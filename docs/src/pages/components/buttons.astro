@@ -1,0 +1,57 @@
+---
+import Docs from "../../layouts/Docs.astro";
+import Example from "../../components/Example.astro";
+import ApiTable from "../../components/ApiTable.astro";
+import Code from "@dario-loi/polytope/astro/Code.astro";
+import Stability from "@dario-loi/polytope/astro/Stability.astro";
+
+const buttons = `<div class="ply-cluster">
+  <button class="ply-button" type="button">Read the paper</button>
+  <button class="ply-button ply-button--secondary" type="button">BibTeX</button>
+  <button class="ply-button ply-button--ghost" type="button">Cancel</button>
+  <button class="ply-button ply-button--sm" type="button">Small</button>
+  <button class="ply-button" type="button" disabled>Disabled</button>
+  <button class="ply-button" type="button" aria-busy="true"><span class="ply-loading" aria-hidden="true"><i></i></span>Running</button>
+</div>`;
+const tags = `<div class="ply-cluster">
+  <span class="ply-tag">NeurIPS 2026</span>
+  <span class="ply-tag ply-tag--solid">Oral</span>
+  <span class="ply-tag ply-tag--note">New</span>
+</div>`;
+const status = `<div class="ply-cluster" style="--ply-cluster-gap: 1.5rem">
+  <span class="ply-status ply-status--idle">Idle</span>
+  <span class="ply-status ply-status--running">Training</span>
+  <span class="ply-status ply-status--done">Converged</span>
+  <span class="ply-status ply-status--warning">Loss plateau</span>
+  <span class="ply-status ply-status--error">Diverged</span>
+</div>`;
+---
+<Docs title="Buttons and tags" status="stable" lede="Square labels in exhibit black. They turn tomato under the pointer.">
+  <h2>Buttons</h2>
+  <Example html={buttons} />
+  <ul>
+    <li>Use one primary button per view, for the action most readers came for. Everything else is secondary or ghost.</li>
+    <li>Label buttons with the action: "Read the paper", "Copy BibTeX", "Run again". Not "Click here" or "Submit".</li>
+    <li>A link that looks like a button is fine: put the classes on an <code>&lt;a&gt;</code>.</li>
+    <li>While an action runs, set <code>aria-busy="true"</code> and add the small machine as a spinner.</li>
+  </ul>
+  <Code lang="astro" code={`<Button href="/paper.pdf">Read the paper</Button>
+<Button variant="secondary">BibTeX</Button>
+<Button busy>Running</Button>`} />
+  <ApiTable rows={[
+    ["variant", "primary, secondary, or ghost", "primary"],
+    ["size", "md or sm", "md"],
+    ["href", "Renders an <a> instead of a <button>"],
+    ["icon", "Square icon-only button. Give it an aria-label.", "false"],
+    ["busy", "Shows the loading machine and sets aria-busy", "false"],
+  ]} head={["Prop", "Effect", "Default"]} />
+
+  <h2>Tags</h2>
+  <Example html={tags} />
+  <p>Tags name a venue, a type, or a topic. They are not buttons; if a tag filters something, make it a real button or link.</p>
+
+  <h2>Status</h2>
+  <Example html={status} />
+  <p>Status always pairs a mark with a word, so it reads without color: an empty ring for idle, a pulsing ball for running, a check, a triangle, and a cross. Use it in demo status lines and experiment tables.</p>
+  <Code lang="astro" code={`<Status state="running">Training</Status>`} />
+</Docs>

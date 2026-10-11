@@ -1,0 +1,38 @@
+---
+import Docs from "../../layouts/Docs.astro";
+import Complex from "@dario-loi/polytope/astro/Complex.astro";
+---
+<Docs title="Principles" lede="Five rules for deciding anything the rest of these docs do not cover.">
+  <figure class="ply-exhibit" slot="exhibit">
+    <Complex seed={11} points={34} radius={0.15} label="A random complex" />
+    <figcaption><b>Play comes from working things.</b> Drag the radius: points join into edges, and three joined points fill a triangle.</figcaption>
+  </figure>
+  <h2>1. Show the work</h2>
+  <p>Lead with the thing itself: a figure, a demo that runs, code that copies and works. A page about a method should let the reader see the method act before it explains it.</p>
+  <ul>
+    <li>A paper page opens with its key figure, above the abstract.</li>
+    <li>A demo opens on its default run, not on an empty form.</li>
+    <li>Docs examples are live, with the code that made them underneath.</li>
+  </ul>
+
+  <h2>2. Play comes from working things</h2>
+  <p>The world of these pages is a mathematics exhibition: models you can touch. Fun is allowed when something works, like the probability machine dropping real random balls. Ornament with no job is left out.</p>
+  <ul>
+    <li>Animation shows a process. It never decorates a heading.</li>
+    <li>Tomato marks the one moving or current thing. Two tomato things on one screen is one too many.</li>
+  </ul>
+
+  <h2>3. One source of truth</h2>
+  <p>Every value lives in <code>tokens/tokens.json</code>. CSS, Astro, Python, Tailwind, and LaTeX all read from it. A project that needs a new value adds a token rather than a hex code.</p>
+
+  <h2>4. Three readers, one page</h2>
+  <p>Academics want depth and rigor, recruiters want a fast read, students want clarity. Serve all three with structure rather than with three versions:</p>
+  <ul>
+    <li>The title states the claim or the subject in plain words.</li>
+    <li>The first screen says what this is, why it matters, and where the details are.</li>
+    <li>Depth follows below, in numbered sections, with equations and references where they belong.</li>
+  </ul>
+
+  <h2>5. Free to host, built to last</h2>
+  <p>Everything builds to static files that GitHub Pages or Cloudflare Pages serve at no cost. Fonts are self-hosted. There is no tracking and no service that can disappear and take a page with it.</p>
+</Docs>

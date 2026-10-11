@@ -1,0 +1,17 @@
+---
+// A live example and the markup that produced it, from one string.
+import Code from "@dario-loi/polytope/astro/Code.astro";
+interface Props { html: string; title?: string; panel?: boolean; lang?: string; code?: string; pad?: boolean }
+const { html, title = "HTML", panel = false, lang = "html", code, pad = true } = Astro.props;
+---
+<div class="ex">
+  <div class:list={["ex__live", panel && "ply-panel", !pad && "ex__live--flush"]} data-surface={panel ? "panel" : undefined} set:html={html} />
+  <Code code={code ?? html} lang={lang} title={title} class="ex__code" />
+</div>
+<style is:global>
+  .ex { margin-block: var(--ply-space-5); max-width: none; }
+  .ex__live { padding: var(--ply-space-5); border: var(--ply-border-control) solid var(--ply-color-rule-strong); border-bottom: 0; }
+  .ex__live--flush { padding: 0; }
+  .ex__live.ply-panel { border-color: var(--ply-color-panel); }
+  .ex .ex__code { max-width: none; }
+</style>

@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Spectral Edge - sketch</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Commissioner:wght@200;300;400;500;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+  :root { --ground: #FAFBFC; --ink: #2A3340; --ink-2: #4E5868; --hair: #E2E6EB; --mint: #7FDDBE; --rose: #F29BB8; --violet: #7C5CFF; --violet-ink: #5B3FD9; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1440px; height: 900px; overflow: hidden; background: var(--ground); color: var(--ink); font-family: Commissioner, sans-serif; }
+  .fringe { height: 7px; background:
+      linear-gradient(90deg, transparent 0, var(--mint) 18%, var(--mint) 70%, transparent 100%) 0 0 / 100% 1.5px no-repeat,
+      linear-gradient(90deg, transparent 4%, var(--rose) 26%, var(--rose) 80%, transparent 100%) 0 2.75px / 100% 1.5px no-repeat,
+      linear-gradient(90deg, transparent 10%, var(--violet) 34%, var(--violet) 90%, transparent 100%) 0 5.5px / 100% 1.5px no-repeat; }
+  .top { height: 72px; display: flex; align-items: center; padding: 0 120px; gap: 56px; }
+  .mark { font-weight: 300; font-size: 26px; letter-spacing: -0.01em; position: relative; }
+  .mark small { font-size: 14px; font-weight: 500; color: var(--ink-2); margin-left: 10px; letter-spacing: 0; }
+  .top nav { display: flex; gap: 26px; font-size: 14.5px; color: var(--ink-2); }
+  .top nav .on { color: var(--violet-ink); font-weight: 600; position: relative; }
+  .top nav .on .fringe { position: absolute; left: 0; right: 0; top: 26px; }
+  .search { margin-left: auto; width: 240px; height: 36px; border: 1px solid var(--hair); background: #fff; font-size: 14px; color: var(--ink-2); display: flex; align-items: center; padding: 0 14px; justify-content: space-between; }
+  .search span { font-family: "JetBrains Mono"; font-size: 12px; }
+  .mast { padding: 56px 120px 40px; display: flex; justify-content: space-between; align-items: flex-end; }
+  h1 { font-weight: 200; font-size: 104px; line-height: .95; letter-spacing: -0.04em; }
+  .lede { font-size: 22px; font-weight: 300; line-height: 1.4; max-width: 620px; margin-top: 20px; color: var(--ink); }
+  .meta { font-size: 14px; color: var(--ink-2); text-align: right; line-height: 1.7; }
+  .meta b { font-weight: 600; color: var(--ink); }
+  .main { display: grid; grid-template-columns: 300px 680px 1fr; padding: 0 120px; margin-top: 40px; }
+  .side li { list-style: none; font-size: 14.5px; padding: 7px 0; color: var(--ink-2); display: flex; align-items: center; gap: 12px; }
+  .side li::before { content: ""; width: 7px; height: 7px; border: 1px solid #A7AFBA; border-radius: 50%; }
+  .side li.on { color: var(--ink); font-weight: 600; }
+  .side li.on::before { background: var(--violet); border-color: var(--violet); }
+  article h2 { font-weight: 400; font-size: 30px; letter-spacing: -0.02em; margin-bottom: 14px; }
+  article p { font-size: 17px; line-height: 1.65; color: var(--ink); margin-bottom: 16px; max-width: 640px; }
+  article a { color: var(--violet-ink); text-decoration: underline; text-decoration-color: var(--rose); text-underline-offset: 4px; text-decoration-thickness: 1.5px; }
+  pre { margin-top: 6px; max-width: 640px; background: #fff; border: 1px solid var(--hair); font-family: "JetBrains Mono"; font-size: 14px; line-height: 1.7; padding: 0 18px 14px; color: var(--ink); }
+  pre .fringe { margin: 0 -18px 12px; }
+  pre .c { color: #6B7482; }
+  .toc { padding-left: 48px; font-size: 13.5px; color: var(--ink-2); }
+  .toc p { font-weight: 600; color: var(--ink); margin-bottom: 10px; }
+  .toc li { list-style: none; padding: 5px 0; }
+  .toc li.on { color: var(--violet-ink); font-weight: 600; }
+</style>
+</head>
+<body>
+  <div class="top">
+    <div class="mark">dario loi<small>design system</small></div>
+    <nav><span class="on">Getting started<span class="fringe"></span></span><span>Principles</span><span>Foundations</span><span>Tokens</span><span>Components</span><span>Patterns</span><span>Accessibility</span><span>Writing</span><span>Changelog</span></nav>
+    <div class="search">Search <span>/</span></div>
+  </div>
+  <header class="mast">
+    <div>
+      <h1>Getting started</h1>
+      <p class="lede">One construction kit and one design language for every site, paper page, and demo Dario Loi ships.</p>
+    </div>
+    <div class="meta"><b>v0.1.0</b><br>6 sections, 4 min read<br>Updated 11 October 2026</div>
+  </header>
+  <div class="fringe" style="margin: 0 120px"></div>
+  <div class="main">
+    <ul class="side"><li class="on">Introduction</li><li>Installation</li><li>Using with Astro</li><li>Using in plain HTML</li><li>Python and figure themes</li><li>Versioning</li></ul>
+    <article>
+      <h2>Introduction</h2>
+      <p>A design system is two things at once. It is a construction kit: tokens, CSS components, and Astro wrappers you take pieces from. It is also a design language: the <a href="#">principles</a>, color, type, and writing rules that make a homepage, a paper page, and a demo read as one person's work.</p>
+      <pre><div class="fringe"></div><span class="c"># add the core to any project</span>
+npm install github:darioloi/design-system</pre>
+    </article>
+    <div class="toc"><p>On this page</p><ul><li class="on">Introduction</li><li>What the kit contains</li><li>What it is not</li><li>Where to go next</li></ul></div>
+  </div>
+</body>
+</html>

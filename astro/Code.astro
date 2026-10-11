@@ -1,0 +1,16 @@
+---
+// Highlighted code in a black panel, with an optional copy button.
+// Uses Astro's built-in Shiki with the system's code theme.
+import { Code as Shiki } from "astro:components";
+import theme from "../dist/code-theme.json";
+interface Props { code: string; lang?: string; title?: string; copy?: boolean; class?: string }
+const { code, lang = "txt", title, copy = true, class: className } = Astro.props;
+---
+<div class:list={["ply-code", className]}>
+  <div class="ply-code__bar">
+    <span class="ply-code__lang">{title ?? lang}</span>
+    {copy && <button class="ply-code__copy" type="button" data-ply-copy>Copy</button>}
+  </div>
+  <Shiki code={code.replace(/^\n+|\s+$/g, "")} lang={lang as any} theme={theme as any} />
+</div>
+<script>import "../css/js/copy.js";</script>

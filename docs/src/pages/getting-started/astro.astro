@@ -1,0 +1,54 @@
+---
+import Docs from "../../layouts/Docs.astro";
+import Code from "@dario-loi/polytope/astro/Code.astro";
+import Note from "@dario-loi/polytope/astro/Note.astro";
+import { u } from "../../data/nav";
+---
+<Docs title="Using with Astro" lede="Import the stylesheet in your layout, then use the components like any other.">
+  <h2>Set up a layout</h2>
+  <Code lang="astro" title="src/layouts/Page.astro" code={`---
+import "@dario-loi/polytope/css";
+import "katex/dist/katex.min.css"; // only if you use Equation or M
+import { TopBar, ThemeToggle } from "@dario-loi/polytope/astro";
+const { title } = Astro.props;
+---
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <script is:inline>try{var t=localStorage.getItem("ply-theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+  </head>
+  <body>
+    <TopBar brand="John Doe" links={[{ label: "Research", href: "/research/" }]}>
+      <ThemeToggle />
+    </TopBar>
+    <slot />
+  </body>
+</html>`} />
+  <p>The inline script applies a saved theme before the first paint, so dark mode does not flash white.</p>
+
+  <h2>Use components</h2>
+  <Code lang="astro" code={`---
+import { Button, Note, Equation, Machine } from "@dario-loi/polytope/astro";
+---
+<Button href="/paper.pdf">Read the paper</Button>
+<Note>Results use five seeds.</Note>
+<Equation tex="L = D - A" num={1} />
+<Machine interactive />`} />
+  <p>Components that need a script (the machine, copy buttons, the theme toggle, sliders) include it themselves. Astro bundles each script once per page.</p>
+
+  <h2>Astro settings</h2>
+  <p>Astro compiles <code>.astro</code> files from <code>node_modules</code> without extra configuration. If Vite complains about an external package during the build, add this:</p>
+  <Code lang="js" title="astro.config.mjs" code={`export default defineConfig({
+  vite: { ssr: { noExternal: ["@dario-loi/polytope"] } },
+});`} />
+  <Note kind="soft">The components are thin: each one prints the classes from the CSS core. Anything a component does, you can also do with plain HTML and the same classes. <a href={u("/components/")}>Components</a> shows both for every part.</Note>
+
+  <h2>Deploying for free</h2>
+  <p>Build with <code>astro build</code> and publish <code>dist/</code> to GitHub Pages or Cloudflare Pages. For a GitHub Pages project site, set <code>site</code> and <code>base</code>:</p>
+  <Code lang="js" code={`export default defineConfig({
+  site: "https://dario-loi.github.io",
+  base: "/my-paper",
+});`} />
+</Docs>

@@ -1,0 +1,41 @@
+---
+import Frame from "./Frame.astro";
+---
+<Frame title="Parts working together" class="xb-comp">
+  <div class="xb-comp__board">
+    <div class="ply-cluster">
+      <button class="ply-button xb-comp__run" type="button">Train model</button>
+      <label class="ply-switch"><input type="checkbox" role="switch" class="xb-comp__seed" checked /> Fixed seed</label>
+    </div>
+    <p class="xb-comp__status"><span class="ply-status ply-status--idle">Idle</span></p>
+  </div>
+  <Fragment slot="caption">Press Train model. The button, the loading machine, and the status line change state together, each with a mark and a word.</Fragment>
+</Frame>
+<style is:global>
+  .xb-comp__board { display: grid; gap: var(--ply-space-5); justify-items: start; width: min(100%, 24rem); }
+  .xb-comp__status { min-height: 1.5rem; }
+</style>
+<script>
+  for (const fig of document.querySelectorAll<HTMLElement>(".xb-comp")) {
+    const btn = fig.querySelector<HTMLButtonElement>(".xb-comp__run")!;
+    const status = fig.querySelector<HTMLElement>(".ply-status")!;
+    const seed = fig.querySelector<HTMLInputElement>(".xb-comp__seed")!;
+    btn.addEventListener("click", () => {
+      btn.setAttribute("aria-busy", "true");
+      btn.innerHTML = '<span class="ply-loading" aria-hidden="true"><i></i></span>Training';
+      status.className = "ply-status ply-status--running";
+      status.textContent = "Epoch 1 of 3";
+      let epoch = 1;
+      const tick = setInterval(() => {
+        epoch++;
+        if (epoch <= 3) { status.textContent = `Epoch ${epoch} of 3`; return; }
+        clearInterval(tick);
+        btn.removeAttribute("aria-busy");
+        btn.textContent = "Train again";
+        const diverged = !seed.checked && Math.random() < 0.35;
+        status.className = `ply-status ply-status--${diverged ? "error" : "done"}`;
+        status.textContent = diverged ? "Diverged. Try a fixed seed." : "Converged";
+      }, 650);
+    });
+  }
+</script>

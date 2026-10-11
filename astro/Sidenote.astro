@@ -1,0 +1,7 @@
+---
+// <p>Text<Sidenote n={1}>The note.</Sidenote> continues.</p>
+// Sits in the right margin on wide screens and under the line on narrow ones.
+interface Props { n: number | string }
+const { n } = Astro.props;
+---
+<sup class="ply-sidenote-ref" id={`sn-ref-${n}`}>{n}</sup><small class="ply-sidenote" data-n={n} role="note"><slot /></small>

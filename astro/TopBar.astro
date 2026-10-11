@@ -1,0 +1,29 @@
+---
+// Top bar: wordmark, chapter tabs (current one is a black wall label), tools slot.
+// Below 72rem the chapters collapse into a menu.
+import Icon from "./Icon.astro";
+export interface Link { label: string; href: string; current?: boolean }
+interface Props { brand?: string; brandHref?: string; links?: Link[]; class?: string }
+const { brand = "Polytope", brandHref = "/", links = [], class: className } = Astro.props;
+---
+<header class:list={["ply-topbar", className]}>
+  <div class="ply-container ply-topbar__inner">
+    <a class="ply-wordmark" href={brandHref}>{brand}</a>
+    {links.length > 0 && (
+      <nav class="ply-topbar__links" aria-label="Chapters">
+        {links.map((l) => <a class="ply-tab" href={l.href} aria-current={l.current ? "page" : undefined}>{l.label}</a>)}
+      </nav>
+    )}
+    <div class="ply-topbar__tools">
+      <slot />
+      {links.length > 0 && (
+        <details class="ply-menu ply-menu--chapters">
+          <summary class="ply-button ply-button--secondary ply-button--sm" aria-label="Chapters"><Icon name="menu" /> Menu</summary>
+          <nav class="ply-menu__panel" aria-label="Chapters">
+            {links.map((l) => <a class="ply-tab" href={l.href} aria-current={l.current ? "page" : undefined}>{l.label}</a>)}
+          </nav>
+        </details>
+      )}
+    </div>
+  </div>
+</header>

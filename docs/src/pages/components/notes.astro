@@ -1,0 +1,34 @@
+---
+import Docs from "../../layouts/Docs.astro";
+import Example from "../../components/Example.astro";
+import Code from "@dario-loi/polytope/astro/Code.astro";
+import Stability from "@dario-loi/polytope/astro/Stability.astro";
+
+const notes = `<div class="ply-stack">
+  <aside class="ply-note" role="note"><span class="ply-note__mark ply-note__mark--ball" aria-hidden="true"></span>
+    <div><span class="ply-note__title">Note.</span> Results are averaged over five seeds.</div></aside>
+  <aside class="ply-note ply-note--info" role="note"><span class="ply-note__mark ply-note__mark--ball" aria-hidden="true"></span>
+    <div><span class="ply-note__title">Info.</span> This page uses the dark theme when your system does.</div></aside>
+  <aside class="ply-note" role="note"><svg class="ply-note__mark" viewBox="0 0 20 18" aria-hidden="true"><path d="M10 0 20 18H0Z" fill="currentColor"/></svg>
+    <div><span class="ply-note__title">Warning.</span> The pretrained weights need 24 GB of GPU memory.</div></aside>
+  <aside class="ply-note ply-note--success" role="note"><svg class="ply-note__mark" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="3"><path d="M4 12.5l5 5L20 6.5"/></svg>
+    <div><span class="ply-note__title">Done.</span> The dataset is cached locally.</div></aside>
+  <aside class="ply-note ply-note--danger" role="note"><svg class="ply-note__mark" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 5l14 14M19 5L5 19"/></svg>
+    <div><span class="ply-note__title">Danger.</span> This deletes every checkpoint in the folder.</div></aside>
+</div>`;
+---
+<Docs title="Notes" status="stable" lede="Short asides that interrupt the reading on purpose. The kind is told by a shape and a word, never by color alone.">
+  <Example html={notes} />
+  <h2>When to use which</h2>
+  <ul>
+    <li><strong>Note</strong> (mustard, ball): a fact the reader should not miss.</li>
+    <li><strong>Info</strong> (wall gray, ball): background that helps but can be skipped.</li>
+    <li><strong>Warning</strong> (mustard, triangle): something that could cost the reader time or money.</li>
+    <li><strong>Success</strong> (gray, check): confirmation after an action.</li>
+    <li><strong>Danger</strong> (black, cross): an action that destroys data or cannot be undone.</li>
+  </ul>
+  <p>Two notes in a row usually means one of them belongs in the text. Keep a note to two sentences.</p>
+  <Code lang="astro" code={`<Note>Results are averaged over five seeds.</Note>
+<Note kind="warning">The pretrained weights need 24 GB of GPU memory.</Note>
+<Note kind="danger" title="Careful">This deletes every checkpoint.</Note>`} />
+</Docs>

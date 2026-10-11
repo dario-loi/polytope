@@ -1,0 +1,46 @@
+---
+import Docs from "../../layouts/Docs.astro";
+import Code from "@dario-loi/polytope/astro/Code.astro";
+---
+<Docs title="Other targets" lede="One token file compiles to every format a project might need.">
+  <p>Every file below is generated from <code>tokens/tokens.json</code> by <code>npm run build</code>. Change a value there and all targets follow.</p>
+
+  <h2>Tailwind CSS v4</h2>
+  <p>Maps the tokens into Tailwind's theme, so utilities like <code>bg-panel</code>, <code>text-accent-text</code>, <code>font-display</code>, and <code>p-5</code> use system values. The variables keep pointing at the tokens, so dark mode still switches.</p>
+  <Code lang="css" code={`@import "tailwindcss";
+@import "@dario-loi/polytope/tokens.css";
+@import "@dario-loi/polytope/tailwind.css";`} />
+
+  <h2>Sass</h2>
+  <p>Raw values for build-time math, plus maps for the dark theme and the chart palette. Prefer the custom properties at runtime; Sass variables cannot follow a theme switch.</p>
+  <Code lang="scss" code={`@use "@dario-loi/polytope/tokens.scss" as ply;
+.figure-frame { border: 3px solid ply.$ply-ink-950; }`} />
+
+  <h2>LaTeX, TikZ, and pgfplots</h2>
+  <p>xcolor definitions for every primitive and chart color, and a <code>dl</code> cycle list for pgfplots. Copy <code>dist/polytope-colors.sty</code> next to your <code>.tex</code> file.</p>
+  <Code lang="latex" code={`\\usepackage{pgfplots}
+\\usepackage{polytope-colors}
+...
+\\begin{axis}[cycle list name=polytope]
+  \\addplot table {gcn.dat};
+\\end{axis}
+\\node[fill=plyTomato500, circle] {};`} />
+
+  <h2>JavaScript and TypeScript</h2>
+  <Code lang="ts" code={`import { tokens, viz } from "@dario-loi/polytope/tokens";
+const series = viz.categorical.light;        // fixed order, eight colors
+const ink = tokens["--ply-ink-950"].value;    // "#141414"`} />
+  <p>The same data as flat JSON is at <code>@dario-loi/polytope/tokens.json</code>.</p>
+
+  <h2>Figma and other design tools</h2>
+  <p><code>dist/tokens.dtcg.json</code> is the source file in the W3C Design Tokens format, which token plugins for Figma and Penpot can import. Aliases like <code>{"{primitive.color.ink.950}"}</code> stay intact.</p>
+
+  <h2>Code highlighting</h2>
+  <p><code>dist/code-theme.json</code> is a TextMate theme. Shiki (and so Astro's <code>&lt;Code&gt;</code>) reads it directly, and VS Code can load it as a color theme.</p>
+  <Code lang="js" code={`import theme from "@dario-loi/polytope/code-theme.json";
+// astro.config.mjs
+export default defineConfig({ markdown: { shikiConfig: { theme } } });`} />
+
+  <h2>Python</h2>
+  <p>matplotlib styles, plotly templates, a Gradio theme, and Streamlit config. See <a href="../python/">Python and figures</a>.</p>
+</Docs>

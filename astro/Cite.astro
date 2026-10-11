@@ -1,0 +1,7 @@
+---
+// Inline citation with a preview card on hover and focus.
+interface Props { n: number | string; title: string; authors?: string; venue?: string; year?: number | string; href?: string }
+const { n, title, authors, venue, year, href = `#ref-${n}` } = Astro.props;
+const id = `cite-${n}-${Math.random().toString(36).slice(2, 7)}`;
+---
+<span class="ply-cite"><a href={href} aria-describedby={id}>[{n}]</a><span class="ply-cite__card" role="tooltip" id={id}><b>{title}</b>{authors && <><br />{authors}</>}{(venue || year) && <><br />{[venue, year].filter(Boolean).join(", ")}</>}</span></span>

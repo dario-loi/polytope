@@ -1,0 +1,85 @@
+---
+import Pattern from "../../layouts/Pattern.astro";
+import AppShell from "@dario-loi/polytope/astro/AppShell.astro";
+import Machine from "@dario-loi/polytope/astro/Machine.astro";
+import Slider from "@dario-loi/polytope/astro/Slider.astro";
+import Readout from "@dario-loi/polytope/astro/Readout.astro";
+import Status from "@dario-loi/polytope/astro/Status.astro";
+import Button from "@dario-loi/polytope/astro/Button.astro";
+import Icon from "@dario-loi/polytope/astro/Icon.astro";
+import Equation from "@dario-loi/polytope/astro/Equation.astro";
+---
+<Pattern title="Demo page" current="Teaching">
+  <div class="ply-container dm">
+    <header class="dm__head">
+      <h1 class="ply-mast__title" style="font-size: clamp(2.5rem, 1.6rem + 3vw, 4.25rem)">The binomial, by hand<span class="ply-mast__stop" aria-hidden="true">.</span></h1>
+      <p class="ply-mast__lede">Drop balls through a board of pegs. Change the rows and the bias of the coin and watch the pile follow the binomial distribution.</p>
+    </header>
+    <AppShell title="Probability machine">
+      <Fragment slot="head">
+        <div class="ply-segmented" role="group" aria-label="Speed" data-speed>
+          <button type="button" aria-pressed="true" value="drop">Drop</button>
+          <button type="button" aria-pressed="false" value="settle">Skip to end</button>
+        </div>
+        <Button size="sm" data-run><Icon name="refresh" />Run again</Button>
+      </Fragment>
+      <Fragment slot="controls">
+        <Slider label="Rows of pegs" name="rows" min={2} max={14} value={10} hint="There is one more bin than rows." />
+        <Slider label="Balls" name="balls" min={10} max={300} step={10} value={80} />
+        <Slider label="Chance of bouncing right" name="p" min={0.05} max={0.95} step={0.05} value={0.5} format="fixed2" />
+        <fieldset class="ply-control-group">
+          <legend>This run</legend>
+          <Readout items={[{ label: "Mean bin", value: "-" }, { label: "Expected n p", value: "5.00" }, { label: "Largest bin", value: "-" }]} label="Run summary" />
+        </fieldset>
+      </Fragment>
+      <div class="dm__stage"><Machine rows={10} balls={80} class="dm__machine" /></div>
+      <Fragment slot="status"><Status state="idle">Ready</Status><span class="dm__counts ply-mono"></span></Fragment>
+    </AppShell>
+    <section class="ply-prose dm__text">
+      <h2>What you are looking at</h2>
+      <p>Each ball meets one peg per row and goes right with probability <i>p</i>. After <i>n</i> rows, the number of rights <i>k</i> decides the bin, so the bins count draws from a binomial distribution:</p>
+      <Equation tex={String.raw`P(k) = \binom{n}{k} p^{k} (1-p)^{n-k}`} num={1} />
+      <p>The mean bin is <i>n p</i>. With more balls the pile looks more like the formula; with more rows and a fair coin it starts to look like a normal curve.</p>
+    </section>
+  </div>
+</Pattern>
+<style>
+  .dm__head { padding-block: var(--ply-space-7) var(--ply-space-6); max-width: 52rem; }
+  .dm__stage { width: min(100%, 52rem); padding: var(--ply-space-4); }
+  .dm__text { margin-top: var(--ply-space-8); }
+</style>
+<script>
+  const m = document.querySelector<any>(".dm__machine");
+  const status = document.querySelector(".ply-app__status .ply-status")!;
+  const counts = document.querySelector(".dm__counts")!;
+  const dd = [...document.querySelectorAll(".ply-readout dd")];
+  const val = (n: string) => Number((document.querySelector(`[name="${n}"]`) as HTMLInputElement).value);
+  let mode = "drop";
+  const go = () => {
+    const rows = val("rows");
+    m.style.setProperty("--rows", String(rows));
+    m.style.setProperty("--bins", String(rows + 1));
+    m.setAttribute("rows", String(rows));
+    m.setAttribute("balls", String(val("balls")));
+    m.setAttribute("p", String(val("p")));
+    dd[1].textContent = (rows * val("p")).toFixed(2);
+    status.className = "ply-status ply-status--running";
+    status.textContent = "Dropping";
+    m.run(mode !== "settle");
+  };
+  const show = (c: number[]) => {
+    const total = c.reduce((a, b) => a + b, 0);
+    const mean = c.reduce((a, b, k) => a + b * k, 0) / total;
+    dd[0].textContent = mean.toFixed(2);
+    dd[2].textContent = `bin ${c.indexOf(Math.max(...c))}`;
+    counts.textContent = `counts ${c.join(" ")}`;
+    status.className = "ply-status ply-status--done";
+    status.textContent = "Settled";
+  };
+  m.addEventListener("ply-machine-done", (e: CustomEvent) => show(e.detail.counts));
+  // With reduced motion the machine may settle before this script runs.
+  if (m.sim && !m.active?.length && m.landed?.some((n: number) => n > 0)) show(m.sim.counts);
+  document.querySelectorAll('.ply-app [name]').forEach((el) => el.addEventListener("change", go));
+  document.querySelector("[data-run]")!.addEventListener("click", go);
+  document.querySelector("[data-speed]")!.addEventListener("ply-change", (e: Event) => { mode = (e as CustomEvent).detail.value; });
+</script>

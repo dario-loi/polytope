@@ -1,0 +1,15 @@
+---
+// Labelled range input with its value printed beside it.
+interface Props { label: string; name: string; min?: number; max?: number; step?: number; value?: number; hint?: string; format?: "int" | "fixed2" | "percent"; id?: string }
+const { label, name, min = 0, max = 100, step = 1, value = 50, hint, format = "int", id = `ply-${name}` } = Astro.props;
+const fmt = (v: number) => (format === "percent" ? `${Math.round(v * 100)}%` : format === "fixed2" ? v.toFixed(2) : String(Math.round(v)));
+---
+<div class="ply-control" data-ply-slider data-format={format}>
+  <label class="ply-control__label" for={id}><span>{label}</span></label>
+  <div class="ply-range">
+    <input class="ply-slider" type="range" id={id} name={name} min={min} max={max} step={step} value={value} aria-describedby={hint ? `${id}-hint` : undefined} />
+    <output for={id}>{fmt(value)}</output>
+  </div>
+  {hint && <p class="ply-control__hint" id={`${id}-hint`}>{hint}</p>}
+</div>
+<script>import "../css/js/controls.js";</script>

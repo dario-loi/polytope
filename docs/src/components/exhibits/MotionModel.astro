@@ -1,0 +1,25 @@
+---
+import Frame from "./Frame.astro";
+import Machine from "@dario-loi/polytope/astro/Machine.astro";
+---
+<Frame title="Reduced motion, tried out" class="xb-motion">
+  <div class="xb-motion__stage"><Machine rows={6} balls={24} autoplay="none" class="xb-motion__machine" label="Probability machine used to demonstrate reduced motion." /></div>
+  <div class="ply-cluster xb-motion__controls">
+    <label class="ply-switch"><input type="checkbox" role="switch" class="xb-motion__reduce" /> Reduced motion</label>
+    <button class="ply-button ply-button--sm xb-motion__run" type="button">Drop balls</button>
+  </div>
+  <Fragment slot="caption">Turn reduced motion on and drop again: the machine skips straight to the settled pile. Readers who ask their system for less motion get that state everywhere.</Fragment>
+</Frame>
+<style is:global>
+  .xb-motion .xb__panel { grid-template-rows: 1fr auto; gap: var(--ply-space-3); padding: var(--ply-space-4); }
+  .xb-motion__stage { width: min(100%, 22rem); }
+  .xb-motion__controls { color: var(--ply-color-panel-text); }
+</style>
+<script>
+  for (const fig of document.querySelectorAll<HTMLElement>(".xb-motion")) {
+    const m = fig.querySelector<any>(".xb-motion__machine");
+    const reduce = fig.querySelector<HTMLInputElement>(".xb-motion__reduce")!;
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) { reduce.checked = true; reduce.disabled = true; }
+    fig.querySelector(".xb-motion__run")!.addEventListener("click", () => m.run(!reduce.checked));
+  }
+</script>

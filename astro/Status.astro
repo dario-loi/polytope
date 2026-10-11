@@ -1,0 +1,6 @@
+---
+// Status always shows a mark and a word.
+interface Props { state: "idle" | "running" | "done" | "warning" | "error" }
+const { state } = Astro.props;
+---
+<span class={`ply-status ply-status--${state}`} role={state === "error" ? "alert" : "status"}><slot /></span>

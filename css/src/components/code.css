@@ -1,0 +1,18 @@
+@layer ply.components {
+  /* Code sits in a black exhibit panel. Comments are mustard so the explanation reads first. */
+  .ply-code { position: relative; background: var(--ply-color-panel); color: var(--ply-color-panel-text); max-width: var(--ply-layout-measure); }
+  .ply-code pre { margin: 0; padding: var(--ply-space-4) var(--ply-space-5); overflow-x: auto; font-size: var(--ply-size-sm); line-height: 1.7; tab-size: 2; scrollbar-color: var(--ply-color-panel-rule) var(--ply-color-panel); background: transparent !important; }
+  .ply-code pre code { background: none; padding: 0; font-size: inherit; }
+  .ply-code__bar { display: flex; align-items: center; justify-content: space-between; gap: var(--ply-space-3); padding: var(--ply-space-2) var(--ply-space-2) var(--ply-space-2) var(--ply-space-5); border-bottom: var(--ply-border-hair) solid var(--ply-color-panel-rule); font-size: var(--ply-size-xs); color: var(--ply-color-panel-muted); }
+  .ply-code__lang { font-family: var(--ply-font-mono); }
+  .ply-code__copy { appearance: none; border: var(--ply-border-hair) solid var(--ply-color-panel-rule); background: transparent; color: var(--ply-color-panel-text); font-size: var(--ply-size-xs); font-weight: var(--ply-weight-semibold); padding: 0.3rem 0.6rem; cursor: pointer; }
+  .ply-code__copy:hover { border-color: var(--ply-color-panel-text); }
+  .ply-code__copy[data-copied] { background: var(--ply-color-note); color: var(--ply-ink-950); border-color: var(--ply-color-note); }
+  .ply-code .c, .ply-code .tok-comment { color: var(--ply-color-code-comment); }
+  .ply-code .k, .ply-code .tok-keyword { color: var(--ply-color-code-keyword); }
+  .ply-code .s, .ply-code .tok-string { color: var(--ply-color-code-string); }
+  .ply-code .n, .ply-code .tok-number { color: var(--ply-color-code-number); }
+  .ply-code mark { background: color-mix(in srgb, var(--ply-color-note) 30%, transparent); color: inherit; padding: 0; }
+
+  kbd, .ply-kbd { display: inline-block; font-family: var(--ply-font-mono); font-size: 0.8em; line-height: 1.4; padding: 0 0.4em; border: 1.5px solid currentColor; border-bottom-width: 3px; }
+}

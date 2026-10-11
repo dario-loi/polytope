@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Grid Specimen - sketch</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;700;800&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+  :root { --ink: #0B0B0B; --grid: rgba(80,128,205,.22); --grid-major: rgba(80,128,205,.42); --plane: #E5401A; --muted: #4A4F57; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1440px; height: 900px; overflow: hidden; color: var(--ink); font-family: "Schibsted Grotesk", sans-serif; }
+  body { background-color: #fff;
+    background-image: linear-gradient(var(--grid-major) 1px, transparent 1px), linear-gradient(90deg, var(--grid-major) 1px, transparent 1px),
+      linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 120px 120px, 120px 120px, 24px 24px, 24px 24px; position: relative; }
+  .mast { position: absolute; left: 120px; right: 120px; top: 24px; height: 48px; display: flex; align-items: center; justify-content: space-between; background: #fff; padding: 0 12px; border: 1px solid var(--ink); }
+  .mast b { font-weight: 800; font-size: 16px; }
+  .mast nav { display: flex; gap: 22px; font-size: 14px; font-weight: 500; color: var(--muted); }
+  .mast nav .on { color: var(--ink); font-weight: 800; }
+  .toggle { font-size: 13px; font-weight: 700; display: flex; gap: 8px; align-items: center; }
+  .toggle i { width: 36px; height: 20px; background: var(--ink); display: inline-block; position: relative; }
+  .toggle i::after { content: ""; position: absolute; right: 3px; top: 3px; width: 14px; height: 14px; background: #fff; }
+  .letters { position: absolute; left: 120px; top: 120px; }
+  .tag { position: absolute; left: 120px; top: 312px; font-size: 22px; font-weight: 500; }
+  .side { position: absolute; left: 120px; top: 384px; width: 216px; background: #fff; font-size: 14.5px; padding: 12px; border-top: 2px solid var(--ink); }
+  .side li { list-style: none; height: 24px; line-height: 24px; color: var(--muted); }
+  .side li.on { color: var(--ink); font-weight: 800; }
+  article { position: absolute; left: 384px; top: 384px; width: 648px; background: #fff; padding: 12px 24px 18px; border-top: 2px solid var(--ink); }
+  h2 { font-size: 34px; font-weight: 800; letter-spacing: -0.02em; line-height: 48px; }
+  p { font-size: 17px; line-height: 24px; margin: 12px 0; color: #16181C; }
+  pre { font-family: "JetBrains Mono"; font-size: 14px; line-height: 24px; background: var(--ink); color: #fff; padding: 12px 16px; }
+  .plane { position: absolute; left: 1080px; top: 384px; width: 240px; height: 240px; background: var(--plane); color: #fff; padding: 16px; display: flex; flex-direction: column; justify-content: space-between; }
+  .plane .n { font-size: 140px; font-weight: 800; line-height: .8; letter-spacing: -0.04em; }
+  .plane .m { font-size: 14px; font-weight: 700; line-height: 1.5; }
+</style>
+</head>
+<body>
+  <div class="mast"><b>Dario Loi Design System</b>
+    <nav><span class="on">Getting started</span><span>Principles</span><span>Foundations</span><span>Tokens</span><span>Components</span><span>Patterns</span><span>Accessibility</span><span>Writing</span><span>Changelog</span></nav>
+    <span class="toggle">Grid <i></i></span>
+  </div>
+  <svg class="letters" width="1200" height="168" viewBox="0 0 1200 168" fill="#0B0B0B"><rect x="0" y="0" width="22" height="22"/><rect x="24" y="0" width="22" height="22"/><rect x="48" y="0" width="22" height="22"/><rect x="72" y="0" width="22" height="22"/><rect x="0" y="24" width="22" height="22"/><rect x="96" y="24" width="22" height="22"/><rect x="0" y="48" width="22" height="22"/><rect x="96" y="48" width="22" height="22"/><rect x="0" y="72" width="22" height="22"/><rect x="96" y="72" width="22" height="22"/><rect x="0" y="96" width="22" height="22"/><rect x="96" y="96" width="22" height="22"/><rect x="0" y="120" width="22" height="22"/><rect x="96" y="120" width="22" height="22"/><rect x="0" y="144" width="22" height="22"/><rect x="24" y="144" width="22" height="22"/><rect x="48" y="144" width="22" height="22"/><rect x="72" y="144" width="22" height="22"/><rect x="168" y="0" width="22" height="22"/><rect x="192" y="0" width="22" height="22"/><rect x="216" y="0" width="22" height="22"/><rect x="144" y="24" width="22" height="22"/><rect x="240" y="24" width="22" height="22"/><rect x="144" y="48" width="22" height="22"/><rect x="240" y="48" width="22" height="22"/><rect x="144" y="72" width="22" height="22"/><rect x="168" y="72" width="22" height="22"/><rect x="192" y="72" width="22" height="22"/><rect x="216" y="72" width="22" height="22"/><rect x="240" y="72" width="22" height="22"/><rect x="144" y="96" width="22" height="22"/><rect x="240" y="96" width="22" height="22"/><rect x="144" y="120" width="22" height="22"/><rect x="240" y="120" width="22" height="22"/><rect x="144" y="144" width="22" height="22"/><rect x="240" y="144" width="22" height="22"/><rect x="288" y="0" width="22" height="22"/><rect x="312" y="0" width="22" height="22"/><rect x="336" y="0" width="22" height="22"/><rect x="360" y="0" width="22" height="22"/><rect x="288" y="24" width="22" height="22"/><rect x="384" y="24" width="22" height="22"/><rect x="288" y="48" width="22" height="22"/><rect x="384" y="48" width="22" height="22"/><rect x="288" y="72" width="22" height="22"/><rect x="312" y="72" width="22" height="22"/><rect x="336" y="72" width="22" height="22"/><rect x="360" y="72" width="22" height="22"/><rect x="288" y="96" width="22" height="22"/><rect x="336" y="96" width="22" height="22"/><rect x="288" y="120" width="22" height="22"/><rect x="360" y="120" width="22" height="22"/><rect x="288" y="144" width="22" height="22"/><rect x="384" y="144" width="22" height="22"/><rect x="432" y="0" width="22" height="22"/><rect x="456" y="0" width="22" height="22"/><rect x="480" y="0" width="22" height="22"/><rect x="504" y="0" width="22" height="22"/><rect x="528" y="0" width="22" height="22"/><rect x="480" y="24" width="22" height="22"/><rect x="480" y="48" width="22" height="22"/><rect x="480" y="72" width="22" height="22"/><rect x="480" y="96" width="22" height="22"/><rect x="480" y="120" width="22" height="22"/><rect x="432" y="144" width="22" height="22"/><rect x="456" y="144" width="22" height="22"/><rect x="480" y="144" width="22" height="22"/><rect x="504" y="144" width="22" height="22"/><rect x="528" y="144" width="22" height="22"/><rect x="600" y="0" width="22" height="22"/><rect x="624" y="0" width="22" height="22"/><rect x="648" y="0" width="22" height="22"/><rect x="576" y="24" width="22" height="22"/><rect x="672" y="24" width="22" height="22"/><rect x="576" y="48" width="22" height="22"/><rect x="672" y="48" width="22" height="22"/><rect x="576" y="72" width="22" height="22"/><rect x="672" y="72" width="22" height="22"/><rect x="576" y="96" width="22" height="22"/><rect x="672" y="96" width="22" height="22"/><rect x="576" y="120" width="22" height="22"/><rect x="672" y="120" width="22" height="22"/><rect x="600" y="144" width="22" height="22"/><rect x="624" y="144" width="22" height="22"/><rect x="648" y="144" width="22" height="22"/><rect x="792" y="0" width="22" height="22"/><rect x="792" y="24" width="22" height="22"/><rect x="792" y="48" width="22" height="22"/><rect x="792" y="72" width="22" height="22"/><rect x="792" y="96" width="22" height="22"/><rect x="792" y="120" width="22" height="22"/><rect x="792" y="144" width="22" height="22"/><rect x="816" y="144" width="22" height="22"/><rect x="840" y="144" width="22" height="22"/><rect x="864" y="144" width="22" height="22"/><rect x="888" y="144" width="22" height="22"/><rect x="960" y="0" width="22" height="22"/><rect x="984" y="0" width="22" height="22"/><rect x="1008" y="0" width="22" height="22"/><rect x="936" y="24" width="22" height="22"/><rect x="1032" y="24" width="22" height="22"/><rect x="936" y="48" width="22" height="22"/><rect x="1032" y="48" width="22" height="22"/><rect x="936" y="72" width="22" height="22"/><rect x="1032" y="72" width="22" height="22"/><rect x="936" y="96" width="22" height="22"/><rect x="1032" y="96" width="22" height="22"/><rect x="936" y="120" width="22" height="22"/><rect x="1032" y="120" width="22" height="22"/><rect x="960" y="144" width="22" height="22"/><rect x="984" y="144" width="22" height="22"/><rect x="1008" y="144" width="22" height="22"/><rect x="1080" y="0" width="22" height="22"/><rect x="1104" y="0" width="22" height="22"/><rect x="1128" y="0" width="22" height="22"/><rect x="1152" y="0" width="22" height="22"/><rect x="1176" y="0" width="22" height="22"/><rect x="1128" y="24" width="22" height="22"/><rect x="1128" y="48" width="22" height="22"/><rect x="1128" y="72" width="22" height="22"/><rect x="1128" y="96" width="22" height="22"/><rect x="1128" y="120" width="22" height="22"/><rect x="1080" y="144" width="22" height="22"/><rect x="1104" y="144" width="22" height="22"/><rect x="1128" y="144" width="22" height="22"/><rect x="1152" y="144" width="22" height="22"/><rect x="1176" y="144" width="22" height="22"/></svg>
+  <div class="tag">Design System, v0.1.0. One kit, one language, every site, paper page, and demo.</div>
+  <ul class="side"><li class="on">Introduction</li><li>Installation</li><li>Using with Astro</li><li>Using in plain HTML</li><li>Python and figure themes</li><li>Versioning</li></ul>
+  <article>
+    <h2>Getting started</h2>
+    <p>A design system is two things at once: a construction kit you take components from, and a design language that keeps a homepage, a paper page, and a demo reading as one person's work. Every size on this page snaps to a 24px cell.</p>
+    <pre># add the core to any project
+npm install github:darioloi/design-system</pre>
+  </article>
+  <div class="plane"><div class="n">0</div><div class="m">Chapter 0 of 8<br>6 sections</div></div>
+</body>
+</html>

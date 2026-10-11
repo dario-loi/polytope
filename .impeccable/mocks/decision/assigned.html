@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>The Yellow Series - sketch</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Source+Serif+4:opsz,wght@8..60,400..700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --yellow: #F2BE1A; --yellow-deep: #D9A700; --ink: #16233F; --ink-2: #2E3B57;
+    --paper: #FCFCFA; --rule: #D8DBE2; --muted: #59627A; --link: #2B55C9;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1440px; height: 900px; overflow: hidden; background: var(--paper); color: var(--ink); }
+  body { font-family: "Source Serif 4", serif; }
+  .sans { font-family: "Archivo", sans-serif; }
+  /* cover */
+  .cover { background: var(--yellow); height: 332px; padding: 0 48px; position: relative; }
+  .top { height: 64px; display: flex; align-items: center; justify-content: space-between; }
+  .mark { font-family: Archivo; font-stretch: 125%; font-weight: 850; font-size: 20px; letter-spacing: -0.01em; display: flex; gap: 14px; align-items: baseline; }
+  .mark span { font-weight: 500; font-stretch: 100%; font-size: 15px; color: var(--ink-2); }
+  .tools { display: flex; gap: 20px; align-items: center; font-family: Archivo; font-size: 14px; font-weight: 600; }
+  .search { width: 300px; height: 36px; border: 1.5px solid var(--ink); background: rgba(255,255,255,.35); display: flex; align-items: center; padding: 0 12px; justify-content: space-between; color: var(--ink-2); font-weight: 500; }
+  .search kbd { font-family: "JetBrains Mono"; font-size: 12px; border: 1px solid var(--ink-2); padding: 1px 6px; }
+  .titleblock { position: absolute; left: 48px; bottom: 34px; width: 900px; }
+  h1 { font-family: Archivo; font-stretch: 112%; font-weight: 880; font-size: 96px; line-height: .92; letter-spacing: -0.035em; }
+  .sub { margin-top: 18px; font-size: 21px; line-height: 1.35; max-width: 640px; color: var(--ink); }
+  .vol { position: absolute; right: 48px; top: 64px; bottom: 34px; width: 300px; border-left: 2px solid var(--ink); padding-left: 24px; display: flex; flex-direction: column; justify-content: space-between; }
+  .vol .num { font-family: Archivo; font-stretch: 62%; font-weight: 800; font-size: 200px; line-height: .8; letter-spacing: -0.04em; }
+  .vol .meta { font-family: Archivo; font-size: 14px; font-weight: 600; line-height: 1.5; }
+  .vol .meta b { font-weight: 800; }
+  /* ink band */
+  .band { background: var(--ink); height: 56px; display: flex; padding: 0 48px; align-items: stretch; }
+  .band a { color: #E9ECF3; text-decoration: none; font-family: Archivo; font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 8px; padding: 0 16px; border-right: 1px solid #2E3B57; }
+  .band a i { font-style: normal; font-stretch: 75%; font-weight: 800; color: var(--yellow); font-size: 17px; }
+  .band a.on { background: var(--yellow); color: var(--ink); }
+  .band a.on i { color: var(--ink); }
+  /* body */
+  .main { display: grid; grid-template-columns: 264px 1fr 268px; gap: 0; height: 512px; }
+  nav.side { border-right: 1px solid var(--rule); padding: 28px 24px 0 48px; font-family: Archivo; font-size: 14.5px; }
+  nav.side .h4 { font-size: 13px; font-weight: 800; font-stretch: 110%; margin-bottom: 14px; }
+  nav.side li { list-style: none; padding: 7px 0; color: var(--ink-2); display: flex; gap: 10px; }
+  nav.side li i { font-style: normal; font-variant-numeric: tabular-nums; color: var(--muted); width: 26px; }
+  nav.side li.on { color: var(--ink); font-weight: 700; }
+  nav.side li.on i { color: var(--ink); background: var(--yellow); padding: 0 3px; }
+  article { padding: 26px 56px 0 64px; }
+  .runhead { font-family: Archivo; font-size: 13px; font-weight: 600; color: var(--muted); display: flex; justify-content: space-between; border-bottom: 1px solid var(--rule); padding-bottom: 10px; margin-bottom: 22px; max-width: 640px; }
+  h2 { font-family: Archivo; font-stretch: 105%; font-weight: 800; font-size: 30px; letter-spacing: -0.02em; margin-bottom: 14px; display: flex; gap: 14px; align-items: baseline; }
+  h2 i { font-style: normal; font-stretch: 70%; color: var(--ink); box-shadow: inset 0 -0.32em 0 var(--yellow); padding: 0 2px; }
+  p { font-size: 17.5px; line-height: 1.6; max-width: 640px; margin-bottom: 16px; }
+  p a { color: var(--link); text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
+  .def { max-width: 640px; border-top: 2px solid var(--ink); padding: 12px 0 4px; margin-bottom: 18px; }
+  .def b { font-family: Archivo; font-weight: 800; font-size: 15px; }
+  .def b i { font-style: normal; background: var(--yellow); padding: 0 4px; margin-right: 6px; }
+  .def p { margin: 6px 0 0; }
+  pre { max-width: 640px; background: var(--ink); color: #E9ECF3; font-family: "JetBrains Mono"; font-size: 14px; line-height: 1.7; padding: 14px 18px; position: relative; }
+  pre .c { color: #8C97B3; } pre .y { color: var(--yellow); }
+  pre .tag { position: absolute; right: 14px; top: 12px; font-family: Archivo; font-size: 12px; font-weight: 700; color: var(--yellow); }
+  aside { padding: 30px 48px 0 24px; font-family: Archivo; font-size: 13.5px; }
+  aside .h4 { font-size: 13px; font-weight: 800; margin-bottom: 12px; }
+  aside li { list-style: none; padding: 5px 0; color: var(--ink-2); }
+  aside li.on { color: var(--ink); font-weight: 700; }
+  .note { margin-top: 30px; border-top: 1px solid var(--ink); padding-top: 10px; font-family: "Source Serif 4"; font-size: 14.5px; line-height: 1.5; color: var(--ink-2); }
+  .note b { font-family: Archivo; font-size: 12.5px; color: var(--ink); display: block; margin-bottom: 4px; }
+</style>
+</head>
+<body>
+  <header class="cover">
+    <div class="top">
+      <div class="mark">Dario Loi <span>Design System</span></div>
+      <div class="tools">
+        <div class="search">Search the index <kbd>/</kbd></div>
+        <span>v0.1.0</span><span>GitHub</span><span>Dark</span>
+      </div>
+    </div>
+    <div class="titleblock">
+      <h1>Getting started</h1>
+      <p class="sub">One construction kit and one design language for every site, paper page, and demo Dario Loi ships.</p>
+    </div>
+    <div class="vol">
+      <div class="num">0</div>
+      <div class="meta"><b>Chapter 0</b> of 8<br>6 sections, 4 min read<br>Updated 11 October 2026</div>
+    </div>
+  </header>
+  <nav class="band">
+    <a class="on" href="#"><i>0</i>Getting started</a>
+    <a href="#"><i>1</i>Principles</a>
+    <a href="#"><i>2</i>Foundations</a>
+    <a href="#"><i>3</i>Tokens</a>
+    <a href="#"><i>4</i>Components</a>
+    <a href="#"><i>5</i>Patterns</a>
+    <a href="#"><i>6</i>Accessibility</a>
+    <a href="#"><i>7</i>Writing</a>
+    <a href="#"><i>8</i>Changelog</a>
+  </nav>
+  <div class="main">
+    <nav class="side">
+      <p class="h4">Chapter 0</p>
+      <ul>
+        <li class="on"><i>0.1</i>Introduction</li>
+        <li><i>0.2</i>Installation</li>
+        <li><i>0.3</i>Using with Astro</li>
+        <li><i>0.4</i>Using in plain HTML</li>
+        <li><i>0.5</i>Python and figure themes</li>
+        <li><i>0.6</i>Versioning</li>
+      </ul>
+    </nav>
+    <article>
+      <div class="runhead"><span>0 Getting started</span><span>0.1 Introduction</span></div>
+      <h2><i>0.1</i>Introduction</h2>
+      <p>A design system is two things at once. It is a construction kit: tokens, CSS components, and Astro wrappers you take pieces from. It is also a design language: the <a href="#">principles</a>, color, type, and writing rules that make a homepage, a paper page, and a demo read as one person's work.</p>
+      <div class="def">
+        <b><i>Definition 0.1</i>Design token</b>
+        <p>A named design decision, such as <em>color.series.yellow</em>, stored once and compiled to CSS, Astro, and Python.</p>
+      </div>
+      <pre><span class="tag">0.2</span><span class="c"># add the core to any project</span>
+npm install <span class="y">github:darioloi/design-system</span></pre>
+    </article>
+    <aside>
+      <p class="h4">On this page</p>
+      <ul>
+        <li class="on">0.1 Introduction</li>
+        <li>What the kit contains</li>
+        <li>What it is not</li>
+        <li>Where to go next</li>
+      </ul>
+      <div class="note"><b>Note 0.1</b>Everything builds to static files. Hosting on GitHub Pages or Cloudflare stays free.</div>
+    </aside>
+  </div>
+</body>
+</html>

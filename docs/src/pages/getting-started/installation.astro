@@ -1,0 +1,50 @@
+---
+import Docs from "../../layouts/Docs.astro";
+import Code from "@dario-loi/polytope/astro/Code.astro";
+import Note from "@dario-loi/polytope/astro/Note.astro";
+import { u } from "../../data/nav";
+---
+<Docs title="Installation" lede="Add the kit from GitHub with npm, from pip for Python, or link the hosted files.">
+  <h2>JavaScript projects</h2>
+  <p>The whole kit is one package. Install it from GitHub; npm builds it on install. Since version 12, npm refuses git dependencies unless the project allows them, so add one line to the project's <code>.npmrc</code> first. The <code>root</code> value allows git dependencies listed in your own <code>package.json</code> and nothing deeper.</p>
+  <Code lang="sh" code={`echo "allow-git=root" >> .npmrc
+npm install github:dario-loi/polytope`} />
+  <p>To pin a release, add the tag:</p>
+  <Code lang="sh" code={`npm install github:dario-loi/polytope#v0.1.0`} />
+  <p>What the package exports:</p>
+  <div class="ply-table-wrap">
+    <table class="ply-table">
+      <thead><tr><th>Import path</th><th>What you get</th></tr></thead>
+      <tbody>
+        <tr><td><code>@dario-loi/polytope/css</code></td><td>Everything: fonts, tokens, every component. One file.</td></tr>
+        <tr><td><code>@dario-loi/polytope/tokens.css</code></td><td>Only the custom properties, for projects that bring their own components.</td></tr>
+        <tr><td><code>@dario-loi/polytope/css/button.css</code></td><td>One component at a time. Needs <code>tokens.css</code>.</td></tr>
+        <tr><td><code>@dario-loi/polytope/js/all.js</code></td><td>The scripts: probability machine, copy buttons, theme toggle, on-this-page list.</td></tr>
+        <tr><td><code>@dario-loi/polytope/astro</code></td><td>Astro components.</td></tr>
+        <tr><td><code>@dario-loi/polytope/tokens</code></td><td>Tokens as a JavaScript module, with TypeScript types.</td></tr>
+        <tr><td><code>@dario-loi/polytope/tokens.json</code></td><td>Tokens as flat JSON, with light and dark values.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>The <a href={u("/getting-started/targets/")}>other targets</a> page lists the Tailwind, Sass, LaTeX, Figma, and editor exports.</p>
+
+  <h2>Python</h2>
+  <p>The figure and app themes live in the <code>python/</code> folder of the same repository. pip can install from a subfolder:</p>
+  <Code lang="sh" code={`pip install "git+https://github.com/dario-loi/polytope#subdirectory=python"
+# with the libraries you use:
+pip install "polytope-theme[matplotlib,plotly] @ git+https://github.com/dario-loi/polytope#subdirectory=python"`} />
+
+  <h2>No install at all</h2>
+  <p>The docs site serves the built kit, so any static page can link it:</p>
+  <Code lang="html" code={`<link rel="stylesheet" href="https://dario-loi.github.io/polytope/kit/polytope.css">
+<script type="module" src="https://dario-loi.github.io/polytope/kit/js/all.js"></script>`} />
+  <Note kind="soft">Hosted files follow the latest release. Pin a version with npm when a page must never change.</Note>
+
+  <h2>Working on the kit itself</h2>
+  <Code lang="sh" code={`git clone https://github.com/dario-loi/polytope
+cd polytope
+npm install          # also builds dist/
+npm run docs:dev     # rebuilds the kit, starts this site
+npm run check:contrast`} />
+  <p>Edit tokens in <code>tokens/tokens.json</code> and styles in <code>css/src/</code>. Never edit <code>dist/</code>; the build overwrites it.</p>
+</Docs>

@@ -1,0 +1,13 @@
+@layer ply.components {
+  .ply-table-wrap { overflow-x: auto; max-width: 100%; border-top: var(--ply-border-rule) solid var(--ply-color-rule-strong); }
+  .ply-table { width: 100%; border-collapse: collapse; font-size: 0.9375rem; line-height: var(--ply-leading-normal); font-variant-numeric: tabular-nums; }
+  .ply-table th { text-align: start; font-weight: var(--ply-weight-bold); font-size: var(--ply-size-sm); padding: var(--ply-space-3) var(--ply-space-4) var(--ply-space-2) 0; border-bottom: var(--ply-border-control) solid var(--ply-color-rule-strong); vertical-align: bottom; white-space: nowrap; }
+  .ply-table td { padding: var(--ply-space-3) var(--ply-space-4) var(--ply-space-3) 0; border-bottom: var(--ply-border-hair) solid var(--ply-color-rule); vertical-align: top; }
+  .ply-table :is(th, td):last-child { padding-inline-end: 0; }
+  .ply-table .ply-num { text-align: end; }
+  .ply-table caption { caption-side: bottom; text-align: start; padding-top: var(--ply-space-3); font-size: var(--ply-size-sm); color: var(--ply-color-text-muted); }
+  .ply-table--striped tbody tr:nth-child(even) { background: var(--ply-color-surface-sunken); }
+  .ply-table--striped td:first-child, .ply-table--striped th:first-child { padding-inline-start: var(--ply-space-3); }
+  .ply-table tbody tr:hover { background: color-mix(in srgb, var(--ply-color-note) 18%, transparent); }
+  .ply-swatch { display: inline-block; width: 1.25rem; height: 1.25rem; vertical-align: -0.3em; border: var(--ply-border-hair) solid var(--ply-color-rule); margin-inline-end: var(--ply-space-2); }
+}

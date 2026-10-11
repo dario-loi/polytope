@@ -1,0 +1,33 @@
+---
+import Frame from "./Frame.astro";
+---
+<Frame title="Two curves" class="xb-ease">
+  <div class="xb-ease__lanes">
+    <div class="xb-ease__lane"><span class="xb-ease__ball xb-ease__ball--out"></span></div>
+    <div class="xb-ease__drop"><span class="xb-ease__ball xb-ease__ball--fall"></span></div>
+  </div>
+  <button class="ply-button ply-button--secondary ply-button--sm xb-ease__run" type="button">Run both</button>
+  <Fragment slot="caption">Parts that arrive use the ease-out curve and slide in fast, then settle. Things that fall use gravity and speed up. Press Run both.</Fragment>
+</Frame>
+<style is:global>
+  .xb-ease .xb__panel { grid-template-rows: 1fr auto; gap: var(--ply-space-4); }
+  .xb-ease__lanes { display: grid; grid-template-columns: 1fr auto; gap: var(--ply-space-7); align-items: end; width: min(100%, 26rem); }
+  .xb-ease__lane { position: relative; height: 1.5rem; border-bottom: 3px solid var(--ply-color-panel-text); }
+  .xb-ease__drop { position: relative; width: 2rem; height: 8rem; border-bottom: 3px solid var(--ply-color-panel-text); }
+  .xb-ease__ball { position: absolute; bottom: 0; width: 1.25rem; height: 1.25rem; border-radius: 50%; }
+  .xb-ease__ball--out { left: calc(100% - 1.25rem); background: var(--ply-teal-300); }
+  .xb-ease__ball--fall { left: 50%; margin-left: -0.625rem; background: var(--ply-color-accent); }
+  .xb-ease.is-running .xb-ease__ball--out { animation: xb-out 900ms var(--ply-ease-out) both; }
+  .xb-ease.is-running .xb-ease__ball--fall { animation: xb-fall var(--ply-duration-drop) var(--ply-ease-gravity) both; }
+  @keyframes xb-out { from { left: 0; } to { left: calc(100% - 1.25rem); } }
+  @keyframes xb-fall { from { transform: translateY(-6.5rem); } to { transform: translateY(0); } }
+</style>
+<script>
+  for (const fig of document.querySelectorAll<HTMLElement>(".xb-ease")) {
+    fig.querySelector(".xb-ease__run")!.addEventListener("click", () => {
+      fig.classList.remove("is-running");
+      void fig.offsetWidth;
+      fig.classList.add("is-running");
+    });
+  }
+</script>

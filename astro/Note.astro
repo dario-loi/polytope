@@ -1,0 +1,20 @@
+---
+// Kind is carried by a shape and a title word, never by color alone.
+interface Props { kind?: "note" | "soft" | "info" | "warning" | "success" | "danger"; title?: string; class?: string }
+const { kind = "note", title, class: className } = Astro.props;
+const defaults = { note: "Note", soft: "Note", info: "Info", warning: "Warning", success: "Done", danger: "Danger" } as const;
+const heading = title ?? defaults[kind];
+const mod = kind === "note" || kind === "warning" ? null : kind;
+---
+<aside class:list={["ply-note", mod && `ply-note--${mod}`, className]} role="note">
+  {kind === "warning" ? (
+    <svg class="ply-note__mark" viewBox="0 0 20 18" aria-hidden="true"><path d="M10 0 20 18H0Z" fill="currentColor" /></svg>
+  ) : kind === "success" ? (
+    <svg class="ply-note__mark" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square"><path d="M4 12.5l5 5L20 6.5" /></svg>
+  ) : kind === "danger" ? (
+    <svg class="ply-note__mark" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square"><path d="M5 5l14 14M19 5L5 19" /></svg>
+  ) : (
+    <span class="ply-note__mark ply-note__mark--ball" aria-hidden="true"></span>
+  )}
+  <div><span class="ply-note__title">{heading}.</span> <slot /></div>
+</aside>

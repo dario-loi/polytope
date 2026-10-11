@@ -1,0 +1,69 @@
+---
+import Docs from "../../layouts/Docs.astro";
+import PaperHeader from "@dario-loi/polytope/astro/PaperHeader.astro";
+import Equation from "@dario-loi/polytope/astro/Equation.astro";
+import M from "@dario-loi/polytope/astro/M.astro";
+import Cite from "@dario-loi/polytope/astro/Cite.astro";
+import BibTeX from "@dario-loi/polytope/astro/BibTeX.astro";
+import PubList from "@dario-loi/polytope/astro/PubList.astro";
+import Figure from "@dario-loi/polytope/astro/Figure.astro";
+import Code from "@dario-loi/polytope/astro/Code.astro";
+import Note from "@dario-loi/polytope/astro/Note.astro";
+import Stability from "@dario-loi/polytope/astro/Stability.astro";
+const examplePubs = [
+  { year: 2026, title: "Example title: higher-order message passing on cell complexes", authors: ["A. Author", "John Doe", "B. Author"], venue: "Example Venue 2026", links: [{ label: "Paper", href: "#" }, { label: "Code", href: "#" }] },
+  { year: 2026, title: "Example title: a second paper in the same year", authors: ["John Doe", "C. Author"], venue: "Example Workshop 2026", links: [{ label: "Paper", href: "#" }] },
+  { year: 2025, title: "Example title: an earlier preprint", authors: ["D. Author", "John Doe"], venue: "arXiv preprint", links: [{ label: "arXiv", href: "#" }] },
+];
+---
+<Docs title="Research" status="experimental" lede="The parts every paper page needs: a header, figures, equations, citations, BibTeX, and a publication list.">
+  <Note kind="info">Every title, author, and venue on this page is example content.</Note>
+
+  <h2>Paper header</h2>
+  <div class="ex__live" style="border: 2px solid var(--ply-color-rule-strong); padding: 1.5rem">
+    <PaperHeader
+      venue="Example Venue 2026"
+      title="Example title: higher-order message passing on cell complexes"
+      authors={[{ name: "A. Author", affiliations: [1], equal: true }, { name: "John Doe", affiliations: [2], equal: true }, { name: "B. Author", affiliations: [1, 2] }]}
+      affiliations={["Example University", "Another Institute"]}
+      links={[{ label: "Paper", href: "#", icon: "paper" }, { label: "Code", href: "#", icon: "code" }, { label: "BibTeX", href: "#bibtex", icon: "quote" }]}
+    />
+  </div>
+  <Code lang="astro" code={`<PaperHeader
+  venue="NeurIPS 2026"
+  title="..."
+  authors={[{ name: "John Doe", affiliations: [1], equal: true }, ...]}
+  affiliations={["Example University"]}
+  links={[{ label: "Paper", href: "/paper.pdf", icon: "paper" }, { label: "Code", href: repo, icon: "code" }]}
+/>`} />
+
+  <h2>Equations</h2>
+  <p>KaTeX renders math at build time, so pages ship HTML and MathML and no math script. The Hodge Laplacian on <M tex={String.raw`k`} />-simplices combines a down and an up part:</p>
+  <Equation tex={String.raw`L_k = B_k^{\top} B_k + B_{k+1} B_{k+1}^{\top}`} num={1} />
+  <Code lang="astro" code={`<p>... on <M tex="k" />-simplices ...</p>
+<Equation tex={String.raw\`L_k = B_k^{\\top} B_k + B_{k+1} B_{k+1}^{\\top}\`} num={1} />`} />
+  <p>Load <code>katex/dist/katex.min.css</code> once in the layout. When the TeX contains a backslash, pass it as <code>tex={"{String.raw`...`}"}</code>: Astro 7 reads backslash sequences inside quoted attributes as escape characters, so <code>\binom</code> in quotes arrives as a backspace and <code>inom</code>. The components stop the build with a clear message if that happens.</p>
+
+  <h2>Citations</h2>
+  <p>Hover or focus a citation to see the reference without leaving the sentence<Cite n={1} title="Example reference title" authors="E. Author, F. Author" venue="Example Journal" year={2024} />. The number links to the reference list.</p>
+  <Code lang="astro" code={`<Cite n={1} title="..." authors="..." venue="..." year={2024} />`} />
+
+  <h2>Figures</h2>
+  <Figure num={2}>
+    <div class="ply-panel" style="aspect-ratio: 16/6; display: grid; place-items: center"><span class="ply-muted">Figure content goes here</span></div>
+    <Fragment slot="caption">Captions start with what the figure shows, then how to read it.</Fragment>
+  </Figure>
+
+  <h2 id="bibtex">BibTeX</h2>
+  <BibTeX entry={`@inproceedings{author2026example,
+  title     = {Example title: higher-order message passing on cell complexes},
+  author    = {Author, A. and Doe, John and Author, B.},
+  booktitle = {Example Venue},
+  year      = {2026}
+}`} />
+
+  <h2>Publication wall</h2>
+  <p>Publications grouped by year, the year in wood type, the site owner's name in bold in each author list.</p>
+  <PubList pubs={examplePubs} me="John Doe" />
+  <Code lang="astro" code={`<PubList pubs={pubs} me="John Doe" />`} />
+</Docs>

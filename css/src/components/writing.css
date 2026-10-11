@@ -1,0 +1,36 @@
+@layer ply.components {
+  /* Sidenotes: in the margin on wide screens, inline under the paragraph on narrow ones. */
+  .ply-sidenote-ref { font-size: 0.72em; font-weight: var(--ply-weight-bold); color: var(--ply-color-accent-text); vertical-align: super; line-height: 0; margin-inline-start: 0.08em; }
+  .ply-sidenote { display: block; margin: var(--ply-space-3) 0; padding-inline-start: var(--ply-space-4); font-size: var(--ply-size-sm); line-height: var(--ply-leading-normal); color: var(--ply-color-text-muted); position: relative; }
+  .ply-sidenote::before { content: attr(data-n); position: absolute; left: 0; font-weight: var(--ply-weight-bold); color: var(--ply-color-accent-text); }
+  @media (min-width: 90rem) {
+    .ply-has-sidenotes { position: relative; }
+    .ply-sidenote { float: right; clear: right; width: 14rem; margin: 0.2rem calc(-14rem - var(--ply-space-6)) var(--ply-space-3) 0; }
+  }
+
+  .ply-footnotes { margin-top: var(--ply-space-8); padding-top: var(--ply-space-4); border-top: var(--ply-border-control) solid var(--ply-color-rule-strong); font-size: var(--ply-size-sm); color: var(--ply-color-text-muted); max-width: var(--ply-layout-measure); }
+  .ply-footnotes ol { padding-inline-start: 1.5em; }
+  .ply-footnotes li + li { margin-top: var(--ply-space-2); }
+
+  /* Theorem-like environments. The kind is set in bold small text before the body,
+     the way a printed paper does it. Proofs end with a tomato box. */
+  .ply-env { margin: var(--ply-space-5) 0; padding: var(--ply-space-4) 0 var(--ply-space-4) var(--ply-space-5); border-top: var(--ply-border-control) solid var(--ply-color-rule-strong); border-bottom: var(--ply-border-hair) solid var(--ply-color-rule); max-width: var(--ply-layout-measure); }
+  .ply-env__head { font-weight: var(--ply-weight-bold); margin-inline-end: 0.4em; }
+  .ply-env__name { font-weight: var(--ply-weight-regular); color: var(--ply-color-text-muted); }
+  .ply-env--theorem, .ply-env--lemma, .ply-env--proposition, .ply-env--corollary { font-style: italic; }
+  .ply-env--theorem .ply-env__head, .ply-env--lemma .ply-env__head { font-style: normal; }
+  .ply-env--definition { background: var(--ply-color-surface-sunken); border-top-color: var(--ply-color-rule-strong); padding-inline-end: var(--ply-space-5); }
+  .ply-env--proof { border-top: 0; border-bottom: 0; padding-block: 0; }
+  .ply-env--proof::after { content: ""; display: block; margin-inline-start: auto; width: 0.7em; height: 0.7em; background: var(--ply-color-accent); margin-top: -1em; }
+  .ply-env--proof .ply-env__head { font-style: italic; }
+
+  .ply-details { border-top: var(--ply-border-control) solid var(--ply-color-rule-strong); max-width: var(--ply-layout-measure); }
+  .ply-details > summary { display: flex; align-items: center; gap: var(--ply-space-3); padding-block: var(--ply-space-3); font-weight: var(--ply-weight-bold); cursor: pointer; list-style: none; }
+  .ply-details > summary::-webkit-details-marker { display: none; }
+  .ply-details > summary::before { content: ""; flex: none; width: 0.7rem; height: 0.7rem; border-radius: var(--ply-radius-ball); border: 2px solid currentColor; transition: background var(--ply-duration-fast) var(--ply-ease-out); }
+  .ply-details[open] > summary::before { background: var(--ply-color-accent); border-color: var(--ply-color-accent); }
+  .ply-details > :not(summary) { padding-bottom: var(--ply-space-4); }
+
+  blockquote, .ply-quote { margin: var(--ply-space-5) 0; padding-inline-start: var(--ply-space-5); border-inline-start: 1px solid var(--ply-color-rule-strong); font-size: var(--ply-size-lg); line-height: var(--ply-leading-normal); max-width: var(--ply-layout-measure); }
+  .ply-quote cite { display: block; margin-top: var(--ply-space-2); font-size: var(--ply-size-sm); font-style: normal; color: var(--ply-color-text-muted); }
+}

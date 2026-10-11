@@ -1,0 +1,32 @@
+@layer ply.components {
+  /* Buttons are square exhibit labels: black by default, outlined or bare when quieter. */
+  .ply-button {
+    --_bg: var(--ply-color-text); --_fg: var(--ply-color-bg); --_bd: var(--ply-color-text);
+    display: inline-flex; align-items: center; justify-content: center; gap: var(--ply-space-2);
+    min-height: 2.75rem; padding: 0 var(--ply-space-5);
+    background: var(--_bg); color: var(--_fg); border: var(--ply-border-control) solid var(--_bd); border-radius: var(--ply-radius-none);
+    font-family: var(--ply-font-text); font-size: var(--ply-size-md); font-weight: var(--ply-weight-semibold); line-height: 1; text-decoration: none; white-space: nowrap;
+    cursor: pointer; user-select: none;
+    transition: background var(--ply-duration-fast) var(--ply-ease-out), color var(--ply-duration-fast) var(--ply-ease-out), border-color var(--ply-duration-fast) var(--ply-ease-out), transform var(--ply-duration-fast) var(--ply-ease-out);
+  }
+  .ply-button:hover { --_bg: var(--ply-color-accent); --_bd: var(--ply-color-accent); --_fg: var(--ply-white); background: var(--_bg); color: var(--_fg); }
+  .ply-button:active { transform: translateY(1px); }
+  .ply-button svg { width: 1.125em; height: 1.125em; flex: none; }
+
+  .ply-button--secondary { --_bg: transparent; --_fg: var(--ply-color-text); --_bd: var(--ply-color-text); }
+  .ply-button--secondary:hover { --_bg: var(--ply-color-text); --_fg: var(--ply-color-bg); --_bd: var(--ply-color-text); background: var(--ply-color-text); color: var(--ply-color-bg); }
+  .ply-button--ghost { --_bg: transparent; --_fg: var(--ply-color-text); --_bd: transparent; padding-inline: var(--ply-space-3); }
+  .ply-button--ghost:hover { --_bg: var(--ply-color-surface-sunken); --_fg: var(--ply-color-text); --_bd: transparent; background: var(--ply-color-surface-sunken); color: var(--ply-color-text); }
+  .ply-button--sm { min-height: 2.25rem; padding-inline: var(--ply-space-4); font-size: var(--ply-size-sm); }
+  .ply-button--icon { padding: 0; width: 2.75rem; }
+  .ply-button--icon.ply-button--sm { width: 2.25rem; }
+
+  .ply-button:disabled, .ply-button[aria-disabled="true"] { --_bg: var(--ply-color-surface-sunken); --_fg: var(--ply-color-text-subtle); --_bd: var(--ply-color-surface-sunken); cursor: not-allowed; transform: none; }
+  .ply-button[aria-busy="true"] { cursor: progress; }
+  .ply-button[aria-busy="true"] .ply-loading { --ply-loading-color: currentColor; }
+
+  /* Inside a black panel the primary button turns white. */
+  .ply-panel .ply-button:not(.ply-button--secondary, .ply-button--ghost) { --_bg: var(--ply-color-panel-text); --_fg: var(--ply-color-panel); --_bd: var(--ply-color-panel-text); }
+  .ply-panel .ply-button--secondary { --_fg: var(--ply-color-panel-text); --_bd: var(--ply-color-panel-text); }
+  .ply-panel .ply-button:hover { --_bg: var(--ply-color-accent); --_bd: var(--ply-color-accent); --_fg: var(--ply-white); }
+}

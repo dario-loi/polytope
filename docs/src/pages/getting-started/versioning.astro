@@ -1,0 +1,38 @@
+---
+import Docs from "../../layouts/Docs.astro";
+import Code from "@dario-loi/polytope/astro/Code.astro";
+import Stability from "@dario-loi/polytope/astro/Stability.astro";
+import { u } from "../../data/nav";
+---
+<Docs title="Versioning" lede="Semantic versions, a short list of what counts as breaking, and a rule for when something joins the kit.">
+  <h2>Version numbers</h2>
+  <p>Releases follow <a href="https://semver.org">semantic versioning</a>. Until 1.0, minor versions may break things; the <a href={u("/changelog/")}>changelog</a> says how to update.</p>
+  <p>From 1.0 on, these changes need a major version:</p>
+  <ul>
+    <li>renaming or removing a CSS class, a token, or an Astro component prop;</li>
+    <li>changing what a token means (moving <code>--ply-color-accent</code> from fills to text, for example);</li>
+    <li>reordering the categorical chart colors, which would repaint every existing figure.</li>
+  </ul>
+  <p>Changing a token's value is a minor version when its meaning holds. Fixing contrast or a bug is a patch.</p>
+
+  <h2>Stability labels</h2>
+  <p>Each component page carries one of three labels:</p>
+  <ul>
+    <li><Stability level="stable" /> safe to use; changes follow the rules above.</li>
+    <li><Stability level="experimental" /> may change in any minor version.</li>
+    <li><Stability level="deprecated" /> still works, with a named replacement and a removal version.</li>
+  </ul>
+
+  <h2>When something joins the kit</h2>
+  <p>Build new parts in the project that needs them, using the tokens. Move a part into the kit when a second project needs it. Before it moves, it needs:</p>
+  <ul>
+    <li>a page in these docs with a live example, the HTML, and the Astro usage;</li>
+    <li>light and dark checked, keyboard focus visible, and contrast passing <code>npm run check:contrast</code>;</li>
+    <li>no hard-coded colors or sizes: only tokens.</li>
+  </ul>
+
+  <h2>Releasing</h2>
+  <Code lang="sh" code={`npm version minor        # bumps package.json and tags
+git push --follow-tags   # the docs site redeploys from main`} />
+  <p>Update <code>python/pyproject.toml</code> to the same version so both halves of the kit move together.</p>
+</Docs>

@@ -1,0 +1,26 @@
+---
+import Docs from "../../layouts/Docs.astro";
+import PatternsModel from "../../components/exhibits/PatternsModel.astro";
+import { u } from "../../data/nav";
+---
+<Docs title="Patterns" lede="Whole pages built from the kit: a personal homepage, a paper page, and a demo.">
+  <PatternsModel slot="exhibit" />
+  <p>Patterns show how the parts combine, at full size, with their own site chrome. Each page carries a banner saying its names, papers, and numbers are example content. Copy the source of a pattern to start a real page.</p>
+  <div class="ply-table-wrap">
+    <table class="ply-table">
+      <thead><tr><th>Pattern</th><th>For</th><th>Built from</th></tr></thead>
+      <tbody>
+        <tr><td><a href={u("/patterns/homepage/")}>Homepage</a></td><td>The personal academic site. Recruiters scan it, academics check it, students find notes on it.</td><td>Top bar, mast with the complex, publication wall, notes list.</td></tr>
+        <tr><td><a href={u("/patterns/paper/")}>Paper page</a></td><td>One page per paper, linked from the PDF and the talk slides.</td><td>Paper header, key figure, abstract, equations, theorem environments, citations, BibTeX.</td></tr>
+        <tr><td><a href={u("/patterns/demo/")}>Demo page</a></td><td>An interactive figure or a small tool that goes with a paper or a lecture.</td><td>App shell, sliders, segmented control, readout, status, the machine.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <h2>What stays the same on every page</h2>
+  <ul>
+    <li>The Ultra wordmark at top left and the 3px rule under the top bar.</li>
+    <li>One exhibit per page: a working model, a key figure, or the demo itself.</li>
+    <li>A reading column of about 68 characters for anything longer than a paragraph.</li>
+    <li>Tomato marks exactly one thing per screen: where you are, or what is moving.</li>
+  </ul>
+</Docs>

@@ -1,0 +1,68 @@
+---
+import Docs from "../../layouts/Docs.astro";
+import AppShell from "@dario-loi/polytope/astro/AppShell.astro";
+import Machine from "@dario-loi/polytope/astro/Machine.astro";
+import Slider from "@dario-loi/polytope/astro/Slider.astro";
+import Readout from "@dario-loi/polytope/astro/Readout.astro";
+import Status from "@dario-loi/polytope/astro/Status.astro";
+import Empty from "@dario-loi/polytope/astro/Empty.astro";
+import Button from "@dario-loi/polytope/astro/Button.astro";
+import Code from "@dario-loi/polytope/astro/Code.astro";
+import Stability from "@dario-loi/polytope/astro/Stability.astro";
+import { u } from "../../data/nav";
+---
+<Docs title="Demo chrome" status="experimental" lede="The frame for an interactive figure or a small research tool: header, controls, a black stage, and a status line." wide>
+  <h2>App shell</h2>
+  <AppShell title="Probability machine">
+    <Fragment slot="head"><Button size="sm" variant="secondary" data-run>Run again</Button></Fragment>
+    <Fragment slot="controls">
+      <Slider label="Rows of pegs" name="demo-rows" min={2} max={14} value={8} hint="One more bin than rows." />
+      <Slider label="Balls" name="demo-balls" min={10} max={200} step={10} value={40} />
+      <Slider label="Chance of going right" name="demo-p" min={0.05} max={0.95} step={0.05} value={0.5} format="fixed2" />
+    </Fragment>
+    <div style="width: min(100%, 44rem); padding: 1rem"><Machine rows={8} balls={40} class="demo-machine" /></div>
+    <Fragment slot="status"><Status state="idle">Ready</Status><span class="demo-counts ply-mono"></span></Fragment>
+  </AppShell>
+  <p>A complete version with this exact shell is the <a href={u("/patterns/demo/")}>demo page pattern</a>.</p>
+  <Code lang="astro" code={`<AppShell title="Probability machine">
+  <Fragment slot="head"><Button size="sm" variant="secondary">Run again</Button></Fragment>
+  <Fragment slot="controls">
+    <Slider label="Rows of pegs" name="rows" min={2} max={14} value={8} />
+  </Fragment>
+  <Machine rows={8} />                       <!-- the stage -->
+  <Fragment slot="status"><Status state="idle">Ready</Status></Fragment>
+</AppShell>`} />
+
+  <h2>Readout</h2>
+  <div style="max-width: 18rem"><Readout label="Run summary" items={[{ label: "Balls", value: 40 }, { label: "Mean bin", value: "4.03" }, { label: "Expected", value: "4.00" }]} /></div>
+  <Code lang="astro" code={`<Readout items={[{ label: "Mean bin", value: "4.03" }]} />`} />
+
+  <h2>Empty state</h2>
+  <div style="border: 2px solid var(--ply-color-rule-strong)">
+    <Empty title="No runs yet" body="Pick a dataset and press Train. Results appear here, newest first.">
+      <Button size="sm">Train</Button>
+    </Empty>
+  </div>
+  <p>An empty state says what is missing and gives the one action that fills it.</p>
+</Docs>
+<script>
+  const m = document.querySelector<any>(".demo-machine");
+  const status = document.querySelector(".ply-app__status .ply-status")!;
+  const counts = document.querySelector(".demo-counts")!;
+  const val = (n: string) => (document.querySelector(`[name="${n}"]`) as HTMLInputElement).value;
+  const apply = () => {
+    m.setAttribute("rows", val("demo-rows"));
+    m.style.setProperty("--rows", val("demo-rows"));
+    m.style.setProperty("--bins", String(Number(val("demo-rows")) + 1));
+    m.setAttribute("balls", val("demo-balls"));
+    m.setAttribute("p", val("demo-p"));
+    run();
+  };
+  const run = () => { status.className = "ply-status ply-status--running"; status.textContent = "Dropping"; m.run(); };
+  m.addEventListener("ply-machine-done", (e: CustomEvent) => {
+    status.className = "ply-status ply-status--done"; status.textContent = "Settled";
+    counts.textContent = `bins: ${e.detail.counts.join(" ")}`;
+  });
+  document.querySelectorAll('[name^="demo-"]').forEach((el) => el.addEventListener("change", apply));
+  document.querySelector("[data-run]")!.addEventListener("click", run);
+</script>

@@ -1,0 +1,37 @@
+---
+import Docs from "../../layouts/Docs.astro";
+import MotionModel from "../../components/exhibits/MotionModel.astro";
+---
+<Docs title="Accessibility" lede="The kit targets WCAG 2.2 level AA. These are the commitments behind that, and the checks a new part has to pass.">
+  <MotionModel slot="exhibit" />
+  <h2>What the kit does for you</h2>
+  <ul>
+    <li><strong>Contrast.</strong> Every text color clears 4.5:1 on the backgrounds it is used on, in both themes, and every control edge and mark clears 3:1. <code>npm run check:contrast</code> fails the build otherwise.</li>
+    <li><strong>Color is never the only signal.</strong> Links are underlined. Notes and status labels carry a shape and a word. Charts have a legend, direct labels, and a data table.</li>
+    <li><strong>Focus.</strong> A 3px teal ring with a 2px gap on light grounds, mustard inside black panels. It is never removed.</li>
+    <li><strong>Keyboard.</strong> Every control is a native element or has a role and key handling. The interactive machine is a button that runs again on Enter or Space.</li>
+    <li><strong>Motion.</strong> With reduced motion set, animations jump to their end state and the machine draws its settled pile.</li>
+    <li><strong>Models and charts.</strong> The machine and the complex describe themselves to screen readers, including their current counts. Demo status lines are live regions.</li>
+    <li><strong>Math.</strong> Equations render to MathML alongside the visual HTML, so screen readers can read them.</li>
+    <li><strong>Reflow.</strong> Pages work at 320px wide and at 400% zoom without sideways scrolling; wide tables scroll inside their own frame.</li>
+    <li><strong>Skip link.</strong> The first tab stop jumps past the top bar to the content.</li>
+  </ul>
+
+  <h2>What you still have to do</h2>
+  <ul>
+    <li>Write alt text for figures that says what the figure shows, not what it is ("Accuracy rises fastest for model A", not "Line chart").</li>
+    <li>Give icon-only buttons a label.</li>
+    <li>Keep headings in order. Skip no levels.</li>
+    <li>Put the language on the page: <code>&lt;html lang="en"&gt;</code>.</li>
+    <li>Caption videos and give talks a transcript or slides.</li>
+  </ul>
+
+  <h2>Checklist for a new component</h2>
+  <ol>
+    <li>Works with keyboard only, in a sensible order, with visible focus.</li>
+    <li>Has a name, a role, and a state that a screen reader announces.</li>
+    <li>Passes contrast in light and dark.</li>
+    <li>Does not rely on color, hover, or motion to carry meaning.</li>
+    <li>Holds together at 320px and at 200% text size.</li>
+  </ol>
+</Docs>

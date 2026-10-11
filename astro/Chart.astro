@@ -1,0 +1,30 @@
+---
+// Frame for a chart: title, optional subtitle, legend, plot slot, source line, and a data table toggle.
+interface Props {
+  title: string;
+  subtitle?: string;
+  legend?: { label: string; slot?: number; shape?: "dot" | "line" | "bar" }[];
+  source?: string;
+  class?: string;
+}
+const { title, subtitle, legend = [], source, class: className } = Astro.props;
+---
+<figure class:list={["ply-chart", className]}>
+  <figcaption>
+    <p class="ply-chart__title">{title}</p>
+    {subtitle && <p class="ply-chart__subtitle">{subtitle}</p>}
+  </figcaption>
+  {legend.length > 1 && (
+    <ul class="ply-legend" aria-label="Legend">
+      {legend.map((l, i) => (
+        <li><span class:list={["ply-legend__key", l.shape && l.shape !== "dot" && `ply-legend__key--${l.shape}`]} style={`--c: var(--ply-viz-${l.slot ?? i + 1})`} aria-hidden="true"></span>{l.label}</li>
+      ))}
+    </ul>
+  )}
+  <div class="ply-chart__plot"><slot /></div>
+  <p class="ply-chart__hint" aria-hidden="true">Scroll sideways to see the whole chart.</p>
+  {Astro.slots.has("table") && (
+    <details class="ply-details"><summary>Data table</summary><slot name="table" /></details>
+  )}
+  {source && <p class="ply-chart__source">{source}</p>}
+</figure>

@@ -1,0 +1,13 @@
+---
+// A chapter exhibit: black panel at the machine's proportions, caption underneath.
+interface Props { title: string; class?: string }
+const { title, class: className } = Astro.props;
+---
+<figure class:list={["ply-exhibit", "xb", className]}>
+  <div class="ply-panel xb__panel" data-surface="panel"><slot /></div>
+  <figcaption><b>{title}.</b> <slot name="caption" /></figcaption>
+</figure>
+<style is:global>
+  .xb__panel { aspect-ratio: 28 / 15; display: grid; place-items: center; position: relative; overflow: hidden; padding: var(--ply-space-5); }
+  @media (max-width: 40rem) { .xb__panel { aspect-ratio: auto; min-height: 14rem; } }
+</style>

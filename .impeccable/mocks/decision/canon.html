@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Category standard - sketch</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+  :root { --ink: #111827; --muted: #4B5563; --rule: #E5E7EB; --blue: #2563EB; --wash: #F3F4F6; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1440px; height: 900px; overflow: hidden; background: #fff; color: var(--ink); font-family: Inter, sans-serif; }
+  .top { height: 60px; border-bottom: 1px solid var(--rule); display: flex; align-items: center; padding: 0 32px; gap: 40px; }
+  .top b { font-size: 16px; font-weight: 700; }
+  .top nav { display: flex; gap: 24px; font-size: 14px; color: var(--muted); }
+  .top nav .on { color: var(--blue); font-weight: 600; }
+  .search { margin-left: auto; width: 260px; height: 36px; border: 1px solid var(--rule); border-radius: 8px; background: var(--wash); font-size: 14px; color: var(--muted); display: flex; align-items: center; padding: 0 12px; }
+  .main { display: grid; grid-template-columns: 280px 1fr 260px; height: 840px; }
+  .side { border-right: 1px solid var(--rule); padding: 28px 24px; font-size: 14px; }
+  .side .h4 { font-size: 12px; font-weight: 600; color: var(--muted); margin: 0 0 10px; }
+  .side li { list-style: none; padding: 7px 10px; border-radius: 6px; color: var(--muted); }
+  .side li.on { background: #EFF6FF; color: var(--blue); font-weight: 600; }
+  article { padding: 40px 64px; max-width: 820px; }
+  .crumb { font-size: 13px; color: var(--muted); margin-bottom: 12px; }
+  h1 { font-size: 40px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 14px; }
+  .lead { font-size: 19px; color: var(--muted); line-height: 1.55; margin-bottom: 26px; }
+  h2 { font-size: 24px; font-weight: 700; margin: 8px 0 12px; }
+  p { font-size: 16px; line-height: 1.7; margin-bottom: 16px; color: #1F2937; }
+  pre { background: var(--wash); border: 1px solid var(--rule); border-radius: 8px; padding: 16px; font-family: "JetBrains Mono"; font-size: 14px; line-height: 1.6; }
+  .toc { padding: 40px 24px; font-size: 13.5px; }
+  .toc .h4 { font-size: 12px; font-weight: 600; color: var(--muted); margin-bottom: 10px; }
+  .toc li { list-style: none; padding: 5px 0; color: var(--muted); }
+  .toc li.on { color: var(--blue); font-weight: 600; }
+</style>
+</head>
+<body>
+  <div class="top"><b>Dario Loi Design System</b>
+    <nav><span class="on">Docs</span><span>Components</span><span>Tokens</span><span>Changelog</span></nav>
+    <div class="search">Search docs...</div>
+  </div>
+  <div class="main">
+    <ul class="side">
+      <p class="h4">Getting started</p>
+      <li class="on">Introduction</li><li>Installation</li><li>Using with Astro</li><li>Using in plain HTML</li><li>Python and figure themes</li><li>Versioning</li>
+      <p class="h4" style="margin-top:20px">Foundations</p>
+      <li>Color</li><li>Typography</li><li>Spacing</li><li>Motion</li>
+    </ul>
+    <article>
+      <div class="crumb">Getting started / Introduction</div>
+      <h1>Introduction</h1>
+      <p class="lead">One construction kit and one design language for every site, paper page, and demo Dario Loi ships.</p>
+      <h2>What is a design system?</h2>
+      <p>A design system is two things at once: a construction kit you take components from, and a design language that keeps a homepage, a paper page, and a demo reading as one person's work.</p>
+      <pre># add the core to any project
+npm install github:darioloi/design-system</pre>
+    </article>
+    <div class="toc"><p class="h4">On this page</p><ul><li class="on">What is a design system?</li><li>What the kit contains</li><li>What it is not</li><li>Where to go next</li></ul></div>
+  </div>
+</body>
+</html>

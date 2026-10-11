@@ -1,0 +1,60 @@
+---
+import Pattern from "../../layouts/Pattern.astro";
+import Mast from "@dario-loi/polytope/astro/Mast.astro";
+import Complex from "@dario-loi/polytope/astro/Complex.astro";
+import PubList from "@dario-loi/polytope/astro/PubList.astro";
+import Button from "@dario-loi/polytope/astro/Button.astro";
+import Icon from "@dario-loi/polytope/astro/Icon.astro";
+const pubs = [
+  { year: 2026, title: "Example title: higher-order message passing on cell complexes", href: "#", authors: ["A. Author", "John Doe", "B. Author"], venue: "Example Venue 2026", links: [{ label: "Paper", href: "#" }, { label: "Code", href: "#" }, { label: "Page", href: "../paper/" }] },
+  { year: 2026, title: "Example title: sheaf diffusion with learned restriction maps", href: "#", authors: ["John Doe", "C. Author"], venue: "Example Workshop 2026", links: [{ label: "Paper", href: "#" }] },
+  { year: 2025, title: "Example title: a benchmark for simplicial representation learning", href: "#", authors: ["D. Author", "John Doe", "E. Author"], venue: "arXiv preprint", links: [{ label: "arXiv", href: "#" }, { label: "Data", href: "#" }] },
+];
+const notes = [
+  ["Example note: the Hodge Laplacian, drawn", "Sep 2026"],
+  ["Example note: why message passing over-smooths", "Jun 2026"],
+  ["Example note: reading group slides on sheaves", "Feb 2026"],
+];
+---
+<Pattern title="Homepage" current="Research">
+  <Mast title="John Doe" lede="PhD student at Example University. I work on graph learning and topological deep learning: neural networks for data where relations join more than two things at once.">
+    <div slot="after" class="ply-cluster" style="margin-top: var(--ply-space-5)">
+      <Button href="#publications">Publications</Button>
+      <Button href="#" variant="secondary"><Icon name="download" />CV</Button>
+      <Button href="#" variant="ghost"><Icon name="mail" />Email</Button>
+    </div>
+    <figure class="ply-exhibit" slot="exhibit">
+      <Complex label="A random complex" />
+      <figcaption><b>A random complex.</b> Points join when they are closer than the radius, and three joined points fill a triangle. Drag the radius; hover a point to see its reach.</figcaption>
+    </figure>
+  </Mast>
+  <hr class="ply-rule" />
+  <main id="main" class="ply-container">
+    <section class="hp-intro ply-prose">
+      <h2>Research</h2>
+      <p>Most machine learning on graphs treats relations as pairs. Many systems are not built from pairs: a chemical reaction joins several molecules, a coauthored paper joins several people, a mesh face joins several vertices. My work asks how neural networks can use that higher-order structure directly, on simplicial complexes, cell complexes, and sheaves.</p>
+      <p class="ply-small ply-muted">Example statement. Replace with your own.</p>
+    </section>
+
+    <section id="publications" class="hp-section">
+      <h2 class="hp-h">Selected publications</h2>
+      <PubList pubs={pubs} me="John Doe" />
+    </section>
+
+    <section class="hp-section">
+      <h2 class="hp-h">Notes</h2>
+      <ul class="hp-notes" role="list">
+        {notes.map(([t, d]) => <li><a href="#">{t}</a><span class="ply-small ply-muted ply-num">{d}</span></li>)}
+      </ul>
+    </section>
+  </main>
+</Pattern>
+<style>
+  .hp-intro { padding-block: var(--ply-space-6) 0; }
+  .hp-section { margin-top: var(--ply-space-8); }
+  .hp-h { margin-bottom: var(--ply-space-5); }
+  .hp-notes { list-style: none; padding: 0; max-width: 48rem; border-top: var(--ply-border-rule) solid var(--ply-color-rule-strong); }
+  .hp-notes li { display: flex; justify-content: space-between; gap: var(--ply-space-4); align-items: baseline; padding-block: var(--ply-space-3); border-bottom: var(--ply-border-hair) solid var(--ply-color-rule); }
+  .hp-notes a { font-size: var(--ply-size-lg); color: var(--ply-color-text); text-decoration-color: var(--ply-color-rule); }
+  .hp-notes a:hover { text-decoration-color: var(--ply-color-accent); }
+</style>

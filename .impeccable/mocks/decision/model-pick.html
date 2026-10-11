@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>The Explainer Article - sketch</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&family=Literata:opsz,wght@7..72,400;7..72,600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+  :root { --ink: #1C1C1C; --muted: #5F6672; --rule: #E3E5E8; --accent: #C2410C; --wash: #F6F7F8; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1440px; height: 900px; overflow: hidden; background: #fff; color: var(--ink); }
+  body { font-family: "Literata", serif; }
+  .bar { height: 52px; border-bottom: 1px solid var(--rule); display: flex; align-items: center; justify-content: space-between; padding: 0 56px; font-family: "Hanken Grotesk"; font-size: 14px; }
+  .bar b { font-weight: 800; font-size: 16px; }
+  .bar nav { display: flex; gap: 26px; color: var(--muted); font-weight: 500; }
+  .bar nav .on { color: var(--ink); font-weight: 700; }
+  .wrap { display: grid; grid-template-columns: 1fr 680px 300px 1fr; column-gap: 40px; }
+  .head { grid-column: 2 / 4; padding-top: 52px; }
+  h1 { font-family: "Hanken Grotesk"; font-weight: 800; font-size: 64px; letter-spacing: -0.035em; line-height: 1; }
+  .dek { font-size: 22px; line-height: 1.4; color: #3A3F47; margin-top: 16px; max-width: 760px; }
+  .byline { grid-column: 2 / 4; display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); margin-top: 30px; padding: 14px 0; font-family: "Hanken Grotesk"; font-size: 14px; }
+  .byline span { display: block; color: var(--muted); font-size: 12.5px; font-weight: 600; margin-bottom: 3px; }
+  figure { grid-column: 1 / 5; background: var(--wash); margin-top: 28px; height: 250px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  figcaption { font-family: "Hanken Grotesk"; font-size: 13.5px; color: var(--muted); margin-top: 8px; width: 1020px; }
+  figcaption b { color: var(--ink); }
+  .col { grid-column: 2; padding-top: 28px; }
+  p { font-size: 18px; line-height: 1.62; margin-bottom: 14px; }
+  p sup { color: var(--accent); font-family: "Hanken Grotesk"; font-weight: 700; font-size: 12px; }
+  .side { grid-column: 3; padding-top: 32px; font-family: "Hanken Grotesk"; font-size: 13.5px; line-height: 1.5; color: var(--muted); }
+  .side b { color: var(--accent); }
+</style>
+</head>
+<body>
+  <div class="bar"><b>Dario Loi Design System</b>
+    <nav><span class="on">Getting started</span><span>Principles</span><span>Foundations</span><span>Tokens</span><span>Components</span><span>Patterns</span><span>Accessibility</span><span>Writing</span><span>Changelog</span></nav>
+  </div>
+  <div class="wrap">
+    <div class="head">
+      <h1>Getting started</h1>
+      <p class="dek">One construction kit and one design language for every site, paper page, and demo Dario Loi ships.</p>
+    </div>
+    <div class="byline">
+      <div><span>Author</span>Dario Loi</div>
+      <div><span>Affiliation</span>Northeastern University</div>
+      <div><span>Version</span>v0.1.0</div>
+      <div><span>Updated</span>11 October 2026</div>
+    </div>
+    <figure>
+      <svg width="1020" height="190" viewBox="0 0 1020 190" font-family="Hanken Grotesk" font-size="15">
+        <g stroke="#9AA1AB" stroke-width="1.5" fill="none">
+          <path d="M300 95 C 420 95, 440 35, 580 35"/><path d="M300 95 L 580 95"/><path d="M300 95 C 420 95, 440 155, 580 155"/>
+          <path d="M760 35 L 860 35"/><path d="M760 95 L 860 95"/><path d="M760 155 L 860 155"/>
+        </g>
+        <rect x="120" y="65" width="180" height="60" fill="#fff" stroke="#1C1C1C" stroke-width="1.5"/>
+        <text x="210" y="100" text-anchor="middle" font-weight="700">tokens.json</text>
+        <g fill="#fff" stroke="#C2410C" stroke-width="1.5">
+          <rect x="580" y="12" width="180" height="46"/><rect x="580" y="72" width="180" height="46"/><rect x="580" y="132" width="180" height="46"/>
+        </g>
+        <g text-anchor="middle" font-weight="600" fill="#1C1C1C">
+          <text x="670" y="40">CSS core</text><text x="670" y="100">Astro components</text><text x="670" y="160">Python themes</text>
+        </g>
+        <g fill="#5F6672" font-size="14"><text x="870" y="40">any HTML page</text><text x="870" y="100">sites, paper pages</text><text x="870" y="160">matplotlib, Gradio</text></g>
+      </svg>
+      <figcaption><b>Figure 1.</b> One token source compiles to three targets. Change a value once and every surface follows.</figcaption>
+    </figure>
+    <div class="col">
+      <p>A design system is two things at once: a construction kit you take components from, and a design language that keeps a homepage, a paper page, and a demo reading as one person's work.<sup>1</sup></p>
+    </div>
+    <div class="side"><b>1.</b> The definition follows the SBB Digital design system's introduction.</div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,14 @@
+---
+// Demo and tool chrome. Slots: head (right side of the header), controls, default (the stage), status.
+interface Props { title: string; class?: string }
+const { title, class: className } = Astro.props;
+---
+<section class:list={["ply-app", className]} aria-label={title}>
+  <header class="ply-app__head">
+    <h2 class="ply-app__title">{title}</h2>
+    <div class="ply-cluster"><slot name="head" /></div>
+  </header>
+  <div class="ply-app__controls"><slot name="controls" /></div>
+  <div class="ply-app__stage ply-panel--flush" data-surface="panel"><slot /></div>
+  <footer class="ply-app__status" aria-live="polite"><slot name="status" /></footer>
+</section>

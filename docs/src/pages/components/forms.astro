@@ -1,0 +1,68 @@
+---
+import Docs from "../../layouts/Docs.astro";
+import Example from "../../components/Example.astro";
+import Code from "@dario-loi/polytope/astro/Code.astro";
+import Stability from "@dario-loi/polytope/astro/Stability.astro";
+
+const fields = `<div class="ply-stack" style="--ply-stack-gap: 1.5rem">
+  <div class="ply-field">
+    <label class="ply-field__label" for="f-name">Dataset name</label>
+    <input class="ply-input" id="f-name" placeholder="cora" aria-describedby="f-name-hint">
+    <p class="ply-field__hint" id="f-name-hint">Lowercase, as it appears in the loader.</p>
+  </div>
+  <div class="ply-field">
+    <label class="ply-field__label" for="f-lr">Learning rate</label>
+    <input class="ply-input" id="f-lr" value="-0.01" aria-invalid="true" aria-describedby="f-lr-err">
+    <p class="ply-field__error" id="f-lr-err">Learning rate must be above 0. Try 0.01.</p>
+  </div>
+  <div class="ply-field">
+    <label class="ply-field__label" for="f-model">Model</label>
+    <select class="ply-select" id="f-model"><option>GCN</option><option>GAT</option><option>SCN</option></select>
+  </div>
+  <div class="ply-field">
+    <label class="ply-field__label" for="f-notes">Notes</label>
+    <textarea class="ply-textarea" id="f-notes" placeholder="What changed in this run?"></textarea>
+  </div>
+</div>`;
+const choices = `<div class="ply-stack">
+  <label class="ply-check"><input type="checkbox" checked> Normalize features</label>
+  <label class="ply-check"><input type="checkbox"> Add self-loops</label>
+  <label class="ply-check"><input type="checkbox" disabled> Use edge weights (not in this dataset)</label>
+  <fieldset style="border:0;padding:0;margin:0" class="ply-stack">
+    <legend class="ply-field__label" style="margin-bottom:.5rem">Complex</legend>
+    <label class="ply-check"><input type="radio" name="cx" checked> Graph</label>
+    <label class="ply-check"><input type="radio" name="cx"> Simplicial complex</label>
+    <label class="ply-check"><input type="radio" name="cx"> Cell complex</label>
+  </fieldset>
+  <label class="ply-switch"><input type="checkbox" role="switch" checked> Show edge labels</label>
+</div>`;
+const sliders = `<div class="ply-stack" style="--ply-stack-gap: 1.5rem; max-width: 24rem">
+  <div class="ply-control" data-ply-slider data-format="int">
+    <label class="ply-control__label" for="s-rows">Rows of pegs</label>
+    <div class="ply-range"><input class="ply-slider" type="range" id="s-rows" min="2" max="16" value="8"><output for="s-rows">8</output></div>
+  </div>
+  <div class="ply-segmented" role="group" aria-label="Theme">
+    <button type="button" aria-pressed="true">Light</button>
+    <button type="button" aria-pressed="false">Dark</button>
+    <button type="button" aria-pressed="false">System</button>
+  </div>
+</div>`;
+---
+<Docs title="Forms" status="stable" lede="Inputs are square wells with a 2px black edge. Picked things get the tomato ball.">
+  <h2>Text fields</h2>
+  <Example html={fields} />
+  <ul>
+    <li>Every input has a visible label. Placeholders show an example, never the label.</li>
+    <li>Errors say what is wrong and how to fix it, next to the field. Set <code>aria-invalid="true"</code> and point <code>aria-describedby</code> at the message.</li>
+  </ul>
+
+  <h2>Choices</h2>
+  <Example html={choices} />
+  <p>Checkboxes are square, radios are round, and a picked radio is a tomato ball. Switches are for settings that apply at once; use a checkbox when the choice waits for a submit.</p>
+
+  <h2>Sliders and segmented controls</h2>
+  <Example html={sliders} />
+  <p>A slider prints its value beside the rail so the reader never has to guess. In Astro the component updates the number for you:</p>
+  <Code lang="astro" code={`<Slider label="Rows of pegs" name="rows" min={2} max={16} value={8} />
+<Slider label="Probability of going right" name="p" min={0} max={1} step={0.05} value={0.5} format="fixed2" />`} />
+</Docs>

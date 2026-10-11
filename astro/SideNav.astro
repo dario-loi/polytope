@@ -1,0 +1,15 @@
+---
+export interface NavGroup { heading?: string; items: { label: string; href: string; current?: boolean }[] }
+interface Props { groups: NavGroup[]; label?: string }
+const { groups, label = "Sections" } = Astro.props;
+---
+<nav class="ply-sidenav" aria-label={label}>
+  {groups.map((g) => (
+    <div class="ply-sidenav__group">
+      {g.heading && <p class="ply-sidenav__heading">{g.heading}</p>}
+      <ul>
+        {g.items.map((i) => <li><a href={i.href} aria-current={i.current ? "page" : undefined}>{i.label}</a></li>)}
+      </ul>
+    </div>
+  ))}
+</nav>

@@ -1,0 +1,17 @@
+---
+import Base from "../layouts/Base.astro";
+import Machine from "@dario-loi/polytope/astro/Machine.astro";
+import { u } from "../data/nav";
+---
+<Base title="Page not found">
+  <main id="main" class="ply-container ply-mast">
+    <div>
+      <h1 class="ply-mast__title">Not found<span class="ply-mast__stop" aria-hidden="true">.</span></h1>
+      <p class="ply-mast__lede">This page fell through the pegs. Start again from <a href={u("/")}>Getting started</a> or look up a value in <a href={u("/tokens/")}>Tokens</a>.</p>
+    </div>
+    <figure class="ply-exhibit">
+      <Machine rows={6} balls={1} interactive label="A probability machine with a single ball." />
+      <figcaption><b>One ball.</b> Wherever it lands is as likely as anywhere it could have landed. Click to drop it again.</figcaption>
+    </figure>
+  </main>
+</Base>

@@ -1,0 +1,13 @@
+Polytope
+Copyright 2026 Dario Loi
+
+This product is licensed under the Apache License, Version 2.0 (see LICENSE).
+
+This product bundles fonts that remain under their own licenses. Their license
+texts are shipped next to the font files in dist/fonts/:
+
+- Ultra, by Astigmatic (Brian J. Bonislawsky). Apache License, Version 2.0.
+- Libre Franklin, Copyright 2020 The Libre Franklin Project Authors
+  (https://github.com/googlefonts/Libre-Franklin). SIL Open Font License, Version 1.1.
+- JetBrains Mono, Copyright 2020 The JetBrains Mono Project Authors
+  (https://github.com/JetBrains/JetBrainsMono). SIL Open Font License, Version 1.1.

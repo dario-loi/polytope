@@ -1,0 +1,29 @@
+---
+import Docs from "../../layouts/Docs.astro";
+import ReleaseModel from "../../components/exhibits/ReleaseModel.astro";
+---
+<Docs title="Changelog" lede="Every release, newest first, on the history wall.">
+  <ReleaseModel slot="exhibit" />
+  <section class="ply-wall ply-wide" aria-label="Releases">
+    <div class="ply-wall__year">
+      <p class="ply-wall__label">0.1</p>
+      <ul class="ply-wall__entries">
+        <li class="ply-pub">
+          <p class="ply-pub__title">0.1.0, first release</p>
+          <p class="ply-pub__venue">11 October 2026</p>
+          <div class="ply-prose ply-small" style="margin-top: var(--ply-space-2)">
+            <ul>
+              <li>Tokens in the W3C format, compiled to CSS, JavaScript and TypeScript, JSON, Sass, Tailwind v4, LaTeX, a code theme, and Python.</li>
+              <li>CSS core in cascade layers, with light and dark themes and self-hosted fonts.</li>
+              <li>Components for buttons, navigation, notes, forms, tables, code, research pages, long-form writing, demos, and charts.</li>
+              <li>Two working models: the probability machine and the complex.</li>
+              <li>32 Astro components.</li>
+              <li>Python theme for matplotlib, plotly, Gradio, and Streamlit.</li>
+              <li>This site, with three pattern pages.</li>
+            </ul>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </section>
+</Docs>

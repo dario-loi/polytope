@@ -1,0 +1,11 @@
+---
+// A black exhibit panel with its caption underneath.
+interface Props { title?: string; flush?: boolean; class?: string }
+const { title, flush = false, class: className } = Astro.props;
+---
+<figure class:list={["ply-exhibit", className]}>
+  <div class:list={["ply-panel", flush && "ply-panel--flush"]} data-surface="panel"><slot /></div>
+  {(title || Astro.slots.has("caption")) && (
+    <figcaption>{title && <b>{title}.</b>} <slot name="caption" /></figcaption>
+  )}
+</figure>

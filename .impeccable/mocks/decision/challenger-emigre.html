@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Bitmap Specimen - sketch</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+  :root { --ink: #0A0A0A; --ink-2: #4A4A4A; --hair: #D4D4D4; --uv: #3A2BFF; --uv-ink: #2A1BE0; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1440px; height: 900px; overflow: hidden; background: #fff; color: var(--ink); font-family: "Hanken Grotesk", sans-serif; }
+  .top { height: 56px; display: flex; align-items: center; padding: 0 72px; gap: 40px; border-bottom: 1px solid var(--ink); }
+  .top b { font-family: Silkscreen; font-weight: 400; font-size: 15px; }
+  .top nav { display: flex; gap: 22px; font-size: 14.5px; color: var(--ink-2); }
+  .top nav .on { color: #fff; background: var(--ink); padding: 3px 8px; margin: -3px -8px; font-weight: 600; }
+  .seg { margin-left: auto; display: flex; border: 1px solid var(--ink); font-size: 13px; font-weight: 600; }
+  .seg span { padding: 6px 12px; }
+  .seg .on { background: var(--ink); color: #fff; font-family: Silkscreen; font-weight: 400; }
+  .mast { height: 344px; position: relative; border-bottom: 1px solid var(--ink); }
+  .px { position: absolute; left: 72px; top: 64px; }
+  .dots { position: absolute; left: 72px; top: 214px; width: 810px; height: 88px;
+    background-image: radial-gradient(var(--uv) 42%, transparent 44%); background-size: 12px 12px;
+    -webkit-mask-image: linear-gradient(90deg, #000 0, #000 30%, transparent 100%); mask-image: linear-gradient(90deg, #000 0, #000 30%, transparent 100%); }
+  .casc { position: absolute; left: 948px; top: 50px; width: 420px; }
+  .casc div { line-height: 1.05; margin-bottom: 10px; white-space: nowrap; }
+  .s1 { font-family: Silkscreen; font-size: 52px; }
+  .s2 { font-family: Silkscreen; font-size: 36px; }
+  .s3 { font-family: Silkscreen; font-size: 24px; }
+  .s4 { font-size: 18px; font-weight: 600; }
+  .s5 { font-size: 13px; color: var(--ink-2); }
+  .casc .ruler { font-family: "JetBrains Mono"; font-size: 12px; color: var(--ink-2); margin-top: 14px; }
+  .main { display: grid; grid-template-columns: 260px 700px 1fr; padding: 0 72px; }
+  .side { padding-top: 24px; border-right: 1px solid var(--hair); }
+  .side li { list-style: none; font-size: 15px; padding: 6px 0; color: var(--ink-2); }
+  .side li.on { color: var(--ink); font-weight: 700; }
+  .side li.on::before { content: ""; display: inline-block; width: 8px; height: 8px; background: var(--uv); margin-right: 10px; vertical-align: 1px; }
+  article { padding: 24px 48px 0; }
+  h2 { font-family: Silkscreen; font-weight: 400; font-size: 26px; margin-bottom: 14px; }
+  p { font-size: 17px; line-height: 1.6; margin-bottom: 14px; max-width: 620px; }
+  p a { color: var(--uv-ink); text-decoration: underline; text-underline-offset: 3px; }
+  pre { max-width: 620px; border: 1px solid var(--ink); font-family: "JetBrains Mono"; font-size: 14px; line-height: 1.7; padding: 12px 16px; }
+  pre .c { color: #666; }
+  .toc { padding: 24px 0 0 32px; font-size: 13.5px; color: var(--ink-2); }
+  .toc .h { font-family: Silkscreen; font-size: 13px; color: var(--ink); margin-bottom: 10px; }
+  .toc li { list-style: none; padding: 5px 0; }
+</style>
+</head>
+<body>
+  <div class="top"><b>Dario Loi</b>
+    <nav><span class="on">Getting started</span><span>Principles</span><span>Foundations</span><span>Tokens</span><span>Components</span><span>Patterns</span><span>Accessibility</span><span>Writing</span><span>Changelog</span></nav>
+    <div class="seg"><span class="on">Bitmap</span><span>Smooth</span></div>
+  </div>
+  <header class="mast">
+    <svg class="px" width="810" height="126" viewBox="0 0 810 126" fill="#0A0A0A" shape-rendering="crispEdges" role="img" aria-label="Dario Loi"><rect x="0" y="0" width="18" height="18"/><rect x="18" y="0" width="18" height="18"/><rect x="36" y="0" width="18" height="18"/><rect x="54" y="0" width="18" height="18"/><rect x="0" y="18" width="18" height="18"/><rect x="72" y="18" width="18" height="18"/><rect x="0" y="36" width="18" height="18"/><rect x="72" y="36" width="18" height="18"/><rect x="0" y="54" width="18" height="18"/><rect x="72" y="54" width="18" height="18"/><rect x="0" y="72" width="18" height="18"/><rect x="72" y="72" width="18" height="18"/><rect x="0" y="90" width="18" height="18"/><rect x="72" y="90" width="18" height="18"/><rect x="0" y="108" width="18" height="18"/><rect x="18" y="108" width="18" height="18"/><rect x="36" y="108" width="18" height="18"/><rect x="54" y="108" width="18" height="18"/><rect x="126" y="0" width="18" height="18"/><rect x="144" y="0" width="18" height="18"/><rect x="162" y="0" width="18" height="18"/><rect x="108" y="18" width="18" height="18"/><rect x="180" y="18" width="18" height="18"/><rect x="108" y="36" width="18" height="18"/><rect x="180" y="36" width="18" height="18"/><rect x="108" y="54" width="18" height="18"/><rect x="126" y="54" width="18" height="18"/><rect x="144" y="54" width="18" height="18"/><rect x="162" y="54" width="18" height="18"/><rect x="180" y="54" width="18" height="18"/><rect x="108" y="72" width="18" height="18"/><rect x="180" y="72" width="18" height="18"/><rect x="108" y="90" width="18" height="18"/><rect x="180" y="90" width="18" height="18"/><rect x="108" y="108" width="18" height="18"/><rect x="180" y="108" width="18" height="18"/><rect x="216" y="0" width="18" height="18"/><rect x="234" y="0" width="18" height="18"/><rect x="252" y="0" width="18" height="18"/><rect x="270" y="0" width="18" height="18"/><rect x="216" y="18" width="18" height="18"/><rect x="288" y="18" width="18" height="18"/><rect x="216" y="36" width="18" height="18"/><rect x="288" y="36" width="18" height="18"/><rect x="216" y="54" width="18" height="18"/><rect x="234" y="54" width="18" height="18"/><rect x="252" y="54" width="18" height="18"/><rect x="270" y="54" width="18" height="18"/><rect x="216" y="72" width="18" height="18"/><rect x="252" y="72" width="18" height="18"/><rect x="216" y="90" width="18" height="18"/><rect x="270" y="90" width="18" height="18"/><rect x="216" y="108" width="18" height="18"/><rect x="288" y="108" width="18" height="18"/><rect x="324" y="0" width="18" height="18"/><rect x="342" y="0" width="18" height="18"/><rect x="360" y="0" width="18" height="18"/><rect x="342" y="18" width="18" height="18"/><rect x="342" y="36" width="18" height="18"/><rect x="342" y="54" width="18" height="18"/><rect x="342" y="72" width="18" height="18"/><rect x="342" y="90" width="18" height="18"/><rect x="324" y="108" width="18" height="18"/><rect x="342" y="108" width="18" height="18"/><rect x="360" y="108" width="18" height="18"/><rect x="414" y="0" width="18" height="18"/><rect x="432" y="0" width="18" height="18"/><rect x="450" y="0" width="18" height="18"/><rect x="396" y="18" width="18" height="18"/><rect x="468" y="18" width="18" height="18"/><rect x="396" y="36" width="18" height="18"/><rect x="468" y="36" width="18" height="18"/><rect x="396" y="54" width="18" height="18"/><rect x="468" y="54" width="18" height="18"/><rect x="396" y="72" width="18" height="18"/><rect x="468" y="72" width="18" height="18"/><rect x="396" y="90" width="18" height="18"/><rect x="468" y="90" width="18" height="18"/><rect x="414" y="108" width="18" height="18"/><rect x="432" y="108" width="18" height="18"/><rect x="450" y="108" width="18" height="18"/><rect x="540" y="0" width="18" height="18"/><rect x="540" y="18" width="18" height="18"/><rect x="540" y="36" width="18" height="18"/><rect x="540" y="54" width="18" height="18"/><rect x="540" y="72" width="18" height="18"/><rect x="540" y="90" width="18" height="18"/><rect x="540" y="108" width="18" height="18"/><rect x="558" y="108" width="18" height="18"/><rect x="576" y="108" width="18" height="18"/><rect x="594" y="108" width="18" height="18"/><rect x="612" y="108" width="18" height="18"/><rect x="666" y="0" width="18" height="18"/><rect x="684" y="0" width="18" height="18"/><rect x="702" y="0" width="18" height="18"/><rect x="648" y="18" width="18" height="18"/><rect x="720" y="18" width="18" height="18"/><rect x="648" y="36" width="18" height="18"/><rect x="720" y="36" width="18" height="18"/><rect x="648" y="54" width="18" height="18"/><rect x="720" y="54" width="18" height="18"/><rect x="648" y="72" width="18" height="18"/><rect x="720" y="72" width="18" height="18"/><rect x="648" y="90" width="18" height="18"/><rect x="720" y="90" width="18" height="18"/><rect x="666" y="108" width="18" height="18"/><rect x="684" y="108" width="18" height="18"/><rect x="702" y="108" width="18" height="18"/><rect x="756" y="0" width="18" height="18"/><rect x="774" y="0" width="18" height="18"/><rect x="792" y="0" width="18" height="18"/><rect x="774" y="18" width="18" height="18"/><rect x="774" y="36" width="18" height="18"/><rect x="774" y="54" width="18" height="18"/><rect x="774" y="72" width="18" height="18"/><rect x="774" y="90" width="18" height="18"/><rect x="756" y="108" width="18" height="18"/><rect x="774" y="108" width="18" height="18"/><rect x="792" y="108" width="18" height="18"/></svg>
+    <div class="dots" aria-hidden="true"></div>
+    <div class="casc">
+      <h1 class="s1">Getting started</h1>
+      <div class="s2" aria-hidden="true">Getting started</div>
+      <div class="s3" aria-hidden="true">Getting started</div>
+      <div class="s4" aria-hidden="true">Getting started</div>
+      <div class="s5" aria-hidden="true">One construction kit and one design language for every site, paper page, and demo.</div>
+      <div class="ruler">52 / 36 / 24 / 18 / 13 px: the type scale, discrete to smooth</div>
+    </div>
+  </header>
+  <div class="main">
+    <ul class="side"><li class="on">Introduction</li><li>Installation</li><li>Using with Astro</li><li>Using in plain HTML</li><li>Python and figure themes</li><li>Versioning</li></ul>
+    <article>
+      <h2>Introduction</h2>
+      <p>A design system is two things at once. It is a construction kit: tokens, CSS components, and Astro wrappers you take pieces from. It is also a design language: the <a href="#">principles</a>, color, type, and writing rules that make a homepage, a paper page, and a demo read as one person's work.</p>
+      <pre><span class="c"># add the core to any project</span>
+npm install github:darioloi/design-system</pre>
+    </article>
+    <div class="toc"><p class="h">On this page</p><ul><li>What the kit contains</li><li>What it is not</li><li>Where to go next</li></ul></div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,34 @@
+@layer ply.components {
+  /* Chart frame for SVG or canvas charts drawn by D3, Observable Plot, or by hand.
+     Series colors come from --ply-viz-1 ... --ply-viz-8 in that order. */
+  .ply-chart { display: grid; gap: var(--ply-space-3); max-width: 100%; }
+  .ply-chart__title { font-weight: var(--ply-weight-bold); font-size: var(--ply-size-md); line-height: 1.3; margin: 0; }
+  .ply-chart__subtitle { font-size: var(--ply-size-sm); color: var(--ply-color-text-muted); margin-top: var(--ply-space-1); }
+  .ply-chart__plot { position: relative; overflow-x: auto; }
+  .ply-chart__hint { display: none; font-size: var(--ply-size-xs); color: var(--ply-color-text-muted); }
+  @media (max-width: 40rem) { .ply-chart__hint { display: block; } }
+  /* Charts keep a readable size on phones and scroll sideways; the data table holds the numbers. */
+  .ply-chart__plot > svg { min-width: 32rem; }
+  .ply-chart svg { overflow: visible; font-family: var(--ply-font-text); font-size: 12px; font-variant-numeric: tabular-nums; }
+  .ply-chart .grid line, .ply-chart .ply-grid-line { stroke: var(--ply-color-rule); stroke-width: 1; }
+  .ply-chart .axis path, .ply-chart .axis line, .ply-chart .ply-axis-line { stroke: var(--ply-color-text-muted); }
+  .ply-chart .axis text, .ply-chart .ply-axis-text { fill: var(--ply-color-text-muted); }
+  .ply-chart .ply-baseline { stroke: var(--ply-color-text); stroke-width: 1.5; }
+  .ply-chart .ply-direct-label { fill: var(--ply-color-text); font-weight: 600; }
+  .ply-chart__source { font-size: var(--ply-size-xs); color: var(--ply-color-text-muted); }
+
+  .ply-legend { display: flex; flex-wrap: wrap; gap: var(--ply-space-1) var(--ply-space-4); list-style: none; padding: 0; font-size: var(--ply-size-sm); }
+  .ply-legend li { display: inline-flex; align-items: center; gap: var(--ply-space-2); }
+  .ply-legend__key { width: 0.75rem; height: 0.75rem; border-radius: var(--ply-radius-ball); background: var(--c, var(--ply-viz-1)); flex: none; }
+  .ply-legend__key--line { width: 1.25rem; height: 2px; border-radius: 0; }
+  .ply-legend__key--bar { border-radius: 0; }
+
+  .ply-tooltip { position: absolute; pointer-events: none; z-index: 60; background: var(--ply-color-panel); color: var(--ply-color-panel-text); padding: var(--ply-space-2) var(--ply-space-3); font-size: var(--ply-size-xs); line-height: var(--ply-leading-normal); font-variant-numeric: tabular-nums; white-space: nowrap; box-shadow: 0 0.5rem 1.25rem rgb(0 0 0 / 0.2); }
+  .ply-tooltip b { font-weight: var(--ply-weight-bold); }
+
+  /* Texture fill for print, forced colors, and color vision deficiency. */
+  /* impeccable-disable-next-line repeating-stripes-gradient: chart texture fill for print, forced colors, and color vision deficiency */
+  .ply-texture { background-image: repeating-linear-gradient(45deg, currentColor 0 1.5px, transparent 1.5px 6px); }
+
+  @media (forced-colors: active) { .ply-legend__key { forced-color-adjust: none; } }
+}

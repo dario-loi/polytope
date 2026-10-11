@@ -1,0 +1,40 @@
+---
+import Docs from "../../layouts/Docs.astro";
+import RewriteModel from "../../components/exhibits/RewriteModel.astro";
+---
+<Docs title="Writing" lede="How the words on pages built with Polytope should read: plain, specific, and in the reader's order.">
+  <RewriteModel slot="exhibit" />
+  <h2>Voice</h2>
+  <p>Write the way you would explain the work to a colleague at the whiteboard. Plain words, concrete examples, short sentences mixed with longer ones. Confident about what the results show and exact about what they do not.</p>
+
+  <h2>Rules</h2>
+  <ul>
+    <li>Lead with the point. The first sentence of a page or section says what it is about.</li>
+    <li>State claims directly. Skip the "not just X, but Y" setup and say Y.</li>
+    <li>Use numbers with units and conditions: "0.84 test accuracy on Cora, mean of five seeds", not "strong results".</li>
+    <li>Leave out sales words: groundbreaking, cutting-edge, seamless, robust (outside statistics), novel (let the reader decide).</li>
+    <li>Do not end a section with a one-line summary of what it just said.</li>
+    <li>Use commas, colons, and parentheses. Avoid em and en dashes in prose.</li>
+    <li>Keep bold for words a reader must not miss. A list does not need a bold label on every line.</li>
+  </ul>
+
+  <h2>Interface text</h2>
+  <ul>
+    <li>Buttons say what happens: "Copy BibTeX", "Run again", "Download CV".</li>
+    <li>Links say where they go: "the paper on arXiv", not "here".</li>
+    <li>Errors name the problem and the fix: "Learning rate must be above 0. Try 0.01."</li>
+    <li>Empty states say what is missing and what to do next.</li>
+  </ul>
+
+  <h2>Research content</h2>
+  <ul>
+    <li>Paper titles in sentence case on the web, even when the venue uses title case.</li>
+    <li>Author lists in the order of the paper. The site owner's name in bold in publication lists, nowhere else.</li>
+    <li>Dates as "11 October 2026" in prose and "Oct 2026" in lists.</li>
+    <li>Figures get a caption that starts with what the figure shows.</li>
+    <li>Never present example or placeholder content as real. Mark it, or leave the section out until the real content exists.</li>
+  </ul>
+
+  <h2>Spelling and terms</h2>
+  <p>American spelling. Terms as in the field: simplicial complex, cell complex, message passing, Hodge Laplacian, sheaf. Spell out an abbreviation the first time on each page: graph neural network (GNN).</p>
+</Docs>

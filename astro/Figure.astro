@@ -1,0 +1,10 @@
+---
+interface Props { num?: number | string; id?: string; wide?: boolean; class?: string }
+const { num, id, wide = false, class: className } = Astro.props;
+---
+<figure class:list={["ply-figure", wide && "ply-figure--wide", className]} id={id}>
+  <slot />
+  {Astro.slots.has("caption") && (
+    <figcaption>{num !== undefined && <span class="ply-figure__num">Figure {num}.</span>}<slot name="caption" /></figcaption>
+  )}
+</figure>

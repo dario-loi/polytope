@@ -1,0 +1,64 @@
+---
+import Docs from "../../layouts/Docs.astro";
+import data from "@dario-loi/polytope/tokens.json";
+const t = data.tokens as Record<string, any>;
+const sizes = Object.keys(t).filter((k) => k.startsWith("--ply-size-"));
+---
+<Docs title="Typography" lede="Three faces with separate jobs: a wood-type slab for titles, a workhorse grotesque for reading, a mono for code.">
+  <h2>The faces</h2>
+  <div class="ty">
+    <div class="ty__row">
+      <p class="ty__sample ty__sample--display">Point, line, plane</p>
+      <p class="ty__meta"><strong>Ultra</strong>. A fat Clarendon in the manner of 19th century wood type. Page titles, section titles, the wordmark, big numerals. Apache 2.0.</p>
+    </div>
+    <div class="ty__row">
+      <p class="ty__sample ty__sample--text">Message passing on simplicial complexes</p>
+      <p class="ty__meta"><strong>Libre Franklin</strong>. A revival of Franklin Gothic, the American grotesque of mid-century signage and print. Body, interface, captions, tables. Variable weight, SIL OFL.</p>
+    </div>
+    <div class="ty__row">
+      <p class="ty__sample ty__sample--mono">loss = F.cross_entropy(logits, y)</p>
+      <p class="ty__meta"><strong>JetBrains Mono</strong>. Code, keyboard keys, and numeric parameters in demos. Variable weight, SIL OFL.</p>
+    </div>
+  </div>
+
+  <h2>Rules for Ultra</h2>
+  <ul>
+    <li>Titles only, at 24px and up. It is too heavy to read in sentences.</li>
+    <li>Sentence case. No capitals throughout, no italics, no letter-spacing beyond the built-in -0.01em.</li>
+    <li>A page title may end in the tomato full stop. One per page.</li>
+  </ul>
+
+  <h2>Rules for reading text</h2>
+  <ul>
+    <li>Body is 17px with 1.6 line height, in a column of about 68 characters (<code>--ply-layout-measure</code>).</li>
+    <li>Headings from h3 down use Libre Franklin bold. Space above a heading is larger than space below it.</li>
+    <li>Numbers in tables use tabular figures so columns line up. The table component sets this.</li>
+    <li>Mono is for code and values, never for labels that only want to look technical.</li>
+  </ul>
+
+  <h2>Scale</h2>
+  <div class="ply-table-wrap">
+    <table class="ply-table">
+      <thead><tr><th>Token</th><th>Value</th><th>Sample</th></tr></thead>
+      <tbody>
+        {sizes.map((s) => (
+          <tr>
+            <td><code>{s}</code></td>
+            <td class="ply-mono ply-small">{t[s].value}</td>
+            <td><span style={`font-size: var(${s}); line-height: 1.1; ${/display|3xl|4xl|2xl/.test(s) ? "font-family: var(--ply-font-display)" : ""}`}>{/display|4xl/.test(s) ? "Graphs" : "Simplices and cells"}</span></td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+  <p>The display size is fluid: 48px on a phone, growing with the viewport to 92px.</p>
+</Docs>
+<style>
+  .ty { display: grid; gap: 0; max-width: none; }
+  .ty__row { display: grid; gap: var(--ply-space-2); padding-block: var(--ply-space-5); border-top: var(--ply-border-control) solid var(--ply-color-rule-strong); }
+  .ty__sample { line-height: 1.05; overflow-wrap: anywhere; }
+  .ty__sample--display { font-family: var(--ply-font-display); font-size: clamp(2.25rem, 1.5rem + 3vw, 4rem); }
+  .ty__sample--text { font-size: clamp(1.75rem, 1.3rem + 1.8vw, 2.75rem); font-weight: 600; letter-spacing: -0.015em; }
+  .ty__sample--mono { font-family: var(--ply-font-mono); font-size: clamp(1.1rem, 0.9rem + 1vw, 1.6rem); }
+  .ty__meta { font-size: var(--ply-size-sm); color: var(--ply-color-text-muted); max-width: 40rem; }
+</style>

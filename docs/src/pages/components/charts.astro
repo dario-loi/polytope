@@ -1,0 +1,33 @@
+---
+import Docs from "../../layouts/Docs.astro";
+import LineChartExample from "../../components/LineChartExample.astro";
+import Code from "@dario-loi/polytope/astro/Code.astro";
+import Stability from "@dario-loi/polytope/astro/Stability.astro";
+import ApiTable from "../../components/ApiTable.astro";
+import { u } from "../../data/nav";
+---
+<Docs title="Charts" status="experimental" lede="A frame for charts drawn by any library: title, legend, plot, data table, source.">
+  <LineChartExample />
+  <Code lang="astro" code={`<Chart title="Validation accuracy by epoch" subtitle="Five seeds, shaded band is one standard deviation"
+  legend={[{ label: "GCN", shape: "line" }, { label: "SCN", shape: "line" }]} source="Source: our runs, 2026">
+  <svg>...</svg>                                <!-- D3, Observable Plot, or hand-drawn -->
+  <table slot="table" class="ply-table">...</table>
+</Chart>`} />
+  <ApiTable rows={[["title", "What the chart shows, as a statement or a question"], ["subtitle", "Units, sample, or how to read it"], ["legend", "Series: { label, slot, shape }. Shown for two or more series."], ["source", "Where the data comes from"], ["table slot", "The same numbers as a table, behind a toggle"]]} head={["Prop", "Effect"]} />
+
+  <h2>With D3 or Observable Plot</h2>
+  <p>Read colors from the custom properties so charts follow the theme:</p>
+  <Code lang="js" code={`const css = getComputedStyle(document.documentElement);
+const series = Array.from({ length: 8 }, (_, i) => css.getPropertyValue(\`--ply-viz-\${i + 1}\`).trim());
+
+Plot.plot({
+  color: { range: series },
+  style: { fontFamily: "var(--ply-font-text)", background: "transparent" },
+  marks: [Plot.lineY(data, { x: "epoch", y: "acc", stroke: "model", strokeWidth: 2 })],
+});`} />
+  <p>Static exports (paper figures) should use the token module instead, so the colors are fixed: <code>import {"{ viz }"} from "@dario-loi/polytope/tokens"</code>.</p>
+
+  <h2>Tooltip and legend</h2>
+  <p><code>.ply-tooltip</code> is the black hover card used above; <code>.ply-legend</code> lists series with a dot, line, or bar key. <code>.ply-texture</code> adds a diagonal hatch for print and forced-colors mode.</p>
+  <p>The color rules live in <a href={u("/foundations/charts/")}>Foundations: Charts</a>.</p>
+</Docs>

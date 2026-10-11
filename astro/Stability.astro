@@ -1,0 +1,6 @@
+---
+interface Props { level: "stable" | "experimental" | "deprecated" }
+const { level } = Astro.props;
+const words = { stable: "Stable", experimental: "Experimental", deprecated: "Deprecated" };
+---
+<span class={`ply-stability ply-stability--${level}`}>{words[level]}</span>

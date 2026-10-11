@@ -1,0 +1,11 @@
+---
+// Empty state: say what is missing and what to do next. Put the action in the default slot.
+interface Props { title: string; body?: string }
+const { title, body } = Astro.props;
+---
+<div class="ply-empty">
+  <span class="ply-empty__mark" aria-hidden="true"></span>
+  <p class="ply-empty__title">{title}</p>
+  {body && <p>{body}</p>}
+  <slot />
+</div>

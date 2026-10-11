@@ -1,0 +1,25 @@
+---
+import Docs from "../../layouts/Docs.astro";
+import Icon from "@dario-loi/polytope/astro/Icon.astro";
+import Code from "@dario-loi/polytope/astro/Code.astro";
+const names = ["arrow-right", "arrow-left", "external", "copy", "check", "search", "sun", "moon", "menu", "close", "paper", "code", "download", "play", "refresh", "quote", "mail", "data"] as const;
+---
+<Docs title="Icons" lede="A small authored set drawn on a 24px grid with square caps and 2.25 strokes, to sit beside Franklin's straight terminals.">
+  <h2>The set</h2>
+  <ul class="ic" role="list">
+    {names.map((n) => <li><Icon name={n} size="1.75rem" /><code>{n}</code></li>)}
+  </ul>
+
+  <h2>Use</h2>
+  <Code lang="astro" code={`<Icon name="paper" />                    <!-- decorative: hidden from screen readers -->
+<Icon name="external" label="Opens in a new tab" />   <!-- meaningful: announced -->`} />
+  <p>Icons inherit the text color and default to 1.125em, so they scale with the text beside them. An icon button always has an accessible name, from <code>aria-label</code> or visible text.</p>
+
+  <h2>Adding an icon</h2>
+  <p>Draw it on the 24px grid with a single path, square caps, mitred joins, no fills. Add the path to <code>astro/Icon.astro</code>. Brand logos are out of scope: use a word instead ("Code", "arXiv").</p>
+</Docs>
+<style>
+  .ic { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(8rem, 1fr)); gap: 0; max-width: none; border-top: var(--ply-border-control) solid var(--ply-color-rule-strong); }
+  .ic li { display: grid; justify-items: center; gap: var(--ply-space-2); padding: var(--ply-space-5) var(--ply-space-2); border-bottom: var(--ply-border-hair) solid var(--ply-color-rule); }
+  .ic code { background: none; font-size: var(--ply-size-xs); color: var(--ply-color-text-muted); }
+</style>

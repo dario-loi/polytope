@@ -1,0 +1,32 @@
+---
+// Publications as a history wall: one row per year, the year as a big numeral.
+export interface Pub {
+  year: number;
+  title: string;
+  href?: string;
+  authors: string[];
+  venue?: string;
+  links?: { label: string; href: string }[];
+}
+// `me` is the author name to set in bold in every author list.
+interface Props { pubs: Pub[]; me?: string; label?: string }
+const { pubs, me, label = "Publications" } = Astro.props;
+const years = [...new Set(pubs.map((p) => p.year))].sort((a, b) => b - a);
+---
+<section class="ply-wall" aria-label={label}>
+  {years.map((y) => (
+    <div class="ply-wall__year">
+      <p class="ply-wall__label">{y}</p>
+      <ul class="ply-wall__entries">
+        {pubs.filter((p) => p.year === y).map((p) => (
+          <li class="ply-pub">
+            <p class="ply-pub__title">{p.href ? <a href={p.href}>{p.title}</a> : p.title}</p>
+            <p class="ply-pub__authors">{p.authors.map((a, i) => <>{i > 0 && ", "}{a === me ? <span class="ply-me">{a}</span> : a}</>)}</p>
+            {p.venue && <p class="ply-pub__venue">{p.venue}</p>}
+            {p.links && p.links.length > 0 && <p class="ply-pub__links">{p.links.map((l) => <a href={l.href}>{l.label}</a>)}</p>}
+          </li>
+        ))}
+      </ul>
+    </div>
+  ))}
+</section>

@@ -1,0 +1,47 @@
+---
+import Docs from "../../layouts/Docs.astro";
+import Env from "@dario-loi/polytope/astro/Env.astro";
+import Sidenote from "@dario-loi/polytope/astro/Sidenote.astro";
+import M from "@dario-loi/polytope/astro/M.astro";
+import Code from "@dario-loi/polytope/astro/Code.astro";
+import Stability from "@dario-loi/polytope/astro/Stability.astro";
+---
+<Docs title="Long-form writing" status="experimental" lede="Notes, explainers, and blog posts: sidenotes, footnotes, theorem environments, and collapsible detail.">
+  <h2>Theorem environments</h2>
+  <Env kind="definition" num="2.1" name="Simplicial complex">
+    A simplicial complex <M tex={String.raw`K`} /> on a vertex set <M tex={String.raw`V`} /> is a set of nonempty finite subsets of <M tex={String.raw`V`} /> such that every nonempty subset of a member is also a member.
+  </Env>
+  <Env kind="theorem" num="2.2">
+    The kernel of the Hodge Laplacian <M tex={String.raw`L_k`} /> is isomorphic to the <M tex={String.raw`k`} />-th homology group of <M tex={String.raw`K`} /> over the reals.
+  </Env>
+  <Env kind="proof">
+    The kernel of <M tex={String.raw`L_k`} /> is the intersection of the kernels of <M tex={String.raw`B_k`} /> and <M tex={String.raw`B_{k+1}^{\top}`} />, which are the harmonic <M tex={String.raw`k`} />-chains, and these represent homology classes one to one.
+  </Env>
+  <Code lang="astro" code={`<Env kind="definition" num="2.1" name="Simplicial complex">...</Env>
+<Env kind="theorem" num="2.2">...</Env>
+<Env kind="proof">...</Env>`} />
+  <p>Kinds: definition, theorem, lemma, proposition, corollary, remark, example, proof. Theorems and lemmas set their body in italics, as print does; definitions sit on the wall gray; proofs end with a tomato box.</p>
+
+  <h2>Sidenotes</h2>
+  <p>A sidenote keeps a remark next to the sentence it belongs to.<Sidenote n={1}>On wide screens it sits in the right margin; on narrow screens it drops below the line.</Sidenote> Use them for asides a curious reader wants and a hurried one can skip.</p>
+  <Code lang="astro" code={`<p>A sentence.<Sidenote n={1}>The aside.</Sidenote> More text.</p>`} />
+
+  <h2>Collapsible detail</h2>
+  <details class="ply-details">
+    <summary>Derivation of the update rule</summary>
+    <p>Long derivations, extra tables, and setup details go here, closed by default, so the main argument reads straight through.</p>
+  </details>
+  <Code lang="html" code={`<details class="ply-details">
+  <summary>Derivation of the update rule</summary>
+  <p>...</p>
+</details>`} />
+
+  <h2>Quotes</h2>
+  <blockquote class="ply-quote">
+    Quotes keep a thin rule and a larger size, and the source goes underneath.
+    <cite>Source, year</cite>
+  </blockquote>
+
+  <h2>Footnotes</h2>
+  <p>For references that should not interrupt the line, use a numbered list in <code>.ply-footnotes</code> at the end of the article.</p>
+</Docs>

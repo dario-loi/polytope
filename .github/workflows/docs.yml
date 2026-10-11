@@ -1,0 +1,60 @@
+# Builds the kit, checks contrast, and publishes the docs site to GitHub Pages.
+# Enable Pages with "Source: GitHub Actions" in the repository settings.
+name: docs
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      # npm ci runs the build; the generated Python theme files must match tokens.json
+      - run: git diff --exit-code -- python/src/polytope_theme
+      - run: npm run check:contrast
+      - run: npm run check:prose
+      - run: npm run docs:build
+        env:
+          DOCS_SITE: https://dario-loi.github.io
+          DOCS_BASE: /polytope
+      - run: npm run check:prose   # again, over the built HTML
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs/dist
+
+  python:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -e "python[matplotlib,plotly,test]"
+      - run: pytest -q python/tests
+
+  deploy:
+    needs: [build, python]
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

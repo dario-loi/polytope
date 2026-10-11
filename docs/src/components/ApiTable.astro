@@ -1,0 +1,12 @@
+---
+// Props or classes for a component, as a compact table.
+interface Props { rows: [string, string, string?][]; head?: [string, string, string?] }
+const { rows, head = ["Name", "Description", "Default"] } = Astro.props;
+const three = rows.some((r) => r[2] !== undefined);
+---
+<div class="ply-table-wrap">
+  <table class="ply-table">
+    <thead><tr><th>{head[0]}</th><th>{head[1]}</th>{three && <th>{head[2]}</th>}</tr></thead>
+    <tbody>{rows.map((r) => <tr><td><code>{r[0]}</code></td><td>{r[1]}</td>{three && <td>{r[2] ? <code>{r[2]}</code> : ""}</td>}</tr>)}</tbody>
+  </table>
+</div>

@@ -1,0 +1,48 @@
+[build-system]
+requires = ["hatchling>=1.18"]
+build-backend = "hatchling.build"
+
+[project]
+name = "polytope-theme"
+version = "0.1.0"
+description = "Chart and app themes for the Polytope design system: matplotlib, plotly, gradio, streamlit."
+readme = "README.md"
+requires-python = ">=3.10"
+license = "Apache-2.0"
+authors = [{ name = "Dario Loi" }]
+keywords = ["matplotlib", "plotly", "gradio", "streamlit", "theme", "design-system"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Framework :: Matplotlib",
+    "Topic :: Scientific/Engineering :: Visualization",
+]
+dependencies = []
+
+[project.optional-dependencies]
+matplotlib = ["matplotlib>=3.7"]
+plotly = ["plotly>=5.24"]
+gradio = ["gradio>=4.0"]
+streamlit = ["streamlit>=1.50"]
+all = [
+    "matplotlib>=3.7",
+    "plotly>=5.24",
+    "gradio>=4.0",
+    "streamlit>=1.50",
+]
+test = ["pytest>=7"]
+
+[project.urls]
+Homepage = "https://github.com/dario-loi/polytope"
+Source = "https://github.com/dario-loi/polytope/tree/main/python"
+
+[tool.hatch.build.targets.wheel]
+# Hatchling ships every file under the package directory, so the generated
+# styles/*.mplstyle files are included as package data without extra config.
+packages = ["src/polytope_theme"]
+exclude = ["__pycache__", "*.pyc"]
+
+[tool.hatch.build.targets.sdist]
+include = ["src", "tests", "README.md", "pyproject.toml"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

@@ -1,0 +1,26 @@
+---
+import Docs from "../../layouts/Docs.astro";
+import Code from "@dario-loi/polytope/astro/Code.astro";
+import Stability from "@dario-loi/polytope/astro/Stability.astro";
+import ApiTable from "../../components/ApiTable.astro";
+---
+<Docs title="Code" status="stable" lede="Code sits in a black exhibit panel. Comments are mustard, so the explanation reads before the syntax.">
+  <h2>Code panels</h2>
+  <Code lang="python" title="train.py" code={`# one step of message passing on a simplicial complex
+def step(x, boundary, weight):
+    up = boundary.T @ (boundary @ x)     # neighbors through shared cofaces
+    down = boundary @ (boundary.T @ x)   # neighbors through shared faces
+    return torch.relu((x + up + down) @ weight)
+
+for epoch in range(200):
+    loss = F.cross_entropy(model(x), y)`} />
+  <Code lang="astro" code={`<Code lang="python" title="train.py" code={source} />`} />
+  <ApiTable rows={[["code", "The source text"], ["lang", "Language for highlighting", "txt"], ["title", "Shown in the bar; defaults to the language"], ["copy", "Show the copy button", "true"]]} head={["Prop", "Effect", "Default"]} />
+  <p>In plain HTML, wrap a <code>&lt;pre&gt;</code> in <code>.ply-code</code> and add a <code>.ply-code__bar</code> with a <code>[data-ply-copy]</code> button; <code>copy.js</code> handles the click. Spans with classes <code>c</code>, <code>k</code>, <code>s</code>, and <code>n</code> color comments, keywords, strings, and numbers if you highlight by hand.</p>
+
+  <h2>Inline code and keys</h2>
+  <p>Inline code like <code>torch.sparse.mm</code> sits on the wall gray. Keys look like this: <kbd>Ctrl</kbd> + <kbd>K</kbd>.</p>
+
+  <h2>The highlighting theme</h2>
+  <p>The panel colors are also a TextMate theme at <code>dist/code-theme.json</code>, for Shiki, Astro's Markdown, and VS Code. See <a href="../../getting-started/targets/">Other targets</a>.</p>
+</Docs>

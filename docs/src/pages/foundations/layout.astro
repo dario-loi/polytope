@@ -1,0 +1,46 @@
+---
+import Docs from "../../layouts/Docs.astro";
+import data from "@dario-loi/polytope/tokens.json";
+const t = data.tokens as Record<string, any>;
+const space = Object.keys(t).filter((k) => k.startsWith("--ply-space-"));
+---
+<Docs title="Space and layout" lede="A 4px base, one reading column, heavy rules between regions, and square corners everywhere except on balls.">
+  <h2>Spacing scale</h2>
+  <p>Use the scale for every margin, padding, and gap. Tight inside a group, generous between groups.</p>
+  <ul class="sp" role="list">
+    {space.map((s) => <li><code>{s}</code><span class="sp__bar" style={`width: var(${s})`}></span><span class="ply-mono ply-small ply-muted">{t[s].value}</span></li>)}
+  </ul>
+
+  <h2>Page frame</h2>
+  <ul>
+    <li>Side margin <code>--ply-layout-gutter</code>: 16px on phones, growing to 72px.</li>
+    <li>Reading column <code>--ply-layout-measure</code>: 36rem, about 68 characters of body text. Code, tables, and wide figures may run wider.</li>
+    <li>Docs pages add a chapter sidebar from 56rem and an on-this-page list from 80rem.</li>
+    <li>The page mast splits into title and exhibit from 64rem. Below that, the exhibit stacks under the title.</li>
+    <li>Sidenotes move into the margin from 90rem.</li>
+  </ul>
+
+  <h2>Rules and borders</h2>
+  <div class="ply-table-wrap">
+    <table class="ply-table">
+      <thead><tr><th>Token</th><th>Width</th><th>Use</th></tr></thead>
+      <tbody>
+        <tr><td><code>--ply-border-rule</code></td><td>3px</td><td>Between page regions: under the top bar, above a pager, at the top of a table.</td></tr>
+        <tr><td><code>--ply-border-control</code></td><td>2px</td><td>Buttons, inputs, table header rules.</td></tr>
+        <tr><td><code>--ply-border-hair</code></td><td>1px</td><td>Rows, list separators, swatch outlines.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>Corners</h2>
+  <p>Panels, buttons, inputs, tags, and code blocks are square, like exhibit labels cut from board. Only round things are round: balls, points, radio buttons, status dots.</p>
+
+  <h2>Layout helpers</h2>
+  <p><code>.ply-stack</code> stacks children with a gap, <code>.ply-cluster</code> wraps them in a row, <code>.ply-grid</code> makes responsive columns from a minimum width. Each reads a custom property for its gap (<code>--ply-stack-gap</code>, <code>--ply-cluster-gap</code>, <code>--ply-grid-gap</code>).</p>
+</Docs>
+<style>
+  .sp { list-style: none; padding: 0; display: grid; gap: var(--ply-space-2); }
+  .sp li { display: grid; grid-template-columns: 9rem 1fr 4rem; gap: var(--ply-space-3); align-items: center; }
+  .sp code { background: none; padding: 0; font-size: var(--ply-size-xs); }
+  .sp__bar { height: 0.875rem; background: var(--ply-color-text); min-width: 1px; }
+</style>

@@ -1,0 +1,5 @@
+---
+interface Props { variant?: "outline" | "solid" | "note"; class?: string }
+const { variant = "outline", class: className } = Astro.props;
+---
+<span class:list={["ply-tag", variant !== "outline" && `ply-tag--${variant}`, className]}><slot /></span>

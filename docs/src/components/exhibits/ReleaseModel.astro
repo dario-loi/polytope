@@ -1,0 +1,19 @@
+---
+import Frame from "./Frame.astro";
+---
+<Frame title="Release 0.1.0" class="xb-rel">
+  <div class="xb-rel__wall">
+    <p class="xb-rel__num">0.1</p>
+    <p class="xb-rel__meta"><span>11 October 2026</span><span>First release</span></p>
+    <div class="xb-rel__track" aria-hidden="true"><span class="is-current"></span><span></span><span></span></div>
+  </div>
+  <Fragment slot="caption">Every release gets its numeral on the wall below, newest first, with what changed and how to update.</Fragment>
+</Frame>
+<style is:global>
+  .xb-rel__wall { display: grid; gap: var(--ply-space-3); justify-items: start; width: min(100%, 26rem); }
+  .xb-rel__num { font-family: var(--ply-font-display); font-size: clamp(5rem, 3rem + 6vw, 9rem); line-height: 0.9; color: var(--ply-color-panel-text); }
+  .xb-rel__meta { display: flex; gap: var(--ply-space-4); font-size: var(--ply-size-sm); color: var(--ply-color-panel-muted); }
+  .xb-rel__track { display: flex; gap: var(--ply-space-5); align-items: center; border-top: 3px solid var(--ply-color-panel-text); padding-top: var(--ply-space-3); width: 100%; }
+  .xb-rel__track span { width: 0.875rem; height: 0.875rem; border-radius: 50%; border: 2px solid var(--ply-color-panel-muted); }
+  .xb-rel__track span.is-current { background: var(--ply-color-accent); border-color: var(--ply-color-accent); }
+</style>

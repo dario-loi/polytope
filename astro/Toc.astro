@@ -1,0 +1,15 @@
+---
+// On-this-page list. Pass Astro's headings (depth 2 and 3 are shown).
+interface Props { headings: { depth: number; slug: string; text: string }[]; title?: string }
+const { headings, title = "On this page" } = Astro.props;
+const shown = headings.filter((h) => h.depth === 2 || h.depth === 3);
+---
+{shown.length > 0 && (
+  <nav class="ply-toc" aria-label={title}>
+    <p class="ply-toc__heading">{title}</p>
+    <ul>
+      {shown.map((h) => <li class={h.depth === 3 ? "ply-toc__sub" : undefined}><a href={`#${h.slug}`}>{h.text}</a></li>)}
+    </ul>
+  </nav>
+)}
+<script>import "../css/js/toc.js";</script>

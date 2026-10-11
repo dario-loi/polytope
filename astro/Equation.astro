@@ -1,0 +1,16 @@
+---
+// Display math rendered by KaTeX at build time. Include katex/dist/katex.min.css once in your layout.
+import katex from "katex";
+interface Props { tex: string; num?: number | string; id?: string }
+const { tex, num, id } = Astro.props;
+// Astro 7 turns backslash sequences in quoted attributes into control characters
+// (\b in \binom becomes a backspace). Catch that here instead of rendering wrong math.
+if (/[\u0000-\u0008\u000b-\u001f]|\t/.test(tex)) {
+  throw new Error(`Math contains a control character: ${JSON.stringify(tex)}. Write tex={String.raw\`...\`} instead of tex="...".`);
+}
+const html = katex.renderToString(tex, { displayMode: true, throwOnError: false, output: "htmlAndMathml" });
+---
+<div class="ply-equation" id={id}>
+  <div class="ply-equation__body" set:html={html} />
+  {num !== undefined && <span class="ply-equation__num">({num})</span>}
+</div>

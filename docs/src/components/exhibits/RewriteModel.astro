@@ -1,0 +1,29 @@
+---
+import Frame from "./Frame.astro";
+---
+<Frame title="Plain over grand" class="xb-write">
+  <div class="xb-write__board">
+    <div class="ply-segmented" role="group" aria-label="Version">
+      <button type="button" aria-pressed="false" value="before">Before</button>
+      <button type="button" aria-pressed="true" value="after">After</button>
+    </div>
+    <p class="xb-write__text" aria-live="polite" data-before="Our groundbreaking framework doesn't just learn on graphs, it unlocks the full potential of higher-order structure." data-after="The model learns on simplicial complexes, so it can use relations among three or more nodes at once.">The model learns on simplicial complexes, so it can use relations among three or more nodes at once.</p>
+  </div>
+  <Fragment slot="caption">The same claim twice. The second version says what the model does, and every word carries information.</Fragment>
+</Frame>
+<style is:global>
+  .xb-write__board { display: grid; gap: var(--ply-space-5); justify-items: start; width: min(100%, 28rem); }
+  .xb-write__text { font-size: var(--ply-size-xl); line-height: var(--ply-leading-normal); color: var(--ply-color-panel-text); min-height: 6.5em; }
+  .xb-write__text.is-before { color: var(--ply-color-panel-muted); text-decoration: line-through; text-decoration-color: var(--ply-color-accent); text-decoration-thickness: 2px; }
+  @media (max-width: 40rem) { .xb-write__text { font-size: var(--ply-size-lg); } }
+</style>
+<script>
+  for (const fig of document.querySelectorAll<HTMLElement>(".xb-write")) {
+    const text = fig.querySelector<HTMLElement>(".xb-write__text")!;
+    fig.querySelector(".ply-segmented")!.addEventListener("ply-change", (e: Event) => {
+      const v = (e as CustomEvent).detail.value as "before" | "after";
+      text.textContent = text.dataset[v]!;
+      text.classList.toggle("is-before", v === "before");
+    });
+  }
+</script>

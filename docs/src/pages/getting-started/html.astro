@@ -1,0 +1,48 @@
+---
+import Docs from "../../layouts/Docs.astro";
+import Code from "@dario-loi/polytope/astro/Code.astro";
+---
+<Docs title="Using in plain HTML" lede="One stylesheet and one optional script. No build step, no framework.">
+  <h2>A complete page</h2>
+  <Code lang="html" title="index.html" code={`<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>My demo</title>
+  <link rel="stylesheet" href="https://dario-loi.github.io/polytope/kit/polytope.css">
+  <script type="module" src="https://dario-loi.github.io/polytope/kit/js/all.js"></script>
+</head>
+<body>
+  <header class="ply-topbar">
+    <div class="ply-container ply-topbar__inner">
+      <a class="ply-wordmark" href="/">John Doe</a>
+      <div class="ply-topbar__tools">
+        <button class="ply-button ply-button--ghost ply-button--sm" data-ply-theme-toggle>Theme</button>
+      </div>
+    </div>
+  </header>
+  <main class="ply-container ply-prose" style="padding-block: 3rem">
+    <h1>My demo<span class="ply-stop">.</span></h1>
+    <p>Body text sits in a column of about 68 characters.</p>
+    <aside class="ply-note"><span class="ply-note__mark ply-note__mark--ball"></span>
+      <div><span class="ply-note__title">Note.</span> Notes are mustard.</div></aside>
+  </main>
+</body>
+</html>`} />
+
+  <h2>Local copies</h2>
+  <p>For offline work or a page that must never change, copy <code>dist/</code> from a release next to your page and point the links at it. The stylesheet finds its fonts in <code>./fonts/</code> next to it.</p>
+  <Code lang="html" code={`<link rel="stylesheet" href="./kit/polytope.css">
+<script type="module" src="./kit/js/all.js"></script>`} />
+
+  <h2>Only what you need</h2>
+  <p>Each component also ships as its own file. Load the tokens first.</p>
+  <Code lang="html" code={`<link rel="stylesheet" href="./kit/fonts.css">
+<link rel="stylesheet" href="./kit/tokens.css">
+<link rel="stylesheet" href="./kit/css/base.css">
+<link rel="stylesheet" href="./kit/css/button.css">`} />
+
+  <h2>Generated pages</h2>
+  <p>Python scripts that write HTML (reports, experiment dashboards) can paste the same two lines into their template. The class names are stable within a major version.</p>
+</Docs>

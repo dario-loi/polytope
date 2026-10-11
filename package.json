@@ -1,0 +1,77 @@
+{
+  "name": "@dario-loi/polytope",
+  "version": "0.1.0",
+  "description": "Polytope: tokens, CSS components, and Astro components for academic sites, paper pages, and research demos.",
+  "type": "module",
+  "license": "Apache-2.0",
+  "author": "Dario Loi",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dario-loi/polytope"
+  },
+  "workspaces": [
+    "docs"
+  ],
+  "files": [
+    "dist",
+    "astro",
+    "tokens/tokens.json",
+    "README.md",
+    "NOTICE"
+  ],
+  "exports": {
+    ".": "./dist/polytope.css",
+    "./css": "./dist/polytope.css",
+    "./tokens.css": "./dist/tokens.css",
+    "./tokens.json": "./dist/tokens.json",
+    "./tokens": {
+      "types": "./dist/tokens.d.ts",
+      "default": "./dist/tokens.mjs"
+    },
+    "./js/*": "./dist/js/*",
+    "./fonts/*": "./dist/fonts/*",
+    "./astro": "./astro/index.ts",
+    "./astro/*": "./astro/*",
+    "./tokens.d.ts": "./dist/tokens.d.ts",
+    "./tokens.scss": "./dist/tokens.scss",
+    "./tailwind.css": "./dist/tailwind.css",
+    "./polytope-colors.sty": "./dist/polytope-colors.sty",
+    "./code-theme.json": "./dist/code-theme.json",
+    "./tokens.dtcg.json": "./dist/tokens.dtcg.json",
+    "./css/*": "./dist/css/*",
+    "./dist/*": "./dist/*"
+  },
+  "keywords": [
+    "design-system",
+    "astro-component",
+    "css",
+    "polytope"
+  ],
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "prepare": "node scripts/build.mjs",
+    "docs:dev": "npm run build && npm run dev -w docs",
+    "docs:build": "npm run build && npm run build -w docs",
+    "check:contrast": "node scripts/check-contrast.mjs",
+    "check:prose": "node scripts/check-prose.mjs"
+  },
+  "peerDependencies": {
+    "astro": ">=5"
+  },
+  "peerDependenciesMeta": {
+    "astro": {
+      "optional": true
+    }
+  },
+  "dependencies": {
+    "katex": "^0.19.0"
+  },
+  "devDependencies": {
+    "@fontsource/ultra": "^5.3.0",
+    "@fontsource-variable/libre-franklin": "^5.3.0",
+    "@fontsource-variable/jetbrains-mono": "^5.3.0"
+  },
+  "engines": {
+    "node": ">=22.12"
+  }
+}

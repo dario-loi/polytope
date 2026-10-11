@@ -1,0 +1,43 @@
+---
+import Frame from "./Frame.astro";
+import data from "@dario-loi/polytope/tokens.json";
+const t = data.tokens as Record<string, any>;
+const sizes = Object.keys(t).filter((k) => k.startsWith("--ply-size-"));
+const start = sizes.indexOf("--ply-size-2xl");
+---
+<Frame title="The type scale" class="xb-type">
+  <div class="xb-type__stage">
+    <p class="xb-type__sample" style={`font-size: var(${sizes[start]})`}>Polytope</p>
+    <p class="xb-type__readout ply-mono"><span class="xb-type__name">{sizes[start]}</span> <span class="xb-type__val">{t[sizes[start]].value}</span></p>
+  </div>
+  <div class="xb-type__control">
+    <label class="ply-visually-hidden" for="xb-type-range">Size token</label>
+    <input class="ply-slider" id="xb-type-range" type="range" min="0" max={sizes.length - 1} step="1" value={start} data-sizes={JSON.stringify(sizes.map((s) => [s, t[s].value]))} />
+  </div>
+  <Fragment slot="caption">Slide through the size tokens. The sample, its token name, and its value follow; titles from 2xl up switch to Ultra.</Fragment>
+</Frame>
+<style is:global>
+  .xb-type .xb__panel { grid-template-rows: 1fr auto; }
+  .xb-type__stage { display: grid; place-items: center; gap: var(--ply-space-3); text-align: center; }
+  .xb-type__sample { line-height: 1; color: var(--ply-color-panel-text); font-weight: 600; transition: font-size var(--ply-duration-base) var(--ply-ease-out); }
+  .xb-type__sample.is-display { font-family: var(--ply-font-display); font-weight: 400; }
+  .xb-type__readout { font-size: var(--ply-size-sm); color: var(--ply-color-panel-muted); }
+  .xb-type__name { color: var(--ply-mustard-400); }
+  .xb-type__control { width: min(100%, 24rem); }
+</style>
+<script>
+  for (const input of document.querySelectorAll<HTMLInputElement>("#xb-type-range")) {
+    const sizes: [string, string][] = JSON.parse(input.dataset.sizes!);
+    const fig = input.closest(".xb-type")!;
+    const sample = fig.querySelector<HTMLElement>(".xb-type__sample")!;
+    const update = () => {
+      const [name, value] = sizes[Number(input.value)];
+      sample.style.fontSize = `var(${name})`;
+      sample.classList.toggle("is-display", /2xl|3xl|4xl|display/.test(name));
+      fig.querySelector(".xb-type__name")!.textContent = name;
+      fig.querySelector(".xb-type__val")!.textContent = value;
+    };
+    input.addEventListener("input", update);
+    update();
+  }
+</script>

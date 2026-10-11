@@ -1,0 +1,58 @@
+---
+import Docs from "../../layouts/Docs.astro";
+import Example from "../../components/Example.astro";
+import ApiTable from "../../components/ApiTable.astro";
+import Code from "@dario-loi/polytope/astro/Code.astro";
+import Stability from "@dario-loi/polytope/astro/Stability.astro";
+
+const tabs = `<nav class="ply-cluster" style="--ply-cluster-gap: 0.25rem" aria-label="Example chapters">
+  <a class="ply-tab" href="#" aria-current="page">Research</a>
+  <a class="ply-tab" href="#">Teaching</a>
+  <a class="ply-tab" href="#">Notes</a>
+  <a class="ply-tab" href="#">CV</a>
+</nav>`;
+const side = `<nav class="ply-sidenav" aria-label="Example sections">
+  <p class="ply-sidenav__heading">Foundations</p>
+  <ul>
+    <li><a href="#">Color</a></li>
+    <li><a href="#" aria-current="page">Typography</a></li>
+    <li><a href="#">Motion</a></li>
+  </ul>
+</nav>`;
+const crumb = `<ol class="ply-breadcrumb">
+  <li><a href="#">Research</a></li>
+  <li><a href="#">2026</a></li>
+  <li aria-current="page">Higher-order message passing</li>
+</ol>`;
+const pager = `<nav class="ply-pager" aria-label="Pages" style="margin-top:0">
+  <a href="#" rel="prev"><span>Previous</span><strong>Typography</strong></a>
+  <a class="ply-pager__next" href="#" rel="next"><span>Next</span><strong>Motion</strong></a>
+</nav>`;
+---
+<Docs title="Navigation" status="stable" lede="A black wall label marks the chapter you are in; a tomato point marks the page.">
+  <h2>Top bar</h2>
+  <p>The top bar of this site is the component: wordmark at left, chapter tabs, tools at right, a 3px rule underneath. Below 72rem the tabs fold into a Menu button that opens a native <code>&lt;details&gt;</code> panel, so it works without JavaScript.</p>
+  <Code lang="astro" code={`<TopBar brand="John Doe" brandHref="/" links={[
+  { label: "Research", href: "/research/", current: true },
+  { label: "Teaching", href: "/teaching/" },
+]}>
+  <ThemeToggle />
+</TopBar>`} />
+  <ApiTable rows={[["brand", "Wordmark text", "Polytope"], ["brandHref", "Wordmark link", "/"], ["links", "Chapters: { label, href, current }"], ["default slot", "Tools on the right: search, theme toggle"]]} head={["Prop", "Effect", "Default"]} />
+
+  <h2>Chapter tabs</h2>
+  <Example html={tabs} />
+  <p>Mark the current tab with <code>aria-current="page"</code>; the black label comes from that attribute, so the visual state and the announced state cannot disagree.</p>
+
+  <h2>Sidebar</h2>
+  <Example html={side} />
+
+  <h2>On this page</h2>
+  <p>The list on the right of this page. Give it <code>data-auto</code> and an empty <code>&lt;ul&gt;</code>, put <code>data-toc-scope</code> on the article, and the script fills it from the h2 and h3 headings and follows your scroll. With Astro and Markdown headings, <code>&lt;Toc headings={"{headings}"} /&gt;</code> renders it on the server instead.</p>
+
+  <h2>Breadcrumb</h2>
+  <Example html={crumb} />
+
+  <h2>Pager</h2>
+  <Example html={pager} />
+</Docs>

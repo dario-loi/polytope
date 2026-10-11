@@ -1,0 +1,22 @@
+@layer ply.components {
+  /* Notes. Kind is carried by a shape and a word, never by color alone:
+     note = ball, warning = triangle, success = check square, danger = cross square. */
+  .ply-note { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--ply-space-3); align-items: start; padding: var(--ply-space-4) var(--ply-space-5); background: var(--ply-color-note); color: var(--ply-ink-950); font-size: 0.96875rem; line-height: var(--ply-leading-normal); max-width: var(--ply-layout-measure); }
+  .ply-note__mark { width: 1rem; height: 1rem; margin-top: 0.2rem; flex: none; }
+  .ply-note__mark--ball { border-radius: var(--ply-radius-ball); background: var(--ply-ink-950); width: 0.875rem; height: 0.875rem; margin-top: 0.3rem; }
+  .ply-note__title { font-weight: var(--ply-weight-bold); }
+  .ply-note a { color: var(--ply-ink-950); }
+  .ply-note code { background: color-mix(in srgb, var(--ply-ink-950) 10%, transparent); }
+
+  .ply-note--soft { background: var(--ply-color-note-soft); color: var(--ply-color-text); }
+  .ply-note--soft a { color: var(--ply-color-link); }
+  .ply-note--soft .ply-note__mark--ball { background: var(--ply-color-text); }
+  .ply-note--info { background: var(--ply-color-surface-sunken); color: var(--ply-color-text); }
+  .ply-note--info a { color: var(--ply-color-link); }
+  .ply-note--info .ply-note__mark--ball { background: var(--ply-color-text); }
+  .ply-note--danger { background: var(--ply-ink-950); color: var(--ply-ink-50); }
+  .ply-note--danger a { color: var(--ply-mustard-400); }
+  .ply-note--danger .ply-note__mark { color: var(--ply-tomato-400); }
+  .ply-note--success { background: var(--ply-color-surface-sunken); color: var(--ply-color-text); }
+  .ply-note--success .ply-note__mark { color: var(--ply-status-good); }
+}

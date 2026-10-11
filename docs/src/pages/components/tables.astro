@@ -1,0 +1,26 @@
+---
+import Docs from "../../layouts/Docs.astro";
+import Example from "../../components/Example.astro";
+import Stability from "@dario-loi/polytope/astro/Stability.astro";
+const table = `<div class="ply-table-wrap">
+  <table class="ply-table">
+    <caption>Synthetic example. Test accuracy, mean of five seeds.</caption>
+    <thead><tr><th>Model</th><th class="ply-num">Cora</th><th class="ply-num">Citeseer</th><th class="ply-num">Params</th></tr></thead>
+    <tbody>
+      <tr><td>Model A</td><td class="ply-num">0.815</td><td class="ply-num">0.703</td><td class="ply-num">23,063</td></tr>
+      <tr><td>Model B</td><td class="ply-num">0.830</td><td class="ply-num">0.725</td><td class="ply-num">92,373</td></tr>
+      <tr><td>Model C</td><td class="ply-num"><strong>0.842</strong></td><td class="ply-num"><strong>0.731</strong></td><td class="ply-num">48,110</td></tr>
+    </tbody>
+  </table>
+</div>`;
+---
+<Docs title="Tables" status="stable" lede="A 3px rule on top, a 2px rule under the header, hairlines between rows, and numbers that line up.">
+  <Example html={table} />
+  <ul>
+    <li>Right-align numeric columns with <code>.ply-num</code>; figures are tabular so decimals line up.</li>
+    <li>Mark the best result in bold, not in color.</li>
+    <li>Put the caption under the table. It says what the numbers are and where they come from.</li>
+    <li>Wrap tables in <code>.ply-table-wrap</code> so wide ones scroll sideways on phones instead of breaking the page.</li>
+    <li>Add <code>.ply-table--striped</code> for long tables people scan across.</li>
+  </ul>
+</Docs>

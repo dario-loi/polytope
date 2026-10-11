@@ -1,0 +1,45 @@
+---
+import Docs from "../../layouts/Docs.astro";
+import LineChartExample from "../../components/LineChartExample.astro";
+import Note from "@dario-loi/polytope/astro/Note.astro";
+import data from "@dario-loi/polytope/tokens.json";
+const viz = data.viz;
+---
+<Docs title="Charts" lede="Eight series colors in a fixed order, a ramp for magnitude, a pair for sign, and four reserved status colors.">
+  <h2>Series colors</h2>
+  <p>Assign series colors in this order, starting from tomato. Never cycle back to the start: a ninth series goes into "Other" or into small multiples. A color follows its series, so filtering one series out never repaints the others.</p>
+  <ol class="vz" role="list">
+    {viz.categorical.names.map((n, i) => (
+      <li><span class="vz__chip" style={`background: var(--ply-viz-${i + 1})`}></span><b>{i + 1}. {n}</b><span class="ply-mono ply-small ply-muted">{viz.categorical.light[i]} / {viz.categorical.dark[i]}</span></li>
+    ))}
+  </ol>
+  <p>
+    The order was chosen by checking every arrangement for color vision deficiency, using the Machado 2009 simulation of protanopia and deuteranopia.
+    Neighboring colors stay at least 13.6 apart (OKLab distance times 100) in both themes, against a target of 8, and at least 16.7 apart for full color vision.
+    Every color clears 3:1 against its chart background. The dark theme has its own steps, checked the same way.
+  </p>
+  <Note kind="soft">In scatter plots, maps, and small multiples any two colors can sit side by side, which is a harder test. Only the first three colors pass it, so those charts use at most three series.</Note>
+
+  <h2>Example</h2>
+  <LineChartExample />
+  <p>Lines are 2px. Up to four series get direct labels at their ends, in text color; the legend stays as well, so identity never rests on color alone. Hover shows every value at that epoch, and the data table holds the numbers for anyone who cannot see the plot.</p>
+
+  <h2>Magnitude and sign</h2>
+  <p>For magnitude (a heatmap, an adjacency matrix), use the cobalt ramp, light to dark. For values with a sign around zero, use the diverging pair, with gray in the middle.</p>
+  <div class="ramp">{viz.sequential.map((c, i) => <span style={`background: var(--ply-viz-seq-${i + 1})`} title={c}></span>)}</div>
+  <div class="ramp">{viz.diverging.map((c, i) => <span style={`background: var(--ply-viz-div-${i + 1})`} title={c}></span>)}</div>
+  <p class="ply-small ply-muted">For ordered categories (small, medium, large) use ramp steps 3 to 7, which stay visible on white.</p>
+
+  <h2>Status</h2>
+  <p>Good, warning, serious, and critical mean state, never "series 4". Each comes with a mark and a word.</p>
+  <p class="ply-cluster"><span class="ply-status ply-status--done">Good</span><span class="ply-status ply-status--warning">Warning</span><span class="ply-status ply-status--error">Critical</span></p>
+
+  <h2>Charts with no color</h2>
+  <p>For print and forced-colors mode, <code>.ply-texture</code> gives a diagonal hatch, so filled areas stay apart without color.</p>
+</Docs>
+<style>
+  .vz { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 12rem), 1fr)); gap: var(--ply-space-4); max-width: none; }
+  .vz li { display: grid; gap: var(--ply-space-1); }
+  .vz__chip { height: 3rem; }
+  .ramp { display: grid; grid-auto-flow: column; height: 2.5rem; margin-block: var(--ply-space-3); max-width: 36rem; }
+</style>

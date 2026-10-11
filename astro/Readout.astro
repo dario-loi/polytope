@@ -1,0 +1,7 @@
+---
+interface Props { items: { label: string; value: string | number }[]; label?: string }
+const { items, label } = Astro.props;
+---
+<dl class="ply-readout" aria-label={label}>
+  {items.map((i) => <><dt>{i.label}</dt><dd>{i.value}</dd></>)}
+</dl>

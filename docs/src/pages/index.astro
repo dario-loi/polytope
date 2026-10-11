@@ -1,0 +1,56 @@
+---
+import Docs from "../layouts/Docs.astro";
+import Machine from "@dario-loi/polytope/astro/Machine.astro";
+import Code from "@dario-loi/polytope/astro/Code.astro";
+import Note from "@dario-loi/polytope/astro/Note.astro";
+import { u } from "../data/nav";
+---
+<Docs title="Getting started" lede="One construction kit and one design language for academic sites, paper pages, and research demos.">
+  <figure class="ply-exhibit" slot="exhibit">
+    <Machine interactive balls={30} rows={8} />
+    <figcaption><b>The probability machine.</b> Each ball bounces left or right at every peg, and together they pile into a bell curve. Click it to run it again.</figcaption>
+  </figure>
+
+  <h2>Install</h2>
+  <Code lang="sh" code={`# npm 12: allow git dependencies
+echo "allow-git=root" >> .npmrc
+npm install github:dario-loi/polytope`} />
+  <p>Then load the stylesheet once, in your layout or page head:</p>
+  <Code lang="js" code={`import "@dario-loi/polytope/css";`} />
+  <p>Without a build step, link the hosted files instead (see <a href={u("/getting-started/html/")}>Using in plain HTML</a>):</p>
+  <Code lang="html" code={`<link rel="stylesheet" href="https://dario-loi.github.io/polytope/kit/polytope.css">`} />
+
+  <h2>What this is</h2>
+  <p>
+    The <a href="https://digital.sbb.ch/en/design-system/getting-started/intro/">SBB design system</a> describes a design system as two things.
+    It is a construction kit you take the parts of an interface from, and it is the design language of a brand: how the name, color, type, and principles are used.
+    Polytope follows that definition, at the scale of one researcher. A polytope is the family of shapes that simplices belong to: points, segments, triangles, and their higher-dimensional relatives. The kit is built from the same parts.
+  </p>
+  <p>It contains:</p>
+  <ul>
+    <li><a href={u("/tokens/")}>Tokens</a>: every color, size, space, and timing decision, stored once in <code>tokens/tokens.json</code> and compiled for each target.</li>
+    <li>A CSS core that works in any HTML page with no build step.</li>
+    <li><a href={u("/getting-started/astro/")}>Astro components</a> built on that CSS.</li>
+    <li>A <a href={u("/getting-started/python/")}>Python theme</a> for matplotlib, plotly, Gradio, and Streamlit, so the figures in a paper match the page that hosts it.</li>
+    <li><a href={u("/getting-started/targets/")}>Exports</a> for Tailwind, Sass, LaTeX, Figma token plugins, and code editors.</li>
+    <li>Guidelines: <a href={u("/principles/")}>principles</a>, <a href={u("/writing/")}>writing rules</a>, and <a href={u("/accessibility/")}>accessibility commitments</a>.</li>
+  </ul>
+
+  <h2>What it covers and what it leaves out</h2>
+  <p>
+    The kit covers the pages a researcher builds most: a personal academic site, a page per paper, and small interactive demos.
+    It will not cover every need. When a project needs a component the kit lacks, build it in the project with the tokens. If a second project needs it too, it moves into the kit.
+  </p>
+  <p>No content ships with it. The <a href={u("/patterns/")}>pattern pages</a> use example content for a researcher called John Doe, labeled as such, to show how the parts fit.</p>
+
+  <h2>Credits</h2>
+  <p>Polytope is made by Dario Loi (Northeastern University) and released under the Apache License 2.0. The visual world is after the 1961 mathematics exhibition by Charles and Ray Eames. Type: Ultra by Astigmatic, Libre Franklin by Impallari Type, JetBrains Mono by JetBrains.</p>
+
+  <h2>Where to go next</h2>
+  <ul>
+    <li><a href={u("/getting-started/installation/")}>Installation</a> covers every way to add the kit, including Python.</li>
+    <li><a href={u("/foundations/")}>Foundations</a> explains the color, type, space, and motion decisions.</li>
+    <li><a href={u("/components/")}>Components</a> lists every part with live examples and code.</li>
+    <li><a href={u("/patterns/")}>Patterns</a> shows a full homepage, paper page, and demo page.</li>
+  </ul>
+</Docs>

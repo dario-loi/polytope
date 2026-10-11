@@ -1,0 +1,22 @@
+@layer ply.components {
+  /* Tags and status labels. Status always carries a mark and a word. */
+  .ply-tag { display: inline-flex; align-items: center; gap: 0.4em; font-size: var(--ply-size-xs); font-weight: var(--ply-weight-bold); line-height: 1.3; padding: 0.15rem 0.5rem; border: 1.5px solid currentColor; color: var(--ply-color-text); white-space: nowrap; }
+  .ply-tag--solid { background: var(--ply-color-text); color: var(--ply-color-bg); border-color: var(--ply-color-text); }
+  .ply-tag--note { background: var(--ply-color-note); color: var(--ply-ink-950); border-color: var(--ply-color-note); }
+
+  .ply-status { display: inline-flex; align-items: center; gap: var(--ply-space-2); font-size: var(--ply-size-sm); font-weight: var(--ply-weight-semibold); }
+  .ply-status::before { content: ""; width: 0.6875rem; height: 0.6875rem; flex: none; }
+  .ply-status--idle::before { border: 2px solid currentColor; border-radius: var(--ply-radius-ball); }
+  /* impeccable-disable-next-line pulsing-dot: a running state, not decoration; reduced motion stops it */
+  .ply-status--running::before { border-radius: var(--ply-radius-ball); background: var(--ply-color-accent); animation: ply-pulse 1.2s var(--ply-ease-out) infinite; }
+  .ply-status--done::before { background: var(--ply-status-good); clip-path: polygon(14% 52%, 0 66%, 38% 100%, 100% 22%, 86% 8%, 38% 72%); width: 0.875rem; }
+  .ply-status--warning::before { background: var(--ply-status-warning); clip-path: polygon(50% 0, 100% 100%, 0 100%); width: 0.8125rem; }
+  .ply-status--error::before { background: linear-gradient(45deg, transparent 38%, var(--ply-status-critical) 38% 62%, transparent 62%), linear-gradient(-45deg, transparent 38%, var(--ply-status-critical) 38% 62%, transparent 62%); }
+  @keyframes ply-pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(0.6); } }
+
+  /* Stability of a component or API: stable is solid, experimental is outlined, deprecated is struck. */
+  .ply-stability { font-size: var(--ply-size-xs); font-weight: var(--ply-weight-bold); padding: 0.1rem 0.45rem; border: 1.5px solid var(--ply-color-text); }
+  .ply-stability--stable { background: var(--ply-color-text); color: var(--ply-color-bg); }
+  .ply-stability--experimental { border-style: dashed; }
+  .ply-stability--deprecated { text-decoration: line-through; color: var(--ply-color-text-muted); border-color: var(--ply-color-text-muted); }
+}

@@ -1,0 +1,17 @@
+node_modules/
+dist/
+docs/dist/
+docs/.astro/
+.playwright-mcp/
+__pycache__/
+*.egg-info/
+.venv/
+.DS_Store
+.impeccable/config.local.json
+.claude/settings.local.json
+docs/public/kit/
+.impeccable/review/
+.impeccable/questions/
+.impeccable/hook.cache.json
+# Private product notes for the design tooling; kept out of the public repo
+PRODUCT.md

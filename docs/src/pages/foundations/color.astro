@@ -1,0 +1,49 @@
+---
+import Docs from "../../layouts/Docs.astro";
+import Swatches from "../../components/Swatches.astro";
+import Note from "@dario-loi/polytope/astro/Note.astro";
+import data from "@dario-loi/polytope/tokens.json";
+import { u } from "../../data/nav";
+
+const t = data.tokens as Record<string, any>;
+const lum = (hex: string) => { const n = parseInt(hex.slice(1), 16); const c = [n >> 16, (n >> 8) & 255, n & 255].map((v) => { v /= 255; return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; }); return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]; };
+const ratio = (a: string, b: string) => { const [x, y] = [lum(a), lum(b)].sort((p, q) => q - p); return (x + 0.05) / (y + 0.05); };
+const pairs = [["text", "bg"], ["text-muted", "bg"], ["text-subtle", "bg"], ["link", "bg"], ["accent-text", "bg"], ["panel-text", "panel"], ["panel-muted", "panel"], ["code-comment", "panel"]];
+const rows = pairs.map(([fg, bg]) => {
+  const f = t[`--ply-color-${fg}`], b = t[`--ply-color-${bg}`];
+  return { fg, bg, light: ratio(f.value, b.value), dark: ratio(f.dark ?? f.value, b.dark ?? b.value) };
+});
+---
+<Docs title="Color" lede="A white gallery wall, black exhibit panels, and a few strong colors that each have one job.">
+  <h2>Roles</h2>
+  <p>Components use semantic tokens (<code>--ply-color-*</code>), never primitives. Each semantic token has a light and a dark value; the page switches by itself.</p>
+  <Swatches names={["--ply-color-bg", "--ply-color-surface-sunken", "--ply-color-panel", "--ply-color-text", "--ply-color-text-muted", "--ply-color-rule-strong"]} />
+
+  <h2>The three strong colors</h2>
+  <p>Each one has a single job. Using one for another job breaks the reader's ability to scan.</p>
+  <Swatches names={["--ply-color-accent", "--ply-color-note", "--ply-color-link"]} />
+  <ul>
+    <li><strong>Tomato</strong> marks the current or moving thing: where you are in the navigation, the balls in the machine, a checked radio. As a fill it needs 3:1; when tomato must be read as text, use <code>--ply-color-accent-text</code>.</li>
+    <li><strong>Mustard</strong> fills notes and highlights, always with black text on it, in both themes.</li>
+    <li><strong>Teal</strong> is for links. Links are also underlined, so color is never the only signal.</li>
+  </ul>
+
+  <h2>Contrast</h2>
+  <p>Every text pair passes WCAG AA (4.5:1) in both themes. The build checks this list and more with <code>npm run check:contrast</code>.</p>
+  <div class="ply-table-wrap">
+    <table class="ply-table">
+      <thead><tr><th>Text</th><th>On</th><th class="ply-num">Light</th><th class="ply-num">Dark</th></tr></thead>
+      <tbody>
+        {rows.map((r) => <tr><td><code>{r.fg}</code></td><td><code>{r.bg}</code></td><td class="ply-num">{r.light.toFixed(2)}:1</td><td class="ply-num">{r.dark.toFixed(2)}:1</td></tr>)}
+      </tbody>
+    </table>
+  </div>
+
+  <h2>Dark theme</h2>
+  <p>The dark theme is the exhibition after hours: a near-black ground, panels a step lighter than the ground, lighter tomato and teal so they keep their contrast. Mustard stays the same and keeps its black text. Dark is chosen by the reader's system setting or the toggle in the top bar; neither theme is the default for a category of page.</p>
+
+  <h2>Primitives</h2>
+  <p>The raw palette the roles point at. Reach for these only when building a new semantic token.</p>
+  <Swatches names={Object.keys(t).filter((k) => /^--ply-(ink|tomato|mustard|teal|cobalt|white)/.test(k))} />
+  <Note kind="soft">Chart colors are separate and follow their own rules. See <a href={u("/foundations/charts/")}>Charts</a>.</Note>
+</Docs>

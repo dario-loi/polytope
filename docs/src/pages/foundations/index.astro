@@ -1,0 +1,22 @@
+---
+import Docs from "../../layouts/Docs.astro";
+import EaseModel from "../../components/exhibits/EaseModel.astro";
+import { u } from "../../data/nav";
+---
+<Docs title="Foundations" lede="The decisions every component is built from: color, type, space, motion, icons, and charts.">
+  <EaseModel slot="exhibit" />
+  <p>The visual world is the 1961 mathematics exhibition by Charles and Ray Eames: white walls, black display panels, wood-type lettering, and working models in strong colors. The foundations turn that world into rules.</p>
+  <div class="ply-table-wrap">
+    <table class="ply-table">
+      <thead><tr><th>Foundation</th><th>The short version</th></tr></thead>
+      <tbody>
+        <tr><td><a href={u("/foundations/color/")}>Color</a></td><td>White ground, exhibit black, tomato for the one moving part, mustard for notes, teal for links.</td></tr>
+        <tr><td><a href={u("/foundations/typography/")}>Typography</a></td><td>Ultra for titles only, Libre Franklin for everything read, JetBrains Mono for code.</td></tr>
+        <tr><td><a href={u("/foundations/layout/")}>Space and layout</a></td><td>A 4px base, a 36rem reading column (about 68 characters), 3px rules between regions, square corners.</td></tr>
+        <tr><td><a href={u("/foundations/motion/")}>Motion</a></td><td>Things arrive with an ease-out and fall with gravity. Reduced motion shows the end state.</td></tr>
+        <tr><td><a href={u("/foundations/icons/")}>Icons</a></td><td>A small authored set: square caps, 2.25 strokes, 24px grid.</td></tr>
+        <tr><td><a href={u("/foundations/charts/")}>Charts</a></td><td>Eight series colors in a fixed order, checked for color vision deficiency in both themes.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</Docs>

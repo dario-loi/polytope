@@ -1,0 +1,92 @@
+---
+import Docs from "../../layouts/Docs.astro";
+import TypeScaleModel from "../../components/exhibits/TypeScaleModel.astro";
+import data from "@dario-loi/polytope/tokens.json";
+import usage from "@dario-loi/polytope/dist/token-usage.json";
+
+const t = data.tokens as Record<string, any>;
+const use = usage as Record<string, string[]>;
+const groups: [string, (k: string) => boolean][] = [
+  ["Color roles", (k) => k.startsWith("--ply-color-")],
+  ["Color primitives", (k) => /^--ply-(white|ink|tomato|mustard|teal|cobalt)/.test(k)],
+  ["Type", (k) => /^--ply-(font|size|weight|leading)-/.test(k)],
+  ["Space", (k) => k.startsWith("--ply-space-")],
+  ["Borders and corners", (k) => /^--ply-(border|radius)-/.test(k)],
+  ["Motion", (k) => /^--ply-(duration|ease)-/.test(k)],
+  ["Layout", (k) => k.startsWith("--ply-layout-")],
+];
+const isColor = (v: unknown) => typeof v === "string" && /^#[0-9a-f]{6}$/i.test(v);
+---
+<Docs title="Tokens" lede="Every design decision as a named value. Search by name, value, or purpose." wide>
+  <TypeScaleModel slot="exhibit" />
+  <div class="tk-filter">
+    <label class="ply-field__label" for="tk-q">Filter tokens</label>
+    <input class="ply-input" id="tk-q" type="search" placeholder="Try accent, 36rem, or panel" autocomplete="off" />
+    <p class="ply-small ply-muted" id="tk-count" aria-live="polite"></p>
+  </div>
+  {groups.map(([label, test]) => {
+    const names = Object.keys(t).filter(test);
+    return (
+      <section class="tk-group" data-tk-group>
+        <h2>{label}</h2>
+        <div class="ply-table-wrap">
+          <table class="ply-table tk">
+            <thead><tr><th>Token</th><th>Light</th><th>Dark</th><th>Purpose</th><th>Used in</th></tr></thead>
+            <tbody>
+              {names.map((n) => {
+                const tok = t[n];
+                const files = use[n] ?? [];
+                return (
+                  <tr data-tk={`${n} ${tok.value} ${tok.dark ?? ""} ${tok.description} ${files.join(" ")}`.toLowerCase()}>
+                    <td data-label="Token"><code>{n}</code></td>
+                    <td class="ply-mono ply-small" data-label="Light">{isColor(tok.value) && <span class="ply-swatch" style={`background:${tok.value}`}></span>}{String(tok.value)}</td>
+                    <td class="ply-mono ply-small" data-label="Dark">{tok.dark !== undefined ? <>{isColor(tok.dark) && <span class="ply-swatch" style={`background:${tok.dark}`}></span>}{String(tok.dark)}</> : <span class="ply-muted">same</span>}</td>
+                    <td class="ply-small tk__desc" data-label="Purpose">{tok.description}</td>
+                    <td class="ply-small ply-muted" data-label="Used in">{files.length ? files.map((f) => f.replace(/^components\//, "").replace(/\.css$/, "")).join(", ") : "tokens only"}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      </section>
+    );
+  })}
+  <h2>Chart colors</h2>
+  <p>Chart tokens (<code>--ply-viz-1</code> to <code>--ply-viz-8</code>, <code>--ply-viz-seq-*</code>, <code>--ply-viz-div-*</code>, <code>--ply-status-*</code>) are documented in <a href="../foundations/charts/">Charts</a>.</p>
+</Docs>
+<style>
+  .tk-filter { display: grid; gap: var(--ply-space-2); max-width: 28rem; margin-bottom: var(--ply-space-6); }
+  .tk td:first-child code { background: none; padding: 0; font-weight: 600; white-space: nowrap; }
+  .tk td:nth-child(4) { min-width: 16rem; }
+  .tk-group[hidden] { display: none; }
+  .tk td.tk__desc:empty { display: none; }
+  /* Phones: each token becomes a stacked block instead of a five-column row. */
+  @media (max-width: 40rem) {
+    .tk thead { display: none; }
+    .tk, .tk tbody, .tk tr, .tk td { display: block; width: 100%; }
+    .tk tr { padding-block: var(--ply-space-3); border-bottom: var(--ply-border-hair) solid var(--ply-color-rule); }
+    .tk td { border: 0; padding: 0.15rem 0; min-width: 0 !important; }
+    .tk td[data-label="Light"], .tk td[data-label="Dark"] { display: inline-block; width: auto; margin-inline-end: var(--ply-space-4); }
+    .tk td[data-label="Light"]::before, .tk td[data-label="Dark"]::before, .tk td[data-label="Used in"]::before { content: attr(data-label) ": "; font-family: var(--ply-font-text); color: var(--ply-color-text-muted); }
+    .tk td:first-child code { font-size: var(--ply-size-sm); overflow-wrap: anywhere; white-space: normal; }
+  }
+</style>
+<script>
+  const q = document.getElementById("tk-q") as HTMLInputElement;
+  const count = document.getElementById("tk-count")!;
+  const rows = [...document.querySelectorAll<HTMLTableRowElement>("tr[data-tk]")];
+  const run = () => {
+    const terms = q.value.toLowerCase().trim().split(/\s+/).filter(Boolean);
+    let shown = 0;
+    for (const r of rows) {
+      const hit = terms.every((term) => r.dataset.tk!.includes(term));
+      r.hidden = !hit;
+      if (hit) shown++;
+    }
+    for (const g of document.querySelectorAll<HTMLElement>("[data-tk-group]")) g.hidden = !g.querySelector("tr[data-tk]:not([hidden])");
+    count.textContent = terms.length ? `${shown} of ${rows.length} tokens` : `${rows.length} tokens`;
+  };
+  q.addEventListener("input", run);
+  run();
+</script>

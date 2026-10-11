@@ -1,0 +1,35 @@
+# Polytope, matplotlib style (dark). Generated; edit tokens/tokens.json.
+# Use: plt.style.use("polytope_theme.styles.polytope-dark") or polytope_theme.use("dark")
+figure.facecolor: 1C1C1A
+axes.facecolor: 1C1C1A
+savefig.facecolor: 1C1C1A
+text.color: F2F2EE
+axes.labelcolor: F2F2EE
+axes.edgecolor: B9BAB4
+axes.linewidth: 1.0
+axes.titleweight: bold
+axes.titlesize: 13
+axes.titlelocation: left
+axes.labelsize: 11
+axes.spines.top: False
+axes.spines.right: False
+axes.grid: True
+axes.grid.axis: y
+axes.axisbelow: True
+grid.color: 3A3A37
+grid.linewidth: 0.8
+xtick.color: B9BAB4
+ytick.color: B9BAB4
+xtick.labelsize: 10
+ytick.labelsize: 10
+legend.frameon: False
+legend.fontsize: 10
+lines.linewidth: 2.0
+lines.markersize: 6
+patch.linewidth: 0
+font.family: sans-serif
+font.sans-serif: Libre Franklin, Franklin Gothic Medium, Helvetica Neue, Arial, DejaVu Sans
+font.monospace: JetBrains Mono, DejaVu Sans Mono
+mathtext.fontset: cm
+axes.prop_cycle: cycler('color', ['E04B34', '00A39A', '5A7FDB', '5A9A35', '2E8FD0', 'B98200', '9A52C8', 'D9658B'])
+image.cmap: Blues

@@ -1,0 +1,17 @@
+---
+import type { HTMLAttributes } from "astro/types";
+type Props = (HTMLAttributes<"button"> & HTMLAttributes<"a">) & {
+  href?: string;
+  variant?: "primary" | "secondary" | "ghost";
+  size?: "md" | "sm";
+  icon?: boolean;
+  busy?: boolean;
+};
+const { href, variant = "primary", size = "md", icon = false, busy = false, class: className, type = "button", ...rest } = Astro.props;
+const classes = ["ply-button", variant !== "primary" && `ply-button--${variant}`, size === "sm" && "ply-button--sm", icon && "ply-button--icon", className];
+---
+{href ? (
+  <a href={href} class:list={classes} {...rest}><slot /></a>
+) : (
+  <button type={type} class:list={classes} aria-busy={busy ? "true" : undefined} {...rest}>{busy && <span class="ply-loading" aria-hidden="true"><i></i></span>}<slot /></button>
+)}

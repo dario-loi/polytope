@@ -1,0 +1,8 @@
+---
+interface Props { label?: string }
+const { label = "Abstract" } = Astro.props;
+---
+<section class="ply-abstract" aria-label={label}>
+  <h2 class="ply-abstract__label">{label}</h2>
+  <slot />
+</section>

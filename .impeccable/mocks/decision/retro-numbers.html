@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>A World of Numbers - sketch</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Ultra&family=Libre+Franklin:wght@400;500;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+  :root { --ink: #141414; --ink-2: #4A4A47; --tomato: #D9412B; --teal: #0F6E73; --mustard: #E9A81C; --wall: #EEF0EF; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1440px; height: 900px; overflow: hidden; background: #fff; color: var(--ink); font-family: "Libre Franklin", sans-serif; }
+  .top { min-height: 76px; display: flex; align-items: center; padding: 16px 72px; border-bottom: 3px solid var(--ink); white-space: nowrap; }
+  .mark { font-family: Ultra; font-size: 26px; flex: none; margin-right: 52px; }
+  .top nav { display: flex; gap: 6px; font-size: 15px; font-weight: 500; color: var(--ink-2); }
+  .top nav span { padding: 6px 10px; }
+  .top nav .on { background: var(--ink); color: #fff; font-weight: 600; }
+  .search { margin-left: auto; flex: none; height: 40px; border: 2px solid var(--ink); font-size: 15px; display: flex; align-items: center; gap: 18px; padding: 0 10px 0 14px; color: var(--ink-2); }
+  .search kbd { display: inline-block; font-family: "JetBrains Mono"; font-size: 12px; line-height: 18px; border: 1.5px solid var(--ink); padding: 0 7px; color: var(--ink); }
+  .mast { height: 404px; position: relative; padding: 44px 72px 0; }
+  h1 { font-family: Ultra; font-weight: 400; font-size: 92px; line-height: .98; letter-spacing: -0.01em; }
+  h1 span { color: var(--tomato); }
+  .lede { font-size: 21px; line-height: 1.45; max-width: 560px; margin-top: 22px; }
+  .panel { position: absolute; right: 72px; top: 28px; width: 560px; }
+  .board { position: relative; height: 300px; background: var(--ink); overflow: hidden; }
+  .funnel { position: absolute; left: 234px; top: 16px; width: 92px; height: 26px; background: var(--mustard); clip-path: polygon(0 0, 100% 0, 60% 100%, 40% 100%); }
+  .pegs { position: absolute; left: 100px; top: 52px; width: 360px; height: 108px; background-image: radial-gradient(circle, #fff 2.4px, transparent 3px); background-size: 30px 18px; background-position: 15px 0; clip-path: polygon(50% 0, 100% 100%, 0 100%); }
+  .bins { position: absolute; left: 100px; right: 100px; bottom: 14px; height: 112px; display: flex; align-items: flex-end; border-bottom: 3px solid #fff; }
+  .bins span { flex: 1; height: 100%; position: relative; border-left: 2px solid #5A5A5A; }
+  .bins span::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: calc(var(--n) * 12px); background-image: radial-gradient(circle, var(--tomato) 5.2px, transparent 5.8px); background-size: 12px 12px; background-position: center bottom; background-repeat: repeat-y; }
+  .bins span:last-child { border-right: 2px solid #5A5A5A; }
+  figcaption { margin-top: 12px; font-size: 13.5px; line-height: 1.45; color: var(--ink-2); }
+  figcaption b { color: var(--ink); font-weight: 700; }
+  .main { display: grid; grid-template-columns: 280px 720px 1fr; padding: 0 72px; border-top: 3px solid var(--ink); }
+  .side { padding-top: 28px; }
+  .side ul { padding-left: 22px; }
+  .side li { list-style: none; font-size: 15.5px; padding: 7px 0; color: var(--ink-2); display: flex; align-items: center; }
+  .side li.on { color: var(--ink); font-weight: 700; }
+  .side li.on::before { content: ""; width: 11px; height: 11px; border-radius: 50%; background: var(--tomato); margin-left: -22px; margin-right: 11px; }
+  article { padding: 28px 48px 0; }
+  h2 { font-family: Ultra; font-weight: 400; font-size: 32px; margin-bottom: 14px; }
+  p { font-size: 17px; line-height: 1.6; margin-bottom: 16px; max-width: 620px; }
+  p a { color: var(--teal); text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 2px; font-weight: 600; }
+  .note { background: var(--mustard); padding: 14px 18px; max-width: 620px; margin-bottom: 16px; font-size: 15.5px; line-height: 1.45; display: flex; gap: 12px; align-items: center; }
+  .note i { flex: none; width: 14px; height: 14px; border-radius: 50%; background: var(--ink); }
+  pre { max-width: 620px; background: var(--ink); color: #fff; font-family: "JetBrains Mono"; font-size: 14px; line-height: 1.7; padding: 14px 18px; }
+  pre .c { color: var(--mustard); }
+  .toc { padding: 34px 0 0 40px; font-size: 14.5px; color: var(--ink-2); }
+  .toc .h { font-weight: 700; color: var(--ink); margin-bottom: 8px; }
+  .toc li { list-style: none; padding: 5px 0; }
+</style>
+</head>
+<body>
+  <div class="top">
+    <div class="mark">Dario Loi</div>
+    <nav><span class="on">Getting started</span><span>Principles</span><span>Foundations</span><span>Tokens</span><span>Components</span><span>Patterns</span><span>Accessibility</span><span>Writing</span><span>Changelog</span></nav>
+    <div class="search">Search <kbd>/</kbd></div>
+  </div>
+  <header class="mast">
+    <h1>Getting<br>started<span>.</span></h1>
+    <p class="lede">One construction kit and one design language for every site, paper page, and demo Dario Loi ships.</p>
+    <figure class="panel">
+      <div class="board" role="img" aria-label="Probability machine: balls bounce through rows of pegs and pile into a bell curve">
+        <i class="funnel"></i><i class="pegs"></i>
+        <div class="bins"><span style="--n:1"></span><span style="--n:2"></span><span style="--n:4"></span><span style="--n:7"></span><span style="--n:9"></span><span style="--n:7"></span><span style="--n:4"></span><span style="--n:2"></span><span style="--n:1"></span></div>
+      </div>
+      <figcaption><b>The probability machine.</b> Each ball bounces left or right at every peg, and together they pile into a bell curve.</figcaption>
+    </figure>
+  </header>
+  <div class="main">
+    <nav class="side"><ul><li class="on">Introduction</li><li>Installation</li><li>Using with Astro</li><li>Using in plain HTML</li><li>Python and figure themes</li><li>Versioning</li></ul></nav>
+    <article>
+      <h2>Introduction</h2>
+      <p>A design system is two things at once. It is a construction kit of tokens, CSS components, and Astro wrappers, and it is a design language: the <a href="#">principles</a>, color, type, and writing rules that make a homepage, a paper page, and a demo read as one person's work.</p>
+      <div class="note"><i aria-hidden="true"></i><span>Version 0.1 is experimental. Component APIs may change before 1.0.</span></div>
+      <pre><span class="c"># add the core to any project</span>
+npm install github:darioloi/design-system</pre>
+    </article>
+    <div class="toc"><p class="h">On this page</p><ul><li>What the kit contains</li><li>What it is not</li><li>Where to go next</li></ul></div>
+  </div>
+</body>
+</html>

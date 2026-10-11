@@ -1,0 +1,6 @@
+---
+import Code from "./Code.astro";
+interface Props { entry: string; title?: string }
+const { entry, title = "BibTeX" } = Astro.props;
+---
+<div class="ply-bibtex"><Code code={entry} lang="bibtex" title={title} /></div>

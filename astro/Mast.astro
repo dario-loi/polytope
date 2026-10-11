@@ -1,0 +1,18 @@
+---
+// Page mast: the title (with the tomato full stop), a lede, and an exhibit slot on the right.
+interface Props { title: string; lede?: string; stop?: boolean; class?: string }
+const { title, lede, stop = true, class: className } = Astro.props;
+// Size the title to its longest word so a long single word never overflows its column,
+// and keep the full stop attached to the last word.
+const words = title.split(" ");
+const last = words.pop() ?? "";
+const chars = Math.max(...[...words, last + (stop ? "." : "")].map((w) => w.length));
+---
+<header class:list={["ply-container ply-mast", className]}>
+  <div>
+    <h1 class="ply-mast__title" style={`--_chars: ${chars}`}>{words.length > 0 && `${words.join(" ")} `}<span class="ply-nowrap">{last}{stop && <span class="ply-mast__stop" aria-hidden="true">.</span>}</span></h1>
+    {lede && <p class="ply-mast__lede">{lede}</p>}
+    <slot name="after" />
+  </div>
+  {Astro.slots.has("exhibit") && <div class="ply-mast__exhibit"><slot name="exhibit" /></div>}
+</header>

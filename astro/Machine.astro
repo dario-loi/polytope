@@ -1,0 +1,33 @@
+---
+// The probability machine. Server-renders the settled bell curve; the script runs it live.
+interface Props {
+  rows?: number;
+  balls?: number;
+  p?: number;
+  label?: string;
+  interactive?: boolean;
+  autoplay?: "visible" | "none";
+  class?: string;
+}
+const { rows = 8, balls = 30, p = 0.5, label, interactive = false, autoplay = "visible", class: className } = Astro.props;
+const choose = (n: number, k: number) => { let r = 1; for (let i = 1; i <= k; i++) r = (r * (n - k + i)) / i; return r; };
+const expected = Array.from({ length: rows + 1 }, (_, k) => Math.round(choose(rows, k) * p ** k * (1 - p) ** (rows - k) * balls));
+const text = label ?? "Probability machine: balls bounce left or right at each peg and pile into a bell curve.";
+---
+<ply-machine
+  class:list={["ply-machine", className]}
+  rows={rows}
+  balls={balls}
+  p={p}
+  label={text}
+  interactive={interactive ? "" : undefined}
+  autoplay={autoplay}
+  role="img"
+  aria-label={text}
+  style={`--rows:${rows};--bins:${rows + 1}`}
+>
+  <span class="ply-machine__funnel"></span>
+  <span class="ply-machine__pegs"></span>
+  <span class="ply-machine__bins">{expected.map((n) => <span style={`--n:${n}`}></span>)}</span>
+</ply-machine>
+<script>import "../css/js/machine.js";</script>
