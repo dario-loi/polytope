@@ -10,10 +10,8 @@ function current() {
 
 function sync() {
   const dark = current() === "dark";
-  for (const btn of document.querySelectorAll("[data-ply-theme-toggle]")) {
-    btn.setAttribute("aria-pressed", String(dark));
-    btn.setAttribute("aria-label", dark ? "Switch to light theme" : "Switch to dark theme");
-  }
+  // A toggle button with a fixed name ("Dark theme"); aria-pressed carries the state.
+  for (const btn of document.querySelectorAll("[data-ply-theme-toggle]")) btn.setAttribute("aria-pressed", String(dark));
 }
 
 document.addEventListener("click", (e) => {

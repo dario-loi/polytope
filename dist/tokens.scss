@@ -30,11 +30,12 @@ $ply-cobalt-400: #6A8BD4;
 $ply-cobalt-500: #3A62C4;
 $ply-cobalt-600: #2B4A99;
 $ply-cobalt-700: #1D336B;
-$ply-font-display: "Ultra", "Rockwell Extra Bold", Rockwell, Georgia, serif;
+$ply-font-display: "Ultra", "Ultra Fallback", "Rockwell Extra Bold", Rockwell, Georgia, serif;
 $ply-font-text: "Libre Franklin Variable", "Libre Franklin", "Franklin Gothic Medium", "Helvetica Neue", Arial, sans-serif;
 $ply-font-mono: "JetBrains Mono Variable", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 $ply-size-xs: 0.8125rem;
 $ply-size-sm: 0.875rem;
+$ply-size-ui: 0.9375rem;
 $ply-size-md: 1rem;
 $ply-size-body: 1.0625rem;
 $ply-size-lg: 1.25rem;
@@ -91,6 +92,7 @@ $ply-color-rule-strong: #141414;
 $ply-color-rule: #D9DAD6;
 $ply-color-accent: #D9412B;
 $ply-color-accent-text: #B8321F;
+$ply-color-on-accent: #FFFFFF;
 $ply-color-link: #0F6E73;
 $ply-color-link-hover: #141414;
 $ply-color-note: #E9A81C;
@@ -116,6 +118,7 @@ $ply-theme-dark: (
   "-rule": #3A3A37,
   "-accent": #F0654F,
   "-accent-text": #F0654F,
+  "-on-accent": #141414,
   "-link": #5CC2C7,
   "-link-hover": #F2F2EE,
   "-note": #E9A81C,

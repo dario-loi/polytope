@@ -81,5 +81,9 @@ import Equation from "@dario-loi/polytope/astro/Equation.astro";
   if (m.sim && !m.active?.length && m.landed?.some((n: number) => n > 0)) show(m.sim.counts);
   document.querySelectorAll('.ply-app [name]').forEach((el) => el.addEventListener("change", go));
   document.querySelector("[data-run]")!.addEventListener("click", go);
-  document.querySelector("[data-speed]")!.addEventListener("ply-change", (e: Event) => { mode = (e as CustomEvent).detail.value; });
+  document.querySelector("[data-speed]")!.addEventListener("ply-change", (e: Event) => {
+    mode = (e as CustomEvent).detail.value;
+    // Picking "Skip to end" during a drop stops it at the settled pile.
+    if (mode === "settle" && m.active?.length) m.settle();
+  });
 </script>

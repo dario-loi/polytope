@@ -12,14 +12,14 @@ import Frame from "./Frame.astro";
 <style is:global>
   .xb-ease .xb__panel { grid-template-rows: 1fr auto; gap: var(--ply-space-4); }
   .xb-ease__lanes { display: grid; grid-template-columns: 1fr auto; gap: var(--ply-space-7); align-items: end; width: min(100%, 26rem); }
-  .xb-ease__lane { position: relative; height: 1.5rem; border-bottom: 3px solid var(--ply-color-panel-text); }
+  .xb-ease__lane { position: relative; height: 1.5rem; border-bottom: 3px solid var(--ply-color-panel-text); container-type: inline-size; }
   .xb-ease__drop { position: relative; width: 2rem; height: 8rem; border-bottom: 3px solid var(--ply-color-panel-text); }
   .xb-ease__ball { position: absolute; bottom: 0; width: 1.25rem; height: 1.25rem; border-radius: 50%; }
-  .xb-ease__ball--out { left: calc(100% - 1.25rem); background: var(--ply-teal-300); }
+  .xb-ease__ball--out { left: 0; transform: translateX(calc(100cqw - 1.25rem)); background: var(--ply-teal-300); }
   .xb-ease__ball--fall { left: 50%; margin-left: -0.625rem; background: var(--ply-color-accent); }
   .xb-ease.is-running .xb-ease__ball--out { animation: xb-out 900ms var(--ply-ease-out) both; }
   .xb-ease.is-running .xb-ease__ball--fall { animation: xb-fall var(--ply-duration-drop) var(--ply-ease-gravity) both; }
-  @keyframes xb-out { from { left: 0; } to { left: calc(100% - 1.25rem); } }
+  @keyframes xb-out { from { transform: translateX(0); } to { transform: translateX(calc(100cqw - 1.25rem)); } }
   @keyframes xb-fall { from { transform: translateY(-6.5rem); } to { transform: translateY(0); } }
 </style>
 <script>

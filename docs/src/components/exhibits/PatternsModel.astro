@@ -11,13 +11,15 @@ const items = [
   <ul class="xb-pat__row" role="list">
     {items.map((i) => (
       <li>
-        <a class={`xb-pat__page xb-pat__page--${i.kind}`} href={u(i.href)}>
-          <span class="xb-pat__bar"></span>
-          <span class="xb-pat__title"></span>
-          <span class="xb-pat__body"><i></i><i></i><i></i></span>
-          <span class="xb-pat__model"></span>
+        <a class="xb-pat__link" href={u(i.href)}>
+          <span class={`xb-pat__page xb-pat__page--${i.kind}`} aria-hidden="true">
+            <span class="xb-pat__bar"></span>
+            <span class="xb-pat__title"></span>
+            <span class="xb-pat__body"><i></i><i></i><i></i></span>
+            <span class="xb-pat__model"></span>
+          </span>
+          <span class="xb-pat__label">{i.label}</span>
         </a>
-        <span class="xb-pat__label">{i.label}</span>
       </li>
     ))}
   </ul>
@@ -25,9 +27,9 @@ const items = [
 </Frame>
 <style is:global>
   .xb-pat__row { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--ply-space-5); width: 100%; max-width: 30rem; }
-  .xb-pat__row li { display: grid; gap: var(--ply-space-2); justify-items: center; }
+  .xb-pat__link { display: grid; gap: var(--ply-space-2); justify-items: center; text-decoration-color: color-mix(in srgb, currentColor 45%, transparent); }
   .xb-pat__page { font-size: clamp(6px, 0.9vw, 10px); display: grid; grid-template-rows: auto auto 1fr; gap: 0.8em; width: 100%; aspect-ratio: 3 / 4; background: var(--ply-white); padding: 1.1em; text-decoration: none; transition: transform var(--ply-duration-base) var(--ply-ease-out); position: relative; }
-  .xb-pat__page:hover, .xb-pat__page:focus-visible { transform: translateY(-0.5rem); }
+  .xb-pat__link:hover .xb-pat__page, .xb-pat__link:focus-visible .xb-pat__page { transform: translateY(-0.5rem); }
   .xb-pat__bar { height: 0.35em; background: var(--ply-ink-950); margin-top: 0.9em; }
   .xb-pat__title { height: 1.3em; width: 70%; background: var(--ply-ink-950); }
   .xb-pat__body { display: grid; gap: 0.5em; align-content: start; }
@@ -38,5 +40,5 @@ const items = [
   .xb-pat__page--paper .xb-pat__model::after { content: ""; position: absolute; left: 10%; right: 10%; top: 50%; height: 2px; background: var(--ply-tomato-500); transform: rotate(-12deg); }
   .xb-pat__page--demo .xb-pat__model { width: auto; left: 1.1em; top: auto; bottom: 1.1em; aspect-ratio: 2 / 1; }
   .xb-pat__page--demo .xb-pat__model::after { content: ""; position: absolute; left: 50%; bottom: 20%; width: 1em; height: 1em; margin-left: -0.5em; border-radius: 50%; background: var(--ply-tomato-500); }
-  .xb-pat__label { font-size: var(--ply-size-sm); font-weight: var(--ply-weight-semibold); color: var(--ply-color-panel-text); }
+  .xb-pat__label { font-size: var(--ply-size-sm); font-weight: var(--ply-weight-semibold); }
 </style>

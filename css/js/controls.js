@@ -9,8 +9,11 @@ document.addEventListener("input", (e) => {
   const input = e.target;
   if (!(input instanceof HTMLInputElement) || input.type !== "range") return;
   const wrap = input.closest("[data-ply-slider]");
-  const out = wrap?.querySelector("output");
-  if (out) out.textContent = fmt(Number(input.value), wrap.dataset.format);
+  if (!wrap) return;
+  const text = fmt(Number(input.value), wrap.dataset.format);
+  input.setAttribute("aria-valuetext", text);
+  const out = wrap.querySelector("output");
+  if (out) out.textContent = text;
 });
 
 document.addEventListener("click", (e) => {

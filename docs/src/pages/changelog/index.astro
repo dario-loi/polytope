@@ -6,6 +6,31 @@ import ReleaseModel from "../../components/exhibits/ReleaseModel.astro";
   <ReleaseModel slot="exhibit" />
   <section class="ply-wall ply-wide" aria-label="Releases">
     <div class="ply-wall__year">
+      <p class="ply-wall__label">0.2</p>
+      <ul class="ply-wall__entries">
+        <li class="ply-pub">
+          <p class="ply-pub__title">0.2.0, fixes from an accessibility audit</p>
+          <p class="ply-pub__venue">11 October 2026</p>
+          <div class="ply-prose ply-small" style="margin-top: var(--ply-space-2)">
+            <ul>
+              <li>The Astro components load their scripts from <code>dist/js</code>. In 0.1.4, six of them (ThemeToggle, Machine, Complex, Code, Slider, Toc) imported files the npm package leaves out, so a site that installed from npm failed to build. <code>npm run check:package</code> now fails CI when a packaged file points at something the package does not ship.</li>
+              <li>A hovered button fills with <code>--ply-color-accent-text</code> and labels with the new <code>--ply-color-on-accent</code>, which keeps 4.5:1 in both themes.</li>
+              <li>Inside panels and code blocks, muted text and the focus ring take their panel values. On mustard notes the ring is black. Mark other surfaces with <code>data-surface="panel"</code> or <code>data-surface="note"</code>.</li>
+              <li>Windows contrast themes keep checks, radio balls, switches, the current tab, and status marks visible. Pages print in the light theme with ink-on-white panels.</li>
+              <li>On touch screens, small controls grow to 44px. The top bar and the pager fit at 320px.</li>
+              <li>Citation cards no longer widen the page on phones, stay open under the pointer, and close with Escape (<code>js/cite.js</code>).</li>
+              <li>A machine that starts by itself finishes within five seconds. Changing its attributes no longer fires <code>ply-machine-done</code>, and its label reads out the counts.</li>
+              <li>Sliders set <code>aria-valuetext</code>, the loading indicator announces its text, and the theme toggle is a "Dark theme" toggle button.</li>
+              <li><code>PaperHeader</code> and <code>AppShell</code> take a <code>level</code> prop for their heading. Sidenotes stay inline when the main column has no room for the margin.</li>
+              <li>New token <code>--ply-size-ui</code> (15px) for tabs, tables, notes, and sidebar links. Chart text uses <code>--ply-size-xs</code>.</li>
+              <li>Titles no longer jump when Ultra arrives. A new <code>Ultra Fallback</code> face scales Georgia Bold to Ultra's metrics, and the display stack lists it right after Ultra.</li>
+              <li>To update: <code>Status</code> is a live region only with <code>live</code>, so add it where a script changes a status outside an app shell. The <code>kbd</code> and <code>blockquote</code> element defaults moved to the base layer, and any class now wins over them.</li>
+            </ul>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <div class="ply-wall__year">
       <p class="ply-wall__label">0.1</p>
       <ul class="ply-wall__entries">
         <li class="ply-pub">

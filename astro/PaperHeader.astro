@@ -9,12 +9,15 @@ interface Props {
   affiliations?: string[];
   links?: { label: string; href: string; icon?: "paper" | "code" | "data" | "quote" | "external" | "download" }[];
   equalNote?: string;
+  /** Heading level of the title: 1 on a paper page, 2 when the header sits inside another page. */
+  level?: 1 | 2 | 3;
 }
-const { title, venue, authors, affiliations = [], links = [], equalNote = "Equal contribution" } = Astro.props;
+const { title, venue, authors, affiliations = [], links = [], equalNote = "Equal contribution", level = 1 } = Astro.props;
+const H = `h${level}`;
 const anyEqual = authors.some((a) => a.equal);
 ---
 <header class="ply-paper">
-  <h1 class="ply-paper__title">{title}</h1>
+  <H class="ply-paper__title">{title}</H>
   <div class="ply-stack" style="--ply-stack-gap: var(--ply-space-2)">
     <ul class="ply-authors" aria-label="Authors">
       {authors.map((a) => {

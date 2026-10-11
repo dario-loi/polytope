@@ -1,11 +1,12 @@
 ---
 // Demo and tool chrome. Slots: head (right side of the header), controls, default (the stage), status.
-interface Props { title: string; class?: string }
-const { title, class: className } = Astro.props;
+interface Props { title: string; level?: 2 | 3 | 4; class?: string }
+const { title, level = 2, class: className } = Astro.props;
+const H = `h${level}`;
 ---
 <section class:list={["ply-app", className]} aria-label={title}>
   <header class="ply-app__head">
-    <h2 class="ply-app__title">{title}</h2>
+    <H class="ply-app__title">{title}</H>
     <div class="ply-cluster"><slot name="head" /></div>
   </header>
   <div class="ply-app__controls"><slot name="controls" /></div>

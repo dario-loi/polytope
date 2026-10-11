@@ -54,7 +54,12 @@ const labelY = Object.fromEntries(ends.map((e) => [e.i, e.y]));
     const line = xh.querySelector("line")!;
     const dots = [...xh.querySelectorAll("circle")];
     const paths = [...svg.querySelectorAll("path")];
-    const move = (ev: PointerEvent) => {
+    // One update per frame: the tooltip write and the size read below happen once, not per event.
+    let queued: PointerEvent | null = null;
+    const draw = () => {
+      const ev = queued;
+      queued = null;
+      if (!ev) return; // the pointer left before this frame
       const pt = new DOMPoint(ev.clientX, ev.clientY).matrixTransform(svg.getScreenCTM()!.inverse());
       const x0 = +hit.getAttribute("x")!, w = +hit.getAttribute("width")!;
       const i = Math.max(0, Math.min(epochs.length - 1, Math.round(((pt.x - x0) / w) * (epochs.length - 1))));
@@ -72,7 +77,8 @@ const labelY = Object.fromEntries(ends.map((e) => [e.i, e.y]));
       tip.style.left = `${Math.min(left, r.width - tip.offsetWidth - 4)}px`;
       tip.style.top = `${ev.clientY - r.top - 10}px`;
     };
+    const move = (ev: PointerEvent) => { if (!queued) requestAnimationFrame(draw); queued = ev; };
     hit.addEventListener("pointermove", move);
-    hit.addEventListener("pointerleave", () => { xh.style.display = "none"; tip.hidden = true; });
+    hit.addEventListener("pointerleave", () => { queued = null; xh.style.display = "none"; tip.hidden = true; });
   }
 </script>

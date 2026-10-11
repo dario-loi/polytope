@@ -1,8 +1,9 @@
+@layer ply.reset, ply.base, ply.layout, ply.components, ply.utilities;
 @layer ply.components {
   /* Paper header: title, authors with affiliation marks, venue, and the link row. */
   .ply-paper { display: grid; gap: var(--ply-space-5); padding-block: var(--ply-space-7); }
   .ply-paper__venue { font-size: var(--ply-size-sm); font-weight: var(--ply-weight-bold); }
-  .ply-paper__title { font-family: var(--ply-font-display); font-weight: 400; font-size: clamp(2.25rem, 1.4rem + 2.8vw, 4rem); line-height: 1.02; letter-spacing: -0.01em; max-width: 22ch; }
+  .ply-paper__title { font-family: var(--ply-font-display); font-weight: 400; font-size: clamp(var(--ply-size-2xl), 1.2rem + 3vw, var(--ply-size-4xl)); line-height: 1.02; letter-spacing: -0.01em; max-width: 22ch; }
   .ply-paper__links { display: flex; flex-wrap: wrap; gap: var(--ply-space-2); }
 
   .ply-authors { display: flex; flex-wrap: wrap; gap: var(--ply-space-1) var(--ply-space-4); list-style: none; padding: 0; font-size: var(--ply-size-lg); font-weight: var(--ply-weight-semibold); }
@@ -34,9 +35,14 @@
   .ply-cite { position: relative; display: inline; }
   .ply-cite > a { font-weight: var(--ply-weight-semibold); font-variant-numeric: tabular-nums; text-decoration: none; color: var(--ply-color-link); }
   .ply-cite > a:hover { text-decoration: underline; }
-  .ply-cite__card { position: absolute; left: 50%; bottom: calc(100% + 0.5rem); z-index: 50; width: min(22rem, 80vw); transform: translate(-50%, 0.25rem); opacity: 0; pointer-events: none; background: var(--ply-color-panel); color: var(--ply-color-panel-text); padding: var(--ply-space-3) var(--ply-space-4); font-size: var(--ply-size-sm); line-height: var(--ply-leading-normal); font-weight: var(--ply-weight-regular); box-shadow: 0 0.5rem 1.5rem rgb(0 0 0 / 0.18); transition: opacity var(--ply-duration-base) var(--ply-ease-out), transform var(--ply-duration-base) var(--ply-ease-out); }
+  /* Closed cards are display: none so they never widen the page. The ::before strip bridges
+     the gap to the link, so the pointer can move onto the card. js/cite.js adds Escape to
+     close and keeps an open card inside the viewport (--_dx). */
+  .ply-cite__card { display: none; position: absolute; left: 50%; bottom: calc(100% + 0.5rem); z-index: 50; width: min(22rem, calc(100vw - 2rem)); transform: translate(calc(-50% + var(--_dx, 0px)), 0.25rem); opacity: 0; background: var(--ply-color-panel); color: var(--ply-color-panel-text); padding: var(--ply-space-3) var(--ply-space-4); font-size: var(--ply-size-sm); line-height: var(--ply-leading-normal); font-weight: var(--ply-weight-regular); box-shadow: 0 0.5rem 1.5rem rgb(0 0 0 / 0.18); outline: 1px solid var(--ply-color-panel-rule); outline-offset: -1px; transition: opacity var(--ply-duration-base) var(--ply-ease-out), transform var(--ply-duration-base) var(--ply-ease-out), display var(--ply-duration-base) allow-discrete; }
+  .ply-cite__card::before { content: ""; position: absolute; inset-inline: 0; top: 100%; height: 0.75rem; }
   .ply-cite__card b { color: var(--ply-color-panel-text); }
-  .ply-cite:hover .ply-cite__card, .ply-cite:focus-within .ply-cite__card { opacity: 1; transform: translate(-50%, 0); pointer-events: auto; }
+  .ply-cite:is(:hover, :focus-within):not([data-dismissed]) .ply-cite__card { display: block; opacity: 1; transform: translate(calc(-50% + var(--_dx, 0px)), 0); }
+  @starting-style { .ply-cite:is(:hover, :focus-within):not([data-dismissed]) .ply-cite__card { opacity: 0; transform: translate(calc(-50% + var(--_dx, 0px)), 0.25rem); } }
 
   /* BibTeX block: a code panel with a copy button, set narrower than prose code. */
   .ply-bibtex .ply-code { max-width: var(--ply-layout-measure); }
@@ -52,8 +58,9 @@
   .ply-pub { display: grid; gap: var(--ply-space-1); }
   .ply-pub__title { font-weight: var(--ply-weight-bold); font-size: var(--ply-size-lg); line-height: 1.3; }
   .ply-pub__title a { color: inherit; font-weight: inherit; }
-  .ply-pub__authors { font-size: 0.96875rem; color: var(--ply-color-text-muted); }
+  .ply-pub__authors { font-size: var(--ply-size-ui); color: var(--ply-color-text-muted); }
   .ply-pub__authors .ply-me { color: var(--ply-color-text); font-weight: var(--ply-weight-semibold); }
   .ply-pub__venue { font-size: var(--ply-size-sm); font-weight: var(--ply-weight-semibold); }
   .ply-pub__links { display: flex; flex-wrap: wrap; gap: var(--ply-space-3); font-size: var(--ply-size-sm); margin-top: var(--ply-space-1); }
+  .ply-pub__links a { display: inline-flex; align-items: center; min-height: 1.5rem; }
 }

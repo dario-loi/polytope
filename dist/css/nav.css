@@ -1,3 +1,4 @@
+@layer ply.reset, ply.base, ply.layout, ply.components, ply.utilities;
 @layer ply.components {
   /* Top bar: wordmark, chapter links with a black wall-label tab on the current one, tools. */
   .ply-topbar { border-bottom: var(--ply-border-rule) solid var(--ply-color-rule-strong); background: var(--ply-color-bg); }
@@ -7,26 +8,31 @@
   .ply-wordmark__stop { color: var(--ply-color-accent); }
   .ply-topbar__links { display: none; }
   .ply-topbar__tools { margin-inline-start: auto; display: flex; align-items: center; gap: var(--ply-space-2); flex: none; }
+  /* Narrow screens keep the tool names for screen readers and show only the icons. */
   @media (max-width: 40rem) {
     .ply-topbar__inner { gap: var(--ply-space-3); }
     .ply-topbar__tools { gap: var(--ply-space-1); }
     .ply-search-trigger { padding: 0; width: 2.5rem; justify-content: center; }
     .ply-search-trigger > span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
   }
+  @media (max-width: 25rem) {
+    .ply-menu--chapters > summary { padding: 0; min-width: 2.5rem; }
+    .ply-menu__word { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  }
   @media (min-width: 72rem) {
     .ply-topbar__links { display: flex; align-items: center; gap: var(--ply-space-1); margin-inline-start: var(--ply-space-5); }
   }
 
-  .ply-tab { display: inline-flex; align-items: center; min-height: 2.25rem; padding: 0 var(--ply-space-3); color: var(--ply-color-text-muted); font-size: 0.9375rem; font-weight: var(--ply-weight-medium); text-decoration: none; white-space: nowrap; transition: color var(--ply-duration-fast) var(--ply-ease-out), background var(--ply-duration-fast) var(--ply-ease-out); }
+  .ply-tab { display: inline-flex; align-items: center; min-height: 2.25rem; padding: 0 var(--ply-space-3); color: var(--ply-color-text-muted); font-size: var(--ply-size-ui); font-weight: var(--ply-weight-medium); text-decoration: none; white-space: nowrap; transition: color var(--ply-duration-fast) var(--ply-ease-out), background var(--ply-duration-fast) var(--ply-ease-out); }
   .ply-tab:not([aria-current]):hover { color: var(--ply-color-text); background: var(--ply-color-surface-sunken); }
   .ply-tab[aria-current="page"], .ply-tab[aria-current="true"] { background: var(--ply-color-text); color: var(--ply-color-bg); font-weight: var(--ply-weight-semibold); }
 
   /* Search trigger shaped like an input. */
-  .ply-search-trigger { text-decoration: none; font-weight: var(--ply-weight-medium); display: inline-flex; align-items: center; gap: var(--ply-space-4); min-height: 2.5rem; padding: 0 var(--ply-space-2) 0 var(--ply-space-3); border: var(--ply-border-control) solid var(--ply-color-rule-strong); background: transparent; color: var(--ply-color-text-muted); font-size: 0.9375rem; cursor: pointer; }
+  .ply-search-trigger { text-decoration: none; font-weight: var(--ply-weight-medium); display: inline-flex; align-items: center; gap: var(--ply-space-4); min-height: 2.5rem; padding: 0 var(--ply-space-2) 0 var(--ply-space-3); border: var(--ply-border-control) solid var(--ply-color-rule-strong); background: transparent; color: var(--ply-color-text-muted); font-size: var(--ply-size-ui); cursor: pointer; }
   .ply-search-trigger:hover { color: var(--ply-color-text); }
 
   /* Chapter sidebar. The current page gets the tomato point. */
-  .ply-sidenav { font-size: 0.96875rem; }
+  .ply-sidenav { font-size: var(--ply-size-ui); }
   .ply-sidenav__group + .ply-sidenav__group { margin-top: var(--ply-space-5); }
   .ply-sidenav__heading { font-size: var(--ply-size-xs); font-weight: var(--ply-weight-bold); color: var(--ply-color-text); margin-bottom: var(--ply-space-2); }
   .ply-sidenav ul { list-style: none; padding: 0 0 0 var(--ply-space-5); }
@@ -49,16 +55,22 @@
   .ply-breadcrumb a { color: inherit; font-weight: var(--ply-weight-regular); }
 
   /* Previous and next at the end of a page. */
-  .ply-pager { display: grid; grid-template-columns: 1fr 1fr; gap: var(--ply-space-4); margin-top: var(--ply-space-8); border-top: var(--ply-border-rule) solid var(--ply-color-rule-strong); padding-top: var(--ply-space-5); }
+  .ply-pager { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--ply-space-4); margin-top: var(--ply-space-8); border-top: var(--ply-border-rule) solid var(--ply-color-rule-strong); padding-top: var(--ply-space-5); }
   .ply-pager a { display: block; text-decoration: none; color: var(--ply-color-text); padding: var(--ply-space-3) 0; }
   .ply-pager a span { display: block; font-size: var(--ply-size-sm); color: var(--ply-color-text-muted); font-weight: var(--ply-weight-medium); }
-  .ply-pager a strong { font-family: var(--ply-font-display); font-weight: 400; font-size: var(--ply-size-xl); line-height: 1.1; }
+  .ply-pager a strong { font-family: var(--ply-font-display); font-weight: 400; font-size: var(--ply-size-xl); line-height: 1.1; overflow-wrap: break-word; }
   .ply-pager a:hover strong { color: var(--ply-color-accent-text); }
   .ply-pager__next { text-align: end; grid-column: 2; }
+  @media (max-width: 30rem) {
+    .ply-pager { grid-template-columns: minmax(0, 1fr); gap: 0; }
+    .ply-pager__next { grid-column: 1; }
+  }
 
   /* Mobile chapter menu (a native details element, no script needed). */
   .ply-menu { position: relative; }
+  /* The menu button matches the search field's 40px height when they sit side by side. */
   .ply-menu > summary { list-style: none; cursor: pointer; }
+  .ply-menu--chapters > summary { min-height: 2.5rem; }
   .ply-menu > summary::-webkit-details-marker { display: none; }
   .ply-menu__panel { position: absolute; right: 0; top: calc(100% + var(--ply-space-2)); z-index: 100; min-width: 16rem; background: var(--ply-color-bg); border: var(--ply-border-rule) solid var(--ply-color-rule-strong); padding: var(--ply-space-3); display: grid; gap: var(--ply-space-1); }
   @media (min-width: 72rem) { .ply-menu--chapters { display: none; } }

@@ -15,6 +15,7 @@
   --color-rule: var(--ply-color-rule);
   --color-accent: var(--ply-color-accent);
   --color-accent-text: var(--ply-color-accent-text);
+  --color-on-accent: var(--ply-color-on-accent);
   --color-link: var(--ply-color-link);
   --color-link-hover: var(--ply-color-link-hover);
   --color-note: var(--ply-color-note);
@@ -69,6 +70,7 @@
   --font-mono: var(--ply-font-mono);
   --text-xs: var(--ply-size-xs);
   --text-sm: var(--ply-size-sm);
+  --text-ui: var(--ply-size-ui);
   --text-md: var(--ply-size-md);
   --text-body: var(--ply-size-body);
   --text-lg: var(--ply-size-lg);

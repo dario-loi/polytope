@@ -13,28 +13,31 @@ const here = locate(Astro.url.pathname);
 const groups = [{ heading: here.chapter.label, items: here.chapter.pages.map((p) => ({ label: p.label, href: u(p.path), current: p.path === here.page?.path })) }];
 ---
 <Base title={title} description={description ?? lede}>
-  <Mast title={title} lede={lede}>
-    {status && <p slot="after" class="docs-status"><Stability level={status} /> <span>{status === "stable" ? "Class names and props are not expected to change before 1.0." : status === "experimental" ? "May change in any minor version before 1.0." : "Still works; see the replacement below."}</span></p>}
-    {Astro.slots.has("exhibit") && <div slot="exhibit"><slot name="exhibit" /></div>}
-  </Mast>
-  <hr class="ply-rule" />
-  <div class="ply-container ply-docs">
-    <aside class="ply-docs__nav">
-      <SideNav groups={groups} label={`${here.chapter.label} pages`} />
-    </aside>
-    <main id="main" class="ply-docs__main" data-toc-scope>
-      <div class:list={["ply-prose", wide && "ply-wide"]}>
-        <slot />
+  <main id="main">
+    <Mast title={title} lede={lede}>
+      {status && <p slot="after" class="docs-status"><Stability level={status} /> <span>{status === "stable" ? "Class names and props are not expected to change before 1.0." : status === "experimental" ? "May change in any minor version before 1.0." : "Still works; see the replacement below."}</span></p>}
+      {Astro.slots.has("exhibit") && <div slot="exhibit"><slot name="exhibit" /></div>}
+    </Mast>
+    <hr class="ply-rule" />
+    <div class="ply-container ply-docs">
+      <div class="ply-docs__nav">
+        <SideNav groups={groups} label={`${here.chapter.label} pages`} />
       </div>
-      <Pager
-        prev={here.prev && { label: here.prev.label, href: u(here.prev.path) }}
-        next={here.next && { label: here.next.label, href: u(here.next.path) }}
-      />
-    </main>
-    <aside class="ply-docs__toc">
-      {toc && <nav class="ply-toc" data-auto aria-label="On this page"><p class="ply-toc__heading">On this page</p><ul></ul></nav>}
-    </aside>
-  </div>
+      <div class="ply-docs__main" data-toc-scope>
+        <div class:list={["ply-prose", wide && "ply-wide"]}>
+          <slot />
+        </div>
+        <Pager
+          label="Previous and next page"
+          prev={here.prev && { label: here.prev.label, href: u(here.prev.path) }}
+          next={here.next && { label: here.next.label, href: u(here.next.path) }}
+        />
+      </div>
+      <div class="ply-docs__toc">
+        {toc && <nav class="ply-toc" data-auto aria-label="On this page"><p class="ply-toc__heading">On this page</p><ul></ul></nav>}
+      </div>
+    </div>
+  </main>
 </Base>
 <style is:global>
   .docs-status { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ply-space-2) var(--ply-space-3); margin-top: var(--ply-space-4); font-size: var(--ply-size-sm); color: var(--ply-color-text-muted); }

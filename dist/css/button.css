@@ -1,3 +1,4 @@
+@layer ply.reset, ply.base, ply.layout, ply.components, ply.utilities;
 @layer ply.components {
   /* Buttons are square exhibit labels: black by default, outlined or bare when quieter. */
   .ply-button {
@@ -9,14 +10,15 @@
     cursor: pointer; user-select: none;
     transition: background var(--ply-duration-fast) var(--ply-ease-out), color var(--ply-duration-fast) var(--ply-ease-out), border-color var(--ply-duration-fast) var(--ply-ease-out), transform var(--ply-duration-fast) var(--ply-ease-out);
   }
-  .ply-button:hover { --_bg: var(--ply-color-accent); --_bd: var(--ply-color-accent); --_fg: var(--ply-white); background: var(--_bg); color: var(--_fg); }
+  /* Hover fills tomato. The fill is accent-text so the label keeps 4.5:1 in both themes. */
+  .ply-button:hover:not(:disabled, [aria-disabled="true"]) { --_bg: var(--ply-color-accent-text); --_bd: var(--ply-color-accent-text); --_fg: var(--ply-color-on-accent); background: var(--_bg); color: var(--_fg); }
   .ply-button:active { transform: translateY(1px); }
   .ply-button svg { width: 1.125em; height: 1.125em; flex: none; }
 
   .ply-button--secondary { --_bg: transparent; --_fg: var(--ply-color-text); --_bd: var(--ply-color-text); }
-  .ply-button--secondary:hover { --_bg: var(--ply-color-text); --_fg: var(--ply-color-bg); --_bd: var(--ply-color-text); background: var(--ply-color-text); color: var(--ply-color-bg); }
+  .ply-button--secondary:hover:not(:disabled, [aria-disabled="true"]) { --_bg: var(--ply-color-text); --_fg: var(--ply-color-bg); --_bd: var(--ply-color-text); background: var(--ply-color-text); color: var(--ply-color-bg); }
   .ply-button--ghost { --_bg: transparent; --_fg: var(--ply-color-text); --_bd: transparent; padding-inline: var(--ply-space-3); }
-  .ply-button--ghost:hover { --_bg: var(--ply-color-surface-sunken); --_fg: var(--ply-color-text); --_bd: transparent; background: var(--ply-color-surface-sunken); color: var(--ply-color-text); }
+  .ply-button--ghost:hover:not(:disabled, [aria-disabled="true"]) { --_bg: var(--ply-color-surface-sunken); --_fg: var(--ply-color-text); --_bd: transparent; background: var(--ply-color-surface-sunken); color: var(--ply-color-text); }
   .ply-button--sm { min-height: 2.25rem; padding-inline: var(--ply-space-4); font-size: var(--ply-size-sm); }
   .ply-button--icon { padding: 0; width: 2.75rem; }
   .ply-button--icon.ply-button--sm { width: 2.25rem; }
@@ -26,7 +28,8 @@
   .ply-button[aria-busy="true"] .ply-loading { --ply-loading-color: currentColor; }
 
   /* Inside a black panel the primary button turns white. */
-  .ply-panel .ply-button:not(.ply-button--secondary, .ply-button--ghost) { --_bg: var(--ply-color-panel-text); --_fg: var(--ply-color-panel); --_bd: var(--ply-color-panel-text); }
+  .ply-panel .ply-button:not(.ply-button--secondary, .ply-button--ghost, :disabled, [aria-disabled="true"]) { --_bg: var(--ply-color-panel-text); --_fg: var(--ply-color-panel); --_bd: var(--ply-color-panel-text); }
   .ply-panel .ply-button--secondary { --_fg: var(--ply-color-panel-text); --_bd: var(--ply-color-panel-text); }
-  .ply-panel .ply-button:hover { --_bg: var(--ply-color-accent); --_bd: var(--ply-color-accent); --_fg: var(--ply-white); }
+  .ply-panel .ply-button:hover:not(:disabled, [aria-disabled="true"]) { --_bg: var(--ply-color-accent-text); --_bd: var(--ply-color-accent-text); --_fg: var(--ply-color-on-accent); }
+  .ply-panel .ply-button:is(:disabled, [aria-disabled="true"]) { --_bg: transparent; --_fg: var(--ply-color-panel-muted); --_bd: var(--ply-color-panel-rule); }
 }

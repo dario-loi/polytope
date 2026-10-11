@@ -29,7 +29,18 @@
   a:hover { color: var(--ply-color-link-hover); text-decoration-color: var(--ply-color-accent); }
 
   :focus-visible { outline: 3px solid var(--ply-color-focus); outline-offset: 2px; }
-  .ply-panel :focus-visible, [data-surface="panel"] :focus-visible { outline-color: var(--ply-color-focus-on-panel); }
+
+  /* Surfaces. Inside a black panel or a code block the quiet text tokens and the focus ring
+     switch to their panel values, so utilities and controls read correctly there.
+     On mustard the ring is black. Mark other surfaces with data-surface="panel" or "note". */
+  .ply-panel, .ply-code, [data-surface="panel"] {
+    --ply-color-text-muted: var(--ply-color-panel-muted);
+    --ply-color-text-subtle: var(--ply-color-panel-muted);
+    --ply-color-focus: var(--ply-color-focus-on-panel);
+  }
+  .ply-note, mark, [data-surface="note"] { --ply-color-focus: var(--ply-ink-950); }
+  .ply-note:is(.ply-note--soft, .ply-note--info, .ply-note--success) { --ply-color-focus: inherit; }
+  .ply-note--danger { --ply-color-focus: var(--ply-color-focus-on-panel); }
 
   strong, b { font-weight: var(--ply-weight-bold); }
   small { font-size: var(--ply-size-sm); }
@@ -40,5 +51,8 @@
   code, kbd, samp, pre { font-family: var(--ply-font-mono); font-size: 0.875em; font-variant-ligatures: none; }
   :not(pre) > code { background: var(--ply-color-surface-sunken); padding: 0.1em 0.35em; overflow-wrap: anywhere; }
   table { font-variant-numeric: tabular-nums; }
+  /* Element defaults that match .ply-kbd and .ply-quote; in the base layer so any class wins. */
+  kbd { display: inline-block; font-family: var(--ply-font-mono); font-size: 0.8em; line-height: 1.4; padding: 0 0.4em; border: 1.5px solid currentColor; border-bottom-width: 3px; }
+  blockquote { margin: var(--ply-space-5) 0; padding-inline-start: var(--ply-space-5); border-inline-start: 1px solid var(--ply-color-rule-strong); font-size: var(--ply-size-lg); line-height: var(--ply-leading-normal); max-width: var(--ply-layout-measure); }
   ::placeholder { color: var(--ply-color-text-subtle); opacity: 1; }
 }

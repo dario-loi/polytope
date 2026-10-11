@@ -36,6 +36,7 @@ const start = sizes.indexOf("--ply-size-2xl");
       sample.classList.toggle("is-display", /2xl|3xl|4xl|display/.test(name));
       fig.querySelector(".xb-type__name")!.textContent = name;
       fig.querySelector(".xb-type__val")!.textContent = value;
+      input.setAttribute("aria-valuetext", `${name}, ${value}`);
     };
     input.addEventListener("input", update);
     update();

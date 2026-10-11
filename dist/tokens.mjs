@@ -213,8 +213,8 @@ export const tokens = {
   "--ply-font-display": {
     "path": "font.family.display",
     "type": "fontFamily",
-    "value": "\"Ultra\", \"Rockwell Extra Bold\", Rockwell, Georgia, serif",
-    "ref": "\"Ultra\", \"Rockwell Extra Bold\", Rockwell, Georgia, serif",
+    "value": "\"Ultra\", \"Ultra Fallback\", \"Rockwell Extra Bold\", Rockwell, Georgia, serif",
+    "ref": "\"Ultra\", \"Ultra Fallback\", \"Rockwell Extra Bold\", Rockwell, Georgia, serif",
     "description": "Wood-type slab for titles, the wordmark, and big numerals. Never for running text."
   },
   "--ply-font-text": {
@@ -244,6 +244,13 @@ export const tokens = {
     "value": "0.875rem",
     "ref": "0.875rem",
     "description": ""
+  },
+  "--ply-size-ui": {
+    "path": "font.size.ui",
+    "type": "dimension",
+    "value": "0.9375rem",
+    "ref": "0.9375rem",
+    "description": "Interface text: tabs, search, sidebar links, tables, notes, author lines."
   },
   "--ply-size-md": {
     "path": "font.size.md",
@@ -662,6 +669,15 @@ export const tokens = {
     "dark": "#F0654F",
     "darkRef": "{primitive.color.tomato.400}",
     "description": "Tomato when it has to be read as text."
+  },
+  "--ply-color-on-accent": {
+    "path": "color.on-accent",
+    "type": "color",
+    "value": "#FFFFFF",
+    "ref": "{primitive.color.white}",
+    "dark": "#141414",
+    "darkRef": "{primitive.color.ink.950}",
+    "description": "Text on a filled tomato control, such as a hovered button. The fill is accent-text."
   },
   "--ply-color-link": {
     "path": "color.link",

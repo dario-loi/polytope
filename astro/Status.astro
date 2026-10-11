@@ -1,6 +1,7 @@
 ---
-// Status always shows a mark and a word.
-interface Props { state: "idle" | "running" | "done" | "warning" | "error" }
-const { state } = Astro.props;
+// Status always shows a mark and a word. Set `live` when a script changes it and nothing
+// around it is a live region already (AppShell's status bar is one).
+interface Props { state: "idle" | "running" | "done" | "warning" | "error"; live?: boolean }
+const { state, live = false } = Astro.props;
 ---
-<span class={`ply-status ply-status--${state}`} role={state === "error" ? "alert" : "status"}><slot /></span>
+<span class={`ply-status ply-status--${state}`} role={live ? "status" : undefined}><slot /></span>

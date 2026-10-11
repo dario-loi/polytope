@@ -17,7 +17,7 @@ const space = Object.keys(t).filter((k) => k.startsWith("--ply-space-"));
     <li>Reading column <code>--ply-layout-measure</code>: 36rem, about 68 characters of body text. Code, tables, and wide figures may run wider.</li>
     <li>Docs pages add a chapter sidebar from 56rem and an on-this-page list from 80rem.</li>
     <li>The page mast splits into title and exhibit from 64rem. Below that, the exhibit stacks under the title.</li>
-    <li>Sidenotes move into the margin from 90rem.</li>
+    <li>Sidenotes move into the margin from 90rem, when the main column (container <code>ply-main</code>) has 52rem for the measure, the gap, and the note. Docs pages, with their on-this-page list, keep them inline.</li>
   </ul>
 
   <h2>Rules and borders</h2>
@@ -39,8 +39,8 @@ const space = Object.keys(t).filter((k) => k.startsWith("--ply-space-"));
   <p><code>.ply-stack</code> stacks children with a gap, <code>.ply-cluster</code> wraps them in a row, <code>.ply-grid</code> makes responsive columns from a minimum width. Each reads a custom property for its gap (<code>--ply-stack-gap</code>, <code>--ply-cluster-gap</code>, <code>--ply-grid-gap</code>).</p>
 </Docs>
 <style>
-  .sp { list-style: none; padding: 0; display: grid; gap: var(--ply-space-2); }
-  .sp li { display: grid; grid-template-columns: 9rem 1fr 4rem; gap: var(--ply-space-3); align-items: center; }
+  .sp { list-style: none; padding: 0; display: grid; grid-template-columns: max-content minmax(0, 1fr) max-content; gap: var(--ply-space-2) var(--ply-space-3); }
+  .sp li { display: grid; grid-column: 1 / -1; grid-template-columns: subgrid; align-items: center; }
   .sp code { background: none; padding: 0; font-size: var(--ply-size-xs); }
-  .sp__bar { height: 0.875rem; background: var(--ply-color-text); min-width: 1px; }
+  .sp__bar { height: 0.875rem; background: var(--ply-color-text); min-width: 1px; max-width: 100%; }
 </style>

@@ -13,4 +13,4 @@ const { code, lang = "txt", title, copy = true, class: className } = Astro.props
   </div>
   <Shiki code={code.replace(/^\n+|\s+$/g, "")} lang={lang as any} theme={theme as any} />
 </div>
-<script>import "../css/js/copy.js";</script>
+<script>import "../dist/js/copy.js";</script>

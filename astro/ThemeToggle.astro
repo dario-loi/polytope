@@ -1,7 +1,7 @@
 ---
 import Icon from "./Icon.astro";
 ---
-<button class="ply-button ply-button--ghost ply-button--icon ply-button--sm ply-theme-toggle" type="button" data-ply-theme-toggle aria-label="Switch theme" aria-pressed="false">
+<button class="ply-button ply-button--ghost ply-button--icon ply-button--sm ply-theme-toggle" type="button" data-ply-theme-toggle aria-label="Dark theme" aria-pressed="false">
   <span class="ply-theme-toggle__light"><Icon name="moon" /></span>
   <span class="ply-theme-toggle__dark"><Icon name="sun" /></span>
 </button>
@@ -14,4 +14,4 @@ import Icon from "./Icon.astro";
     :root:not([data-theme="light"]) .ply-theme-toggle__dark { display: inline; }
   }
 </style>
-<script>import "../css/js/theme.js";</script>
+<script>import "../dist/js/theme.js";</script>

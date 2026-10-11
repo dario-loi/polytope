@@ -54,4 +54,5 @@ const status = `<div class="ply-cluster" style="--ply-cluster-gap: 1.5rem">
   <Example html={status} />
   <p>Status always pairs a mark with a word, so it reads without color: an empty ring for idle, a pulsing ball for running, a check, a triangle, and a cross. Use it in demo status lines and experiment tables.</p>
   <Code lang="astro" code={`<Status state="running">Training</Status>`} />
+  <p>When a script changes the status, add <code>live</code> so screen readers announce it: <code>&lt;Status state="running" live&gt;</code>. Inside an app shell, leave it off; the status bar is already a live region.</p>
 </Docs>

@@ -35,7 +35,6 @@
   ],
   "--ply-color-accent": [
     "base.css",
-    "components/button.css",
     "components/form.css",
     "components/machine.css",
     "components/nav.css",
@@ -86,7 +85,8 @@
     "layout.css"
   ],
   "--ply-size-2xl": [
-    "base.css"
+    "base.css",
+    "components/research.css"
   ],
   "--ply-size-xl": [
     "base.css",
@@ -162,6 +162,11 @@
     "base.css",
     "components/form.css"
   ],
+  "--ply-color-panel-muted": [
+    "base.css",
+    "components/button.css",
+    "components/code.css"
+  ],
   "--ply-color-focus-on-panel": [
     "base.css"
   ],
@@ -197,7 +202,8 @@
     "components/research.css",
     "components/table.css",
     "components/writing.css",
-    "layout.css"
+    "layout.css",
+    "modes.css"
   ],
   "--ply-space-7": [
     "base.css",
@@ -229,6 +235,38 @@
     "components/table.css",
     "components/writing.css"
   ],
+  "--ply-space-5": [
+    "base.css",
+    "components/button.css",
+    "components/code.css",
+    "components/demo.css",
+    "components/nav.css",
+    "components/note.css",
+    "components/panel.css",
+    "components/research.css",
+    "components/writing.css",
+    "layout.css"
+  ],
+  "--ply-leading-normal": [
+    "base.css",
+    "components/demo.css",
+    "components/form.css",
+    "components/note.css",
+    "components/panel.css",
+    "components/research.css",
+    "components/table.css",
+    "components/viz.css",
+    "components/writing.css",
+    "layout.css"
+  ],
+  "--ply-layout-measure": [
+    "base.css",
+    "components/code.css",
+    "components/note.css",
+    "components/research.css",
+    "components/writing.css",
+    "layout.css"
+  ],
   "--ply-layout-max": [
     "layout.css"
   ],
@@ -240,28 +278,6 @@
     "components/writing.css",
     "layout.css"
   ],
-  "--ply-leading-normal": [
-    "components/demo.css",
-    "components/form.css",
-    "components/note.css",
-    "components/panel.css",
-    "components/research.css",
-    "components/table.css",
-    "components/viz.css",
-    "components/writing.css",
-    "layout.css"
-  ],
-  "--ply-space-5": [
-    "components/button.css",
-    "components/code.css",
-    "components/demo.css",
-    "components/nav.css",
-    "components/note.css",
-    "components/panel.css",
-    "components/research.css",
-    "components/writing.css",
-    "layout.css"
-  ],
   "--ply-space-9": [
     "layout.css"
   ],
@@ -269,13 +285,6 @@
     "layout.css"
   ],
   "--ply-layout-toc": [
-    "layout.css"
-  ],
-  "--ply-layout-measure": [
-    "components/code.css",
-    "components/note.css",
-    "components/research.css",
-    "components/writing.css",
     "layout.css"
   ],
   "--ply-space-4": [
@@ -306,6 +315,7 @@
     "components/viz.css",
     "components/writing.css",
     "layout.css",
+    "modes.css",
     "utilities.css"
   ],
   "--ply-space-2": [
@@ -343,13 +353,21 @@
     "components/form.css",
     "components/nav.css",
     "components/table.css",
-    "components/writing.css"
+    "components/writing.css",
+    "modes.css"
   ],
   "--ply-radius-none": [
     "components/button.css",
     "components/form.css"
   ],
-  "--ply-white": [
+  "--ply-color-accent-text": [
+    "components/button.css",
+    "components/form.css",
+    "components/nav.css",
+    "components/research.css",
+    "components/writing.css"
+  ],
+  "--ply-color-on-accent": [
     "components/button.css"
   ],
   "--ply-color-panel-text": [
@@ -372,6 +390,14 @@
     "components/research.css",
     "components/viz.css"
   ],
+  "--ply-color-panel-rule": [
+    "components/button.css",
+    "components/code.css",
+    "components/demo.css",
+    "components/machine.css",
+    "components/research.css",
+    "components/viz.css"
+  ],
   "--ply-space-1": [
     "components/demo.css",
     "components/nav.css",
@@ -390,6 +416,12 @@
     "components/viz.css",
     "components/writing.css",
     "utilities.css"
+  ],
+  "--ply-size-ui": [
+    "components/nav.css",
+    "components/note.css",
+    "components/research.css",
+    "components/table.css"
   ],
   "--ply-weight-medium": [
     "components/form.css",
@@ -415,12 +447,6 @@
     "components/note.css",
     "components/tag.css",
     "components/viz.css",
-    "components/writing.css"
-  ],
-  "--ply-color-accent-text": [
-    "components/form.css",
-    "components/nav.css",
-    "components/research.css",
     "components/writing.css"
   ],
   "--ply-color-code-string": [
@@ -460,13 +486,6 @@
     "components/form.css",
     "components/research.css"
   ],
-  "--ply-color-panel-rule": [
-    "components/code.css",
-    "components/machine.css"
-  ],
-  "--ply-color-panel-muted": [
-    "components/code.css"
-  ],
   "--ply-color-code-comment": [
     "components/code.css"
   ],
@@ -487,6 +506,12 @@
   ],
   "--ply-ease-gravity": [
     "components/machine.css"
+  ],
+  "--ply-loading-count": [
+    "components/machine.css"
+  ],
+  "--ply-size-4xl": [
+    "components/research.css"
   ],
   "--ply-size-3xl": [
     "components/research.css"

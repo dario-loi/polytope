@@ -16,7 +16,7 @@
   .ply-docs { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0; }
   .ply-docs__nav { display: none; }
   .ply-docs__toc { display: none; }
-  .ply-docs__main { min-width: 0; padding-block: var(--ply-space-6) var(--ply-space-9); }
+  .ply-docs__main { min-width: 0; padding-block: var(--ply-space-6) var(--ply-space-9); container: ply-main / inline-size; }
   @media (min-width: 56rem) {
     .ply-docs { grid-template-columns: var(--ply-layout-sidebar) minmax(0, 1fr); }
     .ply-docs__nav { display: block; padding-block: var(--ply-space-6); position: sticky; top: 0; align-self: start; max-height: 100dvh; overflow-y: auto; }

@@ -7,7 +7,7 @@ import Frame from "./Frame.astro";
       <button class="ply-button xb-comp__run" type="button">Train model</button>
       <label class="ply-switch"><input type="checkbox" role="switch" class="xb-comp__seed" checked /> Fixed seed</label>
     </div>
-    <p class="xb-comp__status"><span class="ply-status ply-status--idle">Idle</span></p>
+    <p class="xb-comp__status" role="status"><span class="ply-status ply-status--idle">Idle</span></p>
   </div>
   <Fragment slot="caption">Press Train model. The button, the loading machine, and the status line change state together, each with a mark and a word.</Fragment>
 </Frame>

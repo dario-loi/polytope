@@ -21,7 +21,7 @@ const { title, subtitle, legend = [], source, class: className } = Astro.props;
       ))}
     </ul>
   )}
-  <div class="ply-chart__plot"><slot /></div>
+  <div class="ply-chart__plot" tabindex="0" role="region" aria-label={`${title}, plot`}><slot /></div>
   <p class="ply-chart__hint" aria-hidden="true">Scroll sideways to see the whole chart.</p>
   {Astro.slots.has("table") && (
     <details class="ply-details"><summary>Data table</summary><slot name="table" /></details>

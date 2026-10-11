@@ -22,6 +22,7 @@ const examplePubs = [
   <h2>Paper header</h2>
   <div class="ex__live" style="border: 2px solid var(--ply-color-rule-strong); padding: 1.5rem">
     <PaperHeader
+      level={2}
       venue="Example Venue 2026"
       title="Example title: higher-order message passing on cell complexes"
       authors={[{ name: "A. Author", affiliations: [1], equal: true }, { name: "John Doe", affiliations: [2], equal: true }, { name: "B. Author", affiliations: [1, 2] }]}
@@ -36,6 +37,7 @@ const examplePubs = [
   affiliations={["Example University"]}
   links={[{ label: "Paper", href: "/paper.pdf", icon: "paper" }, { label: "Code", href: repo, icon: "code" }]}
 />`} />
+  <p>The title is the page's <code>h1</code>. When the header sits inside another page, as it does above, pass <code>level={2}</code>.</p>
 
   <h2>Equations</h2>
   <p>KaTeX renders math at build time, so pages ship HTML and MathML and no math script. The Hodge Laplacian on <M tex={String.raw`k`} />-simplices combines a down and an up part:</p>
@@ -46,7 +48,9 @@ const examplePubs = [
 
   <h2>Citations</h2>
   <p>Hover or focus a citation to see the reference without leaving the sentence<Cite n={1} title="Example reference title" authors="E. Author, F. Author" venue="Example Journal" year={2024} />. The number links to the reference list.</p>
+  <ol class="ply-footnotes" style="margin-top: var(--ply-space-5)"><li id="ref-1">E. Author, F. Author. Example reference title. Example Journal, 2024.</li></ol>
   <Code lang="astro" code={`<Cite n={1} title="..." authors="..." venue="..." year={2024} />`} />
+  <p>The card stays open while the pointer is on it and closes with Escape. In plain HTML, load <code>js/cite.js</code> (it is part of <code>js/all.js</code>).</p>
 
   <h2>Figures</h2>
   <Figure num={2}>

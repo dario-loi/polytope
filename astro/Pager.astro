@@ -1,9 +1,9 @@
 ---
-interface Props { prev?: { label: string; href: string }; next?: { label: string; href: string } }
-const { prev, next } = Astro.props;
+interface Props { prev?: { label: string; href: string }; next?: { label: string; href: string }; label?: string }
+const { prev, next, label = "Pages" } = Astro.props;
 ---
 {(prev || next) && (
-  <nav class="ply-pager" aria-label="Pages">
+  <nav class="ply-pager" aria-label={label}>
     {prev && <a href={prev.href} rel="prev"><span>Previous</span><strong>{prev.label}</strong></a>}
     {next && <a class="ply-pager__next" href={next.href} rel="next"><span>Next</span><strong>{next.label}</strong></a>}
   </nav>

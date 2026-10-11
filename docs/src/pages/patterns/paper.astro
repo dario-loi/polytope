@@ -22,7 +22,7 @@ import LineChartExample from "../../components/LineChartExample.astro";
   </div>
   <hr class="ply-rule" />
   <div class="ply-container pp">
-    <main id="main" class="pp__main" data-toc-scope>
+    <div class="pp__main" data-toc-scope>
       <div class="pp__figure"><LineChartExample /></div>
       <div class="ply-prose ply-has-sidenotes">
         <Abstract>
@@ -67,12 +67,13 @@ import LineChartExample from "../../components/LineChartExample.astro";
           <li id="ref-1">E. Author, F. Author. Example reference: neural message passing. Example Journal, 2017.</li>
         </ol>
       </div>
-    </main>
-    <aside class="pp__toc"><nav class="ply-toc" data-auto aria-label="On this page"><p class="ply-toc__heading">On this page</p><ul></ul></nav></aside>
+    </div>
+    <div class="pp__toc"><nav class="ply-toc" data-auto aria-label="On this page"><p class="ply-toc__heading">On this page</p><ul></ul></nav></div>
   </div>
 </Pattern>
 <style>
   .pp { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--ply-space-7); padding-top: var(--ply-space-6); }
+  .pp__main { min-width: 0; container: ply-main / inline-size; }
   .pp__toc { display: none; }
   @media (min-width: 80rem) { .pp { grid-template-columns: minmax(0, 1fr) var(--ply-layout-toc); } .pp__toc { display: block; position: sticky; top: var(--ply-space-5); align-self: start; } }
   .pp__figure { max-width: 52rem; margin-bottom: var(--ply-space-7); }

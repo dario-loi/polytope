@@ -2,4 +2,4 @@
 interface Props { label?: string }
 const { label = "Loading" } = Astro.props;
 ---
-<span class="ply-loading" role="status" aria-label={label}><i></i></span>
+<span class="ply-loading" role="status"><i></i><span class="ply-visually-hidden">{label}</span></span>

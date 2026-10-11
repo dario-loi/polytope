@@ -1,3 +1,4 @@
+@layer ply.reset, ply.base, ply.layout, ply.components, ply.utilities;
 @layer ply.components {
   /* Demo and tool chrome: a header, a control panel, a black stage, a status line.
      Built for interactive figures and small research tools. */
@@ -32,6 +33,6 @@
   .ply-empty p { color: inherit; opacity: 0.85; font-size: var(--ply-size-md); }
 
   /* Toast for short confirmations. */
-  .ply-toast { position: fixed; inset-inline: var(--ply-space-4); bottom: var(--ply-space-4); z-index: 200; margin-inline: auto; max-width: 26rem; display: flex; gap: var(--ply-space-3); align-items: center; background: var(--ply-color-panel); color: var(--ply-color-panel-text); padding: var(--ply-space-3) var(--ply-space-4); font-size: var(--ply-size-sm); box-shadow: 0 0.75rem 2rem rgb(0 0 0 / 0.25); animation: ply-toast-in var(--ply-duration-slow) var(--ply-ease-out); }
+  .ply-toast { position: fixed; inset-inline: var(--ply-space-4); bottom: var(--ply-space-4); z-index: 200; margin-inline: auto; max-width: 26rem; display: flex; gap: var(--ply-space-3); align-items: center; background: var(--ply-color-panel); color: var(--ply-color-panel-text); padding: var(--ply-space-3) var(--ply-space-4); font-size: var(--ply-size-sm); box-shadow: 0 0.75rem 2rem rgb(0 0 0 / 0.25); outline: 1px solid var(--ply-color-panel-rule); outline-offset: -1px; animation: ply-toast-in var(--ply-duration-slow) var(--ply-ease-out); }
   @keyframes ply-toast-in { from { transform: translateY(0.75rem); opacity: 0; } }
 }

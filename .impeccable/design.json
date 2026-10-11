@@ -720,9 +720,9 @@
       "name": "Primary Button",
       "kind": "button",
       "refersTo": "button-primary",
-      "description": "Square black exhibit label; fills tomato on hover.",
+      "description": "Square black exhibit label; fills tomato ink on hover.",
       "html": "<button class=\"ds-btn\">Copy install line</button>",
-      "css": ".ds-btn { display: inline-flex; align-items: center; min-height: 2.75rem; padding: 0 1.5rem; background: #141414; color: #fff; border: 2px solid #141414; border-radius: 0; font-family: \"Libre Franklin\", \"Helvetica Neue\", Arial, sans-serif; font-size: 1rem; font-weight: 600; line-height: 1; cursor: pointer; transition: background 120ms cubic-bezier(0.16,1,0.3,1), border-color 120ms cubic-bezier(0.16,1,0.3,1), transform 120ms cubic-bezier(0.16,1,0.3,1); } .ds-btn:hover { background: #D9412B; border-color: #D9412B; } .ds-btn:active { transform: translateY(1px); } .ds-btn:focus-visible { outline: 3px solid #0F6E73; outline-offset: 2px; }"
+      "css": ".ds-btn { display: inline-flex; align-items: center; min-height: 2.75rem; padding: 0 1.5rem; background: #141414; color: #fff; border: 2px solid #141414; border-radius: 0; font-family: \"Libre Franklin\", \"Helvetica Neue\", Arial, sans-serif; font-size: 1rem; font-weight: 600; line-height: 1; cursor: pointer; transition: background 120ms cubic-bezier(0.16,1,0.3,1), border-color 120ms cubic-bezier(0.16,1,0.3,1), transform 120ms cubic-bezier(0.16,1,0.3,1); } .ds-btn:hover { background: #B8321F; border-color: #B8321F; } .ds-btn:active { transform: translateY(1px); } .ds-btn:focus-visible { outline: 3px solid #0F6E73; outline-offset: 2px; }"
     },
     {
       "name": "Secondary Button",

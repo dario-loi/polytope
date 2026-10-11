@@ -18,7 +18,7 @@ const { brand = "Polytope", brandHref = "/", links = [], class: className } = As
       <slot />
       {links.length > 0 && (
         <details class="ply-menu ply-menu--chapters">
-          <summary class="ply-button ply-button--secondary ply-button--sm" aria-label="Chapters"><Icon name="menu" /> Menu</summary>
+          <summary class="ply-button ply-button--secondary ply-button--sm"><Icon name="menu" /><span class="ply-menu__word">Menu</span></summary>
           <nav class="ply-menu__panel" aria-label="Chapters">
             {links.map((l) => <a class="ply-tab" href={l.href} aria-current={l.current ? "page" : undefined}>{l.label}</a>)}
           </nav>

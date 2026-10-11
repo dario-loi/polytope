@@ -30,6 +30,7 @@ jobs:
       # dist/ and the generated Python theme files are committed; they must match a fresh build
       - run: git diff --exit-code -- dist python/src/polytope_theme
       - run: npm run check:contrast
+      - run: npm run check:package
       - run: npm run check:prose
       - run: npm run docs:build
         env:

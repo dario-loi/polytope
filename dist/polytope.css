@@ -1,7 +1,12 @@
-/* Polytope v0.1.4. Generated; edit css/src instead. */
+/* Polytope v0.2.0. Generated; edit css/src instead. */
 @layer ply.reset, ply.base, ply.layout, ply.components, ply.utilities;
 /* Self-hosted faces. Ultra: Apache 2.0. Libre Franklin and JetBrains Mono: SIL OFL 1.1. License texts: ./fonts/LICENSE-*.txt */
 @font-face { font-family: "Ultra"; font-style: normal; font-weight: 400; font-display: swap; src: url("./fonts/ultra-latin-400.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+/* Georgia Bold scaled to Ultra's metrics, so titles keep their size and line breaks while Ultra loads.
+   fontTools gives a letter-frequency average advance of 0.6425em for Ultra and 0.5203em for Georgia
+   Bold (123.48%); the docs titles measured 0.9% wide at that, so size-adjust is 122.34%.
+   The overrides are Ultra's ascent 2066, descent 561, and line gap 0 on a 2048 em, divided by it. */
+@font-face { font-family: "Ultra Fallback"; font-style: normal; font-weight: 400; src: local("Georgia Bold"), local("Georgia-Bold"); size-adjust: 122.34%; ascent-override: 82.46%; descent-override: 22.39%; line-gap-override: 0%; }
 @font-face { font-family: "Libre Franklin Variable"; font-style: normal; font-weight: 100 900; font-display: swap; src: url("./fonts/libre-franklin-latin-wght.woff2") format("woff2-variations"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
 @font-face { font-family: "Libre Franklin Variable"; font-style: italic; font-weight: 100 900; font-display: swap; src: url("./fonts/libre-franklin-latin-wght-italic.woff2") format("woff2-variations"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
 @font-face { font-family: "JetBrains Mono Variable"; font-style: normal; font-weight: 100 800; font-display: swap; src: url("./fonts/jetbrains-mono-latin-wght.woff2") format("woff2-variations"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
@@ -38,11 +43,12 @@
   --ply-cobalt-500: #3A62C4;
   --ply-cobalt-600: #2B4A99;
   --ply-cobalt-700: #1D336B;
-  --ply-font-display: "Ultra", "Rockwell Extra Bold", Rockwell, Georgia, serif;
+  --ply-font-display: "Ultra", "Ultra Fallback", "Rockwell Extra Bold", Rockwell, Georgia, serif;
   --ply-font-text: "Libre Franklin Variable", "Libre Franklin", "Franklin Gothic Medium", "Helvetica Neue", Arial, sans-serif;
   --ply-font-mono: "JetBrains Mono Variable", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
   --ply-size-xs: 0.8125rem;
   --ply-size-sm: 0.875rem;
+  --ply-size-ui: 0.9375rem;
   --ply-size-md: 1rem;
   --ply-size-body: 1.0625rem;
   --ply-size-lg: 1.25rem;
@@ -120,6 +126,7 @@
   --ply-color-rule: var(--ply-ink-200);
   --ply-color-accent: var(--ply-tomato-500);
   --ply-color-accent-text: var(--ply-tomato-600);
+  --ply-color-on-accent: var(--ply-white);
   --ply-color-link: var(--ply-teal-700);
   --ply-color-link-hover: var(--ply-ink-950);
   --ply-color-note: var(--ply-mustard-500);
@@ -141,7 +148,7 @@
   --ply-viz-8: #E06C91;
   --ply-viz-surface: #FFFFFF;
 }
-@media (prefers-color-scheme: dark) {
+@media screen and (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     color-scheme: dark;
     --ply-color-bg: #161615;
@@ -157,6 +164,7 @@
     --ply-color-rule: var(--ply-ink-700);
     --ply-color-accent: var(--ply-tomato-400);
     --ply-color-accent-text: var(--ply-tomato-400);
+    --ply-color-on-accent: var(--ply-ink-950);
     --ply-color-link: var(--ply-teal-300);
     --ply-color-link-hover: #F2F2EE;
     --ply-color-note: var(--ply-mustard-500);
@@ -179,41 +187,58 @@
     --ply-viz-surface: #1C1C1A;
   }
 }
-:root[data-theme="dark"] {
-  color-scheme: dark;
-  --ply-color-bg: #161615;
-  --ply-color-surface-sunken: var(--ply-ink-900);
-  --ply-color-panel: var(--ply-ink-800);
-  --ply-color-panel-text: var(--ply-ink-50);
-  --ply-color-panel-muted: var(--ply-ink-300);
-  --ply-color-panel-rule: var(--ply-ink-600);
-  --ply-color-text: #F2F2EE;
-  --ply-color-text-muted: var(--ply-ink-300);
-  --ply-color-text-subtle: var(--ply-ink-400);
-  --ply-color-rule-strong: #F2F2EE;
-  --ply-color-rule: var(--ply-ink-700);
-  --ply-color-accent: var(--ply-tomato-400);
-  --ply-color-accent-text: var(--ply-tomato-400);
-  --ply-color-link: var(--ply-teal-300);
-  --ply-color-link-hover: #F2F2EE;
-  --ply-color-note: var(--ply-mustard-500);
-  --ply-color-note-soft: #3A2F14;
-  --ply-color-focus: var(--ply-mustard-400);
-  --ply-color-focus-on-panel: var(--ply-mustard-400);
-  --ply-color-selection: var(--ply-mustard-500);
-  --ply-color-code-comment: var(--ply-mustard-400);
-  --ply-color-code-keyword: var(--ply-tomato-400);
-  --ply-color-code-string: var(--ply-teal-300);
-  --ply-color-code-number: var(--ply-cobalt-300);
-  --ply-viz-1: #E04B34;
-  --ply-viz-2: #00A39A;
-  --ply-viz-3: #5A7FDB;
-  --ply-viz-4: #5A9A35;
-  --ply-viz-5: #2E8FD0;
-  --ply-viz-6: #B98200;
-  --ply-viz-7: #9A52C8;
-  --ply-viz-8: #D9658B;
-  --ply-viz-surface: #1C1C1A;
+@media screen {
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --ply-color-bg: #161615;
+    --ply-color-surface-sunken: var(--ply-ink-900);
+    --ply-color-panel: var(--ply-ink-800);
+    --ply-color-panel-text: var(--ply-ink-50);
+    --ply-color-panel-muted: var(--ply-ink-300);
+    --ply-color-panel-rule: var(--ply-ink-600);
+    --ply-color-text: #F2F2EE;
+    --ply-color-text-muted: var(--ply-ink-300);
+    --ply-color-text-subtle: var(--ply-ink-400);
+    --ply-color-rule-strong: #F2F2EE;
+    --ply-color-rule: var(--ply-ink-700);
+    --ply-color-accent: var(--ply-tomato-400);
+    --ply-color-accent-text: var(--ply-tomato-400);
+    --ply-color-on-accent: var(--ply-ink-950);
+    --ply-color-link: var(--ply-teal-300);
+    --ply-color-link-hover: #F2F2EE;
+    --ply-color-note: var(--ply-mustard-500);
+    --ply-color-note-soft: #3A2F14;
+    --ply-color-focus: var(--ply-mustard-400);
+    --ply-color-focus-on-panel: var(--ply-mustard-400);
+    --ply-color-selection: var(--ply-mustard-500);
+    --ply-color-code-comment: var(--ply-mustard-400);
+    --ply-color-code-keyword: var(--ply-tomato-400);
+    --ply-color-code-string: var(--ply-teal-300);
+    --ply-color-code-number: var(--ply-cobalt-300);
+    --ply-viz-1: #E04B34;
+    --ply-viz-2: #00A39A;
+    --ply-viz-3: #5A7FDB;
+    --ply-viz-4: #5A9A35;
+    --ply-viz-5: #2E8FD0;
+    --ply-viz-6: #B98200;
+    --ply-viz-7: #9A52C8;
+    --ply-viz-8: #D9658B;
+    --ply-viz-surface: #1C1C1A;
+  }
+}
+/* Paper is always the light theme, and black panels print as ink on white. */
+@media print {
+  :root {
+    --ply-color-panel: var(--ply-white);
+    --ply-color-panel-text: var(--ply-ink-950);
+    --ply-color-panel-muted: var(--ply-ink-600);
+    --ply-color-panel-rule: var(--ply-ink-200);
+    --ply-color-focus-on-panel: var(--ply-teal-700);
+    --ply-color-code-comment: var(--ply-ink-600);
+    --ply-color-code-keyword: var(--ply-tomato-600);
+    --ply-color-code-string: var(--ply-teal-700);
+    --ply-color-code-number: var(--ply-cobalt-600);
+  }
 }
 
 /* ---- reset.css ---- */
@@ -228,8 +253,12 @@
   h1, h2, h3, h4 { text-wrap: balance; }
   p { text-wrap: pretty; }
   ul[role="list"], ol[role="list"] { list-style: none; padding: 0; }
+  /* Reduced motion: everything jumps to its end state. A subtree marked
+     data-ply-motion="keep" opts out, for motion the reader starts and needs. */
   @media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+    :not([data-ply-motion="keep"], [data-ply-motion="keep"] *),
+    :not([data-ply-motion="keep"], [data-ply-motion="keep"] *)::before,
+    :not([data-ply-motion="keep"], [data-ply-motion="keep"] *)::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
   }
 }
 
@@ -265,7 +294,18 @@
   a:hover { color: var(--ply-color-link-hover); text-decoration-color: var(--ply-color-accent); }
 
   :focus-visible { outline: 3px solid var(--ply-color-focus); outline-offset: 2px; }
-  .ply-panel :focus-visible, [data-surface="panel"] :focus-visible { outline-color: var(--ply-color-focus-on-panel); }
+
+  /* Surfaces. Inside a black panel or a code block the quiet text tokens and the focus ring
+     switch to their panel values, so utilities and controls read correctly there.
+     On mustard the ring is black. Mark other surfaces with data-surface="panel" or "note". */
+  .ply-panel, .ply-code, [data-surface="panel"] {
+    --ply-color-text-muted: var(--ply-color-panel-muted);
+    --ply-color-text-subtle: var(--ply-color-panel-muted);
+    --ply-color-focus: var(--ply-color-focus-on-panel);
+  }
+  .ply-note, mark, [data-surface="note"] { --ply-color-focus: var(--ply-ink-950); }
+  .ply-note:is(.ply-note--soft, .ply-note--info, .ply-note--success) { --ply-color-focus: inherit; }
+  .ply-note--danger { --ply-color-focus: var(--ply-color-focus-on-panel); }
 
   strong, b { font-weight: var(--ply-weight-bold); }
   small { font-size: var(--ply-size-sm); }
@@ -276,6 +316,9 @@
   code, kbd, samp, pre { font-family: var(--ply-font-mono); font-size: 0.875em; font-variant-ligatures: none; }
   :not(pre) > code { background: var(--ply-color-surface-sunken); padding: 0.1em 0.35em; overflow-wrap: anywhere; }
   table { font-variant-numeric: tabular-nums; }
+  /* Element defaults that match .ply-kbd and .ply-quote; in the base layer so any class wins. */
+  kbd { display: inline-block; font-family: var(--ply-font-mono); font-size: 0.8em; line-height: 1.4; padding: 0 0.4em; border: 1.5px solid currentColor; border-bottom-width: 3px; }
+  blockquote { margin: var(--ply-space-5) 0; padding-inline-start: var(--ply-space-5); border-inline-start: 1px solid var(--ply-color-rule-strong); font-size: var(--ply-size-lg); line-height: var(--ply-leading-normal); max-width: var(--ply-layout-measure); }
   ::placeholder { color: var(--ply-color-text-subtle); opacity: 1; }
 }
 
@@ -298,7 +341,7 @@
   .ply-docs { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0; }
   .ply-docs__nav { display: none; }
   .ply-docs__toc { display: none; }
-  .ply-docs__main { min-width: 0; padding-block: var(--ply-space-6) var(--ply-space-9); }
+  .ply-docs__main { min-width: 0; padding-block: var(--ply-space-6) var(--ply-space-9); container: ply-main / inline-size; }
   @media (min-width: 56rem) {
     .ply-docs { grid-template-columns: var(--ply-layout-sidebar) minmax(0, 1fr); }
     .ply-docs__nav { display: block; padding-block: var(--ply-space-6); position: sticky; top: 0; align-self: start; max-height: 100dvh; overflow-y: auto; }
@@ -350,14 +393,15 @@
     cursor: pointer; user-select: none;
     transition: background var(--ply-duration-fast) var(--ply-ease-out), color var(--ply-duration-fast) var(--ply-ease-out), border-color var(--ply-duration-fast) var(--ply-ease-out), transform var(--ply-duration-fast) var(--ply-ease-out);
   }
-  .ply-button:hover { --_bg: var(--ply-color-accent); --_bd: var(--ply-color-accent); --_fg: var(--ply-white); background: var(--_bg); color: var(--_fg); }
+  /* Hover fills tomato. The fill is accent-text so the label keeps 4.5:1 in both themes. */
+  .ply-button:hover:not(:disabled, [aria-disabled="true"]) { --_bg: var(--ply-color-accent-text); --_bd: var(--ply-color-accent-text); --_fg: var(--ply-color-on-accent); background: var(--_bg); color: var(--_fg); }
   .ply-button:active { transform: translateY(1px); }
   .ply-button svg { width: 1.125em; height: 1.125em; flex: none; }
 
   .ply-button--secondary { --_bg: transparent; --_fg: var(--ply-color-text); --_bd: var(--ply-color-text); }
-  .ply-button--secondary:hover { --_bg: var(--ply-color-text); --_fg: var(--ply-color-bg); --_bd: var(--ply-color-text); background: var(--ply-color-text); color: var(--ply-color-bg); }
+  .ply-button--secondary:hover:not(:disabled, [aria-disabled="true"]) { --_bg: var(--ply-color-text); --_fg: var(--ply-color-bg); --_bd: var(--ply-color-text); background: var(--ply-color-text); color: var(--ply-color-bg); }
   .ply-button--ghost { --_bg: transparent; --_fg: var(--ply-color-text); --_bd: transparent; padding-inline: var(--ply-space-3); }
-  .ply-button--ghost:hover { --_bg: var(--ply-color-surface-sunken); --_fg: var(--ply-color-text); --_bd: transparent; background: var(--ply-color-surface-sunken); color: var(--ply-color-text); }
+  .ply-button--ghost:hover:not(:disabled, [aria-disabled="true"]) { --_bg: var(--ply-color-surface-sunken); --_fg: var(--ply-color-text); --_bd: transparent; background: var(--ply-color-surface-sunken); color: var(--ply-color-text); }
   .ply-button--sm { min-height: 2.25rem; padding-inline: var(--ply-space-4); font-size: var(--ply-size-sm); }
   .ply-button--icon { padding: 0; width: 2.75rem; }
   .ply-button--icon.ply-button--sm { width: 2.25rem; }
@@ -367,9 +411,10 @@
   .ply-button[aria-busy="true"] .ply-loading { --ply-loading-color: currentColor; }
 
   /* Inside a black panel the primary button turns white. */
-  .ply-panel .ply-button:not(.ply-button--secondary, .ply-button--ghost) { --_bg: var(--ply-color-panel-text); --_fg: var(--ply-color-panel); --_bd: var(--ply-color-panel-text); }
+  .ply-panel .ply-button:not(.ply-button--secondary, .ply-button--ghost, :disabled, [aria-disabled="true"]) { --_bg: var(--ply-color-panel-text); --_fg: var(--ply-color-panel); --_bd: var(--ply-color-panel-text); }
   .ply-panel .ply-button--secondary { --_fg: var(--ply-color-panel-text); --_bd: var(--ply-color-panel-text); }
-  .ply-panel .ply-button:hover { --_bg: var(--ply-color-accent); --_bd: var(--ply-color-accent); --_fg: var(--ply-white); }
+  .ply-panel .ply-button:hover:not(:disabled, [aria-disabled="true"]) { --_bg: var(--ply-color-accent-text); --_bd: var(--ply-color-accent-text); --_fg: var(--ply-color-on-accent); }
+  .ply-panel .ply-button:is(:disabled, [aria-disabled="true"]) { --_bg: transparent; --_fg: var(--ply-color-panel-muted); --_bd: var(--ply-color-panel-rule); }
 }
 
 /* ---- components/nav.css ---- */
@@ -382,26 +427,31 @@
   .ply-wordmark__stop { color: var(--ply-color-accent); }
   .ply-topbar__links { display: none; }
   .ply-topbar__tools { margin-inline-start: auto; display: flex; align-items: center; gap: var(--ply-space-2); flex: none; }
+  /* Narrow screens keep the tool names for screen readers and show only the icons. */
   @media (max-width: 40rem) {
     .ply-topbar__inner { gap: var(--ply-space-3); }
     .ply-topbar__tools { gap: var(--ply-space-1); }
     .ply-search-trigger { padding: 0; width: 2.5rem; justify-content: center; }
     .ply-search-trigger > span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
   }
+  @media (max-width: 25rem) {
+    .ply-menu--chapters > summary { padding: 0; min-width: 2.5rem; }
+    .ply-menu__word { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  }
   @media (min-width: 72rem) {
     .ply-topbar__links { display: flex; align-items: center; gap: var(--ply-space-1); margin-inline-start: var(--ply-space-5); }
   }
 
-  .ply-tab { display: inline-flex; align-items: center; min-height: 2.25rem; padding: 0 var(--ply-space-3); color: var(--ply-color-text-muted); font-size: 0.9375rem; font-weight: var(--ply-weight-medium); text-decoration: none; white-space: nowrap; transition: color var(--ply-duration-fast) var(--ply-ease-out), background var(--ply-duration-fast) var(--ply-ease-out); }
+  .ply-tab { display: inline-flex; align-items: center; min-height: 2.25rem; padding: 0 var(--ply-space-3); color: var(--ply-color-text-muted); font-size: var(--ply-size-ui); font-weight: var(--ply-weight-medium); text-decoration: none; white-space: nowrap; transition: color var(--ply-duration-fast) var(--ply-ease-out), background var(--ply-duration-fast) var(--ply-ease-out); }
   .ply-tab:not([aria-current]):hover { color: var(--ply-color-text); background: var(--ply-color-surface-sunken); }
   .ply-tab[aria-current="page"], .ply-tab[aria-current="true"] { background: var(--ply-color-text); color: var(--ply-color-bg); font-weight: var(--ply-weight-semibold); }
 
   /* Search trigger shaped like an input. */
-  .ply-search-trigger { text-decoration: none; font-weight: var(--ply-weight-medium); display: inline-flex; align-items: center; gap: var(--ply-space-4); min-height: 2.5rem; padding: 0 var(--ply-space-2) 0 var(--ply-space-3); border: var(--ply-border-control) solid var(--ply-color-rule-strong); background: transparent; color: var(--ply-color-text-muted); font-size: 0.9375rem; cursor: pointer; }
+  .ply-search-trigger { text-decoration: none; font-weight: var(--ply-weight-medium); display: inline-flex; align-items: center; gap: var(--ply-space-4); min-height: 2.5rem; padding: 0 var(--ply-space-2) 0 var(--ply-space-3); border: var(--ply-border-control) solid var(--ply-color-rule-strong); background: transparent; color: var(--ply-color-text-muted); font-size: var(--ply-size-ui); cursor: pointer; }
   .ply-search-trigger:hover { color: var(--ply-color-text); }
 
   /* Chapter sidebar. The current page gets the tomato point. */
-  .ply-sidenav { font-size: 0.96875rem; }
+  .ply-sidenav { font-size: var(--ply-size-ui); }
   .ply-sidenav__group + .ply-sidenav__group { margin-top: var(--ply-space-5); }
   .ply-sidenav__heading { font-size: var(--ply-size-xs); font-weight: var(--ply-weight-bold); color: var(--ply-color-text); margin-bottom: var(--ply-space-2); }
   .ply-sidenav ul { list-style: none; padding: 0 0 0 var(--ply-space-5); }
@@ -424,16 +474,22 @@
   .ply-breadcrumb a { color: inherit; font-weight: var(--ply-weight-regular); }
 
   /* Previous and next at the end of a page. */
-  .ply-pager { display: grid; grid-template-columns: 1fr 1fr; gap: var(--ply-space-4); margin-top: var(--ply-space-8); border-top: var(--ply-border-rule) solid var(--ply-color-rule-strong); padding-top: var(--ply-space-5); }
+  .ply-pager { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--ply-space-4); margin-top: var(--ply-space-8); border-top: var(--ply-border-rule) solid var(--ply-color-rule-strong); padding-top: var(--ply-space-5); }
   .ply-pager a { display: block; text-decoration: none; color: var(--ply-color-text); padding: var(--ply-space-3) 0; }
   .ply-pager a span { display: block; font-size: var(--ply-size-sm); color: var(--ply-color-text-muted); font-weight: var(--ply-weight-medium); }
-  .ply-pager a strong { font-family: var(--ply-font-display); font-weight: 400; font-size: var(--ply-size-xl); line-height: 1.1; }
+  .ply-pager a strong { font-family: var(--ply-font-display); font-weight: 400; font-size: var(--ply-size-xl); line-height: 1.1; overflow-wrap: break-word; }
   .ply-pager a:hover strong { color: var(--ply-color-accent-text); }
   .ply-pager__next { text-align: end; grid-column: 2; }
+  @media (max-width: 30rem) {
+    .ply-pager { grid-template-columns: minmax(0, 1fr); gap: 0; }
+    .ply-pager__next { grid-column: 1; }
+  }
 
   /* Mobile chapter menu (a native details element, no script needed). */
   .ply-menu { position: relative; }
+  /* The menu button matches the search field's 40px height when they sit side by side. */
   .ply-menu > summary { list-style: none; cursor: pointer; }
+  .ply-menu--chapters > summary { min-height: 2.5rem; }
   .ply-menu > summary::-webkit-details-marker { display: none; }
   .ply-menu__panel { position: absolute; right: 0; top: calc(100% + var(--ply-space-2)); z-index: 100; min-width: 16rem; background: var(--ply-color-bg); border: var(--ply-border-rule) solid var(--ply-color-rule-strong); padding: var(--ply-space-3); display: grid; gap: var(--ply-space-1); }
   @media (min-width: 72rem) { .ply-menu--chapters { display: none; } }
@@ -460,7 +516,7 @@
 @layer ply.components {
   /* Notes. Kind is carried by a shape and a word, never by color alone:
      note = ball, warning = triangle, success = check square, danger = cross square. */
-  .ply-note { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--ply-space-3); align-items: start; padding: var(--ply-space-4) var(--ply-space-5); background: var(--ply-color-note); color: var(--ply-ink-950); font-size: 0.96875rem; line-height: var(--ply-leading-normal); max-width: var(--ply-layout-measure); }
+  .ply-note { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--ply-space-3); align-items: start; padding: var(--ply-space-4) var(--ply-space-5); background: var(--ply-color-note); color: var(--ply-ink-950); font-size: var(--ply-size-ui); line-height: var(--ply-leading-normal); max-width: var(--ply-layout-measure); }
   .ply-note__mark { width: 1rem; height: 1rem; margin-top: 0.2rem; flex: none; }
   .ply-note__mark--ball { border-radius: var(--ply-radius-ball); background: var(--ply-ink-950); width: 0.875rem; height: 0.875rem; margin-top: 0.3rem; }
   .ply-note__title { font-weight: var(--ply-weight-bold); }
@@ -483,7 +539,7 @@
 /* ---- components/table.css ---- */
 @layer ply.components {
   .ply-table-wrap { overflow-x: auto; max-width: 100%; border-top: var(--ply-border-rule) solid var(--ply-color-rule-strong); }
-  .ply-table { width: 100%; border-collapse: collapse; font-size: 0.9375rem; line-height: var(--ply-leading-normal); font-variant-numeric: tabular-nums; }
+  .ply-table { width: 100%; border-collapse: collapse; font-size: var(--ply-size-ui); line-height: var(--ply-leading-normal); font-variant-numeric: tabular-nums; }
   .ply-table th { text-align: start; font-weight: var(--ply-weight-bold); font-size: var(--ply-size-sm); padding: var(--ply-space-3) var(--ply-space-4) var(--ply-space-2) 0; border-bottom: var(--ply-border-control) solid var(--ply-color-rule-strong); vertical-align: bottom; white-space: nowrap; }
   .ply-table td { padding: var(--ply-space-3) var(--ply-space-4) var(--ply-space-3) 0; border-bottom: var(--ply-border-hair) solid var(--ply-color-rule); vertical-align: top; }
   .ply-table :is(th, td):last-child { padding-inline-end: 0; }
@@ -518,7 +574,7 @@
   .ply-select { appearance: none; padding-inline-end: 2.5rem; background-image: linear-gradient(45deg, transparent 50%, currentColor 50%), linear-gradient(135deg, currentColor 50%, transparent 50%); background-position: calc(100% - 1.15rem) 50%, calc(100% - 0.8rem) 50%; background-size: 0.35rem 0.35rem; background-repeat: no-repeat; cursor: pointer; }
 
   /* Checkbox and radio: square box, round ball. The ball is tomato when picked. */
-  .ply-check { display: inline-flex; align-items: flex-start; gap: var(--ply-space-3); font-size: var(--ply-size-md); line-height: var(--ply-leading-normal); cursor: pointer; }
+  .ply-check { display: inline-flex; align-items: flex-start; gap: var(--ply-space-3); min-height: 1.5rem; font-size: var(--ply-size-md); line-height: var(--ply-leading-normal); cursor: pointer; }
   .ply-check input { appearance: none; flex: none; width: 1.25rem; height: 1.25rem; margin-top: 0.15rem; border: var(--ply-border-control) solid var(--ply-color-rule-strong); background: var(--ply-color-bg); display: grid; place-content: center; cursor: pointer; }
   .ply-check input[type="radio"] { border-radius: var(--ply-radius-ball); }
   .ply-check input::before { content: ""; width: 0.625rem; height: 0.625rem; transform: scale(0); transition: transform var(--ply-duration-fast) var(--ply-ease-out); background: var(--ply-color-text); }
@@ -580,7 +636,7 @@
   .ply-code .n, .ply-code .tok-number { color: var(--ply-color-code-number); }
   .ply-code mark { background: color-mix(in srgb, var(--ply-color-note) 30%, transparent); color: inherit; padding: 0; }
 
-  kbd, .ply-kbd { display: inline-block; font-family: var(--ply-font-mono); font-size: 0.8em; line-height: 1.4; padding: 0 0.4em; border: 1.5px solid currentColor; border-bottom-width: 3px; }
+  .ply-kbd { display: inline-block; font-family: var(--ply-font-mono); font-size: 0.8em; line-height: 1.4; padding: 0 0.4em; border: 1.5px solid currentColor; border-bottom-width: 3px; }
 }
 
 /* ---- components/tag.css ---- */
@@ -597,7 +653,7 @@
   .ply-status--running::before { border-radius: var(--ply-radius-ball); background: var(--ply-color-accent); animation: ply-pulse 1.2s var(--ply-ease-out) infinite; }
   .ply-status--done::before { background: var(--ply-status-good); clip-path: polygon(14% 52%, 0 66%, 38% 100%, 100% 22%, 86% 8%, 38% 72%); width: 0.875rem; }
   .ply-status--warning::before { background: var(--ply-status-warning); clip-path: polygon(50% 0, 100% 100%, 0 100%); width: 0.8125rem; }
-  .ply-status--error::before { background: linear-gradient(45deg, transparent 38%, var(--ply-status-critical) 38% 62%, transparent 62%), linear-gradient(-45deg, transparent 38%, var(--ply-status-critical) 38% 62%, transparent 62%); }
+  .ply-status--error::before { background: var(--ply-status-critical); clip-path: polygon(20% 0, 50% 30%, 80% 0, 100% 20%, 70% 50%, 100% 80%, 80% 100%, 50% 70%, 20% 100%, 0 80%, 30% 50%, 0 20%); }
   @keyframes ply-pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(0.6); } }
 
   /* Stability of a component or API: stable is solid, experimental is outlined, deprecated is struck. */
@@ -642,7 +698,8 @@
   }
   .ply-machine[data-live] > :not(canvas) { display: none; }
 
-  /* Loading indicator: a ball dropping through three rows of pegs, on repeat. */
+  /* Loading indicator: a ball dropping through three rows of pegs, on repeat.
+     --ply-loading-count caps the repeats, for specimens that sit on a page. */
   .ply-loading { --ply-loading-color: var(--ply-color-accent); display: inline-block; position: relative; width: 1.5em; height: 1.5em; vertical-align: -0.3em; }
   .ply-loading::before {
     content: ""; position: absolute; inset: 22% 8% 18%;
@@ -653,7 +710,7 @@
     opacity: 0.55;
   }
   /* impeccable-disable-next-line pulsing-dot: the loading indicator is a ball falling through pegs; reduced motion shows it at rest */
-  .ply-loading > i, .ply-loading::after { content: ""; position: absolute; top: 0; left: 50%; width: 0.36em; height: 0.36em; margin-left: -0.18em; border-radius: 50%; background: var(--ply-loading-color); animation: ply-drop 1.1s var(--ply-ease-gravity) infinite; }
+  .ply-loading > i, .ply-loading::after { content: ""; position: absolute; top: 0; left: 50%; width: 0.36em; height: 0.36em; margin-left: -0.18em; border-radius: 50%; background: var(--ply-loading-color); animation: ply-drop 1.1s var(--ply-ease-gravity) var(--ply-loading-count, infinite); }
   .ply-loading > i { animation-name: ply-drop-alt; animation-delay: 0.55s; }
   @keyframes ply-drop {
     0% { transform: translate(0, 0); opacity: 0; }
@@ -681,7 +738,7 @@
   /* The complex: points, edges, and filled triangles of a Vietoris-Rips complex.
      css/js/complex.js makes the radius live; the server-rendered SVG is the fallback. */
   .ply-complex { display: block; position: relative; background: var(--ply-color-panel); aspect-ratio: 100 / 56; width: 100%; }
-  .ply-complex svg { position: absolute; inset: 0; width: 100%; height: 100%; touch-action: none; }
+  .ply-complex svg { position: absolute; inset: 0; width: 100%; height: 100%; }
   .ply-complex[data-live] .ply-complex__static { display: none; }
   .ply-complex__tri { fill: var(--ply-color-note); fill-opacity: 0.5; }
   .ply-complex__edge { stroke: var(--ply-color-panel-text); stroke-opacity: 0.7; stroke-width: 0.28; }
@@ -699,7 +756,7 @@
   /* Paper header: title, authors with affiliation marks, venue, and the link row. */
   .ply-paper { display: grid; gap: var(--ply-space-5); padding-block: var(--ply-space-7); }
   .ply-paper__venue { font-size: var(--ply-size-sm); font-weight: var(--ply-weight-bold); }
-  .ply-paper__title { font-family: var(--ply-font-display); font-weight: 400; font-size: clamp(2.25rem, 1.4rem + 2.8vw, 4rem); line-height: 1.02; letter-spacing: -0.01em; max-width: 22ch; }
+  .ply-paper__title { font-family: var(--ply-font-display); font-weight: 400; font-size: clamp(var(--ply-size-2xl), 1.2rem + 3vw, var(--ply-size-4xl)); line-height: 1.02; letter-spacing: -0.01em; max-width: 22ch; }
   .ply-paper__links { display: flex; flex-wrap: wrap; gap: var(--ply-space-2); }
 
   .ply-authors { display: flex; flex-wrap: wrap; gap: var(--ply-space-1) var(--ply-space-4); list-style: none; padding: 0; font-size: var(--ply-size-lg); font-weight: var(--ply-weight-semibold); }
@@ -731,9 +788,14 @@
   .ply-cite { position: relative; display: inline; }
   .ply-cite > a { font-weight: var(--ply-weight-semibold); font-variant-numeric: tabular-nums; text-decoration: none; color: var(--ply-color-link); }
   .ply-cite > a:hover { text-decoration: underline; }
-  .ply-cite__card { position: absolute; left: 50%; bottom: calc(100% + 0.5rem); z-index: 50; width: min(22rem, 80vw); transform: translate(-50%, 0.25rem); opacity: 0; pointer-events: none; background: var(--ply-color-panel); color: var(--ply-color-panel-text); padding: var(--ply-space-3) var(--ply-space-4); font-size: var(--ply-size-sm); line-height: var(--ply-leading-normal); font-weight: var(--ply-weight-regular); box-shadow: 0 0.5rem 1.5rem rgb(0 0 0 / 0.18); transition: opacity var(--ply-duration-base) var(--ply-ease-out), transform var(--ply-duration-base) var(--ply-ease-out); }
+  /* Closed cards are display: none so they never widen the page. The ::before strip bridges
+     the gap to the link, so the pointer can move onto the card. js/cite.js adds Escape to
+     close and keeps an open card inside the viewport (--_dx). */
+  .ply-cite__card { display: none; position: absolute; left: 50%; bottom: calc(100% + 0.5rem); z-index: 50; width: min(22rem, calc(100vw - 2rem)); transform: translate(calc(-50% + var(--_dx, 0px)), 0.25rem); opacity: 0; background: var(--ply-color-panel); color: var(--ply-color-panel-text); padding: var(--ply-space-3) var(--ply-space-4); font-size: var(--ply-size-sm); line-height: var(--ply-leading-normal); font-weight: var(--ply-weight-regular); box-shadow: 0 0.5rem 1.5rem rgb(0 0 0 / 0.18); outline: 1px solid var(--ply-color-panel-rule); outline-offset: -1px; transition: opacity var(--ply-duration-base) var(--ply-ease-out), transform var(--ply-duration-base) var(--ply-ease-out), display var(--ply-duration-base) allow-discrete; }
+  .ply-cite__card::before { content: ""; position: absolute; inset-inline: 0; top: 100%; height: 0.75rem; }
   .ply-cite__card b { color: var(--ply-color-panel-text); }
-  .ply-cite:hover .ply-cite__card, .ply-cite:focus-within .ply-cite__card { opacity: 1; transform: translate(-50%, 0); pointer-events: auto; }
+  .ply-cite:is(:hover, :focus-within):not([data-dismissed]) .ply-cite__card { display: block; opacity: 1; transform: translate(calc(-50% + var(--_dx, 0px)), 0); }
+  @starting-style { .ply-cite:is(:hover, :focus-within):not([data-dismissed]) .ply-cite__card { opacity: 0; transform: translate(calc(-50% + var(--_dx, 0px)), 0.25rem); } }
 
   /* BibTeX block: a code panel with a copy button, set narrower than prose code. */
   .ply-bibtex .ply-code { max-width: var(--ply-layout-measure); }
@@ -749,10 +811,11 @@
   .ply-pub { display: grid; gap: var(--ply-space-1); }
   .ply-pub__title { font-weight: var(--ply-weight-bold); font-size: var(--ply-size-lg); line-height: 1.3; }
   .ply-pub__title a { color: inherit; font-weight: inherit; }
-  .ply-pub__authors { font-size: 0.96875rem; color: var(--ply-color-text-muted); }
+  .ply-pub__authors { font-size: var(--ply-size-ui); color: var(--ply-color-text-muted); }
   .ply-pub__authors .ply-me { color: var(--ply-color-text); font-weight: var(--ply-weight-semibold); }
   .ply-pub__venue { font-size: var(--ply-size-sm); font-weight: var(--ply-weight-semibold); }
   .ply-pub__links { display: flex; flex-wrap: wrap; gap: var(--ply-space-3); font-size: var(--ply-size-sm); margin-top: var(--ply-space-1); }
+  .ply-pub__links a { display: inline-flex; align-items: center; min-height: 1.5rem; }
 }
 
 /* ---- components/writing.css ---- */
@@ -764,6 +827,11 @@
   @media (min-width: 90rem) {
     .ply-has-sidenotes { position: relative; }
     .ply-sidenote { float: right; clear: right; width: 14rem; margin: 0.2rem calc(-14rem - var(--ply-space-6)) var(--ply-space-3) 0; }
+  }
+  /* A main column that names itself ply-main keeps sidenotes inline until it has room for
+     the margin: the 36rem measure, the gap, and the 14rem note. */
+  @container ply-main (width < 52rem) {
+    .ply-sidenote { float: none; width: auto; margin: var(--ply-space-3) 0; }
   }
 
   .ply-footnotes { margin-top: var(--ply-space-8); padding-top: var(--ply-space-4); border-top: var(--ply-border-control) solid var(--ply-color-rule-strong); font-size: var(--ply-size-sm); color: var(--ply-color-text-muted); max-width: var(--ply-layout-measure); }
@@ -789,7 +857,7 @@
   .ply-details[open] > summary::before { background: var(--ply-color-accent); border-color: var(--ply-color-accent); }
   .ply-details > :not(summary) { padding-bottom: var(--ply-space-4); }
 
-  blockquote, .ply-quote { margin: var(--ply-space-5) 0; padding-inline-start: var(--ply-space-5); border-inline-start: 1px solid var(--ply-color-rule-strong); font-size: var(--ply-size-lg); line-height: var(--ply-leading-normal); max-width: var(--ply-layout-measure); }
+  .ply-quote { margin: var(--ply-space-5) 0; padding-inline-start: var(--ply-space-5); border-inline-start: 1px solid var(--ply-color-rule-strong); font-size: var(--ply-size-lg); line-height: var(--ply-leading-normal); max-width: var(--ply-layout-measure); }
   .ply-quote cite { display: block; margin-top: var(--ply-space-2); font-size: var(--ply-size-sm); font-style: normal; color: var(--ply-color-text-muted); }
 }
 
@@ -828,7 +896,7 @@
   .ply-empty p { color: inherit; opacity: 0.85; font-size: var(--ply-size-md); }
 
   /* Toast for short confirmations. */
-  .ply-toast { position: fixed; inset-inline: var(--ply-space-4); bottom: var(--ply-space-4); z-index: 200; margin-inline: auto; max-width: 26rem; display: flex; gap: var(--ply-space-3); align-items: center; background: var(--ply-color-panel); color: var(--ply-color-panel-text); padding: var(--ply-space-3) var(--ply-space-4); font-size: var(--ply-size-sm); box-shadow: 0 0.75rem 2rem rgb(0 0 0 / 0.25); animation: ply-toast-in var(--ply-duration-slow) var(--ply-ease-out); }
+  .ply-toast { position: fixed; inset-inline: var(--ply-space-4); bottom: var(--ply-space-4); z-index: 200; margin-inline: auto; max-width: 26rem; display: flex; gap: var(--ply-space-3); align-items: center; background: var(--ply-color-panel); color: var(--ply-color-panel-text); padding: var(--ply-space-3) var(--ply-space-4); font-size: var(--ply-size-sm); box-shadow: 0 0.75rem 2rem rgb(0 0 0 / 0.25); outline: 1px solid var(--ply-color-panel-rule); outline-offset: -1px; animation: ply-toast-in var(--ply-duration-slow) var(--ply-ease-out); }
   @keyframes ply-toast-in { from { transform: translateY(0.75rem); opacity: 0; } }
 }
 
@@ -844,7 +912,7 @@
   @media (max-width: 40rem) { .ply-chart__hint { display: block; } }
   /* Charts keep a readable size on phones and scroll sideways; the data table holds the numbers. */
   .ply-chart__plot > svg { min-width: 32rem; }
-  .ply-chart svg { overflow: visible; font-family: var(--ply-font-text); font-size: 12px; font-variant-numeric: tabular-nums; }
+  .ply-chart svg { overflow: visible; font-family: var(--ply-font-text); font-size: var(--ply-size-xs); font-variant-numeric: tabular-nums; }
   .ply-chart .grid line, .ply-chart .ply-grid-line { stroke: var(--ply-color-rule); stroke-width: 1; }
   .ply-chart .axis path, .ply-chart .axis line, .ply-chart .ply-axis-line { stroke: var(--ply-color-text-muted); }
   .ply-chart .axis text, .ply-chart .ply-axis-text { fill: var(--ply-color-text-muted); }
@@ -858,14 +926,13 @@
   .ply-legend__key--line { width: 1.25rem; height: 2px; border-radius: 0; }
   .ply-legend__key--bar { border-radius: 0; }
 
-  .ply-tooltip { position: absolute; pointer-events: none; z-index: 60; background: var(--ply-color-panel); color: var(--ply-color-panel-text); padding: var(--ply-space-2) var(--ply-space-3); font-size: var(--ply-size-xs); line-height: var(--ply-leading-normal); font-variant-numeric: tabular-nums; white-space: nowrap; box-shadow: 0 0.5rem 1.25rem rgb(0 0 0 / 0.2); }
+  .ply-tooltip { position: absolute; pointer-events: none; z-index: 60; background: var(--ply-color-panel); color: var(--ply-color-panel-text); padding: var(--ply-space-2) var(--ply-space-3); font-size: var(--ply-size-xs); line-height: var(--ply-leading-normal); font-variant-numeric: tabular-nums; white-space: nowrap; box-shadow: 0 0.5rem 1.25rem rgb(0 0 0 / 0.2); outline: 1px solid var(--ply-color-panel-rule); outline-offset: -1px; }
   .ply-tooltip b { font-weight: var(--ply-weight-bold); }
 
   /* Texture fill for print, forced colors, and color vision deficiency. */
   /* impeccable-disable-next-line repeating-stripes-gradient: chart texture fill for print, forced colors, and color vision deficiency */
   .ply-texture { background-image: repeating-linear-gradient(45deg, currentColor 0 1.5px, transparent 1.5px 6px); }
 
-  @media (forced-colors: active) { .ply-legend__key { forced-color-adjust: none; } }
 }
 
 /* ---- utilities.css ---- */
@@ -883,4 +950,71 @@
   .ply-flow > * + * { margin-top: var(--ply-flow, var(--ply-space-4)); }
   .ply-mt-0 { margin-top: 0 !important; }
   @media (max-width: 40rem) { .ply-hide-narrow { display: none !important; } }
+}
+
+/* ---- modes.css ---- */
+@layer ply.utilities {
+  /* Forced colors (Windows contrast themes). The system repaints text, borders, and
+     backgrounds, and drops gradient images, so marks drawn as fills would vanish.
+     They keep their shapes here in system colors; picked states use Highlight. */
+  @media (forced-colors: active) {
+    .ply-check input::before, .ply-switch input::before, .ply-field__error::before,
+    .ply-status:not(.ply-status--idle)::before, .ply-note__mark--ball, .ply-env--proof::after,
+    .ply-sidenav a[aria-current="page"]::before, .ply-details[open] > summary::before {
+      forced-color-adjust: none; background: CanvasText;
+    }
+    .ply-check input:checked, .ply-switch input:checked { forced-color-adjust: none; background: Highlight; border-color: Highlight; }
+    .ply-check input:checked::before, .ply-switch input:checked::before { background: HighlightText; }
+    .ply-check:has(input:disabled), .ply-check input:disabled, .ply-switch:has(input:disabled), .ply-switch input:disabled { forced-color-adjust: none; color: GrayText; border-color: GrayText; background: Canvas; }
+
+    .ply-tab[aria-current="page"], .ply-tab[aria-current="true"],
+    .ply-segmented [aria-pressed="true"], .ply-segmented label:has(input:checked) {
+      forced-color-adjust: none; background: Highlight; color: HighlightText;
+    }
+
+    .ply-slider { forced-color-adjust: none; }
+    .ply-slider::-webkit-slider-runnable-track { background: CanvasText; }
+    .ply-slider::-moz-range-track { background: CanvasText; }
+    .ply-slider::-webkit-slider-thumb { background: Highlight; }
+    .ply-slider::-moz-range-thumb { background: Highlight; }
+
+    .ply-select { appearance: auto; background-image: none; padding-inline-end: var(--ply-space-3); }
+    :is(.ply-input, .ply-select, .ply-textarea)[aria-invalid="true"] { border-style: dashed; }
+    .ply-label { outline: 1px solid CanvasText; outline-offset: -1px; }
+
+    /* Models, swatches, and legend keys keep their own colors: the color is the content. */
+    .ply-machine, .ply-complex, .ply-swatch, .ply-legend__key { forced-color-adjust: none; }
+    .ply-loading { forced-color-adjust: none; color: CanvasText; --ply-loading-color: CanvasText; }
+    .ply-texture { forced-color-adjust: none; color: CanvasText; }
+  }
+
+  /* Touch. Fingers need 44px targets; the compact 36px sizes are for mouse and trackpad. */
+  @media (pointer: coarse) {
+    .ply-tab, .ply-button--sm, .ply-segmented :is(button, label), .ply-search-trigger, .ply-code__copy { min-height: 2.75rem; }
+    .ply-button--icon.ply-button--sm, .ply-search-trigger { min-width: 2.75rem; }
+    .ply-menu--chapters > summary, .ply-code__copy { min-width: 2.75rem; }
+    .ply-sidenav a { padding-block: 0.625rem; }
+    .ply-toc a { padding-block: 0.6875rem; }
+    .ply-slider { height: 2.75rem; }
+    .ply-check { padding-block: 0.625rem; }
+    .ply-switch { min-height: 2.75rem; }
+    :is(.ply-pub__links, .ply-paper__links) a { display: inline-flex; align-items: center; min-height: 2.75rem; }
+  }
+
+  /* Print. tokens.css switches paper to the light theme with ink-on-white panels;
+     this hides the site chrome and keeps figures, code, and notes whole. */
+  @media print {
+    .ply-skip, .ply-topbar, .ply-docs__nav, .ply-docs__toc, .ply-pager, .ply-menu,
+    .ply-theme-toggle, .ply-code__copy, .ply-chart__hint, .ply-cite__card, .ply-toast { display: none !important; }
+    .ply-docs { display: block; }
+    .ply-panel, .ply-code { border: var(--ply-border-control) solid var(--ply-color-rule-strong); }
+    .ply-code pre { white-space: pre-wrap; overflow: visible; }
+    .ply-chart__plot { overflow: visible; }
+    .ply-chart__plot > svg { min-width: 0; }
+    .ply-exhibit, .ply-figure, .ply-code, .ply-note, .ply-env, .ply-equation, tr { break-inside: avoid; }
+    h2, h3, h4 { break-after: avoid; }
+    .ply-swatch, .ply-legend__key, .ply-note, .ply-tag--note, mark, .ply-chart svg, .ply-machine, .ply-complex {
+      print-color-adjust: exact; -webkit-print-color-adjust: exact;
+    }
+  }
 }

@@ -77,6 +77,13 @@ const vizStatic = [
   ...Object.entries(viz.status).map(([k, hex]) => `  --ply-status-${k}: ${hex};`),
 ].join("\n");
 
+// Print overrides on top of the light theme: panels and code become ink on white.
+const printDecl = Object.entries({
+  panel: "white", "panel-text": "ink-950", "panel-muted": "ink-600", "panel-rule": "ink-200",
+  "focus-on-panel": "teal-700",
+  "code-comment": "ink-600", "code-keyword": "tomato-600", "code-string": "teal-700", "code-number": "cobalt-600",
+}).map(([k, p]) => `    --ply-color-${k}: var(--ply-${p});`).join("\n");
+
 const tokensCss = `/* Generated from tokens/tokens.json. Do not edit by hand. */
 :root {
   color-scheme: light dark;
@@ -88,17 +95,25 @@ ${vizStatic}
 ${decl(light)}
 ${vizDecl("light")}
 }
-@media (prefers-color-scheme: dark) {
+@media screen and (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     color-scheme: dark;
 ${decl(dark).replace(/^/gm, "  ")}
 ${vizDecl("dark").replace(/^/gm, "  ")}
   }
 }
-:root[data-theme="dark"] {
-  color-scheme: dark;
-${decl(dark)}
-${vizDecl("dark")}
+@media screen {
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+${decl(dark).replace(/^/gm, "  ")}
+${vizDecl("dark").replace(/^/gm, "  ")}
+  }
+}
+/* Paper is always the light theme, and black panels print as ink on white. */
+@media print {
+  :root {
+${printDecl}
+  }
 }
 `;
 writeFileSync(join(dist, "tokens.css"), tokensCss);
@@ -259,6 +274,11 @@ for (const [from, to] of fontLicenses) {
 const range = "U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD";
 const fontsCss = `/* Self-hosted faces. Ultra: Apache 2.0. Libre Franklin and JetBrains Mono: SIL OFL 1.1. License texts: ./fonts/LICENSE-*.txt */
 @font-face { font-family: "Ultra"; font-style: normal; font-weight: 400; font-display: swap; src: url("./fonts/ultra-latin-400.woff2") format("woff2"); unicode-range: ${range}; }
+/* Georgia Bold scaled to Ultra's metrics, so titles keep their size and line breaks while Ultra loads.
+   fontTools gives a letter-frequency average advance of 0.6425em for Ultra and 0.5203em for Georgia
+   Bold (123.48%); the docs titles measured 0.9% wide at that, so size-adjust is 122.34%.
+   The overrides are Ultra's ascent 2066, descent 561, and line gap 0 on a 2048 em, divided by it. */
+@font-face { font-family: "Ultra Fallback"; font-style: normal; font-weight: 400; src: local("Georgia Bold"), local("Georgia-Bold"); size-adjust: 122.34%; ascent-override: 82.46%; descent-override: 22.39%; line-gap-override: 0%; }
 @font-face { font-family: "Libre Franklin Variable"; font-style: normal; font-weight: 100 900; font-display: swap; src: url("./fonts/libre-franklin-latin-wght.woff2") format("woff2-variations"); unicode-range: ${range}; }
 @font-face { font-family: "Libre Franklin Variable"; font-style: italic; font-weight: 100 900; font-display: swap; src: url("./fonts/libre-franklin-latin-wght-italic.woff2") format("woff2-variations"); unicode-range: ${range}; }
 @font-face { font-family: "JetBrains Mono Variable"; font-style: normal; font-weight: 100 800; font-display: swap; src: url("./fonts/jetbrains-mono-latin-wght.woff2") format("woff2-variations"); unicode-range: ${range}; }
@@ -281,7 +301,8 @@ for (const file of order) {
   const css = readFileSync(join(root, "css/src", file), "utf8");
   const outName = file.replace(/^components\//, "");
   mkdirSync(dirname(join(dist, "css", outName)), { recursive: true });
-  writeFileSync(join(dist, "css", outName), css);
+  // Each file declares the layer order too, so files linked one by one cascade like the bundle.
+  writeFileSync(join(dist, "css", outName), layerHeader + css);
   bundle += `\n/* ---- ${file} ---- */\n${css}`;
   for (const m of css.matchAll(/var\((--ply-[a-z0-9-]+)/g)) {
     (usage[m[1]] ??= new Set()).add(file);

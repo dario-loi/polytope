@@ -22,6 +22,9 @@ const pairs = [
   ["color-bg", "color-text", 4.5, "inverted tab and button"],
   ["color-accent", "color-bg", 3, "non-text: points, balls"], ["color-focus", "color-bg", 3, "focus ring"], ["color-focus-on-panel", "color-panel", 3, "focus ring on panel"],
   ["color-rule-strong", "color-bg", 3, "control borders"],
+  ["color-on-accent", "color-accent-text", 4.5, "hovered button label"],
+  ["ink-950", "color-note", 3, "focus ring on a note"], ["color-focus", "color-note-soft", 3, "focus ring on a soft note"],
+  ["color-focus", "color-surface-sunken", 3, "focus ring on info and success notes"], ["color-focus-on-panel", "ink-950", 3, "focus ring on a danger note"],
 ];
 let failed = 0;
 for (const mode of ["light", "dark"]) {

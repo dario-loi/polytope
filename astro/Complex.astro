@@ -38,7 +38,7 @@ for (const [i, j] of edges) for (const k of adj[i]) if (k > j && adj[j].has(k)) 
           <output for={`${id}-r`}>{radius.toFixed(2)}</output>
         </div>
       </div>
-      <p class="ply-complex-counts" aria-live="polite">
+      <p class="ply-complex-counts">
         <span><b data-count="edges">{edges.length}</b> edges</span>
         <span><b data-count="triangles">{tris.length}</b> triangles</span>
       </p>
@@ -46,12 +46,16 @@ for (const [i, j] of edges) for (const k of adj[i]) if (k > j && adj[j].has(k)) 
   )}
 </div>
 <script>
-  import "../css/js/complex.js";
-  import "../css/js/controls.js";
+  import "../dist/js/complex.js";
+  import "../dist/js/controls.js";
   document.addEventListener("ply-complex-change", (e: Event) => {
     const el = e.target as HTMLElement;
     const wrap = el.closest(".ply-complex-wrap");
     const d = (e as CustomEvent).detail;
     wrap?.querySelectorAll<HTMLElement>("[data-count]").forEach((b) => { b.textContent = String(d[b.dataset.count!]); });
+    // The slider reads out the counts with its value, once per step, instead of a live region
+    // that queues an announcement for every step. rAF: after controls.js sets the plain value.
+    const input = wrap?.querySelector<HTMLInputElement>("[data-ply-complex-radius]");
+    if (input) requestAnimationFrame(() => input.setAttribute("aria-valuetext", `${d.radius.toFixed(2)}: ${d.edges} edges, ${d.triangles} triangles`));
   });
 </script>

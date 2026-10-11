@@ -1,6 +1,7 @@
+@layer ply.reset, ply.base, ply.layout, ply.components, ply.utilities;
 @layer ply.components {
   .ply-table-wrap { overflow-x: auto; max-width: 100%; border-top: var(--ply-border-rule) solid var(--ply-color-rule-strong); }
-  .ply-table { width: 100%; border-collapse: collapse; font-size: 0.9375rem; line-height: var(--ply-leading-normal); font-variant-numeric: tabular-nums; }
+  .ply-table { width: 100%; border-collapse: collapse; font-size: var(--ply-size-ui); line-height: var(--ply-leading-normal); font-variant-numeric: tabular-nums; }
   .ply-table th { text-align: start; font-weight: var(--ply-weight-bold); font-size: var(--ply-size-sm); padding: var(--ply-space-3) var(--ply-space-4) var(--ply-space-2) 0; border-bottom: var(--ply-border-control) solid var(--ply-color-rule-strong); vertical-align: bottom; white-space: nowrap; }
   .ply-table td { padding: var(--ply-space-3) var(--ply-space-4) var(--ply-space-3) 0; border-bottom: var(--ply-border-hair) solid var(--ply-color-rule); vertical-align: top; }
   .ply-table :is(th, td):last-child { padding-inline-end: 0; }

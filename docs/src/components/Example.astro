@@ -10,6 +10,8 @@ const { html, title = "HTML", panel = false, lang = "html", code, pad = true } =
 </div>
 <style is:global>
   .ex { margin-block: var(--ply-space-5); max-width: none; }
+  /* Live specimens stop looping after a few passes (WCAG 2.2.2). */
+  .ex__live { --ply-loading-count: 4; }
   .ex__live { padding: var(--ply-space-5); border: var(--ply-border-control) solid var(--ply-color-rule-strong); border-bottom: 0; }
   .ex__live--flush { padding: 0; }
   .ex__live.ply-panel { border-color: var(--ply-color-panel); }

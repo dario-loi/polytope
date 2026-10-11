@@ -4,12 +4,13 @@ import Loading from "@dario-loi/polytope/astro/Loading.astro";
 ---
 <Docs title="Motion" lede="Interface parts arrive with an ease-out. Things that fall, fall with gravity. Nothing moves just to be seen.">
   <h2>Two curves</h2>
-  <div class="mo">
+  <div class="mo" data-mo>
     <div class="mo__track"><span class="mo__ball mo__ball--out"></span></div>
     <p><code>--ply-ease-out</code>, <code>cubic-bezier(0.16, 1, 0.3, 1)</code>. Fast start, long settle. For menus, cards, tooltips, anything arriving.</p>
     <div class="mo__track mo__track--v"><span class="mo__ball mo__ball--gravity"></span></div>
     <p><code>--ply-ease-gravity</code>, <code>cubic-bezier(0.55, 0, 1, 0.45)</code>. Slow start, speeding up. For balls dropping through the machine and anything else that falls.</p>
   </div>
+  <p><button class="ply-button ply-button--secondary ply-button--sm" type="button" data-mo-replay>Play again</button></p>
 
   <h2>Durations</h2>
   <div class="ply-table-wrap">
@@ -25,19 +26,26 @@ import Loading from "@dario-loi/polytope/astro/Loading.astro";
   </div>
 
   <h2>The signature moment</h2>
-  <p>Each page gets at most one moment of motion, and it shows a process. On these docs it is the probability machine filling on load. The same machine, small, is the loading indicator: <Loading label="Loading example" /></p>
+  <p>Each page gets at most one moment of motion, and it shows a process. On these docs it is the probability machine filling on load. The same machine, small, is the loading indicator: <span style="--ply-loading-count: 4"><Loading label="Loading example" /></span></p>
 
   <h2>Reduced motion</h2>
-  <p>When the reader asks their system for reduced motion, every animation jumps to its end state. The machine draws its settled bell curve, the loading indicator shows a resting ball, and transitions take effect at once. The CSS reset handles this globally; scripts check <code>prefers-reduced-motion</code> before animating.</p>
+  <p>When the reader asks their system for reduced motion, every animation jumps to its end state. The machine draws its settled bell curve, the loading indicator shows a resting ball, and transitions take effect at once. The CSS reset handles this globally; scripts check <code>prefers-reduced-motion</code> before animating. Motion the reader starts and needs, such as a step-through animation, can opt out: mark its container <code>data-ply-motion="keep"</code>.</p>
 </Docs>
 <style>
   .mo { display: grid; grid-template-columns: 9rem 1fr; gap: var(--ply-space-5); align-items: center; }
   .mo__track { position: relative; height: 2.5rem; border-bottom: 3px solid var(--ply-color-rule-strong); }
   .mo__track--v { height: 6rem; width: 2.5rem; border-bottom: 3px solid var(--ply-color-rule-strong); justify-self: center; }
   .mo__ball { position: absolute; width: 1rem; height: 1rem; border-radius: 50%; background: var(--ply-color-accent); bottom: 0; }
-  .mo__ball--out { left: 0; animation: mo-out 2.4s var(--ply-ease-out) infinite; }
-  .mo__ball--gravity { left: 50%; margin-left: -0.5rem; animation: mo-fall 1.6s var(--ply-ease-gravity) infinite; }
+  /* Two or three passes (under five seconds), then the end state; the button plays them again. */
+  .mo__ball--out { left: 0; animation: mo-out 2.4s var(--ply-ease-out) 2 both; }
+  .mo__ball--gravity { left: 50%; margin-left: -0.5rem; animation: mo-fall 1.6s var(--ply-ease-gravity) 3 both; }
   @keyframes mo-out { 0%, 15% { transform: translateX(0); } 60%, 100% { transform: translateX(7.5rem); } }
   @keyframes mo-fall { 0% { transform: translateY(-5rem); opacity: 0; } 10% { opacity: 1; } 70%, 100% { transform: translateY(0); } }
   @media (prefers-reduced-motion: reduce) { .mo__ball--out { transform: translateX(7.5rem); } }
 </style>
+<script>
+  const mo = document.querySelector<HTMLElement>("[data-mo]")!;
+  document.querySelector("[data-mo-replay]")!.addEventListener("click", () => {
+    for (const a of mo.getAnimations({ subtree: true })) { a.cancel(); a.play(); }
+  });
+</script>

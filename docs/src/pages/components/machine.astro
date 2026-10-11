@@ -27,8 +27,8 @@ import ApiTable from "../../components/ApiTable.astro";
     ["balls", "Balls dropped per run, up to 400", "30"],
     ["p", "Chance of bouncing right at each peg", "0.5"],
     ["interactive", "Click or Enter runs it again; the element becomes a button", "false"],
-    ["autoplay", "visible runs it when it scrolls into view; none draws the settled state", "visible"],
-    ["label", "Accessible description"],
+    ["autoplay", "visible runs it when it scrolls into view, paced to finish within five seconds; none draws the settled state", "visible"],
+    ["label", "Accessible description. After each run the counts in each bin are added to it."],
   ]} head={["Attribute", "Effect", "Default"]} />
   <p>The element fires <code>ply-machine-done</code> with the final counts, so a demo can print them. Call <code>run()</code> to drop a new set, <code>run(false)</code> to sample a new set and show it settled, and <code>settle()</code> to jump to the end of the current run.</p>
 
@@ -47,6 +47,6 @@ import ApiTable from "../../components/ApiTable.astro";
 <script type="module" src="https://dario-loi.github.io/polytope/kit/js/machine.js"></script>`} />
 
   <h2>Loading indicator</h2>
-  <p class="ply-cluster"><Loading /> <span>Two balls take turns falling through three rows of pegs. It inherits the font size.</span></p>
+  <p class="ply-cluster"><span style="--ply-loading-count: 4"><Loading /></span> <span>Two balls take turns falling through three rows of pegs. It inherits the font size.</span></p>
   <Code lang="html" code={`<span class="ply-loading" role="status" aria-label="Loading"><i></i></span>`} />
 </Docs>

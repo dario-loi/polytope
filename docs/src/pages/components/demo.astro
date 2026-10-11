@@ -13,7 +13,7 @@ import { u } from "../../data/nav";
 ---
 <Docs title="Demo chrome" status="experimental" lede="The frame for an interactive figure or a small research tool: header, controls, a black stage, and a status line." wide>
   <h2>App shell</h2>
-  <AppShell title="Probability machine">
+  <AppShell title="Probability machine" level={3}>
     <Fragment slot="head"><Button size="sm" variant="secondary" data-run>Run again</Button></Fragment>
     <Fragment slot="controls">
       <Slider label="Rows of pegs" name="demo-rows" min={2} max={14} value={8} hint="One more bin than rows." />
@@ -32,6 +32,7 @@ import { u } from "../../data/nav";
   <Machine rows={8} />                       <!-- the stage -->
   <Fragment slot="status"><Status state="idle">Ready</Status></Fragment>
 </AppShell>`} />
+  <p>The shell's title is an <code>h2</code>. Under a section heading of its own, pass <code>level={3}</code>, as this page does.</p>
 
   <h2>Readout</h2>
   <div style="max-width: 18rem"><Readout label="Run summary" items={[{ label: "Balls", value: 40 }, { label: "Mean bin", value: "4.03" }, { label: "Expected", value: "4.00" }]} /></div>

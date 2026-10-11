@@ -1,3 +1,4 @@
+@layer ply.reset, ply.base, ply.layout, ply.components, ply.utilities;
 @layer ply.components {
   /* Chart frame for SVG or canvas charts drawn by D3, Observable Plot, or by hand.
      Series colors come from --ply-viz-1 ... --ply-viz-8 in that order. */
@@ -9,7 +10,7 @@
   @media (max-width: 40rem) { .ply-chart__hint { display: block; } }
   /* Charts keep a readable size on phones and scroll sideways; the data table holds the numbers. */
   .ply-chart__plot > svg { min-width: 32rem; }
-  .ply-chart svg { overflow: visible; font-family: var(--ply-font-text); font-size: 12px; font-variant-numeric: tabular-nums; }
+  .ply-chart svg { overflow: visible; font-family: var(--ply-font-text); font-size: var(--ply-size-xs); font-variant-numeric: tabular-nums; }
   .ply-chart .grid line, .ply-chart .ply-grid-line { stroke: var(--ply-color-rule); stroke-width: 1; }
   .ply-chart .axis path, .ply-chart .axis line, .ply-chart .ply-axis-line { stroke: var(--ply-color-text-muted); }
   .ply-chart .axis text, .ply-chart .ply-axis-text { fill: var(--ply-color-text-muted); }
@@ -23,12 +24,11 @@
   .ply-legend__key--line { width: 1.25rem; height: 2px; border-radius: 0; }
   .ply-legend__key--bar { border-radius: 0; }
 
-  .ply-tooltip { position: absolute; pointer-events: none; z-index: 60; background: var(--ply-color-panel); color: var(--ply-color-panel-text); padding: var(--ply-space-2) var(--ply-space-3); font-size: var(--ply-size-xs); line-height: var(--ply-leading-normal); font-variant-numeric: tabular-nums; white-space: nowrap; box-shadow: 0 0.5rem 1.25rem rgb(0 0 0 / 0.2); }
+  .ply-tooltip { position: absolute; pointer-events: none; z-index: 60; background: var(--ply-color-panel); color: var(--ply-color-panel-text); padding: var(--ply-space-2) var(--ply-space-3); font-size: var(--ply-size-xs); line-height: var(--ply-leading-normal); font-variant-numeric: tabular-nums; white-space: nowrap; box-shadow: 0 0.5rem 1.25rem rgb(0 0 0 / 0.2); outline: 1px solid var(--ply-color-panel-rule); outline-offset: -1px; }
   .ply-tooltip b { font-weight: var(--ply-weight-bold); }
 
   /* Texture fill for print, forced colors, and color vision deficiency. */
   /* impeccable-disable-next-line repeating-stripes-gradient: chart texture fill for print, forced colors, and color vision deficiency */
   .ply-texture { background-image: repeating-linear-gradient(45deg, currentColor 0 1.5px, transparent 1.5px 6px); }
 
-  @media (forced-colors: active) { .ply-legend__key { forced-color-adjust: none; } }
 }

@@ -1,0 +1,65 @@
+@layer ply.utilities {
+  /* Forced colors (Windows contrast themes). The system repaints text, borders, and
+     backgrounds, and drops gradient images, so marks drawn as fills would vanish.
+     They keep their shapes here in system colors; picked states use Highlight. */
+  @media (forced-colors: active) {
+    .ply-check input::before, .ply-switch input::before, .ply-field__error::before,
+    .ply-status:not(.ply-status--idle)::before, .ply-note__mark--ball, .ply-env--proof::after,
+    .ply-sidenav a[aria-current="page"]::before, .ply-details[open] > summary::before {
+      forced-color-adjust: none; background: CanvasText;
+    }
+    .ply-check input:checked, .ply-switch input:checked { forced-color-adjust: none; background: Highlight; border-color: Highlight; }
+    .ply-check input:checked::before, .ply-switch input:checked::before { background: HighlightText; }
+    .ply-check:has(input:disabled), .ply-check input:disabled, .ply-switch:has(input:disabled), .ply-switch input:disabled { forced-color-adjust: none; color: GrayText; border-color: GrayText; background: Canvas; }
+
+    .ply-tab[aria-current="page"], .ply-tab[aria-current="true"],
+    .ply-segmented [aria-pressed="true"], .ply-segmented label:has(input:checked) {
+      forced-color-adjust: none; background: Highlight; color: HighlightText;
+    }
+
+    .ply-slider { forced-color-adjust: none; }
+    .ply-slider::-webkit-slider-runnable-track { background: CanvasText; }
+    .ply-slider::-moz-range-track { background: CanvasText; }
+    .ply-slider::-webkit-slider-thumb { background: Highlight; }
+    .ply-slider::-moz-range-thumb { background: Highlight; }
+
+    .ply-select { appearance: auto; background-image: none; padding-inline-end: var(--ply-space-3); }
+    :is(.ply-input, .ply-select, .ply-textarea)[aria-invalid="true"] { border-style: dashed; }
+    .ply-label { outline: 1px solid CanvasText; outline-offset: -1px; }
+
+    /* Models, swatches, and legend keys keep their own colors: the color is the content. */
+    .ply-machine, .ply-complex, .ply-swatch, .ply-legend__key { forced-color-adjust: none; }
+    .ply-loading { forced-color-adjust: none; color: CanvasText; --ply-loading-color: CanvasText; }
+    .ply-texture { forced-color-adjust: none; color: CanvasText; }
+  }
+
+  /* Touch. Fingers need 44px targets; the compact 36px sizes are for mouse and trackpad. */
+  @media (pointer: coarse) {
+    .ply-tab, .ply-button--sm, .ply-segmented :is(button, label), .ply-search-trigger, .ply-code__copy { min-height: 2.75rem; }
+    .ply-button--icon.ply-button--sm, .ply-search-trigger { min-width: 2.75rem; }
+    .ply-menu--chapters > summary, .ply-code__copy { min-width: 2.75rem; }
+    .ply-sidenav a { padding-block: 0.625rem; }
+    .ply-toc a { padding-block: 0.6875rem; }
+    .ply-slider { height: 2.75rem; }
+    .ply-check { padding-block: 0.625rem; }
+    .ply-switch { min-height: 2.75rem; }
+    :is(.ply-pub__links, .ply-paper__links) a { display: inline-flex; align-items: center; min-height: 2.75rem; }
+  }
+
+  /* Print. tokens.css switches paper to the light theme with ink-on-white panels;
+     this hides the site chrome and keeps figures, code, and notes whole. */
+  @media print {
+    .ply-skip, .ply-topbar, .ply-docs__nav, .ply-docs__toc, .ply-pager, .ply-menu,
+    .ply-theme-toggle, .ply-code__copy, .ply-chart__hint, .ply-cite__card, .ply-toast { display: none !important; }
+    .ply-docs { display: block; }
+    .ply-panel, .ply-code { border: var(--ply-border-control) solid var(--ply-color-rule-strong); }
+    .ply-code pre { white-space: pre-wrap; overflow: visible; }
+    .ply-chart__plot { overflow: visible; }
+    .ply-chart__plot > svg { min-width: 0; }
+    .ply-exhibit, .ply-figure, .ply-code, .ply-note, .ply-env, .ply-equation, tr { break-inside: avoid; }
+    h2, h3, h4 { break-after: avoid; }
+    .ply-swatch, .ply-legend__key, .ply-note, .ply-tag--note, mark, .ply-chart svg, .ply-machine, .ply-complex {
+      print-color-adjust: exact; -webkit-print-color-adjust: exact;
+    }
+  }
+}

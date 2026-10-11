@@ -35,19 +35,19 @@ colors:
   status-critical: "#B3261E"
 typography:
   display:
-    fontFamily: "Ultra, Rockwell Extra Bold, Rockwell, Georgia, serif"
+    fontFamily: "Ultra, Ultra Fallback, Rockwell Extra Bold, Rockwell, Georgia, serif"
     fontSize: "clamp(3rem, 1.6rem + 4.4vw, 5.75rem)"
     fontWeight: 400
     lineHeight: 0.98
     letterSpacing: "-0.01em"
   headline:
-    fontFamily: "Ultra, Rockwell Extra Bold, Rockwell, Georgia, serif"
+    fontFamily: "Ultra, Ultra Fallback, Rockwell Extra Bold, Rockwell, Georgia, serif"
     fontSize: "2rem"
     fontWeight: 400
     lineHeight: 1.1
     letterSpacing: "-0.01em"
   wordmark:
-    fontFamily: "Ultra, Rockwell Extra Bold, Rockwell, Georgia, serif"
+    fontFamily: "Ultra, Ultra Fallback, Rockwell Extra Bold, Rockwell, Georgia, serif"
     fontSize: "1.5rem"
     fontWeight: 400
     lineHeight: 1
@@ -67,6 +67,11 @@ typography:
     fontSize: "1.0625rem"
     fontWeight: 400
     lineHeight: 1.6
+  ui:
+    fontFamily: "Libre Franklin Variable, Libre Franklin, Franklin Gothic Medium, Helvetica Neue, Arial, sans-serif"
+    fontSize: "0.9375rem"
+    fontWeight: 400
+    lineHeight: 1.5
   label:
     fontFamily: "Libre Franklin Variable, Libre Franklin, Franklin Gothic Medium, Helvetica Neue, Arial, sans-serif"
     fontSize: "0.8125rem"
@@ -101,7 +106,7 @@ components:
     padding: "0 1.5rem"
     height: "2.75rem"
   button-primary-hover:
-    backgroundColor: "{colors.tomato}"
+    backgroundColor: "{colors.tomato-ink}"
     textColor: "{colors.gallery-white}"
   button-secondary:
     backgroundColor: "transparent"
@@ -185,7 +190,7 @@ Corners are square. The only round things are things that are round in the world
 A gallery palette: black, white, and gray carry the page, and three strong colors each mark one kind of thing.
 
 ### Primary
-- **Tomato** (`tomato`): the moving part. Fills the current-location point in the sidebar, the balls in the probability machine, the full stop after titles and the wordmark, the picked radio ball, the switch ball when on, the slider thumb, list markers, and the hover fill of primary buttons. It is a fill color. When tomato has to be read as text (field errors, the hovered pager title) use **Tomato Ink** (`tomato-ink`). In dark mode the accent becomes **Tomato Bright** (`tomato-bright`).
+- **Tomato** (`tomato`): the moving part. Fills the current-location point in the sidebar, the balls in the probability machine, the full stop after titles and the wordmark, the picked radio ball, the switch ball when on, the slider thumb, list markers, and, as tomato ink, the hover fill of primary buttons. It is a fill color. When tomato has to be read as text (field errors, the hovered pager title) use **Tomato Ink** (`tomato-ink`). In dark mode the accent becomes **Tomato Bright** (`tomato-bright`).
 
 ### Secondary
 - **Mustard** (`mustard`): notes, highlights, text selection, the `mark` element, the machine funnel, the filled triangles of the complex, and the copied state of the copy button. It always carries exhibit-black text in both themes. **Mustard Soft** (`mustard-soft`) is the quieter note fill in light mode. **Mustard Light** (`mustard-light`) is the focus ring inside black panels and the code comment color, so explanations read first.
@@ -218,7 +223,7 @@ Charts use eight categorical slots in a fixed order: tomato, teal, cobalt, grass
 
 ## Typography
 
-**Display Font:** Ultra (with Rockwell Extra Bold, Rockwell, Georgia, serif)
+**Display Font:** Ultra (with Ultra Fallback, which is Georgia Bold scaled to Ultra's metrics, then Rockwell Extra Bold, Rockwell, Georgia, serif)
 **Body Font:** Libre Franklin Variable (with Franklin Gothic Medium, Helvetica Neue, Arial, sans-serif)
 **Label/Mono Font:** JetBrains Mono Variable (with ui-monospace, SFMono-Regular, Menlo, monospace)
 
@@ -231,6 +236,7 @@ Charts use eight categorical slots in a fixed order: tomato, teal, cobalt, grass
 - **Title** (Libre Franklin 700, 24px, line height 1.2): third-level headings. Fourth level is 20px bold.
 - **Lede** (Libre Franklin 400, 20px, line height 1.45): the paragraph under a mast title, capped at 36rem.
 - **Body** (Libre Franklin 400, 17px, line height 1.6): all running text, in a 36rem column (about 68 characters).
+- **UI** (Libre Franklin 400, 15px): tabs, the search field, sidebar links, tables, notes, author lines (`--ply-size-ui`).
 - **Label** (Libre Franklin 700, 13px, line height 1.3): wall labels, tags, sidebar group headings, code bar text.
 - **Mono** (JetBrains Mono 400, 0.875em, line height 1.7 in blocks, ligatures off): code, keys, and numeric parameters. Tables and numbers use tabular figures.
 
@@ -249,6 +255,10 @@ The page is a top bar, a mast, a 3px rule, then a three-column docs grid inside 
 - **Reading column:** 36rem. Notes, code blocks, and text in one column share that edge. Wide blocks opt out explicitly.
 - **Rhythm:** a 4px-based scale from 0.25rem to 8rem. Paragraphs are 1rem apart, section headings get 3rem above and 0.75rem below, the mast pads 3rem to 4rem.
 - **Phones (below 40rem):** search collapses to an icon button, charts keep a 32rem minimum width and scroll sideways with soft scroll-shadow cues and a hint line, token tables stack.
+- **Very narrow (below 25rem):** the Menu button shows only its icon, and the pager stacks below 30rem, so nothing scrolls sideways at 320px.
+- **Touch (`pointer: coarse`):** tabs, small buttons, the menu, segmented controls, slider rails, and sidebar and on-this-page links grow to 44px targets.
+- **Sidenotes:** in the margin from 90rem, but only when the main column (container `ply-main`) has 52rem for the measure, the gap, and the note.
+- **Contrast themes and print:** in forced colors, marks drawn as fills keep their shapes in system colors and picked states use Highlight; on paper the light theme applies, panels print as ink on white, and the site chrome is hidden.
 
 ## Elevation & Depth
 
@@ -274,10 +284,10 @@ Square corners on every panel, button, input, tag, note, code block, and menu (`
 Square exhibit labels.
 - **Shape:** square (0), 44px tall, 2px border.
 - **Primary:** exhibit black with white semibold text, 1.5rem side padding. Inside a black panel it inverts to chalk with black text.
-- **Hover / Focus:** hover fills tomato with white text; press nudges down 1px; focus is a 3px teal outline offset 2px (mustard inside panels). Transitions run 120ms ease-out.
+- **Hover / Focus:** hover fills tomato ink with white text (bright tomato with black text in dark mode, through `--ply-color-on-accent`); press nudges down 1px; focus is a 3px teal outline offset 2px (mustard inside panels). Transitions run 120ms ease-out.
 - **Secondary:** transparent with a black border; hover fills black.
 - **Ghost:** borderless, 0.75rem padding; hover shows the gallery wall gray.
-- **Sizes:** small is 36px tall; icon buttons are square.
+- **Sizes:** small is 36px tall, growing to 44px on touch screens; icon buttons are square.
 
 ### Chips
 - **Tags:** 13px bold text, 1.5px current-color border, square. Solid tags are black; note tags are mustard with black text.
@@ -292,7 +302,7 @@ Square exhibit labels.
 
 ### Inputs / Fields
 - **Style:** white field, 2px black border, square, 44px tall. Labels are 14px bold above the field; hints are 14px caption gray.
-- **Focus:** 3px teal outline offset 2px; hover adds a 1px inset ring.
+- **Focus:** 3px teal outline offset 2px (mustard inside panels and code, black on mustard notes); hover adds a 1px inset ring.
 - **Error / Disabled:** error turns the border tomato and adds a tomato diamond with tomato-ink text; disabled uses the gallery wall fill and quiet gray text.
 - **Choices:** checkboxes are square and fill black with a white check; radios are round and fill with a tomato ball; the switch is a square track with a ball that rolls and turns tomato; the range slider is a 3px rail with a tomato ball and the value printed in mono beside it; segmented controls are wall-label tabs in a bordered row.
 

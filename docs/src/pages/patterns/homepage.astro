@@ -29,7 +29,7 @@ const notes = [
     </figure>
   </Mast>
   <hr class="ply-rule" />
-  <main id="main" class="ply-container">
+  <div class="ply-container">
     <section class="hp-intro ply-prose">
       <h2>Research</h2>
       <p>Most machine learning on graphs treats relations as pairs. Many systems are not built from pairs: a chemical reaction joins several molecules, a coauthored paper joins several people, a mesh face joins several vertices. My work asks how neural networks can use that higher-order structure directly, on simplicial complexes, cell complexes, and sheaves.</p>
@@ -47,7 +47,7 @@ const notes = [
         {notes.map(([t, d]) => <li><a href="#">{t}</a><span class="ply-small ply-muted ply-num">{d}</span></li>)}
       </ul>
     </section>
-  </main>
+  </div>
 </Pattern>
 <style>
   .hp-intro { padding-block: var(--ply-space-6) 0; }

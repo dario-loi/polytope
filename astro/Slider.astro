@@ -7,9 +7,9 @@ const fmt = (v: number) => (format === "percent" ? `${Math.round(v * 100)}%` : f
 <div class="ply-control" data-ply-slider data-format={format}>
   <label class="ply-control__label" for={id}><span>{label}</span></label>
   <div class="ply-range">
-    <input class="ply-slider" type="range" id={id} name={name} min={min} max={max} step={step} value={value} aria-describedby={hint ? `${id}-hint` : undefined} />
+    <input class="ply-slider" type="range" id={id} name={name} min={min} max={max} step={step} value={value} aria-valuetext={fmt(value)} aria-describedby={hint ? `${id}-hint` : undefined} />
     <output for={id}>{fmt(value)}</output>
   </div>
   {hint && <p class="ply-control__hint" id={`${id}-hint`}>{hint}</p>}
 </div>
-<script>import "../css/js/controls.js";</script>
+<script>import "../dist/js/controls.js";</script>

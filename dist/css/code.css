@@ -1,3 +1,4 @@
+@layer ply.reset, ply.base, ply.layout, ply.components, ply.utilities;
 @layer ply.components {
   /* Code sits in a black exhibit panel. Comments are mustard so the explanation reads first. */
   .ply-code { position: relative; background: var(--ply-color-panel); color: var(--ply-color-panel-text); max-width: var(--ply-layout-measure); }
@@ -14,5 +15,5 @@
   .ply-code .n, .ply-code .tok-number { color: var(--ply-color-code-number); }
   .ply-code mark { background: color-mix(in srgb, var(--ply-color-note) 30%, transparent); color: inherit; padding: 0; }
 
-  kbd, .ply-kbd { display: inline-block; font-family: var(--ply-font-mono); font-size: 0.8em; line-height: 1.4; padding: 0 0.4em; border: 1.5px solid currentColor; border-bottom-width: 3px; }
+  .ply-kbd { display: inline-block; font-family: var(--ply-font-mono); font-size: 0.8em; line-height: 1.4; padding: 0 0.4em; border: 1.5px solid currentColor; border-bottom-width: 3px; }
 }

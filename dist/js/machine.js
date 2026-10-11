@@ -6,8 +6,10 @@
 // Attributes: rows (default 8), balls (default 30), p (default 0.5), label, interactive,
 // autoplay="visible" (default) | "none".
 // Methods: run(animate = true) drops a fresh set; settle() jumps to the end of the current set. Event: "ply-machine-done" with detail { counts }.
+// A run that starts by itself (autoplay) is paced to finish within five seconds (WCAG 2.2.2); runs started by the reader keep the natural pace.
 
 const reduceMotion = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
+const AUTOPLAY_BUDGET = 4.5; // seconds
 
 function sample(rows, balls, p) {
   const paths = [];
@@ -37,11 +39,11 @@ class PlyMachine extends HTMLElement {
     this.setAttribute("data-live", "");
     this.ctx = this.canvas.getContext("2d");
 
-    const label = this.getAttribute("label") || "Probability machine: balls bounce left or right at each peg and pile into a bell curve.";
+    this._label = this.getAttribute("label") || "Probability machine: balls bounce left or right at each peg and pile into a bell curve.";
     if (this.hasAttribute("interactive")) {
       this.setAttribute("role", "button");
       this.tabIndex = 0;
-      this.setAttribute("aria-label", `${label} Press to run it again.`);
+      this.setAttribute("aria-label", `${this._label} Press to run it again.`);
       this.addEventListener("click", () => this.run());
       this.addEventListener("keydown", (e) => {
         if (e.key === "Enter" || e.key === " ") { e.preventDefault(); this.run(); }
@@ -49,7 +51,7 @@ class PlyMachine extends HTMLElement {
       this.style.cursor = "pointer";
     } else {
       this.setAttribute("role", "img");
-      this.setAttribute("aria-label", label);
+      this.setAttribute("aria-label", this._label);
     }
 
     this._ro = new ResizeObserver(() => { this._resize(); this._draw(); });
@@ -59,6 +61,10 @@ class PlyMachine extends HTMLElement {
     this._mq.addEventListener("change", this._onTheme);
     this._mo = new MutationObserver(this._onTheme);
     this._mo.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme", "class"] });
+    // Reduced motion switched on mid-run: jump to the end.
+    this._rm = matchMedia("(prefers-reduced-motion: reduce)");
+    this._onMotion = () => { if (this._rm.matches && this.active?.length) this.settle(); };
+    this._rm.addEventListener("change", this._onMotion);
 
     this._readColors();
     this._resize();
@@ -67,7 +73,7 @@ class PlyMachine extends HTMLElement {
       this.settle();
     } else {
       this._io = new IntersectionObserver((entries) => {
-        if (entries.some((e) => e.isIntersecting)) { this._io.disconnect(); this.run(); }
+        if (entries.some((e) => e.isIntersecting)) { this._io.disconnect(); this.run(true, AUTOPLAY_BUDGET); }
       }, { threshold: 0.3 });
       this._io.observe(this);
       this._draw();
@@ -80,12 +86,17 @@ class PlyMachine extends HTMLElement {
     this._io?.disconnect();
     this._mo?.disconnect();
     this._mq?.removeEventListener("change", this._onTheme);
+    this._rm?.removeEventListener("change", this._onMotion);
   }
 
+  // New parameters redraw a settled pile for them. No done event: the samples are
+  // usually replaced right away by run().
   attributeChangedCallback() {
     if (!this._ready) return;
+    cancelAnimationFrame(this._raf);
     this._prepare();
-    this.settle();
+    this.landed = this.sim.counts.slice();
+    this._draw();
   }
 
   get rows() { return Math.max(2, Math.min(16, parseInt(this.getAttribute("rows") || "8", 10))); }
@@ -169,12 +180,14 @@ class PlyMachine extends HTMLElement {
   }
 
   // Drop a fresh set of balls. run(false) samples new flips and jumps to the settled pile.
-  run(animate = true) {
+  // `budget` (seconds) caps the whole run by releasing balls faster.
+  run(animate = true, budget = Infinity) {
     cancelAnimationFrame(this._raf);
     this._prepare();
     if (!animate || reduceMotion()) { this.settle(); return; }
     const g = this._geometry();
-    const spacing = 0.085;
+    const flight = 0.075 * (this.rows + 1) + 0.35;
+    const spacing = Math.min(0.085, Math.max(0.004, (budget - flight) / this.sim.paths.length));
     const start = performance.now();
     const total = this.sim.paths.length;
     let next = 0;
@@ -203,6 +216,8 @@ class PlyMachine extends HTMLElement {
   }
 
   _done() {
+    const counts = `Bins from left to right hold ${this.sim.counts.join(", ")} balls.`;
+    this.setAttribute("aria-label", `${this._label} ${counts}${this.hasAttribute("interactive") ? " Press to run it again." : ""}`);
     this.dispatchEvent(new CustomEvent("ply-machine-done", { bubbles: true, detail: { counts: this.sim.counts.slice() } }));
   }
 

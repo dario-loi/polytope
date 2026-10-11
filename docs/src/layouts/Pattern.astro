@@ -10,14 +10,14 @@ const { title, current, description } = Astro.props;
 const links = ["Research", "Publications", "Teaching", "Notes", "CV"].map((l) => ({ label: l, href: "#", current: l === current }));
 ---
 <Base title={title} description={description} chrome={false}>
-  <div class="pt-banner" role="note">
+  <aside class="pt-banner" aria-label="About this example" data-surface="note">
     <div class="pt-banner__inner">
       <span><b>Pattern: {title}.</b> Names, papers, and numbers on this page are example content.</span>
       <a href={u("/patterns/")}>Back to the docs</a>
     </div>
-  </div>
+  </aside>
   <TopBar brand="John Doe" brandHref="#" links={links}><ThemeToggle /></TopBar>
-  <slot />
+  <main id="main"><slot /></main>
   <footer class="pt-foot">
     <div class="ply-container pt-foot__inner">
       <p><span class="ply-display">John Doe</span>, Example University</p>
@@ -28,7 +28,7 @@ const links = ["Research", "Publications", "Teaching", "Notes", "CV"].map((l) =>
 <style is:global>
   .pt-banner { background: var(--ply-color-note); color: var(--ply-ink-950); font-size: var(--ply-size-sm); padding: var(--ply-space-2) var(--ply-space-4); }
   .pt-banner__inner { max-width: calc(var(--ply-layout-max) - 2 * var(--ply-space-4)); margin-inline: auto; padding-inline: calc(var(--ply-layout-gutter) - var(--ply-space-4)); display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--ply-space-2) var(--ply-space-5); padding-block: 0; }
-  .pt-banner a { color: var(--ply-ink-950); }
+  .pt-banner a { color: var(--ply-ink-950); display: inline-flex; align-items: center; min-height: 1.5rem; }
   .pt-foot { border-top: var(--ply-border-rule) solid var(--ply-color-rule-strong); margin-top: var(--ply-space-9); }
   .pt-foot__inner { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--ply-space-3); padding-block: var(--ply-space-6) var(--ply-space-7); }
   .pt-foot .ply-display { font-size: var(--ply-size-xl); }

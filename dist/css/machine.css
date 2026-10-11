@@ -1,3 +1,4 @@
+@layer ply.reset, ply.base, ply.layout, ply.components, ply.utilities;
 @layer ply.components {
   /* The probability machine (a Galton board). Without JavaScript it shows the settled
      bell curve from --n counts on each bin. css/js/machine.js upgrades it to a live run. */
@@ -32,7 +33,8 @@
   }
   .ply-machine[data-live] > :not(canvas) { display: none; }
 
-  /* Loading indicator: a ball dropping through three rows of pegs, on repeat. */
+  /* Loading indicator: a ball dropping through three rows of pegs, on repeat.
+     --ply-loading-count caps the repeats, for specimens that sit on a page. */
   .ply-loading { --ply-loading-color: var(--ply-color-accent); display: inline-block; position: relative; width: 1.5em; height: 1.5em; vertical-align: -0.3em; }
   .ply-loading::before {
     content: ""; position: absolute; inset: 22% 8% 18%;
@@ -43,7 +45,7 @@
     opacity: 0.55;
   }
   /* impeccable-disable-next-line pulsing-dot: the loading indicator is a ball falling through pegs; reduced motion shows it at rest */
-  .ply-loading > i, .ply-loading::after { content: ""; position: absolute; top: 0; left: 50%; width: 0.36em; height: 0.36em; margin-left: -0.18em; border-radius: 50%; background: var(--ply-loading-color); animation: ply-drop 1.1s var(--ply-ease-gravity) infinite; }
+  .ply-loading > i, .ply-loading::after { content: ""; position: absolute; top: 0; left: 50%; width: 0.36em; height: 0.36em; margin-left: -0.18em; border-radius: 50%; background: var(--ply-loading-color); animation: ply-drop 1.1s var(--ply-ease-gravity) var(--ply-loading-count, infinite); }
   .ply-loading > i { animation-name: ply-drop-alt; animation-delay: 0.55s; }
   @keyframes ply-drop {
     0% { transform: translate(0, 0); opacity: 0; }
@@ -71,7 +73,7 @@
   /* The complex: points, edges, and filled triangles of a Vietoris-Rips complex.
      css/js/complex.js makes the radius live; the server-rendered SVG is the fallback. */
   .ply-complex { display: block; position: relative; background: var(--ply-color-panel); aspect-ratio: 100 / 56; width: 100%; }
-  .ply-complex svg { position: absolute; inset: 0; width: 100%; height: 100%; touch-action: none; }
+  .ply-complex svg { position: absolute; inset: 0; width: 100%; height: 100%; }
   .ply-complex[data-live] .ply-complex__static { display: none; }
   .ply-complex__tri { fill: var(--ply-color-note); fill-opacity: 0.5; }
   .ply-complex__edge { stroke: var(--ply-color-panel-text); stroke-opacity: 0.7; stroke-width: 0.28; }
