@@ -1,0 +1,76 @@
+# Publishes a GitHub release to npm (@dario-loi/polytope) and PyPI (polytope-theme).
+# Both registries use trusted publishing (OIDC), so no tokens are stored in the repository.
+# Configure once: npm package settings -> Trusted Publisher (workflow release.yml), and a
+# PyPI trusted publisher for polytope-theme (workflow release.yml, environment pypi).
+name: release
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.v.outputs.version }}
+    steps:
+      - uses: actions/checkout@v7
+      - id: v
+        name: Check that the tag matches both package versions
+        run: |
+          npm_version=$(node -p "require('./package.json').version")
+          py_version=$(grep -m1 '^version' python/pyproject.toml | cut -d'"' -f2)
+          echo "npm $npm_version, python $py_version, ref ${GITHUB_REF_NAME}"
+          test "$npm_version" = "$py_version"
+          if [ "${GITHUB_EVENT_NAME}" = "release" ]; then test "v$npm_version" = "${GITHUB_REF_NAME}"; fi
+          echo "version=$npm_version" >> "$GITHUB_OUTPUT"
+
+  npm:
+    needs: verify
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+          package-manager-cache: false
+      # trusted publishing needs npm 11.5.1 or newer
+      - run: npm install -g npm@latest
+      - run: npm ci
+      - run: npm run build
+      - run: git diff --exit-code -- dist python/src/polytope_theme
+      - run: npm run check:contrast
+      - name: Publish unless this version is already on npm
+        run: |
+          if npm view "@dario-loi/polytope@${{ needs.verify.outputs.version }}" version >/dev/null 2>&1; then
+            echo "Version already published; skipping."
+          else
+            npm publish
+          fi
+
+  pypi:
+    needs: verify
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - run: pip install build
+      - run: python -m build python --outdir python/dist
+      - uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: python/dist
+          skip-existing: true

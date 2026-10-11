@@ -12,9 +12,7 @@ import { u } from "../data/nav";
   </figure>
 
   <h2>Install</h2>
-  <Code lang="sh" code={`# npm 12: allow git dependencies
-echo "allow-git=root" >> .npmrc
-npm install github:dario-loi/polytope`} />
+  <Code lang="sh" code={`npm install @dario-loi/polytope`} />
   <p>Then load the stylesheet once, in your layout or page head:</p>
   <Code lang="js" code={`import "@dario-loi/polytope/css";`} />
   <p>Without a build step, link the hosted files instead (see <a href={u("/getting-started/html/")}>Using in plain HTML</a>):</p>

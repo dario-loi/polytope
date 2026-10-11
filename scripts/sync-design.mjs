@@ -2,11 +2,9 @@
 // polytope-design: copy Polytope's DESIGN.md and .impeccable/design.json into the current
 // project, so Impeccable treats Polytope as the project's visual system.
 //
-// Run the installed copy, never through npx (npx falls back to the npm registry):
-//   ./node_modules/.bin/polytope-design            copy both files (refuses to replace another system's DESIGN.md)
-//   ./node_modules/.bin/polytope-design --check    exit 1 if the project's copies differ from the installed version
-//   ./node_modules/.bin/polytope-design --force    replace an existing DESIGN.md even if it is not Polytope's
-// or add "design:sync": "polytope-design" to package.json scripts and use npm run.
+//   npx @dario-loi/polytope            copy both files (refuses to replace another system's DESIGN.md)
+//   npx @dario-loi/polytope --check    exit 1 if the project's copies differ from the installed version
+//   npx @dario-loi/polytope --force    replace an existing DESIGN.md even if it is not Polytope's
 
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from "node:fs";
 import { join, dirname } from "node:path";
@@ -31,7 +29,7 @@ for (const f of files) {
 if (args.has("--check")) {
   const stale = files.filter((f) => !existsSync(f.to) || readFileSync(f.to, "utf8") !== readFileSync(f.from, "utf8"));
   if (stale.length) {
-    console.error(`Out of date with @dario-loi/polytope ${version}: ${stale.map((f) => f.label).join(", ")}. Run ./node_modules/.bin/polytope-design.`);
+    console.error(`Out of date with @dario-loi/polytope ${version}: ${stale.map((f) => f.label).join(", ")}. Run npx @dario-loi/polytope.`);
     process.exit(1);
   }
   console.log(`DESIGN.md and design.json match Polytope ${version}.`);

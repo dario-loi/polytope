@@ -32,8 +32,9 @@ import { u } from "../../data/nav";
   </ul>
 
   <h2>Releasing</h2>
-  <Code lang="sh" code={`npm run build && git add dist   # installs read dist/ from the repository
-npm version minor        # bumps package.json and tags
-git push --follow-tags   # the docs site redeploys from main`} />
-  <p>Update <code>python/pyproject.toml</code> to the same version so both halves of the kit move together.</p>
+  <Code lang="sh" code={`npm run build && git add dist   # installs read dist/ as committed
+npm version minor               # bumps package.json and tags
+git push --follow-tags
+gh release create v0.2.0        # publishing the release sends it to npm and PyPI`} />
+  <p>Update <code>python/pyproject.toml</code> to the same version first, so both halves of the kit move together. The release workflow publishes through trusted publishing, so no tokens are stored anywhere, and npm attaches a provenance record that ties each version to the commit it was built from.</p>
 </Docs>

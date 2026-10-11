@@ -1,13 +1,13 @@
 {
   "name": "@dario-loi/polytope",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Polytope: tokens, CSS components, and Astro components for academic sites, paper pages, and research demos.",
   "type": "module",
   "license": "Apache-2.0",
   "author": "Dario Loi",
   "repository": {
     "type": "git",
-    "url": "https://github.com/dario-loi/polytope"
+    "url": "git+https://github.com/dario-loi/polytope.git"
   },
   "workspaces": [
     "docs"
@@ -79,5 +79,12 @@
   },
   "bin": {
     "polytope-design": "scripts/sync-design.mjs"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "homepage": "https://dario-loi.github.io/polytope/",
+  "bugs": {
+    "url": "https://github.com/dario-loi/polytope/issues"
   }
 }

@@ -6,10 +6,11 @@ import { u } from "../../data/nav";
 ---
 <Docs title="Installation" lede="Add the kit from GitHub with npm, from pip for Python, or link the hosted files.">
   <h2>JavaScript projects</h2>
-  <p>The whole kit is one package. The built files are committed to the repository, so npm installs them as they are and runs no install scripts. Since version 12, npm refuses git dependencies unless the project allows them, so add one line to the project's <code>.npmrc</code> first. The <code>root</code> value allows git dependencies listed in your own <code>package.json</code> and nothing deeper.</p>
+  <p>The whole kit is one package on npm.</p>
+  <Code lang="sh" code={`npm install @dario-loi/polytope`} />
+  <p>To install straight from GitHub instead, npm 12 needs the project to allow git dependencies, and the address needs quotes for zsh. Upgrading a git install means uninstalling first, so the registry is the easier path.</p>
   <Code lang="sh" code={`echo "allow-git=root" >> .npmrc
-npm install "github:dario-loi/polytope#v0.1.3"`} />
-  <p>Keep the quotes: zsh reads an unquoted <code>#</code> as a glob pattern and stops before npm runs.</p>
+npm install "github:dario-loi/polytope#v0.1.4"`} />
   <p>What the package exports:</p>
   <div class="ply-table-wrap">
     <table class="ply-table">
@@ -28,26 +29,21 @@ npm install "github:dario-loi/polytope#v0.1.3"`} />
   <p>The <a href={u("/getting-started/targets/")}>other targets</a> page lists the Tailwind, Sass, LaTeX, Figma, and editor exports.</p>
 
   <h2>Using Polytope with Impeccable</h2>
-  <p>Impeccable reads a project's visual system from <code>DESIGN.md</code> and <code>.impeccable/design.json</code> in its root. The package ships both, and a small command copies them into a site. Run the installed copy:</p>
-  <Code lang="sh" code={`./node_modules/.bin/polytope-design            # copies DESIGN.md and .impeccable/design.json
-./node_modules/.bin/polytope-design --check    # fails if the copies are older than the installed Polytope`} />
-  <p>Avoid <code>npx polytope-design</code>: when the package is missing, npx looks the name up on the public npm registry instead of failing. Scripts in the site's <code>package.json</code> are safer, because <code>npm run</code> only uses installed packages:</p>
-  <Code lang="json" title="package.json" code={`"scripts": {
-  "design:sync": "polytope-design",
-  "design:check": "polytope-design --check"
-}`} />
+  <p>Impeccable reads a project's visual system from <code>DESIGN.md</code> and <code>.impeccable/design.json</code> in its root. The package ships both, and one command copies them into a site:</p>
+  <Code lang="sh" code={`npx @dario-loi/polytope            # copies DESIGN.md and .impeccable/design.json
+npx @dario-loi/polytope --check    # fails if the copies are older than the installed Polytope`} />
+  <p>In a project that has Polytope installed, npx runs that copy. The command will not replace another system's <code>DESIGN.md</code> unless you pass <code>--force</code>. Copy the files again after upgrading Polytope, and add the check to the site's CI to catch a stale copy.</p>
   <p>A site without npm, such as a static site built by a Python script, can fetch the same two files pinned to a release, and link the hosted stylesheet in its template:</p>
-  <Code lang="sh" code={`curl -fsSLo DESIGN.md https://raw.githubusercontent.com/dario-loi/polytope/v0.1.3/DESIGN.md
+  <Code lang="sh" code={`curl -fsSLo DESIGN.md https://raw.githubusercontent.com/dario-loi/polytope/v0.1.4/DESIGN.md
 mkdir -p .impeccable
-curl -fsSLo .impeccable/design.json https://raw.githubusercontent.com/dario-loi/polytope/v0.1.3/.impeccable/design.json`} />
-  <p>With those files in place, Impeccable builds every new page inside Polytope and its design checker flags anything off the system, such as a font Polytope does not use. The command will not replace another system's <code>DESIGN.md</code> unless you pass <code>--force</code>. Copy the files again after moving to a newer Polytope, and add the check to the site's CI to catch a stale copy.</p>
-  <p>Then run <code>/impeccable init</code> in Claude Code so the site gets its own <code>PRODUCT.md</code>: who it is for, what it is for, and its real content.</p>
+curl -fsSLo .impeccable/design.json https://raw.githubusercontent.com/dario-loi/polytope/v0.1.4/.impeccable/design.json`} />
+  <p>With those files in place, Impeccable builds every new page inside Polytope and its design checker flags anything off the system, such as a font Polytope does not use. Then run <code>/impeccable init</code> in Claude Code so the site gets its own <code>PRODUCT.md</code>: who it is for, what it is for, and its real content.</p>
 
   <h2>Python</h2>
-  <p>The figure and app themes live in the <code>python/</code> folder of the same repository. pip can install from a subfolder:</p>
-  <Code lang="sh" code={`pip install "git+https://github.com/dario-loi/polytope#subdirectory=python"
+  <p>The figure and app themes are on PyPI as <code>polytope-theme</code>:</p>
+  <Code lang="sh" code={`pip install polytope-theme
 # with the libraries you use:
-pip install "polytope-theme[matplotlib,plotly] @ git+https://github.com/dario-loi/polytope#subdirectory=python"`} />
+pip install "polytope-theme[matplotlib,plotly]"`} />
 
   <h2>No install at all</h2>
   <p>The docs site serves the built kit, so any static page can link it:</p>

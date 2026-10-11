@@ -7,13 +7,13 @@ Chart and app themes for the Polytope design system, covering matplotlib, plotly
 ## Install
 
 ```sh
-pip install "git+https://github.com/dario-loi/polytope#subdirectory=python"
+pip install polytope-theme
 ```
 
 The package has no required dependencies. Each integration has an extra that pulls in its library: `matplotlib`, `plotly`, `gradio`, `streamlit`, or `all`.
 
 ```sh
-pip install "polytope-theme[matplotlib,plotly] @ git+https://github.com/dario-loi/polytope#subdirectory=python"
+pip install "polytope-theme[matplotlib,plotly]"
 ```
 
 ## Palette
