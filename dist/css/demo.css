@@ -1,0 +1,37 @@
+@layer ply.components {
+  /* Demo and tool chrome: a header, a control panel, a black stage, a status line.
+     Built for interactive figures and small research tools. */
+  .ply-app { display: grid; grid-template-columns: minmax(0, 1fr); grid-template-areas: "head" "stage" "controls" "status"; border: var(--ply-border-rule) solid var(--ply-color-rule-strong); background: var(--ply-color-bg); }
+  @media (min-width: 56rem) {
+    .ply-app { grid-template-columns: 18rem minmax(0, 1fr); grid-template-areas: "head head" "controls stage" "status status"; }
+  }
+  .ply-app__head { grid-area: head; display: flex; flex-wrap: wrap; align-items: center; gap: var(--ply-space-4); justify-content: space-between; padding: var(--ply-space-3) var(--ply-space-4); border-bottom: var(--ply-border-rule) solid var(--ply-color-rule-strong); }
+  .ply-app__title { font-family: var(--ply-font-display); font-size: var(--ply-size-xl); line-height: 1.1; font-weight: 400; }
+  .ply-app__controls { grid-area: controls; padding: var(--ply-space-4); display: grid; gap: var(--ply-space-5); align-content: start; border-top: var(--ply-border-rule) solid var(--ply-color-rule-strong); }
+  @media (min-width: 56rem) { .ply-app__stage { min-height: 20rem; } }
+  @media (min-width: 56rem) { .ply-app__controls { border-top: 0; border-inline-end: var(--ply-border-rule) solid var(--ply-color-rule-strong); } }
+  .ply-app__stage { grid-area: stage; background: var(--ply-color-panel); color: var(--ply-color-panel-text); min-height: 12rem; position: relative; display: grid; place-items: center; overflow: hidden; }
+  .ply-app__status { grid-area: status; display: flex; flex-wrap: wrap; align-items: center; gap: var(--ply-space-2) var(--ply-space-5); padding: var(--ply-space-2) var(--ply-space-4); border-top: var(--ply-border-control) solid var(--ply-color-rule-strong); font-size: var(--ply-size-sm); color: var(--ply-color-text-muted); }
+
+  .ply-control { display: grid; gap: var(--ply-space-2); }
+  .ply-control__label { display: flex; justify-content: space-between; align-items: baseline; gap: var(--ply-space-3); font-size: var(--ply-size-sm); font-weight: var(--ply-weight-bold); }
+  .ply-control__hint { font-size: var(--ply-size-xs); color: var(--ply-color-text-muted); line-height: var(--ply-leading-normal); }
+  .ply-control-group { display: grid; gap: var(--ply-space-4); padding-top: var(--ply-space-4); border-top: var(--ply-border-hair) solid var(--ply-color-rule); }
+  .ply-control-group > legend, .ply-control-group__title { font-size: var(--ply-size-xs); font-weight: var(--ply-weight-bold); color: var(--ply-color-text-muted); padding: 0; }
+  fieldset.ply-control-group { border: 0; border-top: var(--ply-border-hair) solid var(--ply-color-rule); margin: 0; padding-inline: 0; }
+
+  /* Key-value readout of parameters or results. */
+  .ply-readout { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--ply-space-1) var(--ply-space-4); font-size: var(--ply-size-sm); margin: 0; }
+  .ply-readout dt { color: var(--ply-color-text-muted); }
+  .ply-readout dd { margin: 0; font-family: var(--ply-font-mono); font-variant-numeric: tabular-nums; text-align: end; }
+
+  /* Empty state: what is missing and what to do about it. */
+  .ply-empty { display: grid; justify-items: center; gap: var(--ply-space-3); text-align: center; padding: var(--ply-space-7) var(--ply-space-5); max-width: 28rem; margin-inline: auto; }
+  .ply-empty__mark { width: 2.5rem; height: 2.5rem; border-radius: var(--ply-radius-ball); border: var(--ply-border-rule) dashed currentColor; opacity: 0.6; }
+  .ply-empty__title { font-family: var(--ply-font-display); font-size: var(--ply-size-xl); font-weight: 400; line-height: 1.1; }
+  .ply-empty p { color: inherit; opacity: 0.85; font-size: var(--ply-size-md); }
+
+  /* Toast for short confirmations. */
+  .ply-toast { position: fixed; inset-inline: var(--ply-space-4); bottom: var(--ply-space-4); z-index: 200; margin-inline: auto; max-width: 26rem; display: flex; gap: var(--ply-space-3); align-items: center; background: var(--ply-color-panel); color: var(--ply-color-panel-text); padding: var(--ply-space-3) var(--ply-space-4); font-size: var(--ply-size-sm); box-shadow: 0 0.75rem 2rem rgb(0 0 0 / 0.25); animation: ply-toast-in var(--ply-duration-slow) var(--ply-ease-out); }
+  @keyframes ply-toast-in { from { transform: translateY(0.75rem); opacity: 0; } }
+}

@@ -1,0 +1,59 @@
+@layer ply.components {
+  /* Paper header: title, authors with affiliation marks, venue, and the link row. */
+  .ply-paper { display: grid; gap: var(--ply-space-5); padding-block: var(--ply-space-7); }
+  .ply-paper__venue { font-size: var(--ply-size-sm); font-weight: var(--ply-weight-bold); }
+  .ply-paper__title { font-family: var(--ply-font-display); font-weight: 400; font-size: clamp(2.25rem, 1.4rem + 2.8vw, 4rem); line-height: 1.02; letter-spacing: -0.01em; max-width: 22ch; }
+  .ply-paper__links { display: flex; flex-wrap: wrap; gap: var(--ply-space-2); }
+
+  .ply-authors { display: flex; flex-wrap: wrap; gap: var(--ply-space-1) var(--ply-space-4); list-style: none; padding: 0; font-size: var(--ply-size-lg); font-weight: var(--ply-weight-semibold); }
+  .ply-authors sup, .ply-affiliations sup { font-size: 0.65em; font-weight: var(--ply-weight-bold); color: var(--ply-color-accent-text); margin-inline-start: 0.1em; }
+  .ply-authors a { color: inherit; }
+  .ply-affiliations { display: flex; flex-wrap: wrap; gap: var(--ply-space-1) var(--ply-space-4); list-style: none; padding: 0; font-size: var(--ply-size-sm); color: var(--ply-color-text-muted); }
+  .ply-authors__note { font-size: var(--ply-size-sm); color: var(--ply-color-text-muted); }
+
+  .ply-abstract { max-width: var(--ply-layout-measure); }
+  .ply-abstract__label { font-family: var(--ply-font-display); font-size: var(--ply-size-xl); margin-bottom: var(--ply-space-2); }
+  .ply-abstract p { font-size: var(--ply-size-lg); line-height: var(--ply-leading-relaxed); }
+
+  /* Numbered figures. Wide figures may break out of the reading column. */
+  .ply-figure { margin: var(--ply-space-6) 0; }
+  .ply-figure--wide { max-width: none; }
+  .ply-figure img, .ply-figure svg, .ply-figure video { width: 100%; height: auto; }
+  .ply-figure figcaption { margin-top: var(--ply-space-3); font-size: var(--ply-size-sm); line-height: var(--ply-leading-normal); color: var(--ply-color-text-muted); max-width: var(--ply-layout-measure); }
+  .ply-figure__num { font-weight: var(--ply-weight-bold); color: var(--ply-color-text); margin-inline-end: 0.35em; }
+
+  /* Display equation with its number flush right. */
+  .ply-equation { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: var(--ply-space-4); margin: var(--ply-space-5) 0; max-width: var(--ply-layout-measure); }
+  .ply-equation__body { overflow-x: auto; overflow-y: hidden; text-align: center; font-size: 1.1em; padding-block: var(--ply-space-1); }
+  @media (max-width: 40rem) { .ply-equation__body { font-size: 0.95em; } }
+  .ply-equation__num { font-variant-numeric: tabular-nums; color: var(--ply-color-text-muted); font-size: var(--ply-size-sm); }
+  .ply-math { font-size: 1.05em; }
+  .ply-math .katex { line-height: inherit; }
+
+  /* Inline citation with a preview card on hover or focus. */
+  .ply-cite { position: relative; display: inline; }
+  .ply-cite > a { font-weight: var(--ply-weight-semibold); font-variant-numeric: tabular-nums; text-decoration: none; color: var(--ply-color-link); }
+  .ply-cite > a:hover { text-decoration: underline; }
+  .ply-cite__card { position: absolute; left: 50%; bottom: calc(100% + 0.5rem); z-index: 50; width: min(22rem, 80vw); transform: translate(-50%, 0.25rem); opacity: 0; pointer-events: none; background: var(--ply-color-panel); color: var(--ply-color-panel-text); padding: var(--ply-space-3) var(--ply-space-4); font-size: var(--ply-size-sm); line-height: var(--ply-leading-normal); font-weight: var(--ply-weight-regular); box-shadow: 0 0.5rem 1.5rem rgb(0 0 0 / 0.18); transition: opacity var(--ply-duration-base) var(--ply-ease-out), transform var(--ply-duration-base) var(--ply-ease-out); }
+  .ply-cite__card b { color: var(--ply-color-panel-text); }
+  .ply-cite:hover .ply-cite__card, .ply-cite:focus-within .ply-cite__card { opacity: 1; transform: translate(-50%, 0); pointer-events: auto; }
+
+  /* BibTeX block: a code panel with a copy button, set narrower than prose code. */
+  .ply-bibtex .ply-code { max-width: var(--ply-layout-measure); }
+
+  /* History wall: entries grouped by year with the year as a big wood-type numeral.
+     Used for publication lists and the changelog. */
+  .ply-wall { display: grid; gap: 0; }
+  .ply-wall__year { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--ply-space-3); padding-block: var(--ply-space-5); border-top: var(--ply-border-rule) solid var(--ply-color-rule-strong); }
+  .ply-wall__label { font-family: var(--ply-font-display); font-size: var(--ply-size-3xl); line-height: 1; font-variant-numeric: tabular-nums; }
+  .ply-wall__entries { list-style: none; padding: 0; display: grid; gap: var(--ply-space-4); }
+  @media (min-width: 48rem) { .ply-wall__year { grid-template-columns: 9rem minmax(0, 1fr); gap: var(--ply-space-6); } }
+
+  .ply-pub { display: grid; gap: var(--ply-space-1); }
+  .ply-pub__title { font-weight: var(--ply-weight-bold); font-size: var(--ply-size-lg); line-height: 1.3; }
+  .ply-pub__title a { color: inherit; font-weight: inherit; }
+  .ply-pub__authors { font-size: 0.96875rem; color: var(--ply-color-text-muted); }
+  .ply-pub__authors .ply-me { color: var(--ply-color-text); font-weight: var(--ply-weight-semibold); }
+  .ply-pub__venue { font-size: var(--ply-size-sm); font-weight: var(--ply-weight-semibold); }
+  .ply-pub__links { display: flex; flex-wrap: wrap; gap: var(--ply-space-3); font-size: var(--ply-size-sm); margin-top: var(--ply-space-1); }
+}

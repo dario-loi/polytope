@@ -1,0 +1,15 @@
+@layer ply.utilities {
+  .ply-visually-hidden { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+  .ply-skip { position: absolute; left: var(--ply-space-4); top: var(--ply-space-3); z-index: 300; transform: translateY(-200%); background: var(--ply-color-text); color: var(--ply-color-bg); padding: var(--ply-space-2) var(--ply-space-4); font-weight: var(--ply-weight-bold); text-decoration: none; }
+  .ply-skip:hover, .ply-skip:focus { transform: none; color: var(--ply-color-bg); background: var(--ply-color-text); }
+  .ply-display { font-family: var(--ply-font-display); font-weight: 400; line-height: var(--ply-leading-display); }
+  .ply-mono { font-family: var(--ply-font-mono); }
+  .ply-muted { color: var(--ply-color-text-muted); }
+  .ply-small { font-size: var(--ply-size-sm); }
+  .ply-num { font-variant-numeric: tabular-nums; }
+  .ply-nowrap { white-space: nowrap; }
+  .ply-stop { color: var(--ply-color-accent); }
+  .ply-flow > * + * { margin-top: var(--ply-flow, var(--ply-space-4)); }
+  .ply-mt-0 { margin-top: 0 !important; }
+  @media (max-width: 40rem) { .ply-hide-narrow { display: none !important; } }
+}

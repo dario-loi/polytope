@@ -1,0 +1,66 @@
+@layer ply.components {
+  .ply-field { display: grid; gap: var(--ply-space-2); max-width: 32rem; }
+  .ply-field__label { font-size: var(--ply-size-sm); font-weight: var(--ply-weight-bold); }
+  .ply-field__hint { font-size: var(--ply-size-sm); color: var(--ply-color-text-muted); line-height: var(--ply-leading-normal); }
+  .ply-field__error { display: flex; gap: var(--ply-space-2); align-items: baseline; font-size: var(--ply-size-sm); color: var(--ply-color-accent-text); font-weight: var(--ply-weight-semibold); }
+  .ply-field__error::before { content: ""; flex: none; width: 0.625rem; height: 0.625rem; background: var(--ply-color-accent); transform: rotate(45deg) translateY(-1px); }
+
+  .ply-input, .ply-select, .ply-textarea {
+    width: 100%; min-height: 2.75rem; padding: 0 var(--ply-space-3);
+    background: var(--ply-color-bg); color: var(--ply-color-text);
+    border: var(--ply-border-control) solid var(--ply-color-rule-strong); border-radius: var(--ply-radius-none);
+    font-size: var(--ply-size-md); line-height: 1.4;
+    transition: border-color var(--ply-duration-fast) var(--ply-ease-out), box-shadow var(--ply-duration-fast) var(--ply-ease-out);
+  }
+  .ply-textarea { padding-block: var(--ply-space-3); min-height: 7rem; resize: vertical; }
+  .ply-input:hover, .ply-select:hover, .ply-textarea:hover { box-shadow: inset 0 0 0 1px var(--ply-color-rule-strong); }
+  .ply-input:focus-visible, .ply-select:focus-visible, .ply-textarea:focus-visible { outline: 3px solid var(--ply-color-focus); outline-offset: 2px; }
+  .ply-input[aria-invalid="true"], .ply-select[aria-invalid="true"], .ply-textarea[aria-invalid="true"] { border-color: var(--ply-color-accent); box-shadow: inset 0 0 0 1px var(--ply-color-accent); }
+  .ply-input:disabled, .ply-select:disabled, .ply-textarea:disabled { background: var(--ply-color-surface-sunken); color: var(--ply-color-text-subtle); border-color: var(--ply-color-rule); cursor: not-allowed; }
+  .ply-select { appearance: none; padding-inline-end: 2.5rem; background-image: linear-gradient(45deg, transparent 50%, currentColor 50%), linear-gradient(135deg, currentColor 50%, transparent 50%); background-position: calc(100% - 1.15rem) 50%, calc(100% - 0.8rem) 50%; background-size: 0.35rem 0.35rem; background-repeat: no-repeat; cursor: pointer; }
+
+  /* Checkbox and radio: square box, round ball. The ball is tomato when picked. */
+  .ply-check { display: inline-flex; align-items: flex-start; gap: var(--ply-space-3); font-size: var(--ply-size-md); line-height: var(--ply-leading-normal); cursor: pointer; }
+  .ply-check input { appearance: none; flex: none; width: 1.25rem; height: 1.25rem; margin-top: 0.15rem; border: var(--ply-border-control) solid var(--ply-color-rule-strong); background: var(--ply-color-bg); display: grid; place-content: center; cursor: pointer; }
+  .ply-check input[type="radio"] { border-radius: var(--ply-radius-ball); }
+  .ply-check input::before { content: ""; width: 0.625rem; height: 0.625rem; transform: scale(0); transition: transform var(--ply-duration-fast) var(--ply-ease-out); background: var(--ply-color-text); }
+  .ply-check input[type="radio"]::before { border-radius: var(--ply-radius-ball); background: var(--ply-color-accent); }
+  .ply-check input:checked::before { transform: scale(1); }
+  .ply-check input[type="checkbox"]:checked { background: var(--ply-color-text); }
+  .ply-check input[type="checkbox"]::before { background: var(--ply-color-bg); clip-path: polygon(14% 52%, 0 66%, 38% 100%, 100% 22%, 86% 8%, 38% 72%); width: 0.75rem; height: 0.75rem; }
+  .ply-check input:disabled { border-color: var(--ply-color-rule); background: var(--ply-color-surface-sunken); cursor: not-allowed; }
+  .ply-check:has(input:disabled) { color: var(--ply-color-text-subtle); cursor: not-allowed; }
+
+  /* Switch: a ball that rolls along a track. */
+  .ply-switch { display: inline-flex; align-items: center; gap: var(--ply-space-3); cursor: pointer; font-size: var(--ply-size-md); }
+  .ply-switch input { appearance: none; flex: none; width: 2.75rem; height: 1.5rem; border: var(--ply-border-control) solid var(--ply-color-rule-strong); background: var(--ply-color-bg); position: relative; cursor: pointer; transition: background var(--ply-duration-base) var(--ply-ease-out); }
+  .ply-switch input::before { content: ""; position: absolute; top: 50%; left: 0.1875rem; width: 1rem; height: 1rem; margin-top: -0.5rem; border-radius: var(--ply-radius-ball); background: var(--ply-color-text); transition: transform var(--ply-duration-base) var(--ply-ease-out), background var(--ply-duration-base) var(--ply-ease-out); }
+  .ply-switch input:checked { background: var(--ply-color-text); }
+  .ply-switch input:checked::before { transform: translateX(1.25rem); background: var(--ply-color-accent); }
+
+  /* Range slider: a rail and a ball, with the value printed beside it. */
+  .ply-range { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: var(--ply-space-3); }
+  .ply-range output { font-family: var(--ply-font-mono); font-size: var(--ply-size-sm); font-variant-numeric: tabular-nums; min-width: 3.5ch; text-align: end; }
+  .ply-slider { appearance: none; width: 100%; height: 1.5rem; background: transparent; cursor: pointer; }
+  .ply-slider::-webkit-slider-runnable-track { height: 3px; background: var(--ply-color-rule-strong); }
+  .ply-slider::-moz-range-track { height: 3px; background: var(--ply-color-rule-strong); }
+  .ply-slider::-webkit-slider-thumb { appearance: none; width: 1.125rem; height: 1.125rem; margin-top: -0.47rem; border-radius: var(--ply-radius-ball); background: var(--ply-color-accent); border: 0; }
+  .ply-slider::-moz-range-thumb { width: 1.125rem; height: 1.125rem; border-radius: var(--ply-radius-ball); background: var(--ply-color-accent); border: 0; }
+  .ply-slider:focus-visible { outline: 3px solid var(--ply-color-focus); outline-offset: 4px; }
+
+  /* Segmented control: wall-label tabs in a row. */
+  .ply-segmented { display: inline-flex; align-self: flex-start; max-width: 100%; border: var(--ply-border-control) solid var(--ply-color-rule-strong); }
+  .ply-segmented button, .ply-segmented label { white-space: nowrap; appearance: none; border: 0; background: transparent; padding: 0 var(--ply-space-3); min-height: 2.25rem; display: inline-flex; align-items: center; font-size: var(--ply-size-sm); font-weight: var(--ply-weight-medium); color: var(--ply-color-text); cursor: pointer; }
+  .ply-segmented :is(button, label) + :is(button, label) { border-inline-start: var(--ply-border-control) solid var(--ply-color-rule-strong); }
+  .ply-segmented [aria-pressed="true"], .ply-segmented label:has(input:checked) { background: var(--ply-color-text); color: var(--ply-color-bg); font-weight: var(--ply-weight-semibold); }
+  .ply-segmented input { position: absolute; opacity: 0; pointer-events: none; }
+  .ply-segmented label:has(input:focus-visible) { outline: 3px solid var(--ply-color-focus); outline-offset: 2px; }
+
+  .ply-panel :is(.ply-input, .ply-select, .ply-textarea) { background: transparent; color: var(--ply-color-panel-text); border-color: var(--ply-color-panel-text); }
+  .ply-panel .ply-slider::-webkit-slider-runnable-track { background: var(--ply-color-panel-text); }
+  .ply-panel .ply-slider::-moz-range-track { background: var(--ply-color-panel-text); }
+  .ply-panel .ply-segmented { border-color: var(--ply-color-panel-text); }
+  .ply-panel .ply-segmented :is(button, label) { color: var(--ply-color-panel-text); }
+  .ply-panel .ply-segmented :is(button, label) + :is(button, label) { border-color: var(--ply-color-panel-text); }
+  .ply-panel .ply-segmented [aria-pressed="true"], .ply-panel .ply-segmented label:has(input:checked) { background: var(--ply-color-panel-text); color: var(--ply-color-panel); }
+}

@@ -1,0 +1,60 @@
+% Generated from tokens/tokens.json.
+% \usepackage{polytope-colors}  (needs xcolor; the cycle list needs pgfplots)
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{polytope-colors}[2026/10/11 Polytope colors]
+\RequirePackage{xcolor}
+\definecolor{plyWhite}{HTML}{FFFFFF}
+\definecolor{plyInk50}{HTML}{F6F7F6}
+\definecolor{plyInk100}{HTML}{EEF0EF}
+\definecolor{plyInk200}{HTML}{D9DAD6}
+\definecolor{plyInk300}{HTML}{B9BAB4}
+\definecolor{plyInk400}{HTML}{8F8F89}
+\definecolor{plyInk500}{HTML}{6B6B66}
+\definecolor{plyInk600}{HTML}{4A4A47}
+\definecolor{plyInk700}{HTML}{3A3A37}
+\definecolor{plyInk800}{HTML}{262624}
+\definecolor{plyInk900}{HTML}{1C1C1A}
+\definecolor{plyInk950}{HTML}{141414}
+\definecolor{plyTomato100}{HTML}{FBE3DE}
+\definecolor{plyTomato400}{HTML}{F0654F}
+\definecolor{plyTomato500}{HTML}{D9412B}
+\definecolor{plyTomato600}{HTML}{B8321F}
+\definecolor{plyMustard100}{HTML}{FBEFD2}
+\definecolor{plyMustard400}{HTML}{F2B83A}
+\definecolor{plyMustard500}{HTML}{E9A81C}
+\definecolor{plyMustard700}{HTML}{7A5300}
+\definecolor{plyTeal100}{HTML}{DDF1F0}
+\definecolor{plyTeal300}{HTML}{5CC2C7}
+\definecolor{plyTeal700}{HTML}{0F6E73}
+\definecolor{plyCobalt100}{HTML}{E3EAF8}
+\definecolor{plyCobalt200}{HTML}{C2D1F0}
+\definecolor{plyCobalt300}{HTML}{95AEE3}
+\definecolor{plyCobalt400}{HTML}{6A8BD4}
+\definecolor{plyCobalt500}{HTML}{3A62C4}
+\definecolor{plyCobalt600}{HTML}{2B4A99}
+\definecolor{plyCobalt700}{HTML}{1D336B}
+\definecolor{plyVizTomato}{HTML}{D9412B}
+\definecolor{plyVizTeal}{HTML}{009B93}
+\definecolor{plyVizCobalt}{HTML}{3A62C4}
+\definecolor{plyVizGrass}{HTML}{4C8C2B}
+\definecolor{plyVizSky}{HTML}{2E8FD0}
+\definecolor{plyVizMustard}{HTML}{C28A0A}
+\definecolor{plyVizPlum}{HTML}{9A3E96}
+\definecolor{plyVizPink}{HTML}{E06C91}
+\definecolor{plyStatusGood}{HTML}{1E7A3C}
+\definecolor{plyStatusWarning}{HTML}{F2B71F}
+\definecolor{plyStatusSerious}{HTML}{E8743B}
+\definecolor{plyStatusCritical}{HTML}{B3261E}
+\@ifpackageloaded{pgfplots}{%
+  \pgfplotscreateplotcyclelist{polytope}{%
+    {plyVizTomato, mark=*, thick},%
+    {plyVizTeal, mark=*, thick},%
+    {plyVizCobalt, mark=*, thick},%
+    {plyVizGrass, mark=*, thick},%
+    {plyVizSky, mark=*, thick},%
+    {plyVizMustard, mark=*, thick},%
+    {plyVizPlum, mark=*, thick},%
+    {plyVizPink, mark=*, thick}%
+  }%
+}{}
+\endinput

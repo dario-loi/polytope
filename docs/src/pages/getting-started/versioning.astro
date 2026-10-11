@@ -32,7 +32,8 @@ import { u } from "../../data/nav";
   </ul>
 
   <h2>Releasing</h2>
-  <Code lang="sh" code={`npm version minor        # bumps package.json and tags
+  <Code lang="sh" code={`npm run build && git add dist   # installs read dist/ from the repository
+npm version minor        # bumps package.json and tags
 git push --follow-tags   # the docs site redeploys from main`} />
   <p>Update <code>python/pyproject.toml</code> to the same version so both halves of the kit move together.</p>
 </Docs>

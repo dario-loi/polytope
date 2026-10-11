@@ -6,9 +6,9 @@ import { u } from "../../data/nav";
 ---
 <Docs title="Installation" lede="Add the kit from GitHub with npm, from pip for Python, or link the hosted files.">
   <h2>JavaScript projects</h2>
-  <p>The whole kit is one package. Install it from GitHub; npm builds it on install. Since version 12, npm refuses git dependencies unless the project allows them, so add one line to the project's <code>.npmrc</code> first. The <code>root</code> value allows git dependencies listed in your own <code>package.json</code> and nothing deeper.</p>
+  <p>The whole kit is one package. The built files are committed to the repository, so npm installs them as they are and runs no install scripts. Since version 12, npm refuses git dependencies unless the project allows them, so add one line to the project's <code>.npmrc</code> first. The <code>root</code> value allows git dependencies listed in your own <code>package.json</code> and nothing deeper.</p>
   <Code lang="sh" code={`echo "allow-git=root" >> .npmrc
-npm install "github:dario-loi/polytope#v0.1.2"`} />
+npm install "github:dario-loi/polytope#v0.1.3"`} />
   <p>Keep the quotes: zsh reads an unquoted <code>#</code> as a glob pattern and stops before npm runs.</p>
   <p>What the package exports:</p>
   <div class="ply-table-wrap">
@@ -37,9 +37,9 @@ npm install "github:dario-loi/polytope#v0.1.2"`} />
   "design:check": "polytope-design --check"
 }`} />
   <p>A site without npm, such as a static site built by a Python script, can fetch the same two files pinned to a release, and link the hosted stylesheet in its template:</p>
-  <Code lang="sh" code={`curl -fsSLo DESIGN.md https://raw.githubusercontent.com/dario-loi/polytope/v0.1.2/DESIGN.md
+  <Code lang="sh" code={`curl -fsSLo DESIGN.md https://raw.githubusercontent.com/dario-loi/polytope/v0.1.3/DESIGN.md
 mkdir -p .impeccable
-curl -fsSLo .impeccable/design.json https://raw.githubusercontent.com/dario-loi/polytope/v0.1.2/.impeccable/design.json`} />
+curl -fsSLo .impeccable/design.json https://raw.githubusercontent.com/dario-loi/polytope/v0.1.3/.impeccable/design.json`} />
   <p>With those files in place, Impeccable builds every new page inside Polytope and its design checker flags anything off the system, such as a font Polytope does not use. The command will not replace another system's <code>DESIGN.md</code> unless you pass <code>--force</code>. Copy the files again after moving to a newer Polytope, and add the check to the site's CI to catch a stale copy.</p>
   <p>Then run <code>/impeccable init</code> in Claude Code so the site gets its own <code>PRODUCT.md</code>: who it is for, what it is for, and its real content.</p>
 
@@ -58,8 +58,9 @@ pip install "polytope-theme[matplotlib,plotly] @ git+https://github.com/dario-lo
   <h2>Working on the kit itself</h2>
   <Code lang="sh" code={`git clone https://github.com/dario-loi/polytope
 cd polytope
-npm install          # also builds dist/
+npm install          # build dependencies
+npm run build        # rebuilds dist/; commit the result
 npm run docs:dev     # rebuilds the kit, starts this site
 npm run check:contrast`} />
-  <p>Edit tokens in <code>tokens/tokens.json</code> and styles in <code>css/src/</code>. Never edit <code>dist/</code>; the build overwrites it.</p>
+  <p>Edit tokens in <code>tokens/tokens.json</code> and styles in <code>css/src/</code>. Never edit <code>dist/</code> by hand; the build overwrites it. Commit it after each build, because installs read it straight from the repository.</p>
 </Docs>

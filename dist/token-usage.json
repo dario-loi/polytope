@@ -1,0 +1,503 @@
+{
+  "--ply-color-bg": [
+    "base.css",
+    "components/button.css",
+    "components/demo.css",
+    "components/form.css",
+    "components/nav.css",
+    "components/panel.css",
+    "components/tag.css",
+    "layout.css",
+    "utilities.css"
+  ],
+  "--ply-color-text": [
+    "base.css",
+    "components/button.css",
+    "components/form.css",
+    "components/machine.css",
+    "components/nav.css",
+    "components/note.css",
+    "components/panel.css",
+    "components/research.css",
+    "components/tag.css",
+    "components/viz.css",
+    "layout.css",
+    "utilities.css"
+  ],
+  "--ply-font-text": [
+    "base.css",
+    "components/button.css",
+    "components/viz.css"
+  ],
+  "--ply-leading-relaxed": [
+    "base.css",
+    "components/research.css"
+  ],
+  "--ply-color-accent": [
+    "base.css",
+    "components/button.css",
+    "components/form.css",
+    "components/machine.css",
+    "components/nav.css",
+    "components/tag.css",
+    "components/writing.css",
+    "layout.css",
+    "utilities.css"
+  ],
+  "--ply-color-text-subtle": [
+    "base.css",
+    "components/button.css",
+    "components/form.css",
+    "components/nav.css"
+  ],
+  "--ply-space-8": [
+    "base.css",
+    "components/nav.css",
+    "components/writing.css",
+    "layout.css"
+  ],
+  "--ply-size-body": [
+    "base.css"
+  ],
+  "--ply-color-selection": [
+    "base.css"
+  ],
+  "--ply-ink-950": [
+    "base.css",
+    "components/code.css",
+    "components/note.css",
+    "components/tag.css"
+  ],
+  "--ply-font-display": [
+    "base.css",
+    "components/demo.css",
+    "components/nav.css",
+    "components/research.css",
+    "layout.css",
+    "utilities.css"
+  ],
+  "--ply-leading-display": [
+    "base.css",
+    "layout.css",
+    "utilities.css"
+  ],
+  "--ply-size-display": [
+    "base.css",
+    "layout.css"
+  ],
+  "--ply-size-2xl": [
+    "base.css"
+  ],
+  "--ply-size-xl": [
+    "base.css",
+    "components/demo.css",
+    "components/nav.css",
+    "components/research.css"
+  ],
+  "--ply-weight-bold": [
+    "base.css",
+    "components/demo.css",
+    "components/form.css",
+    "components/nav.css",
+    "components/note.css",
+    "components/panel.css",
+    "components/research.css",
+    "components/table.css",
+    "components/tag.css",
+    "components/viz.css",
+    "components/writing.css",
+    "utilities.css"
+  ],
+  "--ply-leading-tight": [
+    "base.css"
+  ],
+  "--ply-size-lg": [
+    "base.css",
+    "components/research.css",
+    "components/writing.css",
+    "layout.css"
+  ],
+  "--ply-size-md": [
+    "base.css",
+    "components/button.css",
+    "components/demo.css",
+    "components/form.css",
+    "components/viz.css"
+  ],
+  "--ply-color-link": [
+    "base.css",
+    "components/note.css",
+    "components/research.css"
+  ],
+  "--ply-weight-semibold": [
+    "base.css",
+    "components/button.css",
+    "components/code.css",
+    "components/form.css",
+    "components/nav.css",
+    "components/research.css",
+    "components/tag.css"
+  ],
+  "--ply-duration-fast": [
+    "base.css",
+    "components/button.css",
+    "components/form.css",
+    "components/nav.css",
+    "components/writing.css"
+  ],
+  "--ply-ease-out": [
+    "base.css",
+    "components/button.css",
+    "components/demo.css",
+    "components/form.css",
+    "components/nav.css",
+    "components/research.css",
+    "components/tag.css",
+    "components/writing.css"
+  ],
+  "--ply-color-link-hover": [
+    "base.css"
+  ],
+  "--ply-color-focus": [
+    "base.css",
+    "components/form.css"
+  ],
+  "--ply-color-focus-on-panel": [
+    "base.css"
+  ],
+  "--ply-size-sm": [
+    "base.css",
+    "components/button.css",
+    "components/code.css",
+    "components/demo.css",
+    "components/form.css",
+    "components/machine.css",
+    "components/nav.css",
+    "components/panel.css",
+    "components/research.css",
+    "components/table.css",
+    "components/tag.css",
+    "components/viz.css",
+    "components/writing.css",
+    "utilities.css"
+  ],
+  "--ply-border-rule": [
+    "base.css",
+    "components/demo.css",
+    "components/nav.css",
+    "components/research.css",
+    "components/table.css",
+    "layout.css"
+  ],
+  "--ply-color-rule-strong": [
+    "base.css",
+    "components/demo.css",
+    "components/form.css",
+    "components/nav.css",
+    "components/research.css",
+    "components/table.css",
+    "components/writing.css",
+    "layout.css"
+  ],
+  "--ply-space-7": [
+    "base.css",
+    "components/demo.css",
+    "components/research.css",
+    "layout.css"
+  ],
+  "--ply-color-note": [
+    "base.css",
+    "components/code.css",
+    "components/machine.css",
+    "components/note.css",
+    "components/table.css",
+    "components/tag.css"
+  ],
+  "--ply-font-mono": [
+    "base.css",
+    "components/code.css",
+    "components/demo.css",
+    "components/form.css",
+    "utilities.css"
+  ],
+  "--ply-color-surface-sunken": [
+    "base.css",
+    "components/button.css",
+    "components/form.css",
+    "components/nav.css",
+    "components/note.css",
+    "components/table.css",
+    "components/writing.css"
+  ],
+  "--ply-layout-max": [
+    "layout.css"
+  ],
+  "--ply-layout-gutter": [
+    "layout.css"
+  ],
+  "--ply-space-6": [
+    "components/research.css",
+    "components/writing.css",
+    "layout.css"
+  ],
+  "--ply-leading-normal": [
+    "components/demo.css",
+    "components/form.css",
+    "components/note.css",
+    "components/panel.css",
+    "components/research.css",
+    "components/table.css",
+    "components/viz.css",
+    "components/writing.css",
+    "layout.css"
+  ],
+  "--ply-space-5": [
+    "components/button.css",
+    "components/code.css",
+    "components/demo.css",
+    "components/nav.css",
+    "components/note.css",
+    "components/panel.css",
+    "components/research.css",
+    "components/writing.css",
+    "layout.css"
+  ],
+  "--ply-space-9": [
+    "layout.css"
+  ],
+  "--ply-layout-sidebar": [
+    "layout.css"
+  ],
+  "--ply-layout-toc": [
+    "layout.css"
+  ],
+  "--ply-layout-measure": [
+    "components/code.css",
+    "components/note.css",
+    "components/research.css",
+    "components/writing.css",
+    "layout.css"
+  ],
+  "--ply-space-4": [
+    "components/button.css",
+    "components/code.css",
+    "components/demo.css",
+    "components/machine.css",
+    "components/nav.css",
+    "components/note.css",
+    "components/research.css",
+    "components/table.css",
+    "components/viz.css",
+    "components/writing.css",
+    "layout.css",
+    "utilities.css"
+  ],
+  "--ply-space-3": [
+    "components/button.css",
+    "components/code.css",
+    "components/demo.css",
+    "components/form.css",
+    "components/machine.css",
+    "components/nav.css",
+    "components/note.css",
+    "components/panel.css",
+    "components/research.css",
+    "components/table.css",
+    "components/viz.css",
+    "components/writing.css",
+    "layout.css",
+    "utilities.css"
+  ],
+  "--ply-space-2": [
+    "components/button.css",
+    "components/code.css",
+    "components/demo.css",
+    "components/form.css",
+    "components/nav.css",
+    "components/research.css",
+    "components/table.css",
+    "components/tag.css",
+    "components/viz.css",
+    "components/writing.css",
+    "layout.css",
+    "utilities.css"
+  ],
+  "--ply-viz-surface": [
+    "layout.css"
+  ],
+  "--ply-stack-gap": [
+    "layout.css"
+  ],
+  "--ply-cluster-gap": [
+    "layout.css"
+  ],
+  "--ply-grid-gap": [
+    "layout.css"
+  ],
+  "--ply-grid-min": [
+    "layout.css"
+  ],
+  "--ply-border-control": [
+    "components/button.css",
+    "components/demo.css",
+    "components/form.css",
+    "components/nav.css",
+    "components/table.css",
+    "components/writing.css"
+  ],
+  "--ply-radius-none": [
+    "components/button.css",
+    "components/form.css"
+  ],
+  "--ply-white": [
+    "components/button.css"
+  ],
+  "--ply-color-panel-text": [
+    "components/button.css",
+    "components/code.css",
+    "components/demo.css",
+    "components/form.css",
+    "components/machine.css",
+    "components/panel.css",
+    "components/research.css",
+    "components/viz.css"
+  ],
+  "--ply-color-panel": [
+    "components/button.css",
+    "components/code.css",
+    "components/demo.css",
+    "components/form.css",
+    "components/machine.css",
+    "components/panel.css",
+    "components/research.css",
+    "components/viz.css"
+  ],
+  "--ply-space-1": [
+    "components/demo.css",
+    "components/nav.css",
+    "components/research.css",
+    "components/viz.css"
+  ],
+  "--ply-color-text-muted": [
+    "components/demo.css",
+    "components/form.css",
+    "components/machine.css",
+    "components/nav.css",
+    "components/panel.css",
+    "components/research.css",
+    "components/table.css",
+    "components/tag.css",
+    "components/viz.css",
+    "components/writing.css",
+    "utilities.css"
+  ],
+  "--ply-weight-medium": [
+    "components/form.css",
+    "components/nav.css"
+  ],
+  "--ply-size-xs": [
+    "components/code.css",
+    "components/demo.css",
+    "components/nav.css",
+    "components/panel.css",
+    "components/tag.css",
+    "components/viz.css"
+  ],
+  "--ply-weight-regular": [
+    "components/nav.css",
+    "components/research.css",
+    "components/writing.css"
+  ],
+  "--ply-radius-ball": [
+    "components/demo.css",
+    "components/form.css",
+    "components/nav.css",
+    "components/note.css",
+    "components/tag.css",
+    "components/viz.css",
+    "components/writing.css"
+  ],
+  "--ply-color-accent-text": [
+    "components/form.css",
+    "components/nav.css",
+    "components/research.css",
+    "components/writing.css"
+  ],
+  "--ply-color-code-string": [
+    "components/code.css",
+    "components/panel.css"
+  ],
+  "--ply-color-note-soft": [
+    "components/note.css"
+  ],
+  "--ply-ink-50": [
+    "components/note.css"
+  ],
+  "--ply-mustard-400": [
+    "components/note.css"
+  ],
+  "--ply-tomato-400": [
+    "components/note.css"
+  ],
+  "--ply-status-good": [
+    "components/note.css",
+    "components/tag.css"
+  ],
+  "--ply-border-hair": [
+    "components/code.css",
+    "components/demo.css",
+    "components/table.css",
+    "components/writing.css"
+  ],
+  "--ply-color-rule": [
+    "components/demo.css",
+    "components/form.css",
+    "components/table.css",
+    "components/viz.css",
+    "components/writing.css"
+  ],
+  "--ply-duration-base": [
+    "components/form.css",
+    "components/research.css"
+  ],
+  "--ply-color-panel-rule": [
+    "components/code.css",
+    "components/machine.css"
+  ],
+  "--ply-color-panel-muted": [
+    "components/code.css"
+  ],
+  "--ply-color-code-comment": [
+    "components/code.css"
+  ],
+  "--ply-color-code-keyword": [
+    "components/code.css"
+  ],
+  "--ply-color-code-number": [
+    "components/code.css"
+  ],
+  "--ply-status-warning": [
+    "components/tag.css"
+  ],
+  "--ply-status-critical": [
+    "components/tag.css"
+  ],
+  "--ply-loading-color": [
+    "components/machine.css"
+  ],
+  "--ply-ease-gravity": [
+    "components/machine.css"
+  ],
+  "--ply-size-3xl": [
+    "components/research.css"
+  ],
+  "--ply-duration-slow": [
+    "components/demo.css"
+  ],
+  "--ply-viz-1": [
+    "components/viz.css"
+  ],
+  "--ply-flow": [
+    "utilities.css"
+  ]
+}

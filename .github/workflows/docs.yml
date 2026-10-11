@@ -26,8 +26,9 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci
-      # npm ci runs the build; the generated Python theme files must match tokens.json
-      - run: git diff --exit-code -- python/src/polytope_theme
+      - run: npm run build
+      # dist/ and the generated Python theme files are committed; they must match a fresh build
+      - run: git diff --exit-code -- dist python/src/polytope_theme
       - run: npm run check:contrast
       - run: npm run check:prose
       - run: npm run docs:build

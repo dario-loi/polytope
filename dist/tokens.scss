@@ -1,0 +1,132 @@
+// Generated from tokens/tokens.json. Prefer the CSS custom properties at runtime;
+// these raw values are for build-time Sass that needs real colors.
+$ply-white: #FFFFFF;
+$ply-ink-50: #F6F7F6;
+$ply-ink-100: #EEF0EF;
+$ply-ink-200: #D9DAD6;
+$ply-ink-300: #B9BAB4;
+$ply-ink-400: #8F8F89;
+$ply-ink-500: #6B6B66;
+$ply-ink-600: #4A4A47;
+$ply-ink-700: #3A3A37;
+$ply-ink-800: #262624;
+$ply-ink-900: #1C1C1A;
+$ply-ink-950: #141414;
+$ply-tomato-100: #FBE3DE;
+$ply-tomato-400: #F0654F;
+$ply-tomato-500: #D9412B;
+$ply-tomato-600: #B8321F;
+$ply-mustard-100: #FBEFD2;
+$ply-mustard-400: #F2B83A;
+$ply-mustard-500: #E9A81C;
+$ply-mustard-700: #7A5300;
+$ply-teal-100: #DDF1F0;
+$ply-teal-300: #5CC2C7;
+$ply-teal-700: #0F6E73;
+$ply-cobalt-100: #E3EAF8;
+$ply-cobalt-200: #C2D1F0;
+$ply-cobalt-300: #95AEE3;
+$ply-cobalt-400: #6A8BD4;
+$ply-cobalt-500: #3A62C4;
+$ply-cobalt-600: #2B4A99;
+$ply-cobalt-700: #1D336B;
+$ply-font-display: "Ultra", "Rockwell Extra Bold", Rockwell, Georgia, serif;
+$ply-font-text: "Libre Franklin Variable", "Libre Franklin", "Franklin Gothic Medium", "Helvetica Neue", Arial, sans-serif;
+$ply-font-mono: "JetBrains Mono Variable", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+$ply-size-xs: 0.8125rem;
+$ply-size-sm: 0.875rem;
+$ply-size-md: 1rem;
+$ply-size-body: 1.0625rem;
+$ply-size-lg: 1.25rem;
+$ply-size-xl: 1.5rem;
+$ply-size-2xl: 2rem;
+$ply-size-3xl: 2.75rem;
+$ply-size-4xl: 4rem;
+$ply-size-display: clamp(3rem, 1.6rem + 4.4vw, 5.75rem);
+$ply-weight-regular: 400;
+$ply-weight-medium: 500;
+$ply-weight-semibold: 600;
+$ply-weight-bold: 700;
+$ply-leading-display: 0.98;
+$ply-leading-tight: 1.2;
+$ply-leading-normal: 1.45;
+$ply-leading-relaxed: 1.6;
+$ply-space-0: 0;
+$ply-space-1: 0.25rem;
+$ply-space-2: 0.5rem;
+$ply-space-3: 0.75rem;
+$ply-space-4: 1rem;
+$ply-space-5: 1.5rem;
+$ply-space-6: 2rem;
+$ply-space-7: 3rem;
+$ply-space-8: 4rem;
+$ply-space-9: 6rem;
+$ply-space-10: 8rem;
+$ply-border-hair: 1px;
+$ply-border-control: 2px;
+$ply-border-rule: 3px;
+$ply-radius-none: 0;
+$ply-radius-ball: 999px;
+$ply-duration-fast: 120ms;
+$ply-duration-base: 200ms;
+$ply-duration-slow: 320ms;
+$ply-duration-drop: 900ms;
+$ply-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+$ply-ease-gravity: cubic-bezier(0.55, 0, 1, 0.45);
+$ply-layout-measure: 36rem;
+$ply-layout-gutter: clamp(1rem, 0.2rem + 4vw, 4.5rem);
+$ply-layout-sidebar: 17.5rem;
+$ply-layout-toc: 15rem;
+$ply-layout-max: 90rem;
+$ply-color-bg: #FFFFFF;
+$ply-color-surface-sunken: #EEF0EF;
+$ply-color-panel: #141414;
+$ply-color-panel-text: #F6F7F6;
+$ply-color-panel-muted: #B9BAB4;
+$ply-color-panel-rule: #4A4A47;
+$ply-color-text: #141414;
+$ply-color-text-muted: #4A4A47;
+$ply-color-text-subtle: #6B6B66;
+$ply-color-rule-strong: #141414;
+$ply-color-rule: #D9DAD6;
+$ply-color-accent: #D9412B;
+$ply-color-accent-text: #B8321F;
+$ply-color-link: #0F6E73;
+$ply-color-link-hover: #141414;
+$ply-color-note: #E9A81C;
+$ply-color-note-soft: #FBEFD2;
+$ply-color-focus: #0F6E73;
+$ply-color-focus-on-panel: #F2B83A;
+$ply-color-selection: #E9A81C;
+$ply-color-code-comment: #F2B83A;
+$ply-color-code-keyword: #F0654F;
+$ply-color-code-string: #5CC2C7;
+$ply-color-code-number: #95AEE3;
+$ply-theme-dark: (
+  "-bg": #161615,
+  "-surface-sunken": #1C1C1A,
+  "-panel": #262624,
+  "-panel-text": #F6F7F6,
+  "-panel-muted": #B9BAB4,
+  "-panel-rule": #4A4A47,
+  "-text": #F2F2EE,
+  "-text-muted": #B9BAB4,
+  "-text-subtle": #8F8F89,
+  "-rule-strong": #F2F2EE,
+  "-rule": #3A3A37,
+  "-accent": #F0654F,
+  "-accent-text": #F0654F,
+  "-link": #5CC2C7,
+  "-link-hover": #F2F2EE,
+  "-note": #E9A81C,
+  "-note-soft": #3A2F14,
+  "-focus": #F2B83A,
+  "-focus-on-panel": #F2B83A,
+  "-selection": #E9A81C,
+  "-code-comment": #F2B83A,
+  "-code-keyword": #F0654F,
+  "-code-string": #5CC2C7,
+  "-code-number": #95AEE3,
+);
+$ply-viz-light: (#D9412B, #009B93, #3A62C4, #4C8C2B, #2E8FD0, #C28A0A, #9A3E96, #E06C91);
+$ply-viz-dark: (#E04B34, #00A39A, #5A7FDB, #5A9A35, #2E8FD0, #B98200, #9A52C8, #D9658B);

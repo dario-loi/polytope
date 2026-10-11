@@ -1,0 +1,15 @@
+@layer ply.components {
+  /* The exhibit panel: a black field that holds a working model, code, or a demo. */
+  .ply-panel { background: var(--ply-color-panel); color: var(--ply-color-panel-text); padding: var(--ply-space-5); }
+  .ply-panel a { color: var(--ply-color-code-string); }
+  .ply-panel a:hover { color: var(--ply-color-panel-text); }
+  .ply-panel--flush { padding: 0; }
+
+  /* Figure with an exhibit caption underneath, outside the black. */
+  .ply-exhibit { margin: 0; }
+  .ply-exhibit > figcaption { margin-top: var(--ply-space-3); font-size: var(--ply-size-sm); line-height: var(--ply-leading-normal); color: var(--ply-color-text-muted); max-width: 40rem; }
+  .ply-exhibit > figcaption b, .ply-exhibit > figcaption strong { color: var(--ply-color-text); }
+
+  /* A wall-label: small black tag naming an exhibit. */
+  .ply-label { display: inline-block; background: var(--ply-color-text); color: var(--ply-color-bg); font-size: var(--ply-size-xs); font-weight: var(--ply-weight-bold); padding: 0.2rem 0.5rem; line-height: 1.3; }
+}

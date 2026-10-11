@@ -9,6 +9,16 @@ import ReleaseModel from "../../components/exhibits/ReleaseModel.astro";
       <p class="ply-wall__label">0.1</p>
       <ul class="ply-wall__entries">
         <li class="ply-pub">
+          <p class="ply-pub__title">0.1.3, no install scripts</p>
+          <p class="ply-pub__venue">11 October 2026</p>
+          <div class="ply-prose ply-small" style="margin-top: var(--ply-space-2)">
+            <ul>
+              <li>The built <code>dist/</code> is now committed and the <code>prepare</code> script is gone, so installing from GitHub runs no install scripts. npm 12 no longer prints the "install scripts blocked" warning, and nothing needs approving.</li>
+              <li>CI rebuilds and fails if the committed <code>dist/</code> differs from a fresh build.</li>
+            </ul>
+          </div>
+        </li>
+        <li class="ply-pub">
           <p class="ply-pub__title">0.1.2, safer install commands</p>
           <p class="ply-pub__venue">11 October 2026</p>
           <div class="ply-prose ply-small" style="margin-top: var(--ply-space-2)">

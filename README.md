@@ -29,7 +29,7 @@ npm 12 refuses git dependencies unless a project opts in, so add one line to you
 
 ```sh
 echo "allow-git=root" >> .npmrc
-npm install "github:dario-loi/polytope#v0.1.2"
+npm install "github:dario-loi/polytope#v0.1.3"
 ```
 
 Keep the quotes: zsh reads an unquoted `#` as a glob pattern and stops before npm runs.
@@ -69,8 +69,8 @@ Avoid `npx polytope-design`: when the package is missing, npx looks the name up 
 A site without npm (a static site built by Python, for example) can fetch the same files pinned to a release:
 
 ```sh
-curl -fsSLo DESIGN.md https://raw.githubusercontent.com/dario-loi/polytope/v0.1.2/DESIGN.md
-mkdir -p .impeccable && curl -fsSLo .impeccable/design.json https://raw.githubusercontent.com/dario-loi/polytope/v0.1.2/.impeccable/design.json
+curl -fsSLo DESIGN.md https://raw.githubusercontent.com/dario-loi/polytope/v0.1.3/DESIGN.md
+mkdir -p .impeccable && curl -fsSLo .impeccable/design.json https://raw.githubusercontent.com/dario-loi/polytope/v0.1.3/.impeccable/design.json
 ```
 
 and link `https://dario-loi.github.io/polytope/kit/polytope.css` in its template. Either way, new pages are then built inside Polytope and the design checker flags anything off the system. Run `/impeccable init` once so the site gets its own `PRODUCT.md`, and repeat the copy whenever you move to a newer Polytope.
@@ -110,14 +110,15 @@ fig.savefig("figure.pdf")
 ```sh
 git clone https://github.com/dario-loi/polytope
 cd polytope
-npm install              # installs dependencies and builds dist/
+npm install              # installs the build dependencies
+npm run build            # rebuilds dist/ and the generated Python files; commit the result
 npm run docs:dev         # rebuilds the kit and serves the docs locally
 npm run check:contrast   # fails if any text pair drops below WCAG AA
 npm run check:prose      # fails on any en or em dash in the sources or the built docs
 cd python && pytest      # tests for the Python theme
 ```
 
-Design decisions live in `tokens/tokens.json` and styles in `css/src/`. The build writes everything else, including `dist/` and the generated Python files, so edit the sources and run `npm run build`. `DESIGN.md` records the system as built and the rules behind it.
+Design decisions live in `tokens/tokens.json` and styles in `css/src/`. The build writes everything else, including `dist/` and the generated Python files, so edit the sources, run `npm run build`, and commit what it writes. `dist/` is committed on purpose: installs from GitHub then run no install scripts, and CI fails if it drifts from a fresh build. `DESIGN.md` records the system as built and the rules behind it.
 
 | Path | What it holds |
 |---|---|
