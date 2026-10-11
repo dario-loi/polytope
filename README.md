@@ -29,8 +29,10 @@ npm 12 refuses git dependencies unless a project opts in, so add one line to you
 
 ```sh
 echo "allow-git=root" >> .npmrc
-npm install github:dario-loi/polytope
+npm install "github:dario-loi/polytope#v0.1.2"
 ```
+
+Keep the quotes: zsh reads an unquoted `#` as a glob pattern and stops before npm runs.
 
 Then import the stylesheet once in your layout:
 
@@ -53,14 +55,25 @@ pip install "polytope-theme[matplotlib,plotly] @ git+https://github.com/dario-lo
 
 ## Using Polytope with Impeccable
 
-[Impeccable](https://github.com/pbakaus/impeccable) reads a project's visual system from `DESIGN.md` and `.impeccable/design.json`. Polytope ships both, so a site can adopt it with one command:
+[Impeccable](https://github.com/pbakaus/impeccable) reads a project's visual system from `DESIGN.md` and `.impeccable/design.json`. Polytope ships both, so a site can adopt it as its design system.
+
+In a project that installs Polytope with npm, run the installed command:
 
 ```sh
-npx polytope-design            # copies DESIGN.md and .impeccable/design.json into the site
-npx polytope-design --check    # fails if the copies are older than the installed Polytope
+./node_modules/.bin/polytope-design            # copies DESIGN.md and .impeccable/design.json into the site
+./node_modules/.bin/polytope-design --check    # fails if the copies are older than the installed Polytope
 ```
 
-After that, new pages are built inside Polytope and the design checker flags anything off the system. Run the command again whenever you upgrade Polytope, and run `/impeccable init` once so the site gets its own `PRODUCT.md`.
+Avoid `npx polytope-design`: when the package is missing, npx looks the name up on the public npm registry instead of failing. Adding `"design:sync": "polytope-design"` and `"design:check": "polytope-design --check"` to the site's `package.json` scripts gives you `npm run design:sync`, which only ever uses the installed copy.
+
+A site without npm (a static site built by Python, for example) can fetch the same files pinned to a release:
+
+```sh
+curl -fsSLo DESIGN.md https://raw.githubusercontent.com/dario-loi/polytope/v0.1.2/DESIGN.md
+mkdir -p .impeccable && curl -fsSLo .impeccable/design.json https://raw.githubusercontent.com/dario-loi/polytope/v0.1.2/.impeccable/design.json
+```
+
+and link `https://dario-loi.github.io/polytope/kit/polytope.css` in its template. Either way, new pages are then built inside Polytope and the design checker flags anything off the system. Run `/impeccable init` once so the site gets its own `PRODUCT.md`, and repeat the copy whenever you move to a newer Polytope.
 
 ## A first page
 
