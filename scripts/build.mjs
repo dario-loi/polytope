@@ -224,6 +224,10 @@ const codeTheme = {
 };
 writeFileSync(join(dist, "code-theme.json"), JSON.stringify(codeTheme, null, 2));
 
+// Impeccable's design record, so other projects can adopt Polytope as their system
+// (see scripts/sync-design.mjs).
+if (existsSync(join(root, ".impeccable/design.json"))) copyFileSync(join(root, ".impeccable/design.json"), join(dist, "design.json"));
+
 // The DTCG source itself, for Figma token plugins and other tools that read the format.
 copyFileSync(join(root, "tokens/tokens.json"), join(dist, "tokens.dtcg.json"));
 

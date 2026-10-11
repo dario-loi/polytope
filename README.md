@@ -51,6 +51,17 @@ The Python theme installs from the `python/` folder of this repository:
 pip install "polytope-theme[matplotlib,plotly] @ git+https://github.com/dario-loi/polytope#subdirectory=python"
 ```
 
+## Using Polytope with Impeccable
+
+[Impeccable](https://github.com/pbakaus/impeccable) reads a project's visual system from `DESIGN.md` and `.impeccable/design.json`. Polytope ships both, so a site can adopt it with one command:
+
+```sh
+npx polytope-design            # copies DESIGN.md and .impeccable/design.json into the site
+npx polytope-design --check    # fails if the copies are older than the installed Polytope
+```
+
+After that, new pages are built inside Polytope and the design checker flags anything off the system. Run the command again whenever you upgrade Polytope, and run `/impeccable init` once so the site gets its own `PRODUCT.md`.
+
 ## A first page
 
 With Astro:

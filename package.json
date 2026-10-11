@@ -1,6 +1,6 @@
 {
   "name": "@dario-loi/polytope",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Polytope: tokens, CSS components, and Astro components for academic sites, paper pages, and research demos.",
   "type": "module",
   "license": "Apache-2.0",
@@ -17,7 +17,9 @@
     "astro",
     "tokens/tokens.json",
     "README.md",
-    "NOTICE"
+    "NOTICE",
+    "DESIGN.md",
+    "scripts/sync-design.mjs"
   ],
   "exports": {
     ".": "./dist/polytope.css",
@@ -39,7 +41,9 @@
     "./code-theme.json": "./dist/code-theme.json",
     "./tokens.dtcg.json": "./dist/tokens.dtcg.json",
     "./css/*": "./dist/css/*",
-    "./dist/*": "./dist/*"
+    "./dist/*": "./dist/*",
+    "./DESIGN.md": "./DESIGN.md",
+    "./design.json": "./dist/design.json"
   },
   "keywords": [
     "design-system",
@@ -73,5 +77,8 @@
   },
   "engines": {
     "node": ">=22.12"
+  },
+  "bin": {
+    "polytope-design": "scripts/sync-design.mjs"
   }
 }

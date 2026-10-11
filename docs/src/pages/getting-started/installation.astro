@@ -10,7 +10,7 @@ import { u } from "../../data/nav";
   <Code lang="sh" code={`echo "allow-git=root" >> .npmrc
 npm install github:dario-loi/polytope`} />
   <p>To pin a release, add the tag:</p>
-  <Code lang="sh" code={`npm install github:dario-loi/polytope#v0.1.0`} />
+  <Code lang="sh" code={`npm install github:dario-loi/polytope#v0.1.1`} />
   <p>What the package exports:</p>
   <div class="ply-table-wrap">
     <table class="ply-table">
@@ -27,6 +27,13 @@ npm install github:dario-loi/polytope`} />
     </table>
   </div>
   <p>The <a href={u("/getting-started/targets/")}>other targets</a> page lists the Tailwind, Sass, LaTeX, Figma, and editor exports.</p>
+
+  <h2>Using Polytope with Impeccable</h2>
+  <p>Impeccable reads a project's visual system from <code>DESIGN.md</code> and <code>.impeccable/design.json</code> in its root. The package ships both, and a small command copies them into a site:</p>
+  <Code lang="sh" code={`npx polytope-design            # copies DESIGN.md and .impeccable/design.json
+npx polytope-design --check    # fails if the copies are older than the installed Polytope`} />
+  <p>With those files in place, Impeccable builds every new page inside Polytope and its design checker flags anything off the system, such as a font Polytope does not use. The command will not replace another system's <code>DESIGN.md</code> unless you pass <code>--force</code>. Run it again after upgrading Polytope, and add <code>--check</code> to the site's CI to catch a stale copy.</p>
+  <p>Then run <code>/impeccable init</code> in Claude Code so the site gets its own <code>PRODUCT.md</code>: who it is for, what it is for, and its real content.</p>
 
   <h2>Python</h2>
   <p>The figure and app themes live in the <code>python/</code> folder of the same repository. pip can install from a subfolder:</p>
