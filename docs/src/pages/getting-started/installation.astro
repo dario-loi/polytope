@@ -10,7 +10,7 @@ import { u } from "../../data/nav";
   <Code lang="sh" code={`npm install @dario-loi/polytope`} />
   <p>To install straight from GitHub instead, npm 12 needs the project to allow git dependencies, and the address needs quotes for zsh. Upgrading a git install means uninstalling first, so the registry is the easier path.</p>
   <Code lang="sh" code={`echo "allow-git=root" >> .npmrc
-npm install "github:dario-loi/polytope#v0.2.0"`} />
+npm install "github:dario-loi/polytope#v0.2.1"`} />
   <p>What the package exports:</p>
   <div class="ply-table-wrap">
     <table class="ply-table">
@@ -34,9 +34,9 @@ npm install "github:dario-loi/polytope#v0.2.0"`} />
 npx @dario-loi/polytope --check    # fails if the copies are older than the installed Polytope`} />
   <p>In a project that has Polytope installed, npx runs that copy. The command will not replace another system's <code>DESIGN.md</code> unless you pass <code>--force</code>. Copy the files again after upgrading Polytope, and add the check to the site's CI to catch a stale copy.</p>
   <p>A site without npm, such as a static site built by a Python script, can fetch the same two files pinned to a release, and link the hosted stylesheet in its template:</p>
-  <Code lang="sh" code={`curl -fsSLo DESIGN.md https://raw.githubusercontent.com/dario-loi/polytope/v0.2.0/DESIGN.md
+  <Code lang="sh" code={`curl -fsSLo DESIGN.md https://raw.githubusercontent.com/dario-loi/polytope/v0.2.1/DESIGN.md
 mkdir -p .impeccable
-curl -fsSLo .impeccable/design.json https://raw.githubusercontent.com/dario-loi/polytope/v0.2.0/.impeccable/design.json`} />
+curl -fsSLo .impeccable/design.json https://raw.githubusercontent.com/dario-loi/polytope/v0.2.1/.impeccable/design.json`} />
   <p>With those files in place, Impeccable builds every new page inside Polytope and its design checker flags anything off the system, such as a font Polytope does not use. Then run <code>/impeccable init</code> in Claude Code so the site gets its own <code>PRODUCT.md</code>: who it is for, what it is for, and its real content.</p>
 
   <h2>Python</h2>

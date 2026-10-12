@@ -58,7 +58,12 @@
     .ply-chart__plot > svg { min-width: 0; }
     .ply-exhibit, .ply-figure, .ply-code, .ply-note, .ply-env, .ply-equation, tr { break-inside: avoid; }
     h2, h3, h4 { break-after: avoid; }
-    .ply-swatch, .ply-legend__key, .ply-note, .ply-tag--note, mark, .ply-chart svg, .ply-machine, .ply-complex {
+    /* Browsers drop backgrounds when printing. These fills carry a label or a state, so they
+       keep their ink: without it a primary button or pressed segment prints white on white
+       and a checked box prints empty. */
+    .ply-swatch, .ply-legend__key, .ply-note, .ply-tag, mark, .ply-chart svg, .ply-machine, .ply-complex,
+    .ply-button, .ply-segmented, .ply-tab, .ply-label, .ply-stability, .ply-status, .ply-check, .ply-switch,
+    .ply-slider, .ply-field__error, .ply-sidenav, .ply-details, .ply-env--proof {
       print-color-adjust: exact; -webkit-print-color-adjust: exact;
     }
   }

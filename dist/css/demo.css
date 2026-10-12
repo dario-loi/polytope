@@ -30,7 +30,7 @@
   .ply-empty { display: grid; justify-items: center; gap: var(--ply-space-3); text-align: center; padding: var(--ply-space-7) var(--ply-space-5); max-width: 28rem; margin-inline: auto; }
   .ply-empty__mark { width: 2.5rem; height: 2.5rem; border-radius: var(--ply-radius-ball); border: var(--ply-border-rule) dashed currentColor; opacity: 0.6; }
   .ply-empty__title { font-family: var(--ply-font-display); font-size: var(--ply-size-xl); font-weight: 400; line-height: 1.1; }
-  .ply-empty p { color: inherit; opacity: 0.85; font-size: var(--ply-size-md); }
+  .ply-empty p:not(.ply-empty__title) { color: inherit; opacity: 0.85; font-size: var(--ply-size-md); }
 
   /* Toast for short confirmations. */
   .ply-toast { position: fixed; inset-inline: var(--ply-space-4); bottom: var(--ply-space-4); z-index: 200; margin-inline: auto; max-width: 26rem; display: flex; gap: var(--ply-space-3); align-items: center; background: var(--ply-color-panel); color: var(--ply-color-panel-text); padding: var(--ply-space-3) var(--ply-space-4); font-size: var(--ply-size-sm); box-shadow: 0 0.75rem 2rem rgb(0 0 0 / 0.25); outline: 1px solid var(--ply-color-panel-rule); outline-offset: -1px; animation: ply-toast-in var(--ply-duration-slow) var(--ply-ease-out); }

@@ -8,7 +8,7 @@ HEX = re.compile(r"^#[0-9A-F]{6}$")
 
 
 def test_version():
-    assert dl.__version__ == "0.2.0"
+    assert dl.__version__ == "0.2.1"
 
 
 def test_categorical_shapes():

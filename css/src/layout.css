@@ -40,8 +40,11 @@
   .ply-wide { max-width: none; }
 
   /* Scroll shadows: a soft edge appears on whichever side has more to scroll to.
-     Used by charts, display equations, wide tables, and code. */
+     Used by charts, display equations, wide tables, and code. Each scroller is also the
+     containing block, so an absolute child such as .ply-visually-hidden stays inside it
+     instead of widening the page. */
   .ply-scroll-cue, .ply-chart__plot, .ply-equation__body, .ply-table-wrap {
+    position: relative;
     background:
       linear-gradient(to right, var(--_cue-bg, var(--ply-color-bg)) 30%, transparent) left / 2.5rem 100% no-repeat local,
       linear-gradient(to left, var(--_cue-bg, var(--ply-color-bg)) 30%, transparent) right / 2.5rem 100% no-repeat local,

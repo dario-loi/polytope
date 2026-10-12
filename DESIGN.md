@@ -258,7 +258,7 @@ The page is a top bar, a mast, a 3px rule, then a three-column docs grid inside 
 - **Very narrow (below 25rem):** the Menu button shows only its icon, and the pager stacks below 30rem, so nothing scrolls sideways at 320px.
 - **Touch (`pointer: coarse`):** tabs, small buttons, the menu, segmented controls, slider rails, and sidebar and on-this-page links grow to 44px targets.
 - **Sidenotes:** in the margin from 90rem, but only when the main column (container `ply-main`) has 52rem for the measure, the gap, and the note.
-- **Contrast themes and print:** in forced colors, marks drawn as fills keep their shapes in system colors and picked states use Highlight; on paper the light theme applies, panels print as ink on white, and the site chrome is hidden.
+- **Contrast themes and print:** in forced colors, marks drawn as fills keep their shapes in system colors and picked states use Highlight; on paper the light theme applies, panels print as ink on white, fills that show a state (primary buttons, pressed segments, checked boxes) keep their ink, and the site chrome is hidden.
 
 ## Elevation & Depth
 
