@@ -11,9 +11,10 @@
 //             data-from="2016-09" data-kind="Education"> ... <p class="ply-atlas__place">...</p> </li>
 //         </ol></div></div>
 //   </ply-atlas>
-// The entry that crosses a line under the globe (45% down the viewport when they sit side by
-// side) is current: the globe turns to its place and the tomato ball travels there. A pin, or
-// an entry's place line, picks that entry. Drag turns the globe, Ctrl or Cmd and scroll or a
+// Side by side, the entry whose top crosses a line 45% down the viewport is current; stacked,
+// the topmost entry showing below the pinned globe is. The globe turns to its place and the
+// tomato ball travels there; past the last entry it pulls back to every place. A pin, or an
+// entry's place line, picks that entry. Drag turns the globe, Ctrl or Cmd and scroll or a
 // pinch zooms, and the buttons zoom and show every place. Under reduced motion it jumps.
 // Event: "ply-atlas-change" with detail { index, place } when the current entry changes.
 
@@ -133,10 +134,15 @@ class PlyAtlas extends HTMLElement {
     }
     this._probe = el("span", "ply-atlas__ink", map);
     // The caption under the globe says how to turn it, once it can turn.
+    this.stage = this.querySelector(".ply-atlas__stage");
     const caption = this.querySelector(".ply-atlas__caption");
     if (caption) {
-      const hint = el("span", "ply-atlas__hint", caption);
-      hint.textContent = matchMedia("(pointer: coarse)").matches ? " Drag sideways to turn the globe, pinch to zoom." : " Drag to turn the globe.";
+      this.capLead = caption.querySelector("b");
+      this.capTally = caption.querySelector(".ply-atlas__tally");
+      this._label = this.capLead?.textContent ?? "";
+      if (!this.capLead || !this.capTally) this.capLead = null;
+      this.capHint = el("span", "ply-atlas__hint", caption);
+      this.capHint.textContent = matchMedia("(pointer: coarse)").matches ? " Drag sideways to turn the globe, pinch to zoom." : " Drag to turn the globe.";
     }
 
     // Each entry's place line becomes a button that shows it on the map.
@@ -279,29 +285,39 @@ class PlyAtlas extends HTMLElement {
     const c = this._colors;
     const proj = core.projection(w, h, this.view);
     const path = core.geoPath(proj, ctx);
+    // The outlines are dense already, so they skip d3's resampling, which is a third of a
+    // frame; the sphere, the graticule, and the route's long arcs keep it.
+    const outline = core.geoPath(core.projection(w, h, this.view).precision(0), ctx);
     ctx.setTransform(this._dpr, 0, 0, this._dpr, 0, 0);
     ctx.clearRect(0, 0, w, h);
     ctx.lineJoin = "round";
-    const fill = (name, ...shapes) => {
+    const fill = (name, draw, ...shapes) => {
       ctx.beginPath();
-      for (const s of shapes) path(s);
+      for (const s of shapes) draw(s);
       ctx.globalAlpha = c[name].a; ctx.fillStyle = c[name].color; ctx.fill();
     };
-    const stroke = (name, width, ...shapes) => {
+    const stroke = (name, width, draw, ...shapes) => {
       ctx.beginPath();
-      for (const s of shapes) path(s);
+      for (const s of shapes) draw(s);
       ctx.globalAlpha = c[name].a; ctx.strokeStyle = c[name].color; ctx.lineWidth = width; ctx.stroke();
     };
     const v = this.view;
-    fill("sea", core.sphere);
-    stroke("grid", 1, core.graticule);
-    if (world.visitedParts.length) fill("visited", core.cull(world.visitedParts, v, w, h, "MultiPolygon"));
+    fill("sea", path, core.sphere);
+    stroke("grid", 1, path, core.graticule);
+    if (world.visitedParts.length) fill("visited", outline, core.cull(world.visitedParts, v, w, h, "MultiPolygon"));
     // The land is drawn in chalk, like the complex: a faint fill, then its coast on the same path.
-    fill("land", core.cull(world.landParts, v, w, h, "MultiPolygon"));
+    fill("land", outline, core.cull(world.landParts, v, w, h, "MultiPolygon"));
     ctx.globalAlpha = c.coast.a; ctx.strokeStyle = c.coast.color; ctx.lineWidth = 1; ctx.stroke();
-    stroke("border", 0.75, core.cull(world.borderParts, v, w, h, "MultiLineString"));
-    stroke("limb", 1.5, core.sphere);
-    stroke("route", 1.5, this._route);
+    stroke("border", 0.75, outline, core.cull(world.borderParts, v, w, h, "MultiLineString"));
+    stroke("limb", 1.5, path, core.sphere);
+    stroke("route", 1.5, path, this._route);
+    if (this._trace) {
+      ctx.lineCap = "round";
+      ctx.beginPath();
+      path({ type: "MultiLineString", coordinates: this._trace.lines });
+      ctx.globalAlpha = c.trail.a * this._trace.alpha; ctx.strokeStyle = c.trail.color; ctx.lineWidth = 2.5; ctx.stroke();
+      ctx.lineCap = "butt";
+    }
     if (this._trail) {
       ctx.lineCap = "round";
       ctx.beginPath();
@@ -386,29 +402,58 @@ class PlyAtlas extends HTMLElement {
 
   // ------------------------------------------------------------- story
 
-  // The reading line: under the pinned globe when it sits above the entries, else 45% down.
-  _line() {
+  // Side by side, the reading line is 45% down the screen. Stacked, the pinned globe covers
+  // the top of the screen, so the line is just under it, where the stage sits once stuck.
+  _stacked() {
     const m = this.map.getBoundingClientRect();
     const l = this.list.getBoundingClientRect();
-    const stacked = m.right > l.left && m.left < l.right;
-    return stacked ? m.bottom + (innerHeight - m.bottom) * 0.3 : innerHeight * 0.45;
+    return m.right > l.left && m.left < l.right;
   }
 
-  // The entry the reader is on: the last one whose top has crossed the line. At the end of
-  // the list, the last entry on screen, since it may never reach the line.
+  _line() {
+    return this._stacked() ? (this.stage?.offsetHeight ?? 0) + 24 : innerHeight * 0.45;
+  }
+
+  // The entry the reader is on. Side by side: the last one whose top has crossed the line,
+  // or at the end of the list the last one on screen, since it may never reach the line.
+  // Stacked: the topmost entry that shows below the globe, so the one the globe names is the
+  // one the reader can read.
   _pick() {
     const line = this._line();
-    let pick = -1;
-    for (const [i, s] of this.stops.entries()) {
-      if (s.el.hidden) continue;
-      const top = s.el.getBoundingClientRect().top;
-      if (top <= line) pick = i;
-      else {
-        if (this.list.getBoundingClientRect().bottom <= innerHeight + 1 && top < innerHeight) pick = i;
-        else break;
+    const open = this.stops.map((s, i) => [s, i]).filter(([s]) => !s.el.hidden);
+    // Past the last entry the reader has finished: the globe pulls back to the whole route.
+    const END = -2;
+    if (this._stacked()) {
+      for (const [s, i] of open) {
+        const r = s.el.getBoundingClientRect();
+        if (r.bottom > line + 48) return r.top < innerHeight * 0.85 ? i : -1;
       }
+      return open.length ? END : -1;
+    }
+    if (open.length && this.list.getBoundingClientRect().bottom < line) return END;
+    let pick = -1;
+    const end = this.list.getBoundingClientRect().bottom <= innerHeight + 1;
+    for (const [s, i] of open) {
+      const top = s.el.getBoundingClientRect().top;
+      if (top <= line || (end && top < innerHeight)) pick = i;
+      else break;
     }
     return pick;
+  }
+
+  // The caption names the current entry, or the whole map when there is none.
+  _caption(s) {
+    if (!this.capLead) return;
+    const text = (sel) => s.el.querySelector(sel)?.textContent.replace(/\s+/g, " ").trim().replace(/\.$/, "");
+    if (s) {
+      this.capLead.textContent = `${text(".ply-atlas__title")}.`;
+      const rest = [text(".ply-atlas__org"), text(".ply-atlas__when")].filter(Boolean).join(", ");
+      this.capTally.textContent = rest ? `${rest}.` : "";
+    } else {
+      this.capLead.textContent = this._label;
+      this.capTally.textContent = this._tally ?? this.capTally.textContent;
+    }
+    if (this.capHint) this.capHint.hidden = Boolean(s);
   }
 
   _follow() {
@@ -416,7 +461,14 @@ class PlyAtlas extends HTMLElement {
     const pick = this._pick();
     if (pick === this._followed) return;
     this._followed = pick;
-    this.select(pick);
+    if (pick === -2) {
+      // The first finish on screen traces the route; later ones only pull back.
+      const r = this.map.getBoundingClientRect();
+      const seen = r.bottom > 0 && r.top < innerHeight;
+      this._traceNext = seen && !this._traced;
+      if (this._traceNext) this._traced = true;
+    }
+    this.select(pick < 0 ? -1 : pick);
   }
 
   // Make entry i current and fly to its place; -1 shows every place.
@@ -429,12 +481,15 @@ class PlyAtlas extends HTMLElement {
     const { core } = this;
     if (!s) {
       this._ball = null;
-      this._fly(core.overview(this._shown(), this._w, this._h));
+      const trace = this._traceNext;
+      this._traceNext = false;
+      this._fly(core.overview(this._shown(), this._w, this._h), undefined, trace ? () => this._traceRoute() : null);
     } else {
       const p = this.places[s.at];
       this._fly({ lon: p.lon, lat: p.lat, k: Math.max(core.ZOOM.min, Math.min(core.ZOOM.max, s.zoom || core.ZOOM.stop)) }, [p.lon, p.lat]);
     }
     this._readout();
+    this._caption(s);
     this.dispatchEvent(new CustomEvent("ply-atlas-change", { bubbles: true, detail: { index: i, place: s ? s.place : null } }));
   }
 
@@ -461,11 +516,12 @@ class PlyAtlas extends HTMLElement {
     this.querySelectorAll(".ply-atlas__filter [data-kind]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.kind === kind)));
     this.stops.forEach((s) => { s.el.hidden = Boolean(kind) && s.kind !== kind; });
     for (const p of this.places ?? []) p.pin?.toggleAttribute("data-out", p.stops.every((i) => this.stops[i].el.hidden));
-    this._route = this.core.chart(this.stops.filter((s) => !s.el.hidden).map((s) => ({ ...s }))).route;
-    const tally = this.querySelector(".ply-atlas__tally");
-    if (tally) tally.textContent = this.core.tally(this._shown().length, this._route.coordinates.length);
+    const shown = this.core.chart(this.stops.filter((s) => !s.el.hidden).map((s) => ({ ...s })));
+    this._route = shown.route;
+    this._tally = this.core.tally(this._shown().length, shown.moves);
+    if (this.capTally && this.current < 0) this.capTally.textContent = this._tally;
     if (!this._live) return;
-    if (this.stops[this.current]?.el.hidden) { this.current = -1; this._ball = null; }
+    if (this.stops[this.current]?.el.hidden) { this.current = -1; this._ball = null; this._caption(null); }
     this._followed = null;
     this._follow();
     if (this.current < 0) this._fly(this.core.overview(this._shown(), this._w, this._h));
@@ -476,7 +532,7 @@ class PlyAtlas extends HTMLElement {
 
   // Fly to a view. With a place, the ball travels the great circle to it from wherever it
   // is, drawing a tomato trail that fades once it lands; with no ball yet, it drops in.
-  _fly(view, to) {
+  _fly(view, to, done) {
     const { core } = this;
     this._halt();
     const from = this._ball;
@@ -486,6 +542,7 @@ class PlyAtlas extends HTMLElement {
       this._ball = to ?? null;
       this._trail = null;
       this._paint();
+      if (!reduceMotion()) done?.();
       return;
     }
     const leg = from && to && core.geoDistance(from, to) > 1e-4 ? core.geoInterpolate(from, to) : null;
@@ -516,6 +573,33 @@ class PlyAtlas extends HTMLElement {
       this._ball = to ?? null;
       this._draw();
       if (this._trail) this._fadeTrail();
+      else done?.();
+    };
+    this._anim = requestAnimationFrame(step);
+  }
+
+  // The closing beat: each leg of the route lights tomato in date order, the way the reader
+  // travelled it, then the whole route fades back to chalk. About two and a half seconds.
+  _traceRoute() {
+    const { core } = this;
+    const legs = this._route.coordinates.map(([a, b]) => ({ a, b, at: core.geoInterpolate(a, b) }));
+    if (!legs.length) return;
+    const STEP = 260, LEG = 520, FADE = 600;
+    const total = STEP * (legs.length - 1) + LEG;
+    const t0 = performance.now();
+    const step = (now) => {
+      const t = now - t0;
+      const alpha = t < total ? 1 : 1 - (t - total) / FADE;
+      if (alpha <= 0) { this._trace = null; this._anim = 0; this._draw(); return; }
+      this._trace = {
+        alpha,
+        lines: legs.map((l, n) => {
+          const p = Math.max(0, Math.min(1, (t - n * STEP) / LEG));
+          return p > 0 ? [l.a, l.at(core.lead(p))] : null;
+        }).filter(Boolean),
+      };
+      this._draw();
+      this._anim = requestAnimationFrame(step);
     };
     this._anim = requestAnimationFrame(step);
   }
@@ -539,6 +623,7 @@ class PlyAtlas extends HTMLElement {
     this._anim = 0;
     if (this._flight) { this._ball = this._flight.to ?? this._ball; this._flight = null; }
     this._trail = null;
+    this._trace = null;
     this._drop = null;
   }
 
@@ -579,7 +664,8 @@ class PlyAtlas extends HTMLElement {
     if (!this._live || e.button > 0 || e.target.closest("button")) return;
     this._halt();
     this._ptrs.set(e.pointerId, [e.clientX, e.clientY]);
-    this.map.setPointerCapture?.(e.pointerId);
+    // A pointer the browser did not start, such as a synthetic one, cannot be captured.
+    try { this.map.setPointerCapture(e.pointerId); } catch {}
     this.map.setAttribute("data-dragging", "");
   }
 

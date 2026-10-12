@@ -1,7 +1,9 @@
 ---
 // A small line chart drawn at build time from synthetic data, with direct labels,
 // a legend, a hover crosshair, and a data table. Shows the chart rules in practice.
+// legend={false} drops the legend where the direct labels already name every line.
 import Chart from "@dario-loi/polytope/astro/Chart.astro";
+const { legend = true } = Astro.props as { legend?: boolean };
 const epochs = Array.from({ length: 11 }, (_, i) => i * 10);
 const curve = (a: number, k: number, c: number) => epochs.map((e) => +(c - a * Math.exp(-k * e)).toFixed(3));
 const series = [
@@ -19,7 +21,7 @@ const ends = series.map((s, i) => ({ i, y: y(s.values.at(-1)!) })).sort((a, b) =
 for (let k = 1; k < ends.length; k++) if (ends[k].y - ends[k - 1].y < 14) ends[k].y = ends[k - 1].y + 14;
 const labelY = Object.fromEntries(ends.map((e) => [e.i, e.y]));
 ---
-<Chart title="Validation accuracy by epoch" subtitle="Synthetic example data" legend={series.map((s) => ({ label: s.name, shape: "line" }))}>
+<Chart title="Validation accuracy by epoch" subtitle="Synthetic example data" legend={legend ? series.map((s) => ({ label: s.name, shape: "line" })) : undefined}>
   <svg viewBox={`0 0 ${W} ${H}`} width="100%" role="img" aria-label="Line chart of synthetic validation accuracy for three models over 100 epochs. Model A ends highest at 0.86." data-ply-linechart data-series={JSON.stringify(series)} data-epochs={JSON.stringify(epochs)}>
     <g class="grid">{ticksY.map((v) => <line x1={m.l} x2={W - m.r} y1={y(v)} y2={y(v)} />)}</g>
     <g class="axis">

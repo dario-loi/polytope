@@ -87,8 +87,8 @@ export function when(text) {
   return m ? +m[1] + ((+(m[2] || 1) - 1) + (+(m[3] || 1) - 1) / 31) / 12 : NaN;
 }
 
-// Stops ({ place, lon, lat, from }) to places, each with the stops held there, and the route:
-// one leg between each place and the next in date order.
+// Stops ({ place, lon, lat, from }) to places, each with the stops held there, the route (one
+// leg between each place and the next in date order), and the number of moves.
 export function chart(stops) {
   const places = [];
   const byKey = new Map();
@@ -103,12 +103,15 @@ export function chart(stops) {
   const dated = stops.map((s, i) => ({ s, i, t: when(s.from) })).filter((d) => d.s.at !== undefined);
   // Undated stops keep their written order, after the dated ones.
   dated.sort((a, b) => (Number.isNaN(a.t) ? Infinity : a.t) - (Number.isNaN(b.t) ? Infinity : b.t) || a.i - b.i);
+  // The route draws each pair of places once; moves counts every change of place.
   const legs = [];
+  let moves = 0;
   for (let n = 1; n < dated.length; n++) {
     const a = places[dated[n - 1].s.at], b = places[dated[n].s.at];
+    if (a !== b) moves++;
     if (a !== b && !legs.some(([x, y]) => (x === a && y === b) || (x === b && y === a))) legs.push([a, b]);
   }
-  return { places, route: { type: "MultiLineString", coordinates: legs.map(([a, b]) => [[a.lon, a.lat], [b.lon, b.lat]]) } };
+  return { places, moves, route: { type: "MultiLineString", coordinates: legs.map(([a, b]) => [[a.lon, a.lat], [b.lon, b.lat]]) } };
 }
 
 // The country each place stands in. A coastal city can fall just outside simplified outlines,
@@ -201,10 +204,10 @@ export function flight(a, b, w, h) {
   };
 }
 
-// The caption's counts: "6 places, 6 legs between them."
-export function tally(places, legs) {
+// The caption's counts: "6 places, 6 moves between them."
+export function tally(places, moves) {
   if (places === 1) return "1 place.";
-  return legs ? `${places} places, ${legs} ${legs === 1 ? "leg" : "legs"} between them.` : `${places} places.`;
+  return moves ? `${places} places, ${moves} ${moves === 1 ? "move" : "moves"} between them.` : `${places} places.`;
 }
 
 // "41.90 N, 12.50 E"

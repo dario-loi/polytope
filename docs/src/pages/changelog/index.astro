@@ -9,11 +9,28 @@ import ReleaseModel from "../../components/exhibits/ReleaseModel.astro";
       <p class="ply-wall__label">0.4</p>
       <ul class="ply-wall__entries">
         <li class="ply-pub">
+          <p class="ply-pub__title">0.4.1, fixes from an audit of 0.4.0</p>
+          <p class="ply-pub__venue">12 October 2026</p>
+          <div class="ply-prose ply-small" style="margin-top: var(--ply-space-2)">
+            <ul>
+              <li>On phones the Atlas names the entry the reader can see. Before, the pinned globe covered the entry it showed. The globe is shorter on phones, and its caption names the current entry.</li>
+              <li>Wide tables, display equations, and <code>.ply-scroll-cue</code> boxes can be scrolled from the keyboard. While their content overflows, the new <code>js/scroll.js</code> makes each one a named region that takes focus, and when it fits again it is no longer a tab stop. <code>js/all.js</code> and <code>Equation</code> load it.</li>
+              <li>On touch screens, Atlas pins are 44px targets. The drawn point keeps its size.</li>
+              <li>Atlas frames cost about a quarter less to draw. <code>js/all.js</code> loads the Atlas element only on pages that have one.</li>
+              <li>The Atlas caption counts moves between places, so a return to a city counts again. When the reader reaches the end of the entries, the route lights up in the order it was travelled.</li>
+              <li>Search lists first the pages whose title or a section heading names every word of the query, and shows the chapter links again when nothing matches. The search button answers <kbd>Space</kbd>.</li>
+              <li>Each Copy button is named for the section its code sits in, as in "Copy the HTML for Text fields".</li>
+              <li>The table of contents skips headings inside an Atlas, and sidenote numbers stay out of the search index.</li>
+              <li>To update: <code>npm update</code>. Nothing to change in your pages.</li>
+            </ul>
+          </div>
+        </li>
+        <li class="ply-pub">
           <p class="ply-pub__title">0.4.0, the Atlas</p>
           <p class="ply-pub__venue">12 October 2026</p>
           <div class="ply-prose ply-small" style="margin-top: var(--ply-space-2)">
             <ul>
-              <li>New: <code>&lt;Atlas&gt;</code> and <code>&lt;AtlasStop&gt;</code>, a globe of the places in a CV beside the entries that happened there. As the reader scrolls, the globe turns to each entry's place and a tomato ball travels the route to it. Pins pick entries, a filter shows one kind of entry, and drag, pinch, or <kbd>Ctrl</kbd> and scroll move the globe. See <a href="../components/atlas/">Atlas</a> and the new <a href="../patterns/cv/">CV page</a> pattern.</li>
+              <li>New: <code>&lt;Atlas&gt;</code> and <code>&lt;AtlasStop&gt;</code>, a globe of the places in a CV beside the entries that happened there. As the reader scrolls, the globe turns to each entry's place and a tomato ball travels the route to it. Pins pick entries and a filter shows one kind of entry; drag, pinch, or <kbd>Ctrl</kbd> and scroll move the globe. See <a href="../components/atlas/">Atlas</a> and the new <a href="../patterns/cv/">CV page</a> pattern.</li>
               <li>The kit draws the map itself, from Natural Earth country outlines with borders as the United States recognizes them, so there are no map tiles, keys, or outside services. About 60KB, compressed, loads when an Atlas connects, and 76KB more for close views when it nears the screen.</li>
               <li>Without JavaScript the server draws the finished globe with its places and route. Under reduced motion the globe jumps instead of flying, and on paper it prints once above the entries.</li>
               <li><code>js/all.js</code> now registers <code>&lt;ply-atlas&gt;</code>. The map code and data load only on pages that have one.</li>

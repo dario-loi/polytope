@@ -52,3 +52,27 @@ document.addEventListener("click", async (e) => {
   clearTimeout(btn._t);
   btn._t = setTimeout(() => { btn.textContent = btn.dataset.label; btn.removeAttribute("data-copied"); }, 1600);
 });
+
+// Name each button for the section it sits in, so the buttons on a page read as a list of
+// sections ("Copy the HTML for Text fields"). Where no heading is found, the button keeps
+// the name the server gave it, which quotes the code's first line.
+function section(el) {
+  for (let node = el; node && node !== document.body; node = node.parentElement) {
+    for (let prev = node.previousElementSibling; prev; prev = prev.previousElementSibling) {
+      if (/^H[2-4]$/.test(prev.tagName)) return prev.textContent.trim();
+    }
+  }
+  return "";
+}
+const named = new Map();
+for (const btn of document.querySelectorAll("[data-ply-copy]")) {
+  const code = btn.closest(".ply-code");
+  const where = code && section(code.closest(".ex") ?? code);
+  if (!where) continue;
+  const raw = code.querySelector(".ply-code__lang")?.textContent.trim() || "code";
+  const lang = { html: "HTML", astro: "Astro", css: "CSS", js: "JavaScript", ts: "TypeScript", sh: "shell", bash: "shell", py: "Python", python: "Python", json: "JSON", tex: "TeX", latex: "LaTeX" }[raw.toLowerCase()] ?? raw;
+  const base = `Copy the ${lang} for ${where}`;
+  const n = (named.get(base) ?? 0) + 1;
+  named.set(base, n);
+  btn.setAttribute("aria-label", n > 1 ? `${base}, part ${n}` : base);
+}

@@ -31,7 +31,7 @@ const stops = [...html.matchAll(/<li\b[^>]*\bclass="ply-atlas__stop"[^>]*>/g)].m
 
 const S = 1000;
 const W = decode(world);
-const { places, route } = chart(stops);
+const { places, route, moves } = chart(stops);
 const view = overview(places, S, S);
 const proj = projection(S, S, view);
 const path = geoPath(proj).digits(0);
@@ -64,7 +64,6 @@ function place(size: number, fixed: Label[]) {
 }
 const narrow = place(340, []);
 const labels = [...narrow, ...place(720, narrow).map((l) => ({ ...l, wide: true }))];
-const legs = route.coordinates.length;
 ---
 <ply-atlas class:list={["ply-atlas", className]} id={id} label={label}>
   <div class="ply-atlas__frame">
@@ -83,7 +82,7 @@ const legs = route.coordinates.length;
           {labels.map((l) => <span class="ply-atlas__name" data-side={l.side} data-wide={l.wide ? "" : undefined} style={`--x: ${l.x.toFixed(4)}; --y: ${l.y.toFixed(4)}`}>{l.name}</span>)}
         </div>
       </div>
-      <p class="ply-atlas__caption"><b>{label}.</b> <span class="ply-atlas__tally">{tally(places.length, legs)}</span></p>
+      <p class="ply-atlas__caption"><b>{label}.</b> <span class="ply-atlas__tally">{tally(places.length, moves)}</span></p>
     </div>
     <div class="ply-atlas__list">
       {filter && <div class="ply-segmented ply-atlas__filter" role="group" aria-label="Show entries" hidden></div>}

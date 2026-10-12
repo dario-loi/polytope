@@ -5,9 +5,10 @@ const items = [
   { label: "Homepage", href: "/patterns/homepage/", kind: "home" },
   { label: "Paper page", href: "/patterns/paper/", kind: "paper" },
   { label: "Demo page", href: "/patterns/demo/", kind: "demo" },
+  { label: "CV page", href: "/patterns/cv/", kind: "cv" },
 ];
 ---
-<Frame title="Three pages, one world" class="xb-pat">
+<Frame title="Four pages, one world" class="xb-pat">
   <ul class="xb-pat__row" role="list">
     {items.map((i) => (
       <li>
@@ -26,7 +27,7 @@ const items = [
   <Fragment slot="caption">Each pattern is a whole page built only from the kit, with one exhibit of its own. Pick one to open it.</Fragment>
 </Frame>
 <style is:global>
-  .xb-pat__row { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--ply-space-5); width: 100%; max-width: 30rem; }
+  .xb-pat__row { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--ply-space-4); width: 100%; max-width: 34rem; }
   .xb-pat__link { display: grid; gap: var(--ply-space-2); justify-items: center; text-decoration-color: color-mix(in srgb, currentColor 45%, transparent); }
   .xb-pat__page { font-size: clamp(6px, 0.9vw, 10px); display: grid; grid-template-rows: auto auto 1fr; gap: 0.8em; width: 100%; aspect-ratio: 3 / 4; background: var(--ply-white); padding: 1.1em; text-decoration: none; transition: transform var(--ply-duration-base) var(--ply-ease-out); position: relative; }
   .xb-pat__link:hover .xb-pat__page, .xb-pat__link:focus-visible .xb-pat__page { transform: translateY(-0.5rem); }
@@ -40,5 +41,8 @@ const items = [
   .xb-pat__page--paper .xb-pat__model::after { content: ""; position: absolute; left: 10%; right: 10%; top: 50%; height: 2px; background: var(--ply-tomato-500); transform: rotate(-12deg); }
   .xb-pat__page--demo .xb-pat__model { width: auto; left: 1.1em; top: auto; bottom: 1.1em; aspect-ratio: 2 / 1; }
   .xb-pat__page--demo .xb-pat__model::after { content: ""; position: absolute; left: 50%; bottom: 20%; width: 1em; height: 1em; margin-left: -0.5em; border-radius: 50%; background: var(--ply-tomato-500); }
+  .xb-pat__page--cv .xb-pat__model { width: 46%; top: auto; bottom: 1.1em; }
+  .xb-pat__page--cv .xb-pat__model::before { content: ""; position: absolute; inset: 16%; border: 1px solid var(--ply-ink-50); border-radius: 50%; }
+  .xb-pat__page--cv .xb-pat__model::after { content: ""; position: absolute; left: 44%; top: 38%; width: 0.9em; height: 0.9em; border-radius: 50%; background: var(--ply-tomato-500); }
   .xb-pat__label { font-size: var(--ply-size-sm); font-weight: var(--ply-weight-semibold); }
 </style>

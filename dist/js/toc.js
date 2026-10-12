@@ -7,7 +7,7 @@ function build(toc) {
   const scope = document.querySelector("[data-toc-scope]");
   const list = toc.querySelector("ul");
   if (!scope || !list) return;
-  const heads = [...scope.querySelectorAll("h2, h3")].filter((h) => !h.closest("[data-toc-skip], .ex__live, .ply-app, .ply-abstract"));
+  const heads = [...scope.querySelectorAll("h2, h3")].filter((h) => !h.closest("[data-toc-skip], .ex__live, .ply-app, .ply-abstract, .ply-atlas"));
   if (heads.length < 2) { toc.hidden = true; return; }
   const used = new Set();
   for (const h of heads) {

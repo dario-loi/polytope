@@ -48,7 +48,11 @@ class PlySearch extends HTMLElement {
     if (!this.trigger || !this.dialog || !this.input || !this.list) return;
     this._uid = this.id || "ply-search";
     this._n = 0;
+    // It is a link to a fallback page without script; with script it opens the panel, so it
+    // is announced as a button and answers Space as one.
+    this.trigger.setAttribute("role", "button");
     this.trigger.setAttribute("aria-haspopup", "dialog");
+    this.trigger.addEventListener("keydown", (e) => { if (e.key === " ") { e.preventDefault(); this.open(); } });
     this.trigger.addEventListener("click", (e) => { e.preventDefault(); this.open(); });
     // Start fetching the index as soon as the reader shows intent.
     for (const ev of ["pointerenter", "focus"]) this.trigger.addEventListener(ev, () => this._load(), { once: true });
@@ -107,7 +111,8 @@ class PlySearch extends HTMLElement {
     // null means a newer query replaced this one before it ran.
     if (search === null || q !== this.input.value.trim()) return;
     this._q = q;
-    this._results = search.results;
+    this._results = await this._rank(search.results, q);
+    if (q !== this.input.value.trim()) return;
     this._shown = 0;
     this.list.replaceChildren();
     await this._render();
@@ -118,7 +123,7 @@ class PlySearch extends HTMLElement {
     if (!results) return;
     const q = this._q;
     const batch = results.slice(this._shown, this._shown + PAGE);
-    const data = await Promise.all(batch.map((r) => r.data()));
+    const data = await Promise.all(batch.map((r) => r._data ?? r.data()));
     if (results !== this._results) return;
     for (const d of data) this.list.append(...this._hits(d));
     this._shown += batch.length;
@@ -127,7 +132,24 @@ class PlySearch extends HTMLElement {
     const n = results.length;
     this.status.textContent = n
       ? `${n} ${n === 1 ? "result" : "results"} for "${q}"`
-      : `Nothing matches "${q}". Try a shorter or broader word.`;
+      : `Nothing matches "${q}". Try a shorter or broader word, or open a chapter.`;
+  }
+
+  // A page whose title or a section heading names every word of the query comes first, ahead
+  // of short records (with meta.summary) that only carry the word: someone searching
+  // "mustard" wants the page on color before the seven mustard tokens. Only the first results
+  // are fetched to decide, and the rest keep Pagefind's order.
+  async _rank(results, q) {
+    const head = results.slice(0, 2 * PAGE);
+    const data = await Promise.all(head.map((r) => r.data()));
+    head.forEach((r, i) => { r._data = data[i]; });
+    const words = q.toLowerCase().split(/\s+/).filter(Boolean);
+    const names = (text) => {
+      const ws = String(text || "").toLowerCase().split(/[^a-z0-9]+/);
+      return words.every((w) => ws.some((x) => x.startsWith(w)));
+    };
+    const first = head.filter((r) => !r._data.meta?.summary && [r._data.meta?.title, ...(r._data.sub_results || []).map((s) => s.title)].some(names));
+    return [...first, ...head.filter((r) => !first.includes(r)), ...results.slice(head.length)];
   }
 
   _hits(d) {
@@ -209,7 +231,8 @@ class PlySearch extends HTMLElement {
 
   _show(results) {
     this.input.setAttribute("aria-expanded", String(results));
-    if (this.idle) this.idle.hidden = Boolean(this.input.value.trim());
+    // With nothing found, the chapter shortcuts come back, so there is always a way on.
+    if (this.idle) this.idle.hidden = Boolean(this.input.value.trim()) && results;
     if (!results && this.more) this.more.hidden = true;
   }
 

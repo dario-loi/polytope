@@ -22,7 +22,7 @@
     --_limb: var(--ply-color-panel-text); --_limb-a: 0.3;
     --_route: var(--ply-color-panel-text); --_route-a: 0.8;
     --_trail: var(--ply-color-accent); --_trail-a: 1;
-    position: relative; height: clamp(15rem, 42svh, 26rem); overflow: hidden; container-type: size;
+    position: relative; height: clamp(12rem, 34svh, 22rem); overflow: hidden; container-type: size;
     background: var(--ply-color-panel); color: var(--ply-color-panel-text);
     user-select: none; -webkit-user-select: none;
   }
@@ -49,7 +49,7 @@
 
   /* Pins, names, the ball, and the tag ride over the canvas. */
   .ply-atlas__pins { position: absolute; inset: 0; pointer-events: none; }
-  .ply-atlas__pin, .ply-atlas__here, .ply-atlas__tag, .ply-atlas__name { position: absolute; left: 0; top: 0; will-change: transform; }
+  .ply-atlas__pin, .ply-atlas__here, .ply-atlas__tag, .ply-atlas__name { position: absolute; left: 0; top: 0; }
   .ply-atlas__pin { width: 1.75rem; height: 1.75rem; margin: -0.875rem 0 0 -0.875rem; padding: 0; border: 0; background: none; cursor: pointer; pointer-events: auto; }
   .ply-atlas__pin::before { content: ""; position: absolute; inset: 0.4375rem; border: 2px solid var(--ply-color-panel); border-radius: var(--ply-radius-ball); background: var(--ply-color-panel-text); transition: scale var(--ply-duration-fast) var(--ply-ease-out); }
   .ply-atlas__pin:hover::before { scale: 1.3; }
@@ -117,6 +117,9 @@
   }
   @media (max-width: 22rem) { .ply-atlas__readout { display: none; } }
   @media (pointer: coarse) {
+    /* A finger needs 44px; the drawn point stays the same size. */
+    .ply-atlas__pin { width: 2.75rem; height: 2.75rem; margin: -1.375rem 0 0 -1.375rem; }
+    .ply-atlas__pin::before { inset: 0.9375rem; }
     .ply-atlas__controls button { width: 2.75rem; height: 2.75rem; }
     .ply-atlas__go { min-height: 2.75rem; }
   }

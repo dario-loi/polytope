@@ -1,7 +1,7 @@
 // Builds the docs search index after `astro build`: the pages in dist, plus every token,
 // every .ply class, and every Astro component as a result of its own, each linking to the
 // page that documents it. The kit's Search component reads the files this writes.
-import { readFileSync, readdirSync } from "node:fs";
+import { readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { join, dirname, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 import * as pagefind from "pagefind";
@@ -25,9 +25,33 @@ const pages = walk(pagesDir).map((file) => {
   return { url: `/${rel}`.replace(/\/+$/, "/"), source: readFileSync(file, "utf8") };
 });
 
+// Section headings get their ids here, in the built HTML, with the slug rule css/js/toc.js
+// uses at runtime, so the ids match the on-this-page links. Pagefind finds a page's sections
+// by their ids; without them a result could only point at the top of its page.
+const slug = (s) => s.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+const unescape = (s) => s.replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&#39;/g, "'");
+function htmlFiles(dir) {
+  return readdirSync(dir, { withFileTypes: true }).flatMap((d) => (d.isDirectory() ? (d.name === "pagefind" || d.name === "_astro" || d.name === "kit" ? [] : htmlFiles(join(dir, d.name))) : d.name.endsWith(".html") ? [join(dir, d.name)] : []));
+}
+let named = 0;
+for (const file of htmlFiles(dist)) {
+  const html = readFileSync(file, "utf8");
+  const used = new Set([...html.matchAll(/\sid="([^"]+)"/g)].map((m) => m[1]));
+  const out = html.replace(/<(h[23])((?:\s[^>]*)?)>([\s\S]*?)<\/\1>/g, (all, tag, attrs, inner) => {
+    if (/\sid=/.test(attrs)) return all;
+    let id = slug(unescape(inner.replace(/<[^>]+>/g, ""))) || "section";
+    while (used.has(id)) id += "-x";
+    used.add(id);
+    named++;
+    return `<${tag} id="${id}"${attrs}>${inner}</${tag}>`;
+  });
+  if (out !== html) writeFileSync(file, out);
+}
+
 // Code samples and live examples would fill page excerpts with markup and button labels;
 // classes and components are found through records of their own below.
-const { index } = await pagefind.createIndex({ forceLanguage: "en", excludeSelectors: [".ply-code", ".ex__live"] });
+// Swatch grids are token names and hex values, which the token records already carry.
+const { index } = await pagefind.createIndex({ forceLanguage: "en", excludeSelectors: [".ply-code", ".ex__live", ".sw"] });
 const added = await index.addDirectory({ path: dist });
 if (added.errors.length) fail("could not index the built pages", added.errors);
 
@@ -45,13 +69,13 @@ async function add(record) {
 // Tokens: found by name, value, and purpose; the link opens the Tokens page filtered to it.
 const tokens = JSON.parse(readFileSync(join(root, "dist/tokens.json"), "utf8")).tokens;
 for (const [name, t] of Object.entries(tokens)) {
-  const words = name.replace(/^--ply-/, "").replace(/-/g, " ");
   const isColor = typeof t.value === "string" && /^#[0-9a-f]{6}$/i.test(t.value);
   const purpose = (t.description ?? "").replace(/`([^`]+)`/g, "$1");
   const values = t.dark !== undefined && t.dark !== t.value ? `Light ${t.value}, dark ${t.dark}.` : `${t.value}.`;
   await add({
     url: `/tokens/?q=${encodeURIComponent(name)}`,
-    content: `${name} ${words}. ${purpose} ${values}`,
+    // The name once: spelled out again, a short record outranks the page that explains it.
+    content: `${name}. ${purpose} ${values}`,
     meta: { title: name, kind: "Token", summary: `${purpose} ${values}`.trim(), ...(isColor ? { swatch: t.value } : {}) },
   });
 }
@@ -108,11 +132,11 @@ for (const file of readdirSync(join(root, "astro")).filter((f) => f.endsWith(".a
   await add({
     url: url + fragment(`<${name}`),
     content: `${name} ${summary} An Astro component, shown in ${labels[url] ?? "Components"}.`,
-    meta: { title: `<${name}>`, kind: "Component", summary: summary || `Shown in ${labels[url] ?? "Components"}.` },
+    meta: { title: `<${name}>`, kind: "Astro component", summary: summary || `Shown in ${labels[url] ?? "Components"}.` },
   });
 }
 
 const written = await index.writeFiles({ outputPath: join(dist, "pagefind") });
 if (written.errors.length) fail("could not write the index", written.errors);
 await pagefind.close();
-console.log(`search index: ${added.page_count} pages and ${records} records (tokens, class blocks, components)`);
+console.log(`search index: ${added.page_count} pages and ${records} records (tokens, class blocks, components); ${named} headings given ids`);

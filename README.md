@@ -62,8 +62,8 @@ In a project that has Polytope installed, npx runs that copy. The command won't 
 A site without npm (a static site built by Python, for example) can fetch the same files pinned to a release and link the hosted stylesheet in its template:
 
 ```sh
-curl -fsSLo DESIGN.md https://raw.githubusercontent.com/dario-loi/polytope/v0.4.0/DESIGN.md
-mkdir -p .impeccable && curl -fsSLo .impeccable/design.json https://raw.githubusercontent.com/dario-loi/polytope/v0.4.0/.impeccable/design.json
+curl -fsSLo DESIGN.md https://raw.githubusercontent.com/dario-loi/polytope/v0.4.1/DESIGN.md
+mkdir -p .impeccable && curl -fsSLo .impeccable/design.json https://raw.githubusercontent.com/dario-loi/polytope/v0.4.1/.impeccable/design.json
 ```
 
 Either way, new pages are then built inside Polytope and the design checker flags anything off the system. Run `/impeccable init` once so the site gets its own `PRODUCT.md`, and copy the files again whenever you upgrade Polytope.
@@ -117,7 +117,7 @@ Design decisions live in `tokens/tokens.json` and styles in `css/src/`. The buil
 |---|---|
 | `tokens/tokens.json` | Every design decision, in the W3C Design Tokens format |
 | `css/src/` | The CSS core, in cascade layers, with the `ply-` prefix |
-| `css/js/` | The working models and small scripts for copy buttons, the theme toggle, and form controls |
+| `css/js/` | The working models, the Atlas and its map data, site search, and small scripts for copy buttons, scroll boxes, the theme toggle, and form controls |
 | `astro/` | Astro components |
 | `python/` | The `polytope-theme` package |
 | `scripts/` | The build and the contrast and prose checks, using only Node's standard library |
@@ -125,7 +125,7 @@ Design decisions live in `tokens/tokens.json` and styles in `css/src/`. The buil
 
 ## Status
 
-This is version 0.1. The core components are marked stable in the docs; the working models, research components, and demo chrome are experimental and may change before 1.0. The changelog on the docs site lists what changes between releases.
+This is version 0.4. The core components are marked stable in the docs; the working models, the Atlas, research components, and demo chrome are experimental and may change before 1.0. The changelog on the docs site lists what changes between releases.
 
 ## Credits and license
 

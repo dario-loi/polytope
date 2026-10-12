@@ -1,10 +1,12 @@
 ---
-// A live example and the markup that produced it, from one string.
+// A live example and the markup that produced it, from one string. It runs to the main
+// column's edge, wider than the reading column, so the class names at the ends of the
+// markup's lines stay in view.
 import Code from "@dario-loi/polytope/astro/Code.astro";
 interface Props { html: string; title?: string; panel?: boolean; lang?: string; code?: string; pad?: boolean }
 const { html, title = "HTML", panel = false, lang = "html", code, pad = true } = Astro.props;
 ---
-<div class="ex">
+<div class="ex ply-wide">
   <div class:list={["ex__live", panel && "ply-panel", !pad && "ex__live--flush"]} data-surface={panel ? "panel" : undefined} set:html={html} />
   <Code code={code ?? html} lang={lang} title={title} class="ex__code" />
 </div>

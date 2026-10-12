@@ -9,9 +9,6 @@ import { u } from "../../data/nav";
 const sample = stops.filter((s) => ["Edinburgh, United Kingdom", "Lisbon, Portugal", "Toronto, Canada"].includes(s.place));
 ---
 <Docs title="Atlas" status="experimental" lede="A globe of the places in a CV, beside the entries that happened there. As you read, the globe turns to each place.">
-  <p>The Atlas is for the CV or the about page of a personal site. Each entry is a stop: what you did, when, and where. The globe is drawn like the complex: places are points, the route between them in date order is a line of edges, and the entry you are reading is the tomato ball, with its dashed reach. Countries that hold a place fill mustard.</p>
-  <p>The example below holds four example entries. In a column this narrow the globe stays pinned above the entries; give it 52rem or more and the entries run on the left with the globe in view beside them, as on the <a href={u("/patterns/cv/")}>CV page pattern</a>.</p>
-
   <h2>Example</h2>
   <Atlas label="Example places">
     {sample.map((s) => (
@@ -29,9 +26,14 @@ const sample = stops.filter((s) => ["Edinburgh, United Kingdom", "Lisbon, Portug
     kind="Education" place="Toronto, Canada" lat={43.65} lon={-79.38} from="2019-09" to="2021-06" />
 </Atlas>`} />
 
+  <h2>What it is</h2>
+  <p>The Atlas is for the CV or the about page of a personal site. Each entry is a stop: what you did, when, and where. The globe is drawn like the complex: places are points, the route between them in date order is a line of edges, and the entry you are reading is the tomato ball, with its dashed reach. Countries that hold a place fill mustard.</p>
+  <p>The example above holds four entries. In a column this narrow the globe stays pinned above the entries; give it 52rem or more and the entries run on the left with the globe in view beside them, as on the <a href={u("/patterns/cv/")}>CV page pattern</a>.</p>
+
   <h2>Reading it</h2>
   <ul>
-    <li>Scrolling makes an entry current when its top crosses a line just under the globe (45% down the screen when they sit side by side). The globe flies to the place, and the ball travels the great circle from the last place, leaving a tomato trail that fades when it lands.</li>
+    <li>Side by side, an entry becomes current when its top crosses a line 45% down the screen. Stacked, the current entry is the topmost one showing below the pinned globe, so the globe always names the entry you can read, and the caption under it gives that entry's title, organization, and dates. The globe flies to the place, and the ball travels the great circle from the last place, leaving a tomato trail that fades when it lands.</li>
+    <li>Past the last entry the globe pulls back to every place. The first time, the route lights up leg by leg in date order, then fades back to chalk.</li>
     <li>A pin, or the place line of an entry, picks that entry. A pin holding several entries picks the next one each time.</li>
     <li>Drag turns the globe. <kbd>Ctrl</kbd> or <kbd>Cmd</kbd> and scroll zooms, so plain scrolling over the globe still scrolls the page; on touch screens a sideways drag turns it and a pinch zooms. The buttons zoom and show every place. With the globe focused, arrow keys turn it, <kbd>+</kbd> and <kbd>-</kbd> zoom, and <kbd>0</kbd> shows every place.</li>
     <li>With more than one kind of entry, a filter above the list shows one kind; the other places dim.</li>
@@ -51,13 +53,13 @@ const sample = stops.filter((s) => ["Edinburgh, United Kingdom", "Lisbon, Portug
     ["kind", "Education, Work, Academia, or any word. Shown as a label and offered as a filter"],
     ["org", "Institution or company"],
     ["zoom", "Zoom while the entry is current, from 1 (the whole globe) to 16. The default 6 shows about 3000km"],
-    ["level", "Heading level of the title. Default 3"],
+    ["level", "Heading level of the title, from 2 to 6. Default 3; make it follow the page outline, so 2 when the entries sit right under the page title"],
   ]} head={["AtlasStop prop", "Effect"]} />
   <p>The element fires <code>ply-atlas-change</code> with <code>index</code> and <code>place</code> when the current entry changes, and <code>select(index)</code> makes an entry current; <code>-1</code> shows every place.</p>
 
   <h2>The map</h2>
-  <p>The outlines are Natural Earth's countries as the United States government recognizes them, the dataset's US point of view, so borders in disputed places follow the US position. Natural Earth is in the public domain. The globe uses two levels of detail made from its 1:10 million shapes: a coarse one for the whole globe and a finer one from zoom 3.5. It is drawn in the browser with d3-geo, so there are no map tiles, no keys, and no outside service. It zooms from the whole globe to a region about 400km across; streets and roads are not part of it.</p>
-  <p>The page loads about 60KB, compressed, when the Atlas connects, and the close outlines, about 80KB more, when it comes near the screen. Under reduced motion the globe jumps instead of flying, and the ball does not travel.</p>
+  <p>The outlines are Natural Earth's countries as the United States government recognizes them, the dataset's US point of view, so borders in disputed places follow the US position. Natural Earth is in the public domain. The globe uses two levels of detail made from its 1:10 million shapes: a coarse one for the whole globe and a finer one from zoom 3.5. It is drawn in the browser with d3-geo, so it needs no map tiles, keys, or outside service. It zooms from the whole globe to a region about 400km across; streets and roads are not part of it.</p>
+  <p>The page loads about 60KB, compressed, when the Atlas connects, and the close outlines, about 76KB more, when it comes near the screen. Under reduced motion the globe jumps instead of flying, and the ball does not travel.</p>
 
   <h2>Without JavaScript</h2>
   <p>The server draws the globe with every place and the route, and the entries read as a plain list with their dates, places, and text. Contrast themes keep the globe's own colors, since the color is the content. In print the globe appears once above the entries, without its controls.</p>

@@ -18,7 +18,7 @@ import { stops } from "../../data/atlas-example";
         </div>
       </Fragment>
       {stops.map((s) => (
-        <AtlasStop title={s.title} org={s.org} kind={s.kind} place={s.place} lat={s.lat} lon={s.lon} from={s.from} to={s.to}>
+        <AtlasStop level={2} title={s.title} org={s.org} kind={s.kind} place={s.place} lat={s.lat} lon={s.lon} from={s.from} to={s.to}>
           <p>{s.text}</p>
         </AtlasStop>
       ))}

@@ -12,7 +12,7 @@ import { version, minor } from "../../data/version";
 </Frame>
 <style is:global>
   .xb-rel__wall { display: grid; gap: var(--ply-space-3); justify-items: start; width: min(100%, 26rem); }
-  .xb-rel__num { font-family: var(--ply-font-display); font-size: clamp(5rem, 3rem + 6vw, 9rem); line-height: 0.9; color: var(--ply-color-panel-text); }
+  .xb-rel__num { font-family: var(--ply-font-display); font-size: max(var(--ply-size-4xl), min(var(--ply-size-display), 2rem + 5vw)); line-height: 0.9; color: var(--ply-color-panel-text); }
   .xb-rel__meta { display: flex; gap: var(--ply-space-4); font-size: var(--ply-size-sm); color: var(--ply-color-panel-muted); }
   .xb-rel__track { display: flex; gap: var(--ply-space-5); align-items: center; border-top: 3px solid var(--ply-color-panel-text); padding-top: var(--ply-space-3); width: 100%; }
   .xb-rel__track span { width: 0.875rem; height: 0.875rem; border-radius: 50%; border: 2px solid var(--ply-color-panel-muted); }

@@ -52,6 +52,8 @@ const pagerLabel = (p: NonNullable<typeof here.next>) => (p.chapter === here.cha
   /* Phones and tablets: the chapter sidebar is hidden, so its pages sit above the content. */
   .docs-chapter { margin-bottom: var(--ply-space-6); border-bottom: var(--ply-border-hair) solid var(--ply-color-rule); }
   .docs-chapter > summary { font-size: var(--ply-size-ui); }
+  /* The current page's point inside is the tomato mark; the open disclosure stays black. */
+  .docs-chapter[open] > summary::before { background: currentColor; border-color: currentColor; }
   .docs-chapter__count { margin-inline-start: auto; font-weight: var(--ply-weight-regular); color: var(--ply-color-text-muted); }
   .docs-chapter .ply-sidenav { padding-block-end: var(--ply-space-3); }
   @media (min-width: 56rem) { .docs-chapter { display: none; } }
