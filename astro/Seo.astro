@@ -1,0 +1,158 @@
+---
+// Head tags that tell search engines and link previews what a page is: the title, the
+// description, the canonical address, Open Graph and Twitter cards, and structured data.
+// Put it inside <head>, in place of your own <title>. Set `site` in astro.config so every
+// address comes out absolute; without it, the canonical link and og:url are left out.
+//   <Seo title="John Doe" description="PhD student at Example University." image={og} person={{ name: "John Doe" }} />
+// A paper page passes `citation`: the citation_ tags Google Scholar indexes papers by, and
+// a ScholarlyArticle record. Pass the same authors array PaperHeader takes.
+
+/** A paper, for Google Scholar and reference managers. */
+export interface Citation {
+  title: string;
+  authors: (string | { name: string; href?: string })[];
+  /** "2026", "2026-06", or "2026-06-14". */
+  date: string | Date;
+  journal?: string;
+  conference?: string;
+  volume?: string | number;
+  issue?: string | number;
+  firstPage?: string | number;
+  lastPage?: string | number;
+  /** The PDF, absolute or relative to the page. Scholar prefers one on the same site. */
+  pdf?: string;
+  doi?: string;
+  /** The arXiv identifier: the part of the address after arxiv.org/abs/. */
+  arxiv?: string;
+  abstract?: string;
+}
+
+/** The person a homepage or CV is about. */
+export interface Person {
+  name: string;
+  /** Their homepage. Defaults to this page. */
+  url?: string;
+  jobTitle?: string;
+  affiliation?: string;
+  /** Profiles elsewhere: ORCID, Google Scholar, GitHub, a university page. */
+  sameAs?: string[];
+  image?: string;
+}
+
+/** A picture for link previews, 1200 by 630 for most sites. An imported image works as is. */
+export type SeoImage = string | { src: string; alt?: string; width?: number; height?: number };
+
+interface Props {
+  /** The whole title, as the tab and the search result show it. */
+  title: string;
+  /** One or two sentences, ideally under 160 characters. */
+  description?: string;
+  /** Defaults to this page's address on `site`. */
+  canonical?: string | URL;
+  image?: SeoImage;
+  /** Read aloud and shown when the image does not load. */
+  imageAlt?: string;
+  /** Defaults to "article" with a citation, else "website". */
+  type?: "website" | "article" | "profile";
+  siteName?: string;
+  /** Such as "en_US". */
+  locale?: string;
+  /** The site's account, such as "@yourname", for X and Twitter cards. */
+  twitter?: string;
+  /** Keep this page out of search results, such as a 404 or a draft. */
+  noindex?: boolean;
+  published?: string | Date;
+  modified?: string | Date;
+  citation?: Citation;
+  person?: Person;
+  /** The trail from the home page to this one, last item this page. */
+  breadcrumbs?: { name: string; href: string }[];
+  /** Further schema.org records, written out as they are given. */
+  schema?: Record<string, unknown> | Record<string, unknown>[];
+  /** The sitemap's address, as @astrojs/sitemap writes it: "/sitemap-index.xml" under your base. */
+  sitemap?: string;
+}
+
+const { title, description, canonical, image, imageAlt, citation, person, breadcrumbs, schema, sitemap, siteName, locale, twitter, published, modified, noindex = false } = Astro.props;
+const type = Astro.props.type ?? (citation ? "article" : "website");
+const site = Astro.site;
+const here = site ? new URL(Astro.url.pathname, site) : undefined;
+if (!site && import.meta.env.DEV) console.warn("[polytope] Seo: set `site` in astro.config so canonical and preview addresses are absolute.");
+
+// Addresses resolve the way an href on this page would.
+const abs = (href: string | URL) => (here ? new URL(href, here).href : String(href));
+const url = noindex ? undefined : canonical ? abs(canonical) : here?.href;
+const pic = typeof image === "string" ? { src: image } : image;
+const picAlt = imageAlt ?? (typeof image === "object" ? image.alt : undefined);
+const iso = (d: string | Date) => (d instanceof Date ? d.toISOString() : d);
+const day = (d: string | Date) => (d instanceof Date ? d.toISOString().slice(0, 10) : d);
+const names = (citation?.authors ?? []).map((a) => (typeof a === "string" ? a : a.name));
+const venue = citation?.journal ?? citation?.conference;
+
+// One record per script. Text is escaped so a "</script>" inside a title cannot end the tag.
+const records: Record<string, unknown>[] = [];
+const ld = (node: Record<string, unknown>) => ({ "@context": "https://schema.org", ...node });
+if (person) {
+  records.push(ld({
+    "@type": "Person", name: person.name, url: person.url ? abs(person.url) : url, jobTitle: person.jobTitle,
+    affiliation: person.affiliation && { "@type": "Organization", name: person.affiliation },
+    sameAs: person.sameAs?.length ? person.sameAs : undefined, image: person.image && abs(person.image),
+  }));
+}
+if (citation) {
+  const same = [citation.doi && `https://doi.org/${citation.doi}`, citation.arxiv && `https://arxiv.org/abs/${citation.arxiv}`].filter(Boolean);
+  records.push(ld({
+    "@type": "ScholarlyArticle", headline: citation.title, name: citation.title,
+    author: (citation.authors ?? []).map((a) => (typeof a === "string" ? { "@type": "Person", name: a } : { "@type": "Person", name: a.name, url: a.href && abs(a.href) })),
+    datePublished: day(citation.date), abstract: citation.abstract, url,
+    isPartOf: venue && { "@type": citation.journal ? "Periodical" : "CreativeWork", name: venue },
+    sameAs: same.length ? same : undefined,
+  }));
+}
+if (breadcrumbs?.length) {
+  records.push(ld({
+    "@type": "BreadcrumbList",
+    itemListElement: breadcrumbs.map((b, i) => ({ "@type": "ListItem", position: i + 1, name: b.name, item: abs(b.href) })),
+  }));
+}
+for (const node of [schema ?? []].flat()) records.push("@context" in node ? node : ld(node));
+const json = (node: unknown) => JSON.stringify(node).replace(/</g, "\\u003c");
+---
+<title>{title}</title>
+{description && <meta name="description" content={description} />}
+{url && <link rel="canonical" href={url} />}
+{noindex && <meta name="robots" content="noindex" />}
+{sitemap && <link rel="sitemap" type="application/xml" href={sitemap} />}
+
+<meta property="og:type" content={type} />
+<meta property="og:title" content={title} />
+{description && <meta property="og:description" content={description} />}
+{url && <meta property="og:url" content={url} />}
+{siteName && <meta property="og:site_name" content={siteName} />}
+{locale && <meta property="og:locale" content={locale} />}
+{pic && <meta property="og:image" content={abs(pic.src)} />}
+{pic?.width && <meta property="og:image:width" content={String(pic.width)} />}
+{pic?.height && <meta property="og:image:height" content={String(pic.height)} />}
+{pic && picAlt && <meta property="og:image:alt" content={picAlt} />}
+{type === "article" && published && <meta property="article:published_time" content={iso(published)} />}
+{type === "article" && modified && <meta property="article:modified_time" content={iso(modified)} />}
+<meta name="twitter:card" content={pic ? "summary_large_image" : "summary"} />
+{twitter && <meta name="twitter:site" content={twitter} />}
+
+{citation && (
+  <>
+    <meta name="citation_title" content={citation.title} />
+    {names.map((n) => <meta name="citation_author" content={n} />)}
+    <meta name="citation_publication_date" content={day(citation.date).replace(/-/g, "/")} />
+    {citation.journal && <meta name="citation_journal_title" content={citation.journal} />}
+    {citation.conference && <meta name="citation_conference_title" content={citation.conference} />}
+    {citation.volume !== undefined && <meta name="citation_volume" content={String(citation.volume)} />}
+    {citation.issue !== undefined && <meta name="citation_issue" content={String(citation.issue)} />}
+    {citation.firstPage !== undefined && <meta name="citation_firstpage" content={String(citation.firstPage)} />}
+    {citation.lastPage !== undefined && <meta name="citation_lastpage" content={String(citation.lastPage)} />}
+    {citation.pdf && <meta name="citation_pdf_url" content={abs(citation.pdf)} />}
+    {citation.doi && <meta name="citation_doi" content={citation.doi} />}
+  </>
+)}
+
+{records.map((r) => <script type="application/ld+json" set:html={json(r)} />)}

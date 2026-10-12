@@ -1,0 +1,113 @@
+---
+import Docs from "../../layouts/Docs.astro";
+import Code from "@dario-loi/polytope/astro/Code.astro";
+import Note from "@dario-loi/polytope/astro/Note.astro";
+import ApiTable from "../../components/ApiTable.astro";
+import { u } from "../../data/nav";
+---
+<Docs title="Search engines" status="experimental" lede="One component in the head tells search engines, Google Scholar, and link previews what each page is. A sitemap tells them which pages exist.">
+  <h2>Put Seo in the head</h2>
+  <p><code>&lt;Seo&gt;</code> takes the place of your own <code>&lt;title&gt;</code>. Set <code>site</code> in <code>astro.config.mjs</code> first: the canonical link and the preview addresses must be absolute, and the component leaves them out without it.</p>
+  <Code lang="astro" title="src/layouts/Page.astro" code={`---
+import "@dario-loi/polytope/css";
+import { Seo } from "@dario-loi/polytope/astro";
+import og from "../assets/og.png";
+const { title, description } = Astro.props;
+---
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <Seo
+      title={\`\${title} - John Doe\`}
+      description={description}
+      image={og}
+      imageAlt="John Doe's name over a random complex"
+      siteName="John Doe"
+      sitemap="/sitemap-index.xml"
+    />
+  </head>
+  ...`} />
+  <p>From these props it writes:</p>
+  <ul>
+    <li>the title and the description a search result shows;</li>
+    <li>a canonical link to the page's own address, so a copy at another address does not compete with it;</li>
+    <li>Open Graph and Twitter tags, which messaging apps and social sites read to draw a link preview with the title, the description, and the image;</li>
+    <li>schema.org records as JSON-LD, for the person, the paper, or the trail of pages;</li>
+    <li>a <code>noindex</code> rule, for pages that should stay out of results.</li>
+  </ul>
+  <p>Give every page its own title and description. Two pages with the same title look like one page twice in a list of results.</p>
+
+  <h2>A preview image</h2>
+  <p>Link previews use an image of 1200 by 630 pixels. Keep the important part in the middle: some apps crop it to a square. An image imported from <code>src/assets</code> carries its width and height, which the component passes on, so a preview can be drawn before the image arrives. A path such as <code>/og.png</code> in <code>public/</code> works too; add <code>width</code> and <code>height</code> yourself: <code>image=&#123;&#123; src: "/og.png", width: 1200, height: 630 &#125;&#125;</code>.</p>
+
+  <h2>A sitemap</h2>
+  <p>A sitemap lists every page, so a search engine finds pages that few links point to. Astro's own integration writes one at each build:</p>
+  <Code lang="sh" code={`npx astro add sitemap`} />
+  <p>It writes <code>sitemap-index.xml</code> at the root of your site, under your <code>base</code>. Point to it with the <code>sitemap</code> prop, and from <code>robots.txt</code>, which an endpoint can write from the same <code>site</code>:</p>
+  <Code lang="ts" title="src/pages/robots.txt.ts" code={`import type { APIRoute } from "astro";
+
+export const GET: APIRoute = ({ site }) =>
+  new Response(\`User-agent: *\\nAllow: /\\n\\nSitemap: \${new URL("sitemap-index.xml", site)}\\n\`);`} />
+  <Note>Crawlers read <code>robots.txt</code> only at the root of a host. A GitHub Pages project site lives under a path, such as <code>/my-paper/</code>, so its own <code>robots.txt</code> is never read. Add its sitemap to the robots.txt of your user site, or submit it in <a href="https://search.google.com/search-console">Google Search Console</a>. Search Console asks you to prove the site is yours: put the file it gives you in <code>public/</code>.</Note>
+
+  <h2>Homepages and CVs</h2>
+  <p>On the page about you, <code>person</code> adds a Person record. Its <code>sameAs</code> list ties the page to your profiles elsewhere, so a search engine can tell that the ORCID, the Scholar profile, and the homepage belong to the same person and not to someone with the same name.</p>
+  <Code lang="astro" code={`<Seo
+  title="John Doe"
+  description="PhD student at Example University, working on graph learning."
+  type="profile"
+  person={{
+    name: "John Doe",
+    jobTitle: "PhD student",
+    affiliation: "Example University",
+    sameAs: [
+      "https://orcid.org/0000-0000-0000-0000",
+      "https://scholar.google.com/citations?user=...",
+    ],
+  }}
+/>`} />
+
+  <h2>Paper pages</h2>
+  <p>Google Scholar finds papers by the <code>citation_</code> tags in the head of the page. <code>citation</code> writes them, along with a ScholarlyArticle record; reference managers such as Zotero read the same tags when a reader saves the page. The authors take the same shape as <code>PaperHeader</code>'s, so one array feeds both.</p>
+  <Code lang="astro" code={`---
+import { Seo, PaperHeader } from "@dario-loi/polytope/astro";
+const authors = [{ name: "A. Author", affiliations: [1] }, { name: "John Doe", affiliations: [2] }];
+const paper = {
+  title: "Example title: higher-order message passing on cell complexes",
+  authors,
+  date: "2026-05-01",
+  conference: "Example Venue 2026",
+  pdf: "paper.pdf",
+};
+---
+<head>
+  <Seo title={paper.title} description="One or two sentences from the abstract." citation={paper} />
+</head>
+<body>
+  <PaperHeader title={paper.title} authors={authors} venue={paper.conference} />
+  ...
+</body>`} />
+  <p>Scholar checks the tags against the page itself, so keep the title and the authors on the page as <code>PaperHeader</code> prints them, keep the abstract on the page, and give each paper a page of its own. A PDF on the same site, named by <code>pdf</code>, is the copy Scholar is most likely to pick up.</p>
+
+  <h2>Props</h2>
+  <ApiTable rows={[
+    ["title", "The whole title, as the browser tab and the search result show it"],
+    ["description", "One or two sentences, ideally under 160 characters"],
+    ["canonical", "The page's preferred address. Defaults to its address on site"],
+    ["image, imageAlt", "The preview image, as a path or an imported image, and its text alternative"],
+    ["type", "website, article, or profile. Defaults to article with a citation, else website"],
+    ["siteName, locale", "The site's name and its language, such as en_US, for previews"],
+    ["twitter", "The site's account on X, such as @yourname"],
+    ["noindex", "Keeps the page out of results, and drops the canonical link"],
+    ["published, modified", "Dates for an article, as ISO text or a Date"],
+    ["person", "name, url, jobTitle, affiliation, sameAs, image: a Person record"],
+    ["citation", "title, authors, date, journal or conference, volume, issue, firstPage, lastPage, pdf, doi, arxiv, abstract"],
+    ["breadcrumbs", "The trail from the home page to this one, as name and href pairs. Search results may show it in place of the address"],
+    ["schema", "Further schema.org records, written out as given"],
+    ["sitemap", "The sitemap's address, for a link in the head"],
+  ]} head={["Prop", "Effect"]} />
+
+  <h2>Check the result</h2>
+  <p>After a deploy, paste a page's address into the <a href="https://validator.schema.org/">Schema Markup Validator</a> to see the records it reads, and into Google's <a href="https://search.google.com/test/rich-results">Rich Results Test</a> to see which ones Google can show, and into a link preview of any messaging app to see the card. These docs use the component on every page; <a href={u("/getting-started/astro/")}>Using with Astro</a> has the rest of the layout.</p>
+</Docs>

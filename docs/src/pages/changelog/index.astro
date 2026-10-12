@@ -2,9 +2,28 @@
 import Docs from "../../layouts/Docs.astro";
 import ReleaseModel from "../../components/exhibits/ReleaseModel.astro";
 ---
-<Docs title="Changelog" lede="Every release, newest first, on the history wall.">
+<Docs title="Changelog" lede="Every release, newest first, on the history wall." description="Every Polytope release, newest first: what changed in the kit and how to update.">
   <ReleaseModel slot="exhibit" />
+  <link slot="head" rel="alternate" type="application/atom+xml" title="Polytope releases" href="https://github.com/dario-loi/polytope/releases.atom" />
   <section class="ply-wall ply-wide" aria-label="Releases">
+    <div class="ply-wall__year">
+      <p class="ply-wall__label">0.5</p>
+      <ul class="ply-wall__entries">
+        <li class="ply-pub">
+          <p class="ply-pub__title">0.5.0, search engines</p>
+          <p class="ply-pub__venue">12 October 2026</p>
+          <div class="ply-prose ply-small" style="margin-top: var(--ply-space-2)">
+            <ul>
+              <li>New: <code>&lt;Seo&gt;</code> writes the head tags that search engines and link previews read: the title, the description, a canonical link, Open Graph and Twitter cards, and <code>noindex</code>. With <code>person</code> it adds a Person record for a homepage or CV; with <code>citation</code>, the <code>citation_</code> tags Google Scholar indexes papers by and a ScholarlyArticle record. See <a href="../getting-started/seo/">Search engines</a>.</li>
+              <li>The top bar shows the chapter tabs wherever they fit. Where they do not, they first set closer and the search field drops its word, then they fold into the menu. Before, between 72rem and the width the tabs needed, the bar ran past the edge of the page; on these docs that was from 1152px to about 1420px, most laptops. The new <code>js/topbar.js</code> measures the fit; <code>TopBar</code> and <code>js/all.js</code> load it.</li>
+              <li>Without the script, the tabs still show from 72rem, and tabs that do not fit scroll in their row instead of widening the page.</li>
+              <li>These docs now have a sitemap, link previews, and structured data, all from <code>&lt;Seo&gt;</code> and <code>@astrojs/sitemap</code>.</li>
+              <li>To update: <code>npm install @dario-loi/polytope@^0.5.0</code>. If your own CSS shows or hides <code>.ply-topbar__links</code>, check it against the <code>data-ply-tabs</code> attribute the script sets on the bar.</li>
+            </ul>
+          </div>
+        </li>
+      </ul>
+    </div>
     <div class="ply-wall__year">
       <p class="ply-wall__label">0.4</p>
       <ul class="ply-wall__entries">

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-12T06:41:11.000Z",
+  "generatedAt": "2026-10-12T15:00:47.000Z",
   "title": "Design System: Polytope",
   "extensions": {
     "colorMeta": {
@@ -757,7 +757,7 @@
       {
         "name": "topbar",
         "value": "72rem",
-        "purpose": "Chapter links show in the top bar; details menu hides."
+        "purpose": "Without js/topbar.js, chapter links show in the top bar and the details menu hides. With it, the links show wherever they fit."
       },
       {
         "name": "toc",

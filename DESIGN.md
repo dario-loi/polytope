@@ -250,7 +250,7 @@ Charts use eight categorical slots in a fixed order: tomato, teal, cobalt, grass
 
 The page is a top bar, a mast, a 3px rule, then a three-column docs grid inside a 90rem container with a fluid gutter of 16px on phones to 72px on wide screens.
 
-- **Top bar:** wordmark at left, nine chapter links from 72rem up, the search button and theme tools at right, 4.5rem tall, closed by a 3px rule. Below 72rem the chapters move into a details menu.
+- **Top bar:** wordmark at left, chapter links, the search button and theme tools at right, 4.5rem tall, closed by a 3px rule. The links show where they fit. First they set closer and search drops its word, then the chapters move into a details menu. Without JavaScript the switch is at 72rem.
 - **Mast:** one column on phones; from 64rem, title and lede at left and a 35rem exhibit at right. Every chapter landing puts its own working model in that slot as a black panel with a caption below.
 - **Docs grid:** reading column only on phones, with the chapter's pages in an "In this chapter" disclosure above the content; a 17.5rem sticky chapter sidebar from 56rem; a 15rem sticky on-this-page list from 80rem.
 - **Reading column:** 36rem. Notes, code blocks, and text in one column share that edge. Wide blocks opt out explicitly.

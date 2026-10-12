@@ -1,6 +1,7 @@
 // Docs site for the design system. Static output for GitHub Pages or Cloudflare Pages.
 // DOCS_SITE and DOCS_BASE set the deploy URL; the defaults suit a GitHub Pages project site.
 import { defineConfig } from "astro/config";
+import sitemap from "@astrojs/sitemap";
 import { cpSync, existsSync, mkdirSync, rmSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 
@@ -29,7 +30,9 @@ export default defineConfig({
   site,
   base,
   trailingSlash: "ignore",
-  integrations: [serveKit()],
+  integrations: [serveKit(), sitemap()],
+  // Pages are small and static, so the next one loads while the pointer rests on its link.
+  prefetch: { prefetchAll: true, defaultStrategy: "hover" },
   vite: {
     server: { fs: { allow: [root] } },
     ssr: { noExternal: ["@dario-loi/polytope"] },

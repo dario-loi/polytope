@@ -1,6 +1,6 @@
 {
   "name": "@dario-loi/polytope",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "description": "Polytope: tokens, CSS components, and Astro components for academic sites, paper pages, and research demos.",
   "type": "module",
   "license": "Apache-2.0",

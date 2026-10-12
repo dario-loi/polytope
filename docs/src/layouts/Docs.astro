@@ -7,15 +7,16 @@ import Pager from "@dario-loi/polytope/astro/Pager.astro";
 import Stability from "@dario-loi/polytope/astro/Stability.astro";
 import { locate, u } from "../data/nav";
 
-interface Props { title: string; lede?: string; description?: string; toc?: boolean; wide?: boolean; status?: "stable" | "experimental" | "deprecated" }
-const { title, lede, description, toc = true, wide = false, status } = Astro.props;
+interface Props { title: string; headTitle?: string; lede?: string; description?: string; toc?: boolean; wide?: boolean; status?: "stable" | "experimental" | "deprecated" }
+const { title, headTitle, lede, description, toc = true, wide = false, status } = Astro.props;
 const here = locate(Astro.url.pathname);
 const groups = [{ heading: here.chapter.label, items: here.chapter.pages.map((p) => ({ label: p.label, href: u(p.path), current: p.path === here.page?.path })) }];
 const siblings = here.chapter.pages.length;
 // Crossing into another chapter, the pager names the chapter: "Patterns", not "Overview".
 const pagerLabel = (p: NonNullable<typeof here.next>) => (p.chapter === here.chapter ? p.label : p.chapter.label);
 ---
-<Base title={title} description={description ?? lede}>
+<Base title={title} headTitle={headTitle} description={description ?? lede}>
+  {Astro.slots.has("head") && <Fragment slot="head"><slot name="head" /></Fragment>}
   <main id="main" data-pagefind-body data-pagefind-meta={`title:${title}`}>
     <Mast title={title} lede={lede}>
       {status && <p slot="after" class="docs-status" data-pagefind-ignore><Stability level={status} /> <span>{status === "stable" ? "Class names and props are not expected to change before 1.0." : status === "experimental" ? "May change in any minor version before 1.0." : "Still works; see the replacement below."}</span></p>}

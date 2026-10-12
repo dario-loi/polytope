@@ -8,6 +8,7 @@ export const chapters: Chapter[] = [
     { label: "Installation", path: "/getting-started/installation/" },
     { label: "Using with Astro", path: "/getting-started/astro/" },
     { label: "Using in plain HTML", path: "/getting-started/html/" },
+    { label: "Search engines", path: "/getting-started/seo/" },
     { label: "Python and figures", path: "/getting-started/python/" },
     { label: "Other targets", path: "/getting-started/targets/" },
     { label: "Versioning", path: "/getting-started/versioning/" },

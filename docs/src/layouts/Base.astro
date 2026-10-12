@@ -5,23 +5,62 @@ import TopBar from "@dario-loi/polytope/astro/TopBar.astro";
 import ThemeToggle from "@dario-loi/polytope/astro/ThemeToggle.astro";
 import Icon from "@dario-loi/polytope/astro/Icon.astro";
 import Search from "@dario-loi/polytope/astro/Search.astro";
+import Seo from "@dario-loi/polytope/astro/Seo.astro";
 import { base, chapters, locate, u } from "../data/nav";
 import { version } from "../data/version";
 
-interface Props { title: string; description?: string; chrome?: boolean }
-const { title, description = "Polytope: tokens, CSS components, and Astro components for academic sites, paper pages, and research demos.", chrome = true } = Astro.props;
+interface Props {
+  title: string;
+  /** The whole <title>, when "{title} - Polytope" would be vague or taken by another page. */
+  headTitle?: string;
+  description?: string;
+  chrome?: boolean;
+  noindex?: boolean;
+}
+const { title, headTitle, description = "Polytope: tokens, CSS components, and Astro components for academic sites, paper pages, and research demos.", chrome = true, noindex = false } = Astro.props;
 const here = locate(Astro.url.pathname);
 const links = chapters.map((c) => ({ label: c.label, href: u(c.path), current: c === here.chapter }));
-const pageTitle = title === "Polytope" ? title : `${title} - Polytope`;
+const pageTitle = headTitle ?? (title === "Polytope" ? title : `${title} - Polytope`);
+const repo = "https://github.com/dario-loi/polytope";
+const home = here.page?.path === "/";
+
+// Search results show the trail Polytope > chapter > page. A chapter's first page is the
+// chapter, and the first chapter's first page is the home page, so neither repeats.
+const crumbs = !here.page || home ? undefined : [
+  { name: "Polytope", href: u("/") },
+  ...(here.chapter.path !== "/" && here.chapter.path !== here.page.path ? [{ name: here.chapter.label, href: u(here.chapter.path) }] : []),
+  { name: here.page.label, href: u(here.page.path) },
+];
+// The home page says what the site is and what it documents.
+const author = { "@type": "Person", name: "Dario Loi", affiliation: { "@type": "Organization", name: "Northeastern University" } };
+const schema = home ? [
+  { "@type": "WebSite", name: "Polytope", url: new URL(u("/"), Astro.site).href, description, inLanguage: "en" },
+  {
+    "@type": "SoftwareSourceCode", name: "Polytope", description, codeRepository: repo, version,
+    programmingLanguage: ["CSS", "JavaScript", "Astro", "Python"], license: "https://www.apache.org/licenses/LICENSE-2.0",
+    author, url: new URL(u("/"), Astro.site).href,
+  },
+] : undefined;
 ---
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{pageTitle}</title>
-    <meta name="description" content={description} />
+    <Seo
+      title={pageTitle}
+      description={description}
+      image={{ src: u("/og.png"), width: 1200, height: 630 }}
+      imageAlt="The Polytope wordmark under a Vietoris-Rips complex: chalk points and edges with mustard triangles on black."
+      siteName="Polytope"
+      locale="en_US"
+      noindex={noindex}
+      breadcrumbs={crumbs}
+      schema={schema}
+      sitemap={u("/sitemap-index.xml")}
+    />
     <link rel="icon" href={u("/favicon.svg")} type="image/svg+xml" />
+    <slot name="head" />
     <meta name="theme-color" content="#141414" />
     <script is:inline>try{var t=localStorage.getItem("ply-theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
   </head>
@@ -38,7 +77,7 @@ const pageTitle = title === "Polytope" ? title : `${title} - Polytope`;
           links={chapters.map((c) => ({ label: c.label, href: u(c.path) }))}
           ranking={{ pageLength: 0.2 }}
         />
-        <a class="ply-button ply-button--ghost ply-button--icon ply-button--sm ply-hide-narrow" href="https://github.com/dario-loi/polytope" aria-label="Source on GitHub"><Icon name="code" /></a>
+        <a class="ply-button ply-button--ghost ply-button--icon ply-button--sm ply-hide-narrow" href={repo} aria-label="Source on GitHub"><Icon name="code" /></a>
         <ThemeToggle />
       </TopBar>
     )}
@@ -47,7 +86,7 @@ const pageTitle = title === "Polytope" ? title : `${title} - Polytope`;
       <footer class="ply-site-footer">
         <div class="ply-container ply-site-footer__inner">
           <p><span class="ply-display">Polytope</span> version {version}. Made by Dario Loi, Northeastern University.</p>
-          <p class="ply-muted ply-small">Static site, hosted for free. Type: Ultra, Libre Franklin, JetBrains Mono. <a href="https://github.com/dario-loi/polytope">Source</a> under Apache 2.0.</p>
+          <p class="ply-muted ply-small">Static site, hosted for free. Type: Ultra, Libre Franklin, JetBrains Mono. <a href={repo}>Source</a> under Apache 2.0.</p>
         </div>
       </footer>
     )}

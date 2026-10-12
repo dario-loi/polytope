@@ -26,6 +26,7 @@ export { default as Pager } from "./Pager.astro";
 export { default as PaperHeader } from "./PaperHeader.astro";
 export { default as PubList } from "./PubList.astro";
 export { default as Readout } from "./Readout.astro";
+export { default as Seo } from "./Seo.astro";
 export { default as SideNav } from "./SideNav.astro";
 export { default as Sidenote } from "./Sidenote.astro";
 export { default as Slider } from "./Slider.astro";

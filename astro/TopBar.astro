@@ -1,6 +1,7 @@
 ---
 // Top bar: wordmark, chapter tabs (current one is a black wall label), tools slot.
-// Below 72rem the chapters collapse into a menu.
+// The chapters show as tabs where they fit and collapse into a menu where they do not
+// (js/topbar.js; without it, below 72rem).
 import Icon from "./Icon.astro";
 export interface Link { label: string; href: string; current?: boolean }
 interface Props { brand?: string; brandHref?: string; links?: Link[]; class?: string }
@@ -27,3 +28,4 @@ const { brand = "Polytope", brandHref = "/", links = [], class: className } = As
     </div>
   </div>
 </header>
+<script>import "../dist/js/topbar.js";</script>
