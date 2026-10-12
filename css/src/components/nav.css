@@ -27,18 +27,18 @@
   .ply-tab[aria-current="page"], .ply-tab[aria-current="true"] { background: var(--ply-color-text); color: var(--ply-color-bg); font-weight: var(--ply-weight-semibold); }
 
   /* Search trigger shaped like an input. */
-  .ply-search-trigger { text-decoration: none; font-weight: var(--ply-weight-medium); display: inline-flex; align-items: center; gap: var(--ply-space-4); min-height: 2.5rem; padding: 0 var(--ply-space-2) 0 var(--ply-space-3); border: var(--ply-border-control) solid var(--ply-color-rule-strong); background: transparent; color: var(--ply-color-text-muted); font-size: var(--ply-size-ui); cursor: pointer; }
+  .ply-search-trigger { text-decoration: none; font-weight: var(--ply-weight-medium); display: inline-flex; align-items: center; gap: var(--ply-space-4); min-height: 2.5rem; padding-block: 0; padding-inline: var(--ply-space-3) var(--ply-space-2); border: var(--ply-border-control) solid var(--ply-color-rule-strong); background: transparent; color: var(--ply-color-text-muted); font-size: var(--ply-size-ui); cursor: pointer; }
   .ply-search-trigger:hover { color: var(--ply-color-text); }
 
   /* Chapter sidebar. The current page gets the tomato point. */
   .ply-sidenav { font-size: var(--ply-size-ui); }
   .ply-sidenav__group + .ply-sidenav__group { margin-top: var(--ply-space-5); }
   .ply-sidenav__heading { font-size: var(--ply-size-xs); font-weight: var(--ply-weight-bold); color: var(--ply-color-text); margin-bottom: var(--ply-space-2); }
-  .ply-sidenav ul { list-style: none; padding: 0 0 0 var(--ply-space-5); }
+  .ply-sidenav ul { list-style: none; padding: 0; padding-inline-start: var(--ply-space-5); }
   .ply-sidenav a { display: flex; align-items: center; padding-block: 0.4rem; color: var(--ply-color-text-muted); font-weight: var(--ply-weight-regular); text-decoration: none; position: relative; }
   .ply-sidenav a:hover { color: var(--ply-color-text); }
   .ply-sidenav a[aria-current="page"] { color: var(--ply-color-text); font-weight: var(--ply-weight-bold); }
-  .ply-sidenav a[aria-current="page"]::before { content: ""; position: absolute; left: calc(-1 * var(--ply-space-5)); top: 50%; width: 0.6875rem; height: 0.6875rem; margin-top: -0.34375rem; border-radius: var(--ply-radius-ball); background: var(--ply-color-accent); }
+  .ply-sidenav a[aria-current="page"]::before { content: ""; position: absolute; inset-inline-start: calc(-1 * var(--ply-space-5)); top: 50%; width: 0.6875rem; height: 0.6875rem; margin-top: -0.34375rem; border-radius: var(--ply-radius-ball); background: var(--ply-color-accent); }
 
   /* On this page. */
   .ply-toc { font-size: var(--ply-size-sm); }
@@ -71,6 +71,6 @@
   .ply-menu > summary { list-style: none; cursor: pointer; }
   .ply-menu--chapters > summary { min-height: 2.5rem; }
   .ply-menu > summary::-webkit-details-marker { display: none; }
-  .ply-menu__panel { position: absolute; right: 0; top: calc(100% + var(--ply-space-2)); z-index: 100; min-width: 16rem; background: var(--ply-color-bg); border: var(--ply-border-rule) solid var(--ply-color-rule-strong); padding: var(--ply-space-3); display: grid; gap: var(--ply-space-1); }
+  .ply-menu__panel { position: absolute; inset-inline-end: 0; top: calc(100% + var(--ply-space-2)); z-index: 100; min-width: 16rem; background: var(--ply-color-bg); border: var(--ply-border-rule) solid var(--ply-color-rule-strong); padding: var(--ply-space-3); display: grid; gap: var(--ply-space-1); }
   @media (min-width: 72rem) { .ply-menu--chapters { display: none; } }
 }

@@ -31,6 +31,7 @@ export const chapters: Chapter[] = [
     { label: "Forms", path: "/components/forms/" },
     { label: "Tables", path: "/components/tables/" },
     { label: "Code", path: "/components/code/" },
+    { label: "Complex", path: "/components/complex/" },
     { label: "Probability machine", path: "/components/machine/" },
     { label: "Research", path: "/components/research/" },
     { label: "Long-form writing", path: "/components/writing/" },

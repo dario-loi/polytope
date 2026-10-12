@@ -2,10 +2,12 @@
 @layer ply.components {
   .ply-table-wrap { overflow-x: auto; max-width: 100%; border-top: var(--ply-border-rule) solid var(--ply-color-rule-strong); }
   .ply-table { width: 100%; border-collapse: collapse; font-size: var(--ply-size-ui); line-height: var(--ply-leading-normal); font-variant-numeric: tabular-nums; }
-  .ply-table th { text-align: start; font-weight: var(--ply-weight-bold); font-size: var(--ply-size-sm); padding: var(--ply-space-3) var(--ply-space-4) var(--ply-space-2) 0; border-bottom: var(--ply-border-control) solid var(--ply-color-rule-strong); vertical-align: bottom; white-space: nowrap; }
-  .ply-table td { padding: var(--ply-space-3) var(--ply-space-4) var(--ply-space-3) 0; border-bottom: var(--ply-border-hair) solid var(--ply-color-rule); vertical-align: top; }
+  .ply-table th { text-align: start; font-weight: var(--ply-weight-bold); font-size: var(--ply-size-sm); padding-block: var(--ply-space-3) var(--ply-space-2); padding-inline: 0 var(--ply-space-4); border-bottom: var(--ply-border-control) solid var(--ply-color-rule-strong); vertical-align: bottom; white-space: nowrap; }
+  .ply-table td { padding-block: var(--ply-space-3); padding-inline: 0 var(--ply-space-4); border-bottom: var(--ply-border-hair) solid var(--ply-color-rule); vertical-align: top; }
   .ply-table :is(th, td):last-child { padding-inline-end: 0; }
   .ply-table .ply-num { text-align: end; }
+  /* The first column names things. Names stay whole; a wide table scrolls in its wrap. */
+  .ply-table :is(th, td):first-child code { white-space: nowrap; }
   .ply-table caption { caption-side: bottom; text-align: start; padding-top: var(--ply-space-3); font-size: var(--ply-size-sm); color: var(--ply-color-text-muted); }
   .ply-table--striped tbody tr:nth-child(even) { background: var(--ply-color-surface-sunken); }
   .ply-table--striped td:first-child, .ply-table--striped th:first-child { padding-inline-start: var(--ply-space-3); }

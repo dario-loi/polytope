@@ -1,14 +1,14 @@
 ---
 import Docs from "../layouts/Docs.astro";
-import Machine from "@dario-loi/polytope/astro/Machine.astro";
+import Complex from "@dario-loi/polytope/astro/Complex.astro";
 import Code from "@dario-loi/polytope/astro/Code.astro";
 import Note from "@dario-loi/polytope/astro/Note.astro";
 import { u } from "../data/nav";
 ---
 <Docs title="Getting started" lede="One construction kit and one design language for academic sites, paper pages, and research demos.">
   <figure class="ply-exhibit" slot="exhibit">
-    <Machine interactive balls={30} rows={8} />
-    <figcaption><b>The probability machine.</b> Each ball bounces left or right at every peg, and together they pile into a bell curve. Click it to run it again.</figcaption>
+    <Complex seed={11} points={34} radius={0.15} autoplay="visible" label="A Vietoris-Rips complex" />
+    <figcaption><b>A Vietoris-Rips complex.</b> Points closer than the radius join into edges, and three joined points fill a triangle. Drag the radius to grow it or take it apart.</figcaption>
   </figure>
 
   <h2>Install</h2>

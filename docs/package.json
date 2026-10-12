@@ -4,12 +4,15 @@
   "type": "module",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "astro build && node scripts/search-index.mjs",
     "preview": "astro preview"
   },
   "dependencies": {
+    "@dario-loi/polytope": "file:..",
     "astro": "^7.3.8",
-    "katex": "^0.19.0",
-    "@dario-loi/polytope": "file:.."
+    "katex": "^0.19.0"
+  },
+  "devDependencies": {
+    "pagefind": "^1.5.2"
   }
 }

@@ -12,7 +12,7 @@ import Equation from "@dario-loi/polytope/astro/Equation.astro";
 <Pattern title="Demo page" current="Teaching">
   <div class="ply-container dm">
     <header class="dm__head">
-      <h1 class="ply-mast__title" style="font-size: clamp(2.5rem, 1.6rem + 3vw, 4.25rem)">The binomial, by hand<span class="ply-mast__stop" aria-hidden="true">.</span></h1>
+      <h1 class="ply-mast__title" style="--_chars: 9">The binomial, by hand<span class="ply-mast__stop" aria-hidden="true">.</span></h1>
       <p class="ply-mast__lede">Drop balls through a board of pegs. Change the rows and the bias of the coin and watch the pile follow the binomial distribution.</p>
     </header>
     <AppShell title="Probability machine">
@@ -21,7 +21,7 @@ import Equation from "@dario-loi/polytope/astro/Equation.astro";
           <button type="button" aria-pressed="true" value="drop">Drop</button>
           <button type="button" aria-pressed="false" value="settle">Skip to end</button>
         </div>
-        <Button size="sm" data-run><Icon name="refresh" />Run again</Button>
+        <Button size="sm" data-run><Icon name="refresh" />New run</Button>
       </Fragment>
       <Fragment slot="controls">
         <Slider label="Rows of pegs" name="rows" min={2} max={14} value={10} hint="There is one more bin than rows." />
@@ -44,7 +44,9 @@ import Equation from "@dario-loi/polytope/astro/Equation.astro";
   </div>
 </Pattern>
 <style>
-  .dm__head { padding-block: var(--ply-space-7) var(--ply-space-6); max-width: 52rem; }
+  .dm__head { padding-block: var(--ply-space-7) var(--ply-space-6); max-width: 52rem; container-type: inline-size; }
+  /* A demo title sits one step below a docs mast, still sized so its longest word fits. */
+  .dm__head .ply-mast__title { font-size: min(var(--ply-size-4xl), calc(100cqi / (var(--_chars) * 0.76))); }
   .dm__stage { width: min(100%, 52rem); padding: var(--ply-space-4); }
   .dm__text { margin-top: var(--ply-space-8); }
 </style>

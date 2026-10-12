@@ -1,11 +1,11 @@
 ---
 import Docs from "../../layouts/Docs.astro";
-import Complex from "@dario-loi/polytope/astro/Complex.astro";
+import Machine from "@dario-loi/polytope/astro/Machine.astro";
 ---
 <Docs title="Principles" lede="Five rules for deciding anything the rest of these docs do not cover.">
   <figure class="ply-exhibit" slot="exhibit">
-    <Complex seed={11} points={34} radius={0.15} label="A random complex" />
-    <figcaption><b>Play comes from working things.</b> Drag the radius: points join into edges, and three joined points fill a triangle.</figcaption>
+    <Machine interactive balls={30} rows={8} />
+    <figcaption><b>Play comes from working things.</b> Each ball bounces left or right at every peg, and together they pile into a bell curve. Click it to run it again.</figcaption>
   </figure>
   <h2>1. Show the work</h2>
   <p>Lead with the thing itself: a figure, a demo that runs, code that copies and works. A page about a method should let the reader see the method act before it explains it.</p>
@@ -19,7 +19,7 @@ import Complex from "@dario-loi/polytope/astro/Complex.astro";
   <p>The world of these pages is a mathematics exhibition: models you can touch. Fun is allowed when something works, like the probability machine dropping real random balls. Ornament with no job is left out.</p>
   <ul>
     <li>Animation shows a process. It never decorates a heading.</li>
-    <li>Tomato marks the one moving or current thing. Two tomato things on one screen is one too many.</li>
+    <li>Tomato marks where you are and what moves, and the small marks that lead the eye there: the full stop, list markers, reference numbers. It never fills a panel or colors a paragraph.</li>
   </ul>
 
   <h2>3. One source of truth</h2>

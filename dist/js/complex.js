@@ -3,10 +3,24 @@
 // triangle (a 2-cell). A range input with [data-ply-complex-radius] inside or targeting the
 // element (for="id") changes the radius.
 //
-// Attributes: points (default 36), radius (0..0.5 of the width, default 0.16), seed, label.
+// Attributes: points (default 36), radius (0..0.5 of the width, default 0.16), seed, label,
+// autoplay="none" (default) | "visible". With "visible" the complex grows on first view: the
+// radius runs from 0 to its value, so points join into edges and edges fill into triangles,
+// and a linked slider moves with it. It takes under three seconds and stops when the reader
+// takes the slider. Under reduced motion it draws the finished complex.
 // Event: "ply-complex-change" with detail { vertices, edges, triangles, radius }.
 
 const NS = "http://www.w3.org/2000/svg";
+const GROW_MS = 2600;
+const DENSE = 2000;
+const reduceMotion = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+function path(d, cls) {
+  const el = document.createElementNS(NS, "path");
+  el.setAttribute("d", d);
+  el.setAttribute("class", cls);
+  return el;
+}
 
 function rng(seed) {
   let s = seed >>> 0 || 1;
@@ -36,9 +50,74 @@ class PlyComplex extends HTMLElement {
     this._render();
     const id = this.id;
     const input = this.querySelector("[data-ply-complex-radius]") || (id && document.querySelector(`[data-ply-complex-radius][for="${id}"]`));
-    if (input) input.addEventListener("input", () => this.setAttribute("radius", input.value));
+    this._input = input || null;
+    if (input) input.addEventListener("input", (e) => {
+      // The growth moves the slider with synthetic input events; a real one hands it back.
+      if (this._grow) { if (!e.isTrusted) return; this._stopGrow(false); }
+      this.setAttribute("radius", input.value);
+    });
     this.svg.addEventListener("pointermove", (e) => this._hover(e));
     this.svg.addEventListener("pointerleave", () => { this._hi = -1; this._ring(); });
+    if (this.getAttribute("autoplay") === "visible" && !reduceMotion()) {
+      // Wait as bare points until the reader sees it, then grow.
+      this._primeGrow();
+      if ("IntersectionObserver" in window) {
+        this._io = new IntersectionObserver((entries) => {
+          if (entries.some((e) => e.isIntersecting)) { this._io.disconnect(); this._runGrow(); }
+        }, { threshold: 0.4 });
+        this._io.observe(this);
+      } else this._runGrow();
+    } else {
+      // A reload can restore an old slider value; the drawn radius is the truth. Deferred,
+      // since the script that prints the slider value may load after this one.
+      queueMicrotask(() => { if (!this._grow) this._syncInput(this.radius); });
+    }
+  }
+
+  disconnectedCallback() {
+    this._io?.disconnect();
+    this._stopGrow();
+  }
+
+  // Grow the complex from bare points to its radius, easing out like anything that arrives.
+  _primeGrow() {
+    this._grow = { target: this.radius, raf: 0 };
+    this.setAttribute("radius", "0");
+    // Page scripts that print the slider value and the counts may load after this one.
+    queueMicrotask(() => { if (this._grow) { this._syncInput(0); this._render(); } });
+  }
+
+  _runGrow() {
+    if (!this._grow) return;
+    const { target } = this._grow;
+    const t0 = performance.now();
+    const step = (now) => {
+      if (!this._grow) return;
+      const t = Math.min(1, (now - t0) / GROW_MS);
+      const r = target * (1 - Math.pow(1 - t, 3));
+      this._syncInput(r);
+      this.setAttribute("radius", t < 1 ? r.toFixed(4) : String(target));
+      if (t < 1) this._grow.raf = requestAnimationFrame(step);
+      else this._grow = null;
+    };
+    this._grow.raf = requestAnimationFrame(step);
+  }
+
+  // restore: jump to the final radius; false when the reader's own value takes over.
+  _stopGrow(restore = true) {
+    if (!this._grow) return;
+    cancelAnimationFrame(this._grow.raf);
+    const { target } = this._grow;
+    this._grow = null;
+    if (restore) { this._syncInput(target); this.setAttribute("radius", String(target)); }
+  }
+
+  // Move a linked slider and let its own script print the value.
+  _syncInput(r) {
+    const input = this._input;
+    if (!input) return;
+    input.value = String(r);
+    input.dispatchEvent(new Event("input", { bubbles: true }));
   }
 
   attributeChangedCallback(name) {
@@ -74,19 +153,29 @@ class PlyComplex extends HTMLElement {
     const tris = [];
     for (const [i, j] of edges) for (const k of adj[i]) if (k > j && adj[j].has(k)) tris.push([i, j, k]);
 
-    this.gTri.replaceChildren(...tris.map(([a, b, c]) => {
-      const el = document.createElementNS(NS, "polygon");
-      el.setAttribute("points", `${p[a]} ${p[b]} ${p[c]}`);
-      el.setAttribute("class", "ply-complex__tri");
-      return el;
-    }));
-    this.gEdge.replaceChildren(...edges.map(([a, b]) => {
-      const el = document.createElementNS(NS, "line");
-      el.setAttribute("x1", p[a][0]); el.setAttribute("y1", p[a][1]);
-      el.setAttribute("x2", p[b][0]); el.setAttribute("y2", p[b][1]);
-      el.setAttribute("class", "ply-complex__edge");
-      return el;
-    }));
+    // Each triangle is its own shape so overlaps stack into deeper mustard. Past DENSE the
+    // overlaps are solid anyway, and one path per layer keeps a 120-point complex responsive.
+    if (tris.length > DENSE) {
+      this.gTri.replaceChildren(path(tris.map(([a, b, c]) => `M${p[a]}L${p[b]}L${p[c]}Z`).join(""), "ply-complex__tri ply-complex__tri--dense"));
+    } else {
+      this.gTri.replaceChildren(...tris.map(([a, b, c]) => {
+        const el = document.createElementNS(NS, "polygon");
+        el.setAttribute("points", `${p[a]} ${p[b]} ${p[c]}`);
+        el.setAttribute("class", "ply-complex__tri");
+        return el;
+      }));
+    }
+    if (edges.length > DENSE) {
+      this.gEdge.replaceChildren(path(edges.map(([a, b]) => `M${p[a]}L${p[b]}`).join(""), "ply-complex__edge"));
+    } else {
+      this.gEdge.replaceChildren(...edges.map(([a, b]) => {
+        const el = document.createElementNS(NS, "line");
+        el.setAttribute("x1", p[a][0]); el.setAttribute("y1", p[a][1]);
+        el.setAttribute("x2", p[b][0]); el.setAttribute("y2", p[b][1]);
+        el.setAttribute("class", "ply-complex__edge");
+        return el;
+      }));
+    }
     this.gPt.replaceChildren(...p.map(([x, y]) => {
       const el = document.createElementNS(NS, "circle");
       el.setAttribute("cx", x); el.setAttribute("cy", y); el.setAttribute("r", 0.9);

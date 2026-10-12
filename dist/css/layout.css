@@ -44,13 +44,14 @@
      Used by charts, display equations, wide tables, and code. Each scroller is also the
      containing block, so an absolute child such as .ply-visually-hidden stays inside it
      instead of widening the page. */
-  .ply-scroll-cue, .ply-chart__plot, .ply-equation__body, .ply-table-wrap {
+  .ply-scroll-cue, .ply-chart__plot, .ply-equation__body, .ply-table-wrap, .ply-code pre {
     position: relative;
-    background:
+    --_cue:
       linear-gradient(to right, var(--_cue-bg, var(--ply-color-bg)) 30%, transparent) left / 2.5rem 100% no-repeat local,
       linear-gradient(to left, var(--_cue-bg, var(--ply-color-bg)) 30%, transparent) right / 2.5rem 100% no-repeat local,
-      linear-gradient(to right, color-mix(in srgb, var(--ply-color-text) 22%, transparent), transparent) left / 0.75rem 100% no-repeat scroll,
-      linear-gradient(to left, color-mix(in srgb, var(--ply-color-text) 22%, transparent), transparent) right / 0.75rem 100% no-repeat scroll;
+      linear-gradient(to right, color-mix(in srgb, var(--_cue-shade, var(--ply-color-text)) 22%, transparent), transparent) left / 0.75rem 100% no-repeat scroll,
+      linear-gradient(to left, color-mix(in srgb, var(--_cue-shade, var(--ply-color-text)) 22%, transparent), transparent) right / 0.75rem 100% no-repeat scroll;
+    background: var(--_cue);
     background-color: var(--_cue-bg, var(--ply-color-bg));
   }
   .ply-chart__plot { --_cue-bg: var(--ply-viz-surface); }

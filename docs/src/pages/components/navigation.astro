@@ -38,7 +38,29 @@ const pager = `<nav class="ply-pager" aria-label="Pages" style="margin-top:0">
 ]}>
   <ThemeToggle />
 </TopBar>`} />
-  <ApiTable rows={[["brand", "Wordmark text", "Polytope"], ["brandHref", "Wordmark link", "/"], ["links", "Chapters: { label, href, current }"], ["default slot", "Tools on the right: search, theme toggle"]]} head={["Prop", "Effect", "Default"]} />
+  <ApiTable rows={[["brand", "Wordmark text", "Polytope"], ["brandHref", "Wordmark link", "/"], ["links", "Chapters: { label, href, current }"], ["default slot", "Tools on the right: Search, the theme toggle"]]} head={["Prop", "Effect", "Default"]} />
+
+  <h2>Search</h2>
+  <p>The search in this site's top bar is the component. It opens a panel over the page with results from the site's own <a href="https://pagefind.app/">Pagefind</a> index, a static search that needs no server. Press <kbd>/</kbd> or <kbd>Ctrl</kbd>+<kbd>K</kbd> (<kbd>Cmd</kbd>+<kbd>K</kbd> on a Mac) to open it, the arrow keys to move through results, <kbd>Enter</kbd> to follow one, and <kbd>Esc</kbd> to close it. Without JavaScript the button is a plain link to a page you choose.</p>
+  <Code lang="astro" code={`<TopBar brand="John Doe" brandHref="/" links={links}>
+  <Search href="/publications/" placeholder="Search papers, talks, and notes"
+    links={[{ label: "Publications", href: "/publications/" }, { label: "Teaching", href: "/teaching/" }]} />
+  <ThemeToggle />
+</TopBar>`} />
+  <p>Build the index after the site build, and mark what it should read: the main content of each page, and the kind of each page, which the panel shows beside the result. Navigation, footers, and forms are left out on their own.</p>
+  <Code lang="sh" code={`npx astro build && npx pagefind --site dist`} />
+  <Code lang="html" code={`<main data-pagefind-body>
+  <article data-pagefind-meta="kind:Publications">...</article>
+</main>`} />
+  <ApiTable rows={[
+    ["href", "Where the button goes without JavaScript", "#"],
+    ["label, placeholder", "The button's text and the field's placeholder", "Search"],
+    ["bundle", "Folder of the Pagefind files, with the site's base path", "/pagefind/"],
+    ["baseUrl", "Prefix for result links when the site lives under a base path", "/"],
+    ["hint, links", "A line and quick links shown before the reader types"],
+    ["ranking", "Pagefind ranking options, such as { pageLength: 0.2 } so short records do not crowd out pages"],
+  ]} head={["Prop", "Effect", "Default"]} />
+  <p>A record can carry <code>meta.summary</code>, which the panel shows in place of an excerpt. These docs add every token, class, and component that way, from a short script that uses Pagefind's Node API after the build.</p>
 
   <h2>Chapter tabs</h2>
   <Example html={tabs} />

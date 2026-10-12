@@ -6,6 +6,29 @@ import ReleaseModel from "../../components/exhibits/ReleaseModel.astro";
   <ReleaseModel slot="exhibit" />
   <section class="ply-wall ply-wide" aria-label="Releases">
     <div class="ply-wall__year">
+      <p class="ply-wall__label">0.3</p>
+      <ul class="ply-wall__entries">
+        <li class="ply-pub">
+          <p class="ply-pub__title">0.3.0, site search and a new emblem</p>
+          <p class="ply-pub__venue">12 October 2026</p>
+          <div class="ply-prose ply-small" style="margin-top: var(--ply-space-2)">
+            <ul>
+              <li>Your site can have search. Put <code>&lt;Search&gt;</code> in the top bar, run <code>npx pagefind --site dist</code> after your build, and mark each page's main content with <code>data-pagefind-body</code>. Readers open it with <kbd>/</kbd> or <kbd>Ctrl</kbd>+<kbd>K</kbd>; results come from your own pages, with nothing hosted elsewhere. See <a href="../components/navigation/">Navigation</a>.</li>
+              <li>The Vietoris-Rips complex is the emblem: it opens these docs and draws the favicon. <code>&lt;Complex autoplay="visible"&gt;</code> grows it from bare points the first time it is seen; without the attribute nothing changes.</li>
+              <li>Inside a panel, controls now read: checkboxes, switches, ghost buttons, inline code, and tables draw in chalk on black. If you set something inside a <code>.ply-panel</code> to <code>--ply-color-text</code> and meant black, use <code>--ply-ink-950</code>.</li>
+              <li>Long content no longer widens a page. A long button label wraps to two balanced lines, a long tag wraps, a segmented row longer than its space scrolls in its frame, and names in a table's first column stay whole while the table scrolls.</li>
+              <li><code>hidden</code> now hides any element, including one whose class sets a display, such as a button.</li>
+              <li>Pages written right to left mirror the switch, the select arrow, the sidebar point, the menu, the skip link, and sidenotes. Code blocks stay left to right.</li>
+              <li>Code blocks show the soft scroll cue, and each Copy button is named for the code it copies.</li>
+              <li><code>.ply-wide</code> on a block inside the reading column now runs to the edge of a main column that names itself <code>ply-main</code>.</li>
+              <li>A complex with many points stays responsive: past 2000 triangles its fill is drawn as one shape.</li>
+              <li>To update: <code>npm install @dario-loi/polytope@^0.3.0</code>. Check panels that hold your own content, and buttons you gave a fixed height.</li>
+            </ul>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <div class="ply-wall__year">
       <p class="ply-wall__label">0.2</p>
       <ul class="ply-wall__entries">
         <li class="ply-pub">

@@ -1,10 +1,10 @@
 @layer ply.components {
   /* Code sits in a black exhibit panel. Comments are mustard so the explanation reads first. */
   .ply-code { position: relative; background: var(--ply-color-panel); color: var(--ply-color-panel-text); max-width: var(--ply-layout-measure); }
-  .ply-code pre { position: relative; margin: 0; padding: var(--ply-space-4) var(--ply-space-5); overflow-x: auto; font-size: var(--ply-size-sm); line-height: 1.7; tab-size: 2; scrollbar-color: var(--ply-color-panel-rule) var(--ply-color-panel); background: transparent !important; }
+  .ply-code pre { position: relative; direction: ltr; margin: 0; padding: var(--ply-space-4) var(--ply-space-5); overflow-x: auto; font-size: var(--ply-size-sm); line-height: 1.7; tab-size: 2; scrollbar-color: var(--ply-color-panel-rule) var(--ply-color-panel); --_cue-bg: var(--ply-color-panel); --_cue-shade: var(--ply-color-panel-text); background: var(--_cue) !important; }
   .ply-code pre code { background: none; padding: 0; font-size: inherit; }
-  .ply-code__bar { display: flex; align-items: center; justify-content: space-between; gap: var(--ply-space-3); padding: var(--ply-space-2) var(--ply-space-2) var(--ply-space-2) var(--ply-space-5); border-bottom: var(--ply-border-hair) solid var(--ply-color-panel-rule); font-size: var(--ply-size-xs); color: var(--ply-color-panel-muted); }
-  .ply-code__lang { font-family: var(--ply-font-mono); }
+  .ply-code__bar { display: flex; align-items: center; justify-content: space-between; gap: var(--ply-space-3); padding-block: var(--ply-space-2); padding-inline: var(--ply-space-5) var(--ply-space-2); border-bottom: var(--ply-border-hair) solid var(--ply-color-panel-rule); font-size: var(--ply-size-xs); color: var(--ply-color-panel-muted); }
+  .ply-code__lang { font-family: var(--ply-font-mono); min-width: 0; overflow-wrap: anywhere; }
   .ply-code__copy { appearance: none; border: var(--ply-border-hair) solid var(--ply-color-panel-rule); background: transparent; color: var(--ply-color-panel-text); font-size: var(--ply-size-xs); font-weight: var(--ply-weight-semibold); padding: 0.3rem 0.6rem; cursor: pointer; }
   .ply-code__copy:hover { border-color: var(--ply-color-panel-text); }
   .ply-code__copy[data-copied] { background: var(--ply-color-note); color: var(--ply-ink-950); border-color: var(--ply-color-note); }

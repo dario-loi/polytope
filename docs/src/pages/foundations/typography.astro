@@ -38,7 +38,7 @@ const sizes = Object.keys(t).filter((k) => k.startsWith("--ply-size-"));
   </ul>
 
   <h2>Scale</h2>
-  <div class="ply-table-wrap">
+  <div class="ply-table-wrap ply-wide">
     <table class="ply-table">
       <thead><tr><th>Token</th><th>Value</th><th>Sample</th></tr></thead>
       <tbody>
@@ -58,8 +58,8 @@ const sizes = Object.keys(t).filter((k) => k.startsWith("--ply-size-"));
   .ty { display: grid; gap: 0; max-width: none; }
   .ty__row { display: grid; gap: var(--ply-space-2); padding-block: var(--ply-space-5); border-top: var(--ply-border-control) solid var(--ply-color-rule-strong); }
   .ty__sample { line-height: 1.05; overflow-wrap: anywhere; }
-  .ty__sample--display { font-family: var(--ply-font-display); font-size: clamp(2.25rem, 1.5rem + 3vw, 4rem); }
-  .ty__sample--text { font-size: clamp(1.75rem, 1.3rem + 1.8vw, 2.75rem); font-weight: 600; letter-spacing: -0.015em; }
-  .ty__sample--mono { font-family: var(--ply-font-mono); font-size: clamp(1.1rem, 0.9rem + 1vw, 1.6rem); }
+  .ty__sample--display { font-family: var(--ply-font-display); font-size: var(--ply-size-4xl); }
+  .ty__sample--text { font-size: var(--ply-size-3xl); font-weight: 600; letter-spacing: -0.015em; }
+  .ty__sample--mono { font-family: var(--ply-font-mono); font-size: var(--ply-size-xl); }
   .ty__meta { font-size: var(--ply-size-sm); color: var(--ply-color-text-muted); max-width: 40rem; }
 </style>

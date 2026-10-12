@@ -4,7 +4,9 @@ import "katex/dist/katex.min.css";
 import TopBar from "@dario-loi/polytope/astro/TopBar.astro";
 import ThemeToggle from "@dario-loi/polytope/astro/ThemeToggle.astro";
 import Icon from "@dario-loi/polytope/astro/Icon.astro";
-import { chapters, locate, u } from "../data/nav";
+import Search from "@dario-loi/polytope/astro/Search.astro";
+import { base, chapters, locate, u } from "../data/nav";
+import { version } from "../data/version";
 
 interface Props { title: string; description?: string; chrome?: boolean }
 const { title, description = "Polytope: tokens, CSS components, and Astro components for academic sites, paper pages, and research demos.", chrome = true } = Astro.props;
@@ -27,7 +29,15 @@ const pageTitle = title === "Polytope" ? title : `${title} - Polytope`;
     <a class="ply-skip" href="#main">Skip to content</a>
     {chrome && (
       <TopBar brand="Polytope" brandHref={u("/")} links={links}>
-        <a class="ply-search-trigger" href={u("/tokens/")} aria-label="Find a token"><span>Find a token</span><Icon name="search" /></a>
+        <Search
+          href={u("/tokens/#tk-q")}
+          bundle={u("/pagefind/")}
+          baseUrl={`${base}/`}
+          placeholder="Search pages, tokens, and classes"
+          hint="Finds pages and their sections, every token, every .ply class, and every Astro component."
+          links={chapters.map((c) => ({ label: c.label, href: u(c.path) }))}
+          ranking={{ pageLength: 0.2 }}
+        />
         <a class="ply-button ply-button--ghost ply-button--icon ply-button--sm ply-hide-narrow" href="https://github.com/dario-loi/polytope" aria-label="Source on GitHub"><Icon name="code" /></a>
         <ThemeToggle />
       </TopBar>
@@ -36,7 +46,7 @@ const pageTitle = title === "Polytope" ? title : `${title} - Polytope`;
     {chrome && (
       <footer class="ply-site-footer">
         <div class="ply-container ply-site-footer__inner">
-          <p><span class="ply-display">Polytope</span> version 0.2.1. Made by Dario Loi, Northeastern University.</p>
+          <p><span class="ply-display">Polytope</span> version {version}. Made by Dario Loi, Northeastern University.</p>
           <p class="ply-muted ply-small">Static site, hosted for free. Type: Ultra, Libre Franklin, JetBrains Mono. <a href="https://github.com/dario-loi/polytope">Source</a> under Apache 2.0.</p>
         </div>
       </footer>
@@ -45,7 +55,7 @@ const pageTitle = title === "Polytope" ? title : `${title} - Polytope`;
 </html>
 <script>import "@dario-loi/polytope/js/all.js";</script>
 <style is:global>
-  .ply-site-footer { border-top: var(--ply-border-rule) solid var(--ply-color-rule-strong); margin-top: var(--ply-space-9); }
+  .ply-site-footer { border-top: var(--ply-border-rule) solid var(--ply-color-rule-strong); margin-top: var(--ply-space-7); }
   .ply-site-footer__inner { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--ply-space-3) var(--ply-space-6); padding-block: var(--ply-space-6) var(--ply-space-7); }
   .ply-site-footer .ply-display { font-size: var(--ply-size-xl); }
 </style>

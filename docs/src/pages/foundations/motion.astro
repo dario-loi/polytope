@@ -26,10 +26,10 @@ import Loading from "@dario-loi/polytope/astro/Loading.astro";
   </div>
 
   <h2>The signature moment</h2>
-  <p>Each page gets at most one moment of motion, and it shows a process. On these docs it is the probability machine filling on load. The same machine, small, is the loading indicator: <span style="--ply-loading-count: 4"><Loading label="Loading example" /></span></p>
+  <p>Each page gets at most one moment of motion, and it shows a process. On the home page it is the complex growing from bare points into edges and triangles; on a chapter landing it is that chapter's model, such as the probability machine filling on Principles. The machine, small, is also the loading indicator: <span style="--ply-loading-count: 4"><Loading label="Loading example" /></span></p>
 
   <h2>Reduced motion</h2>
-  <p>When the reader asks their system for reduced motion, every animation jumps to its end state. The machine draws its settled bell curve, the loading indicator shows a resting ball, and transitions take effect at once. The CSS reset handles this globally; scripts check <code>prefers-reduced-motion</code> before animating. Motion the reader starts and needs, such as a step-through animation, can opt out: mark its container <code>data-ply-motion="keep"</code>.</p>
+  <p>When the reader asks their system for reduced motion, every animation jumps to its end state. The complex is drawn finished, the machine draws its settled bell curve, the loading indicator shows a resting ball, and transitions take effect at once. The CSS reset handles this globally; scripts check <code>prefers-reduced-motion</code> before animating. Motion the reader starts and needs, such as a step-through animation, can opt out: mark its container <code>data-ply-motion="keep"</code>.</p>
 </Docs>
 <style>
   .mo { display: grid; grid-template-columns: 9rem 1fr; gap: var(--ply-space-5); align-items: center; }

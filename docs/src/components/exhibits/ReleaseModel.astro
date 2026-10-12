@@ -1,9 +1,10 @@
 ---
 import Frame from "./Frame.astro";
+import { version, minor } from "../../data/version";
 ---
-<Frame title="Release 0.2.1" class="xb-rel">
+<Frame title={`Release ${version}`} class="xb-rel">
   <div class="xb-rel__wall">
-    <p class="xb-rel__num">0.2</p>
+    <p class="xb-rel__num">{minor}</p>
     <p class="xb-rel__meta"><span>11 October 2026</span><span>On npm and PyPI</span></p>
     <div class="xb-rel__track" aria-hidden="true"><span class="is-current"></span><span></span><span></span></div>
   </div>

@@ -2,7 +2,7 @@
 
 Polytope is a design system for researchers who publish on the web: a personal academic site, a page for each paper, and the small interactive demos that go with them. It ships as plain CSS, Astro components, and a Python theme, all compiled from one token file, so the figures in a paper match the page that hosts them.
 
-![The Polytope docs site: a wood-type title on the left and a black panel on the right where red balls pile into a bell curve](docs/public/img/polytope-getting-started.png)
+![The Polytope docs site: a wood-type title on the left and a black panel on the right holding a complex of points, edges, and mustard triangles, with a radius slider below](docs/public/img/polytope-getting-started.png)
 
 Documentation and live examples: https://dario-loi.github.io/polytope/
 
@@ -10,14 +10,14 @@ Documentation and live examples: https://dario-loi.github.io/polytope/
 
 The visual language borrows from the mathematics exhibition Charles and Ray Eames designed for IBM in 1961. Pages are white walls with black exhibit panels and heavy rules. Titles are set in Ultra, a fat wood-type slab. Everything you read is in Libre Franklin, and code is in JetBrains Mono. Red marks the one thing that moves or the place you are, mustard holds notes, and teal is for links.
 
-Each page gets one working model. The docs open with a probability machine, a Galton board that drops real random balls into a bell curve. The homepage pattern uses a random simplicial complex that grows edges and triangles as you drag a radius. Both work without JavaScript and settle into their final state when the reader asks for reduced motion.
+Each page gets one working model. The emblem is a Vietoris-Rips complex: random points that join into edges and fill into triangles as you drag a radius. The docs open with it growing from bare points, and the homepage pattern uses it as the header figure. The probability machine, a Galton board that drops real random balls into a bell curve, runs on Principles and doubles as the loading indicator. Both work without JavaScript and show their final state when the reader asks for reduced motion.
 
 ![The homepage pattern in the dark theme, with a random complex of points, edges, and filled triangles](docs/public/img/polytope-homepage-dark.png)
 
 ## What's included
 
-- About 30 CSS components, from buttons and forms to paper headers, citations, theorem environments, a publication list, and demo chrome. Light and dark themes switch on their own.
-- 32 Astro components that print the same markup.
+- About 30 CSS components, from buttons and forms to paper headers, citations, theorem environments, a publication list, demo chrome, and site search over a static Pagefind index. Light and dark themes switch on their own.
+- 33 Astro components that print the same markup.
 - The two working models as custom elements, `<ply-machine>` and `<ply-complex>`.
 - A chart palette of eight colors, checked for color vision deficiency in both themes, with matplotlib, plotly, Gradio, and Streamlit themes that use it.
 - Exports for Tailwind v4, Sass, LaTeX (xcolor and a pgfplots cycle list), TypeScript, Figma token plugins, and a code theme for Shiki and VS Code.
@@ -62,8 +62,8 @@ In a project that has Polytope installed, npx runs that copy. The command won't 
 A site without npm (a static site built by Python, for example) can fetch the same files pinned to a release and link the hosted stylesheet in its template:
 
 ```sh
-curl -fsSLo DESIGN.md https://raw.githubusercontent.com/dario-loi/polytope/v0.2.1/DESIGN.md
-mkdir -p .impeccable && curl -fsSLo .impeccable/design.json https://raw.githubusercontent.com/dario-loi/polytope/v0.2.1/.impeccable/design.json
+curl -fsSLo DESIGN.md https://raw.githubusercontent.com/dario-loi/polytope/v0.3.0/DESIGN.md
+mkdir -p .impeccable && curl -fsSLo .impeccable/design.json https://raw.githubusercontent.com/dario-loi/polytope/v0.3.0/.impeccable/design.json
 ```
 
 Either way, new pages are then built inside Polytope and the design checker flags anything off the system. Run `/impeccable init` once so the site gets its own `PRODUCT.md`, and copy the files again whenever you upgrade Polytope.

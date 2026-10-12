@@ -1,0 +1,46 @@
+---
+import Docs from "../../layouts/Docs.astro";
+import Complex from "@dario-loi/polytope/astro/Complex.astro";
+import Code from "@dario-loi/polytope/astro/Code.astro";
+import ApiTable from "../../components/ApiTable.astro";
+---
+<Docs title="Vietoris-Rips complex" status="experimental" lede="Random points on a plane. Two points closer than the radius join into an edge, and three points that are pairwise joined fill a triangle.">
+  <p>The complex is the emblem of these docs: the home page opens with it, and the homepage pattern hangs it as the header figure. It is built from the same parts as a polytope: points, segments, and triangles.</p>
+
+  <h2>Default</h2>
+  <figure class="ply-exhibit">
+    <Complex />
+    <figcaption><b>36 points, radius 0.16.</b> Drag the radius. Point at a vertex to see how far it reaches.</figcaption>
+  </figure>
+  <Code lang="astro" code={`<Complex />`} />
+
+  <h2>Growing on first view</h2>
+  <figure class="ply-exhibit">
+    <Complex seed={23} points={40} radius={0.14} autoplay="visible" label="A complex that grows on first view" />
+    <figcaption><b>autoplay="visible".</b> The first time it scrolls into view, the radius runs from 0 to its value, so edges arrive before triangles. Take the slider to stop it.</figcaption>
+  </figure>
+  <Code lang="astro" code={`<Complex seed={23} points={40} radius={0.14} autoplay="visible" />`} />
+
+  <h2>Options</h2>
+  <ApiTable rows={[
+    ["points", "Number of points, 4 to 120, on a jittered grid so they spread across the panel", "36"],
+    ["radius", "Joining distance as a share of the width, 0 to 0.5", "0.16"],
+    ["seed", "Seed for the point positions; the server and the script draw the same points", "7"],
+    ["autoplay", "visible grows the complex from bare points on first view, in under three seconds, and stops when the reader takes the slider; none draws it finished", "none"],
+    ["label", "Accessible description. The counts of points, edges, and triangles are added to it.", "A random complex"],
+    ["controls", "Astro only. Shows the radius slider and the edge and triangle counts.", "true"],
+  ]} head={["Attribute", "Effect", "Default"]} />
+  <p>The element fires <code>ply-complex-change</code> with <code>vertices</code>, <code>edges</code>, <code>triangles</code>, and <code>radius</code> whenever it redraws. Any range input with <code>data-ply-complex-radius</code>, inside the element or pointing at it with <code>for</code>, drives the radius.</p>
+
+  <h2>Without JavaScript</h2>
+  <p>The server draws the same complex from the seed, so the figure is complete before any script runs, in RSS readers, and with scripts off. Under reduced motion it is drawn finished and does not grow.</p>
+  <Code lang="html" code={`<ply-complex class="ply-complex" id="cx" points="36" radius="0.16" seed="7" role="img"
+  aria-label="A random complex: 36 points, 82 edges, 51 filled triangles.">
+  <svg class="ply-complex__static" viewBox="0 0 100 56" aria-hidden="true">
+    <!-- polygon.ply-complex__tri, line.ply-complex__edge, circle.ply-complex__pt -->
+  </svg>
+</ply-complex>
+<input class="ply-slider" type="range" min="0" max="0.32" step="0.01" value="0.16"
+  aria-label="Radius" data-ply-complex-radius for="cx">
+<script type="module" src="https://dario-loi.github.io/polytope/kit/js/complex.js"></script>`} />
+</Docs>

@@ -1,15 +1,17 @@
 ---
 import Docs from "../../layouts/Docs.astro";
 import ComponentModel from "../../components/exhibits/ComponentModel.astro";
+import { version } from "../../data/version";
 import Stability from "@dario-loi/polytope/astro/Stability.astro";
 import { u } from "../../data/nav";
 const families = [
   ["Buttons and tags", "/components/buttons/", "Buttons, tags, status labels, stability labels.", "stable"],
-  ["Navigation", "/components/navigation/", "Top bar, chapter tabs, sidebar, on-this-page list, breadcrumb, pager.", "stable"],
+  ["Navigation", "/components/navigation/", "Top bar, search, chapter tabs, sidebar, on-this-page list, breadcrumb, pager.", "stable"],
   ["Notes", "/components/notes/", "Note, info, warning, success, and danger callouts.", "stable"],
   ["Forms", "/components/forms/", "Inputs, selects, checkboxes, radios, switches, sliders, segmented controls.", "stable"],
   ["Tables", "/components/tables/", "Data tables with tabular numbers, stripes, and captions.", "stable"],
   ["Code", "/components/code/", "Highlighted code panels with copy, inline code, keyboard keys.", "stable"],
+  ["Complex", "/components/complex/", "The live Vietoris-Rips complex with its radius slider, the emblem of these docs.", "experimental"],
   ["Probability machine", "/components/machine/", "The live Galton board and the loading indicator.", "experimental"],
   ["Research", "/components/research/", "Paper header, figures, equations, citations, BibTeX, publication wall.", "experimental"],
   ["Long-form writing", "/components/writing/", "Sidenotes, footnotes, theorem environments, collapsible sections.", "experimental"],
@@ -26,5 +28,5 @@ const families = [
       <tbody>{families.map(([name, path, what, level]) => <tr><td><a href={u(path)}>{name}</a></td><td>{what}</td><td><Stability level={level} /></td></tr>)}</tbody>
     </table>
   </div>
-  <p>Everything is version 0.1. "Stable" means the class names and props are not expected to change before 1.0; "experimental" means they might.</p>
+  <p>Everything here is version {version}. "Stable" means the class names and props are not expected to change before 1.0; "experimental" means they might.</p>
 </Docs>

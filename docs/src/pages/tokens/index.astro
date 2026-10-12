@@ -3,32 +3,55 @@ import Docs from "../../layouts/Docs.astro";
 import TypeScaleModel from "../../components/exhibits/TypeScaleModel.astro";
 import data from "@dario-loi/polytope/tokens.json";
 import usage from "@dario-loi/polytope/dist/token-usage.json";
+import Ticks from "../../components/Ticks.astro";
 
 const t = data.tokens as Record<string, any>;
 const use = usage as Record<string, string[]>;
-const groups: [string, (k: string) => boolean][] = [
-  ["Color roles", (k) => k.startsWith("--ply-color-")],
-  ["Color primitives", (k) => /^--ply-(white|ink|tomato|mustard|teal|cobalt)/.test(k)],
-  ["Type", (k) => /^--ply-(font|size|weight|leading)-/.test(k)],
-  ["Space", (k) => k.startsWith("--ply-space-")],
-  ["Borders and corners", (k) => /^--ply-(border|radius)-/.test(k)],
-  ["Motion", (k) => /^--ply-(duration|ease)-/.test(k)],
-  ["Layout", (k) => k.startsWith("--ply-layout-")],
+// Each group carries the words people search with, so "spacing" finds the space scale.
+const groups: [string, string, (k: string) => boolean][] = [
+  ["Color roles", "color colour role semantic theme", (k) => k.startsWith("--ply-color-")],
+  ["Color primitives", "color colour primitive palette ramp", (k) => /^--ply-(white|ink|tomato|mustard|teal|cobalt)/.test(k)],
+  ["Type", "type typography font size weight leading line-height", (k) => /^--ply-(font|size|weight|leading)-/.test(k)],
+  ["Space", "space spacing gap margin padding", (k) => k.startsWith("--ply-space-")],
+  ["Borders and corners", "border stroke rule radius corner rounded", (k) => /^--ply-(border|radius)-/.test(k)],
+  ["Motion", "motion animation transition duration timing easing", (k) => /^--ply-(duration|ease)-/.test(k)],
+  ["Layout", "layout width column measure container", (k) => k.startsWith("--ply-layout-")],
 ];
 const isColor = (v: unknown) => typeof v === "string" && /^#[0-9a-f]{6}$/i.test(v);
+const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+// A role that points at a primitive is found by that primitive's name: "teal" finds the link color.
+const refWords = (r: unknown) => {
+  if (typeof r !== "string" || !r.startsWith("{")) return "";
+  const parts = r.slice(1, -1).split(".").filter((x) => x !== "primitive" && x !== "color");
+  return `${parts.join(" ")} ${parts.join("-")} --ply-${parts.join("-")}`;
+};
 ---
 <Docs title="Tokens" lede="Every design decision as a named value. Search by name, value, or purpose." wide>
   <TypeScaleModel slot="exhibit" />
   <div class="tk-filter">
     <label class="ply-field__label" for="tk-q">Filter tokens</label>
-    <input class="ply-input" id="tk-q" type="search" placeholder="Try accent, 36rem, or panel" autocomplete="off" />
+    <div class="tk-filter__row">
+      <input class="ply-input" id="tk-q" type="search" placeholder="Try accent, 36rem, or panel" autocomplete="off" />
+      <button class="ply-button ply-button--secondary" type="button" data-tk-clear hidden>Clear</button>
+    </div>
     <p class="ply-small ply-muted" id="tk-count" aria-live="polite"></p>
   </div>
-  {groups.map(([label, test]) => {
+  <div class="ply-empty tk-empty" id="tk-empty" hidden>
+    <span class="ply-empty__mark" aria-hidden="true"></span>
+    <p class="ply-empty__title">No token matches</p>
+    <p>Nothing has <code id="tk-empty-q"></code> in its name, value, or purpose. Try a color, a value, or a group:</p>
+    <div class="ply-cluster tk-empty__try">
+      <button class="ply-button ply-button--secondary ply-button--sm" type="button" data-tk-try>tomato</button>
+      <button class="ply-button ply-button--secondary ply-button--sm" type="button" data-tk-try>1rem</button>
+      <button class="ply-button ply-button--secondary ply-button--sm" type="button" data-tk-try>space</button>
+      <button class="ply-button ply-button--sm" type="button" data-tk-clear>Clear the filter</button>
+    </div>
+  </div>
+  {groups.map(([label, aliases, test]) => {
     const names = Object.keys(t).filter(test);
     return (
       <section class="tk-group" data-tk-group>
-        <h2>{label}</h2>
+        <h2 id={slug(label)}>{label}</h2>
         <div class="ply-table-wrap">
           <table class="ply-table tk">
             <thead><tr><th>Token</th><th>Light</th><th>Dark</th><th>Purpose</th><th>Used in</th></tr></thead>
@@ -37,11 +60,11 @@ const isColor = (v: unknown) => typeof v === "string" && /^#[0-9a-f]{6}$/i.test(
                 const tok = t[n];
                 const files = use[n] ?? [];
                 return (
-                  <tr data-tk={`${n} ${tok.value} ${tok.dark ?? ""} ${tok.description} ${files.join(" ")}`.toLowerCase()}>
+                  <tr data-tk={`${n} ${tok.value} ${tok.dark ?? ""} ${tok.description} ${files.join(" ")} ${refWords(tok.ref)} ${refWords(tok.darkRef)} ${aliases}`.toLowerCase()}>
                     <td data-label="Token"><code>{n}</code></td>
                     <td class="ply-mono ply-small" data-label="Light">{isColor(tok.value) && <span class="ply-swatch" style={`background:${tok.value}`}></span>}{String(tok.value)}</td>
                     <td class="ply-mono ply-small" data-label="Dark">{tok.dark !== undefined ? <>{isColor(tok.dark) && <span class="ply-swatch" style={`background:${tok.dark}`}></span>}{String(tok.dark)}</> : <span class="ply-muted">same</span>}</td>
-                    <td class="ply-small tk__desc" data-label="Purpose">{tok.description}</td>
+                    <td class="ply-small tk__desc" data-label="Purpose"><Ticks text={tok.description} /></td>
                     <td class="ply-small ply-muted" data-label="Used in">{files.length ? files.map((f) => f.replace(/^components\//, "").replace(/\.css$/, "")).join(", ") : "tokens only"}</td>
                   </tr>
                 );
@@ -57,12 +80,17 @@ const isColor = (v: unknown) => typeof v === "string" && /^#[0-9a-f]{6}$/i.test(
 </Docs>
 <style>
   .tk-filter { display: grid; gap: var(--ply-space-2); max-width: 28rem; margin-bottom: var(--ply-space-6); }
+  .tk-filter__row { display: flex; gap: var(--ply-space-2); }
+  .tk-filter__row .ply-input { flex: 1; min-width: 0; }
+  .tk-empty { margin-inline: 0; max-width: 36rem; text-align: start; justify-items: start; padding-inline: 0; }
+  .tk-empty__try { margin-top: var(--ply-space-2); }
   .tk td:first-child code { background: none; padding: 0; font-weight: 600; white-space: nowrap; }
   .tk td:nth-child(4) { min-width: 16rem; }
+  .tk td:nth-child(5) { min-width: 11rem; }
   .tk-group[hidden] { display: none; }
-  .tk td.tk__desc:empty { display: none; }
   /* Phones: each token becomes a stacked block instead of a five-column row. */
   @media (max-width: 40rem) {
+    .tk td.tk__desc:empty { display: none; }
     .tk thead { display: none; }
     .tk, .tk tbody, .tk tr, .tk td { display: block; width: 100%; }
     .tk tr { padding-block: var(--ply-space-3); border-bottom: var(--ply-border-hair) solid var(--ply-color-rule); }
@@ -75,18 +103,43 @@ const isColor = (v: unknown) => typeof v === "string" && /^#[0-9a-f]{6}$/i.test(
 <script>
   const q = document.getElementById("tk-q") as HTMLInputElement;
   const count = document.getElementById("tk-count")!;
+  const empty = document.getElementById("tk-empty")!;
+  const emptyQ = document.getElementById("tk-empty-q")!;
   const rows = [...document.querySelectorAll<HTMLTableRowElement>("tr[data-tk]")];
+  const clears = [...document.querySelectorAll<HTMLButtonElement>("[data-tk-clear]")];
   const run = () => {
-    const terms = q.value.toLowerCase().trim().split(/\s+/).filter(Boolean);
+    const raw = q.value.trim();
+    const terms = raw.toLowerCase().split(/\s+/).filter(Boolean);
     let shown = 0;
     for (const r of rows) {
       const hit = terms.every((term) => r.dataset.tk!.includes(term));
       r.hidden = !hit;
       if (hit) shown++;
     }
-    for (const g of document.querySelectorAll<HTMLElement>("[data-tk-group]")) g.hidden = !g.querySelector("tr[data-tk]:not([hidden])");
+    for (const g of document.querySelectorAll<HTMLElement>("[data-tk-group]")) {
+      g.hidden = !g.querySelector("tr[data-tk]:not([hidden])");
+      // The on-this-page list drops the sections the filter hides.
+      const id = g.querySelector("h2")?.id;
+      const li = id && document.querySelector(`.ply-toc a[href="#${id}"]`)?.closest("li");
+      if (li) li.hidden = g.hidden;
+    }
     count.textContent = terms.length ? `${shown} of ${rows.length} tokens` : `${rows.length} tokens`;
+    empty.hidden = !(terms.length && shown === 0);
+    emptyQ.textContent = raw;
+    clears[0].hidden = !raw;
+    // The filter lives in the address, so a filtered view can be shared or bookmarked.
+    const url = new URL(location.href);
+    raw ? url.searchParams.set("q", raw) : url.searchParams.delete("q");
+    history.replaceState(history.state, "", url);
   };
+  const set = (value: string) => { q.value = value; run(); q.focus(); };
   q.addEventListener("input", run);
+  q.addEventListener("keydown", (e) => { if (e.key === "Escape" && q.value) { e.preventDefault(); set(""); } });
+  for (const b of clears) b.addEventListener("click", () => set(""));
+  for (const b of document.querySelectorAll<HTMLButtonElement>("[data-tk-try]")) b.addEventListener("click", () => set(b.textContent!.trim()));
+  q.value = new URL(location.href).searchParams.get("q") ?? q.value;
   run();
+  // The on-this-page list fills itself after this script; sync it once it exists.
+  setTimeout(run, 0);
+  if (location.hash === "#tk-q") q.focus();
 </script>

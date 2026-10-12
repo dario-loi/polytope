@@ -11,26 +11,35 @@ interface Props { title: string; lede?: string; description?: string; toc?: bool
 const { title, lede, description, toc = true, wide = false, status } = Astro.props;
 const here = locate(Astro.url.pathname);
 const groups = [{ heading: here.chapter.label, items: here.chapter.pages.map((p) => ({ label: p.label, href: u(p.path), current: p.path === here.page?.path })) }];
+const siblings = here.chapter.pages.length;
+// Crossing into another chapter, the pager names the chapter: "Patterns", not "Overview".
+const pagerLabel = (p: NonNullable<typeof here.next>) => (p.chapter === here.chapter ? p.label : p.chapter.label);
 ---
 <Base title={title} description={description ?? lede}>
-  <main id="main">
+  <main id="main" data-pagefind-body data-pagefind-meta={`title:${title}`}>
     <Mast title={title} lede={lede}>
-      {status && <p slot="after" class="docs-status"><Stability level={status} /> <span>{status === "stable" ? "Class names and props are not expected to change before 1.0." : status === "experimental" ? "May change in any minor version before 1.0." : "Still works; see the replacement below."}</span></p>}
+      {status && <p slot="after" class="docs-status" data-pagefind-ignore><Stability level={status} /> <span>{status === "stable" ? "Class names and props are not expected to change before 1.0." : status === "experimental" ? "May change in any minor version before 1.0." : "Still works; see the replacement below."}</span></p>}
       {Astro.slots.has("exhibit") && <div slot="exhibit"><slot name="exhibit" /></div>}
     </Mast>
     <hr class="ply-rule" />
-    <div class="ply-container ply-docs">
+    <div class="ply-container ply-docs" data-pagefind-meta={`kind:${here.chapter.label}`}>
       <div class="ply-docs__nav">
         <SideNav groups={groups} label={`${here.chapter.label} pages`} />
       </div>
       <div class="ply-docs__main" data-toc-scope>
+        {siblings > 1 && (
+          <details class="ply-details docs-chapter" data-pagefind-ignore>
+            <summary>In this chapter <span class="docs-chapter__count">{siblings} pages</span></summary>
+            <SideNav groups={[{ items: groups[0].items }]} label={`${here.chapter.label} pages`} />
+          </details>
+        )}
         <div class:list={["ply-prose", wide && "ply-wide"]}>
           <slot />
         </div>
         <Pager
           label="Previous and next page"
-          prev={here.prev && { label: here.prev.label, href: u(here.prev.path) }}
-          next={here.next && { label: here.next.label, href: u(here.next.path) }}
+          prev={here.prev && { label: pagerLabel(here.prev), href: u(here.prev.path) }}
+          next={here.next && { label: pagerLabel(here.next), href: u(here.next.path) }}
         />
       </div>
       <div class="ply-docs__toc">
@@ -40,5 +49,11 @@ const groups = [{ heading: here.chapter.label, items: here.chapter.pages.map((p)
   </main>
 </Base>
 <style is:global>
+  /* Phones and tablets: the chapter sidebar is hidden, so its pages sit above the content. */
+  .docs-chapter { margin-bottom: var(--ply-space-6); border-bottom: var(--ply-border-hair) solid var(--ply-color-rule); }
+  .docs-chapter > summary { font-size: var(--ply-size-ui); }
+  .docs-chapter__count { margin-inline-start: auto; font-weight: var(--ply-weight-regular); color: var(--ply-color-text-muted); }
+  .docs-chapter .ply-sidenav { padding-block-end: var(--ply-space-3); }
+  @media (min-width: 56rem) { .docs-chapter { display: none; } }
   .docs-status { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ply-space-2) var(--ply-space-3); margin-top: var(--ply-space-4); font-size: var(--ply-size-sm); color: var(--ply-color-text-muted); }
 </style>

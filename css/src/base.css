@@ -9,6 +9,7 @@
     caret-color: var(--ply-color-accent);
     scrollbar-color: var(--ply-color-text-subtle) var(--ply-color-bg);
     scroll-padding-top: var(--ply-space-8);
+    overflow-wrap: break-word;
   }
   body {
     font-size: var(--ply-size-body);
@@ -32,11 +33,20 @@
 
   /* Surfaces. Inside a black panel or a code block the quiet text tokens and the focus ring
      switch to their panel values, so utilities and controls read correctly there.
+     A panel also takes over text, ground, and rules, so a checkbox, switch, ghost button,
+     or table inside it draws in chalk on black instead of black on black.
      On mustard the ring is black. Mark other surfaces with data-surface="panel" or "note". */
   .ply-panel, .ply-code, [data-surface="panel"] {
     --ply-color-text-muted: var(--ply-color-panel-muted);
     --ply-color-text-subtle: var(--ply-color-panel-muted);
     --ply-color-focus: var(--ply-color-focus-on-panel);
+  }
+  .ply-panel, [data-surface="panel"] {
+    --ply-color-text: var(--ply-color-panel-text);
+    --ply-color-bg: var(--ply-color-panel);
+    --ply-color-rule-strong: var(--ply-color-panel-text);
+    --ply-color-rule: var(--ply-color-panel-rule);
+    --ply-color-surface-sunken: color-mix(in srgb, var(--ply-color-panel-text) 14%, var(--ply-color-panel));
   }
   .ply-note, mark, [data-surface="note"] { --ply-color-focus: var(--ply-ink-950); }
   .ply-note:is(.ply-note--soft, .ply-note--info, .ply-note--success) { --ply-color-focus: inherit; }
@@ -49,7 +59,7 @@
   mark { background: var(--ply-color-note); color: var(--ply-ink-950); padding-inline: 0.15em; }
 
   code, kbd, samp, pre { font-family: var(--ply-font-mono); font-size: 0.875em; font-variant-ligatures: none; }
-  :not(pre) > code { background: var(--ply-color-surface-sunken); padding: 0.1em 0.35em; overflow-wrap: anywhere; }
+  :not(pre) > code { background: var(--ply-color-surface-sunken); padding: 0.1em 0.35em; }
   table { font-variant-numeric: tabular-nums; }
   /* Element defaults that match .ply-kbd and .ply-quote; in the base layer so any class wins. */
   kbd { display: inline-block; font-family: var(--ply-font-mono); font-size: 0.8em; line-height: 1.4; padding: 0 0.4em; border: 1.5px solid currentColor; border-bottom-width: 3px; }

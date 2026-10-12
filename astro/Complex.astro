@@ -1,10 +1,12 @@
 ---
 // A Vietoris-Rips complex with a radius slider. Server-renders the same complex from the
 // seed so it is complete without JavaScript; complex.js makes the slider live.
-interface Props { points?: number; radius?: number; seed?: number; label?: string; controls?: boolean; id?: string; class?: string }
-const { points = 36, radius = 0.16, seed = 7, label = "A random complex", controls = true, id = `cx-${seed}-${points}`, class: className } = Astro.props;
+// autoplay="visible" grows it from bare points on first view; the default draws it finished.
+interface Props { points?: number; radius?: number; seed?: number; label?: string; controls?: boolean; autoplay?: "visible" | "none"; id?: string; class?: string }
+const { points = 36, radius = 0.16, seed = 7, label = "A random complex", controls = true, autoplay = "none", id = `cx-${seed}-${points}`, class: className } = Astro.props;
 
-// same generator and layout as css/js/complex.js
+// same generator, layout, and dense-drawing budget as css/js/complex.js
+const DENSE = 2000;
 let s = seed >>> 0 || 1;
 const rand = () => ((s = (s * 1664525 + 1013904223) >>> 0) / 4294967296);
 const cols = Math.ceil(Math.sqrt(points * 1.8)), rows = Math.ceil(points / cols);
@@ -22,10 +24,14 @@ const tris: [number, number, number][] = [];
 for (const [i, j] of edges) for (const k of adj[i]) if (k > j && adj[j].has(k)) tris.push([i, j, k]);
 ---
 <div class:list={["ply-complex-wrap", className]}>
-  <ply-complex class="ply-complex" id={id} points={points} radius={radius} seed={seed} label={label} role="img" aria-label={`${label}: ${points} points, ${edges.length} edges, ${tris.length} filled triangles.`}>
+  <ply-complex class="ply-complex" id={id} points={points} radius={radius} seed={seed} label={label} autoplay={autoplay} role="img" aria-label={`${label}: ${points} points, ${edges.length} edges, ${tris.length} filled triangles.`}>
     <svg class="ply-complex__static" viewBox="0 0 100 56" aria-hidden="true">
-      <g>{tris.map(([a, b, c]) => <polygon class="ply-complex__tri" points={`${pts[a]} ${pts[b]} ${pts[c]}`} />)}</g>
-      <g>{edges.map(([a, b]) => <line class="ply-complex__edge" x1={pts[a][0]} y1={pts[a][1]} x2={pts[b][0]} y2={pts[b][1]} />)}</g>
+      <g>{tris.length > DENSE
+        ? <path class="ply-complex__tri ply-complex__tri--dense" d={tris.map(([a, b, c]) => `M${pts[a]}L${pts[b]}L${pts[c]}Z`).join("")} />
+        : tris.map(([a, b, c]) => <polygon class="ply-complex__tri" points={`${pts[a]} ${pts[b]} ${pts[c]}`} />)}</g>
+      <g>{edges.length > DENSE
+        ? <path class="ply-complex__edge" d={edges.map(([a, b]) => `M${pts[a]}L${pts[b]}`).join("")} />
+        : edges.map(([a, b]) => <line class="ply-complex__edge" x1={pts[a][0]} y1={pts[a][1]} x2={pts[b][0]} y2={pts[b][1]} />)}</g>
       <g>{pts.map(([x, y]) => <circle class="ply-complex__pt" cx={x} cy={y} r="0.9" />)}</g>
     </svg>
   </ply-complex>

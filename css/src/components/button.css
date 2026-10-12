@@ -5,7 +5,7 @@
     display: inline-flex; align-items: center; justify-content: center; gap: var(--ply-space-2);
     min-height: 2.75rem; padding: 0 var(--ply-space-5);
     background: var(--_bg); color: var(--_fg); border: var(--ply-border-control) solid var(--_bd); border-radius: var(--ply-radius-none);
-    font-family: var(--ply-font-text); font-size: var(--ply-size-md); font-weight: var(--ply-weight-semibold); line-height: 1; text-decoration: none; white-space: nowrap;
+    font-family: var(--ply-font-text); font-size: var(--ply-size-md); font-weight: var(--ply-weight-semibold); line-height: 1.2; text-decoration: none; text-align: center; text-wrap: balance; max-width: 100%; padding-block: 0.4rem;
     cursor: pointer; user-select: none;
     transition: background var(--ply-duration-fast) var(--ply-ease-out), color var(--ply-duration-fast) var(--ply-ease-out), border-color var(--ply-duration-fast) var(--ply-ease-out), transform var(--ply-duration-fast) var(--ply-ease-out);
   }

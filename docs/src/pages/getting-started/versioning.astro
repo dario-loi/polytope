@@ -3,6 +3,7 @@ import Docs from "../../layouts/Docs.astro";
 import Code from "@dario-loi/polytope/astro/Code.astro";
 import Stability from "@dario-loi/polytope/astro/Stability.astro";
 import { u } from "../../data/nav";
+import { version } from "../../data/version";
 ---
 <Docs title="Versioning" lede="Semantic versions, a short list of what counts as breaking, and a rule for when something joins the kit.">
   <h2>Version numbers</h2>
@@ -35,6 +36,6 @@ import { u } from "../../data/nav";
   <Code lang="sh" code={`npm run build && git add dist   # installs read dist/ as committed
 npm version minor               # bumps package.json and tags
 git push --follow-tags
-gh release create v0.2.1        # publishing the release sends it to npm and PyPI`} />
+gh release create v${version}        # publishing the release sends it to npm and PyPI`} />
   <p>Update <code>python/pyproject.toml</code> to the same version first, so both halves of the kit move together. The release workflow publishes through trusted publishing, so no tokens are stored anywhere, and npm attaches a provenance record that ties each version to the commit it was built from.</p>
 </Docs>

@@ -15,7 +15,8 @@ function walk(p) {
   if (!existsSync(p)) return;
   const st = statSync(p);
   if (st.isDirectory()) {
-    for (const f of readdirSync(p)) if (f !== "node_modules" && f !== "kit" && f !== "_astro") walk(join(p, f));
+    // Build output from other tools (bundled scripts, the Pagefind index) is not our prose.
+    for (const f of readdirSync(p)) if (f !== "node_modules" && f !== "kit" && f !== "_astro" && f !== "pagefind") walk(join(p, f));
     return;
   }
   if (!exts.has(extname(p))) return;

@@ -7,6 +7,8 @@ import { u } from "../../data/nav";
 
 const t = data.tokens as Record<string, any>;
 const lum = (hex: string) => { const n = parseInt(hex.slice(1), 16); const c = [n >> 16, (n >> 8) & 255, n & 255].map((v) => { v /= 255; return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; }); return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]; };
+// One decimal, rounded down, so a pair is never shown passing when it does not.
+const fmt = (r: number) => (Math.floor(r * 10) / 10).toFixed(1);
 const ratio = (a: string, b: string) => { const [x, y] = [lum(a), lum(b)].sort((p, q) => q - p); return (x + 0.05) / (y + 0.05); };
 const pairs = [["text", "bg"], ["text-muted", "bg"], ["text-subtle", "bg"], ["link", "bg"], ["accent-text", "bg"], ["panel-text", "panel"], ["panel-muted", "panel"], ["code-comment", "panel"]];
 const rows = pairs.map(([fg, bg]) => {
@@ -34,7 +36,7 @@ const rows = pairs.map(([fg, bg]) => {
     <table class="ply-table">
       <thead><tr><th>Text</th><th>On</th><th class="ply-num">Light</th><th class="ply-num">Dark</th></tr></thead>
       <tbody>
-        {rows.map((r) => <tr><td><code>{r.fg}</code></td><td><code>{r.bg}</code></td><td class="ply-num">{r.light.toFixed(2)}:1</td><td class="ply-num">{r.dark.toFixed(2)}:1</td></tr>)}
+        {rows.map((r) => <tr><td><code>{r.fg}</code></td><td><code>{r.bg}</code></td><td class="ply-num">{fmt(r.light)}:1</td><td class="ply-num">{fmt(r.dark)}:1</td></tr>)}
       </tbody>
     </table>
   </div>

@@ -6,6 +6,7 @@
     "components/form.css",
     "components/nav.css",
     "components/panel.css",
+    "components/search.css",
     "components/tag.css",
     "layout.css",
     "utilities.css"
@@ -19,6 +20,7 @@
     "components/note.css",
     "components/panel.css",
     "components/research.css",
+    "components/search.css",
     "components/tag.css",
     "components/viz.css",
     "layout.css",
@@ -38,6 +40,7 @@
     "components/form.css",
     "components/machine.css",
     "components/nav.css",
+    "components/search.css",
     "components/tag.css",
     "components/writing.css",
     "layout.css",
@@ -102,6 +105,7 @@
     "components/note.css",
     "components/panel.css",
     "components/research.css",
+    "components/search.css",
     "components/table.css",
     "components/tag.css",
     "components/viz.css",
@@ -114,6 +118,7 @@
   "--ply-size-lg": [
     "base.css",
     "components/research.css",
+    "components/search.css",
     "components/writing.css",
     "layout.css"
   ],
@@ -136,6 +141,7 @@
     "components/form.css",
     "components/nav.css",
     "components/research.css",
+    "components/search.css",
     "components/tag.css"
   ],
   "--ply-duration-fast": [
@@ -152,6 +158,7 @@
     "components/form.css",
     "components/nav.css",
     "components/research.css",
+    "components/search.css",
     "components/tag.css",
     "components/writing.css"
   ],
@@ -160,7 +167,8 @@
   ],
   "--ply-color-focus": [
     "base.css",
-    "components/form.css"
+    "components/form.css",
+    "components/search.css"
   ],
   "--ply-color-panel-muted": [
     "base.css",
@@ -169,6 +177,37 @@
   ],
   "--ply-color-focus-on-panel": [
     "base.css"
+  ],
+  "--ply-color-panel-text": [
+    "base.css",
+    "components/button.css",
+    "components/code.css",
+    "components/demo.css",
+    "components/form.css",
+    "components/machine.css",
+    "components/panel.css",
+    "components/research.css",
+    "components/viz.css"
+  ],
+  "--ply-color-panel": [
+    "base.css",
+    "components/button.css",
+    "components/code.css",
+    "components/demo.css",
+    "components/form.css",
+    "components/machine.css",
+    "components/panel.css",
+    "components/research.css",
+    "components/viz.css"
+  ],
+  "--ply-color-panel-rule": [
+    "base.css",
+    "components/button.css",
+    "components/code.css",
+    "components/demo.css",
+    "components/machine.css",
+    "components/research.css",
+    "components/viz.css"
   ],
   "--ply-size-sm": [
     "base.css",
@@ -180,6 +219,7 @@
     "components/nav.css",
     "components/panel.css",
     "components/research.css",
+    "components/search.css",
     "components/table.css",
     "components/tag.css",
     "components/viz.css",
@@ -191,6 +231,7 @@
     "components/demo.css",
     "components/nav.css",
     "components/research.css",
+    "components/search.css",
     "components/table.css",
     "layout.css"
   ],
@@ -200,6 +241,7 @@
     "components/form.css",
     "components/nav.css",
     "components/research.css",
+    "components/search.css",
     "components/table.css",
     "components/writing.css",
     "layout.css",
@@ -224,6 +266,7 @@
     "components/code.css",
     "components/demo.css",
     "components/form.css",
+    "components/search.css",
     "utilities.css"
   ],
   "--ply-color-surface-sunken": [
@@ -232,6 +275,7 @@
     "components/form.css",
     "components/nav.css",
     "components/note.css",
+    "components/search.css",
     "components/table.css",
     "components/writing.css"
   ],
@@ -254,6 +298,7 @@
     "components/note.css",
     "components/panel.css",
     "components/research.css",
+    "components/search.css",
     "components/table.css",
     "components/viz.css",
     "components/writing.css",
@@ -275,6 +320,7 @@
   ],
   "--ply-space-6": [
     "components/research.css",
+    "components/search.css",
     "components/writing.css",
     "layout.css"
   ],
@@ -295,6 +341,7 @@
     "components/nav.css",
     "components/note.css",
     "components/research.css",
+    "components/search.css",
     "components/table.css",
     "components/viz.css",
     "components/writing.css",
@@ -311,6 +358,7 @@
     "components/note.css",
     "components/panel.css",
     "components/research.css",
+    "components/search.css",
     "components/table.css",
     "components/viz.css",
     "components/writing.css",
@@ -325,6 +373,7 @@
     "components/form.css",
     "components/nav.css",
     "components/research.css",
+    "components/search.css",
     "components/table.css",
     "components/tag.css",
     "components/viz.css",
@@ -352,6 +401,7 @@
     "components/demo.css",
     "components/form.css",
     "components/nav.css",
+    "components/search.css",
     "components/table.css",
     "components/writing.css",
     "modes.css"
@@ -370,34 +420,6 @@
   "--ply-color-on-accent": [
     "components/button.css"
   ],
-  "--ply-color-panel-text": [
-    "components/button.css",
-    "components/code.css",
-    "components/demo.css",
-    "components/form.css",
-    "components/machine.css",
-    "components/panel.css",
-    "components/research.css",
-    "components/viz.css"
-  ],
-  "--ply-color-panel": [
-    "components/button.css",
-    "components/code.css",
-    "components/demo.css",
-    "components/form.css",
-    "components/machine.css",
-    "components/panel.css",
-    "components/research.css",
-    "components/viz.css"
-  ],
-  "--ply-color-panel-rule": [
-    "components/button.css",
-    "components/code.css",
-    "components/demo.css",
-    "components/machine.css",
-    "components/research.css",
-    "components/viz.css"
-  ],
   "--ply-space-1": [
     "components/demo.css",
     "components/nav.css",
@@ -411,6 +433,7 @@
     "components/nav.css",
     "components/panel.css",
     "components/research.css",
+    "components/search.css",
     "components/table.css",
     "components/tag.css",
     "components/viz.css",
@@ -421,23 +444,27 @@
     "components/nav.css",
     "components/note.css",
     "components/research.css",
+    "components/search.css",
     "components/table.css"
   ],
   "--ply-weight-medium": [
     "components/form.css",
-    "components/nav.css"
+    "components/nav.css",
+    "components/search.css"
   ],
   "--ply-size-xs": [
     "components/code.css",
     "components/demo.css",
     "components/nav.css",
     "components/panel.css",
+    "components/search.css",
     "components/tag.css",
     "components/viz.css"
   ],
   "--ply-weight-regular": [
     "components/nav.css",
     "components/research.css",
+    "components/search.css",
     "components/writing.css"
   ],
   "--ply-radius-ball": [
@@ -445,16 +472,38 @@
     "components/form.css",
     "components/nav.css",
     "components/note.css",
+    "components/search.css",
     "components/tag.css",
     "components/viz.css",
     "components/writing.css"
   ],
+  "--ply-duration-base": [
+    "components/form.css",
+    "components/research.css",
+    "components/search.css"
+  ],
+  "--ply-border-hair": [
+    "components/code.css",
+    "components/demo.css",
+    "components/search.css",
+    "components/table.css",
+    "components/writing.css"
+  ],
+  "--ply-color-rule": [
+    "components/demo.css",
+    "components/form.css",
+    "components/search.css",
+    "components/table.css",
+    "components/viz.css",
+    "components/writing.css"
+  ],
+  "--ply-color-note-soft": [
+    "components/note.css",
+    "components/search.css"
+  ],
   "--ply-color-code-string": [
     "components/code.css",
     "components/panel.css"
-  ],
-  "--ply-color-note-soft": [
-    "components/note.css"
   ],
   "--ply-ink-50": [
     "components/note.css"
@@ -468,23 +517,6 @@
   "--ply-status-good": [
     "components/note.css",
     "components/tag.css"
-  ],
-  "--ply-border-hair": [
-    "components/code.css",
-    "components/demo.css",
-    "components/table.css",
-    "components/writing.css"
-  ],
-  "--ply-color-rule": [
-    "components/demo.css",
-    "components/form.css",
-    "components/table.css",
-    "components/viz.css",
-    "components/writing.css"
-  ],
-  "--ply-duration-base": [
-    "components/form.css",
-    "components/research.css"
   ],
   "--ply-color-code-comment": [
     "components/code.css"

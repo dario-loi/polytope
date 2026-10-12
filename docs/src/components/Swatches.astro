@@ -1,6 +1,7 @@
 ---
 // Swatch grid for a list of token names, showing light and dark values.
 import data from "@dario-loi/polytope/tokens.json";
+import Ticks from "./Ticks.astro";
 interface Props { names: string[] }
 const { names } = Astro.props;
 const t = data.tokens as Record<string, any>;
@@ -13,14 +14,14 @@ const t = data.tokens as Record<string, any>;
         <span class="sw__chip" style={`background: var(${n})`}></span>
         <span class="sw__name"><code>{n}</code></span>
         <span class="sw__val ply-mono">{tok?.value}{tok?.dark && tok.dark !== tok.value ? ` / ${tok.dark}` : ""}</span>
-        {tok?.description && <span class="sw__desc">{tok.description}</span>}
+        {tok?.description && <span class="sw__desc"><Ticks text={tok.description} /></span>}
       </li>
     );
   })}
 </ul>
 <style is:global>
   .sw { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr)); gap: var(--ply-space-5) var(--ply-space-4); list-style: none; padding: 0; margin-block: var(--ply-space-5); max-width: none; }
-  .sw__item { display: grid; gap: var(--ply-space-1); align-content: start; }
+  .sw__item { display: grid; gap: var(--ply-space-1); align-content: start; margin: 0; }
   .sw__chip { height: 4.5rem; border: var(--ply-border-hair) solid var(--ply-color-rule); }
   .sw__name code { background: none; padding: 0; font-size: var(--ply-size-xs); font-weight: 600; }
   .sw__val { font-size: var(--ply-size-xs); color: var(--ply-color-text-muted); }

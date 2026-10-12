@@ -1,6 +1,8 @@
 @layer ply.components {
   /* Tags and status labels. Status always carries a mark and a word. */
-  .ply-tag { display: inline-flex; align-items: center; gap: 0.4em; font-size: var(--ply-size-xs); font-weight: var(--ply-weight-bold); line-height: 1.3; padding: 0.15rem 0.5rem; border: 1.5px solid currentColor; color: var(--ply-color-text); white-space: nowrap; }
+  .ply-tag { display: inline-flex; align-items: center; gap: 0.4em; font-size: var(--ply-size-xs); font-weight: var(--ply-weight-bold); line-height: 1.3; padding: 0.15rem 0.5rem; border: 1.5px solid currentColor; color: var(--ply-color-text); max-width: 100%; overflow-wrap: anywhere; }
+  /* In a table a tag keeps its words whole, so it never narrows a column. */
+  .ply-table .ply-tag { overflow-wrap: normal; }
   .ply-tag--solid { background: var(--ply-color-text); color: var(--ply-color-bg); border-color: var(--ply-color-text); }
   .ply-tag--note { background: var(--ply-color-note); color: var(--ply-ink-950); border-color: var(--ply-color-note); }
 

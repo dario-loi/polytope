@@ -6,3 +6,4 @@ import "./theme.js";
 import "./toc.js";
 import "./controls.js";
 import "./cite.js";
+import "./search.js";
