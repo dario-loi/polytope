@@ -73,6 +73,7 @@
   --text-ui: var(--ply-size-ui);
   --text-md: var(--ply-size-md);
   --text-body: var(--ply-size-body);
+  --text-body-wide: var(--ply-size-body-wide);
   --text-lg: var(--ply-size-lg);
   --text-xl: var(--ply-size-xl);
   --text-2xl: var(--ply-size-2xl);

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-12T15:00:47.000Z",
+  "generatedAt": "2026-10-12T16:30:00.000Z",
   "title": "Design System: Polytope",
   "extensions": {
     "colorMeta": {
@@ -603,7 +603,7 @@
       },
       "body": {
         "displayName": "Body",
-        "purpose": "All running text in the 36rem reading column."
+        "purpose": "All running text in the 36rem reading column. From 100rem, docs and article text is 18px in a 38rem column."
       },
       "ui": {
         "displayName": "UI",
@@ -701,17 +701,29 @@
         "purpose": "Reading column; notes, code, and text share this edge."
       },
       {
+        "name": "measure-wide",
+        "value": "38rem",
+        "purpose": "Docs and article reading column from 100rem, with 18px text."
+      },
+      {
+        "name": "margin",
+        "value": "14rem",
+        "purpose": "Narrowest margin after the text, for sidenotes and margin figures; opens when ply-main has 52rem and widens with the page to 21rem."
+      },
+      {
         "name": "gutter",
         "value": "clamp(1rem, 0.2rem + 4vw, 4.5rem)",
         "purpose": "Page side margin."
       },
       {
         "name": "sidebar",
-        "value": "17.5rem"
+        "value": "17.5rem",
+        "purpose": "Docs chapter sidebar from 56rem, with the on-this-page list under the current page."
       },
       {
         "name": "toc",
-        "value": "15rem"
+        "value": "15rem",
+        "purpose": "Article on-this-page rail at the start edge, from 80rem."
       },
       {
         "name": "max",
@@ -747,12 +759,17 @@
       {
         "name": "sidebar",
         "value": "56rem",
-        "purpose": "Chapter sidebar appears."
+        "purpose": "Docs chapter sidebar appears, with the on-this-page list under the current page; the text centres once there is room."
       },
       {
         "name": "mast",
         "value": "64rem",
         "purpose": "Mast splits into title and exhibit."
+      },
+      {
+        "name": "article",
+        "value": "60rem",
+        "purpose": "Article margin opens after the text, and the text moves toward the centre."
       },
       {
         "name": "topbar",
@@ -762,12 +779,17 @@
       {
         "name": "toc",
         "value": "80rem",
-        "purpose": "On-this-page list appears."
+        "purpose": "Article on-this-page rail appears at the start edge and the text is centred; below it the list sits in an On this page disclosure above the text."
       },
       {
         "name": "sidenotes",
         "value": "90rem",
-        "purpose": "Sidenotes move to the margin, but only when the main column (container ply-main) has 52rem."
+        "purpose": "Outside a ply-main column, sidenotes and margin blocks move to the margin. Inside one, they move whenever it has 52rem: the measure, a 2rem gap, the 14rem margin."
+      },
+      {
+        "name": "wide",
+        "value": "100rem",
+        "purpose": "Docs and article text steps to 18px in a 38rem column."
       },
       {
         "name": "touch",
@@ -914,7 +936,7 @@
     ],
     "dos": [
       "Do open every chapter landing with a working model in a black panel, captioned underneath like a wall label.",
-      "Do keep text, notes, and code in one column on the same 36rem edge.",
+      "Do keep text, tables, and code in one column on the same 36rem edge, with notes and margin figures beside it; never let a block straddle the edge between text and margin.",
       "Do end mast titles in a tomato full stop and size them to the longest word.",
       "Do use ease-out (`cubic-bezier(0.16, 1, 0.3, 1)`) for things that arrive and the gravity curve (`cubic-bezier(0.55, 0, 1, 0.45)`) for things that fall.",
       "Do give each page one signature moment of motion and show the end state under reduced motion.",

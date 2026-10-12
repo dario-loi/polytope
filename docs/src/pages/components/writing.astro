@@ -5,8 +5,23 @@ import Sidenote from "@dario-loi/polytope/astro/Sidenote.astro";
 import M from "@dario-loi/polytope/astro/M.astro";
 import Code from "@dario-loi/polytope/astro/Code.astro";
 import Stability from "@dario-loi/polytope/astro/Stability.astro";
+import Figure from "@dario-loi/polytope/astro/Figure.astro";
+import PostHeader from "@dario-loi/polytope/astro/PostHeader.astro";
+import CellSketch from "../../components/CellSketch.astro";
+import { u } from "../../data/nav";
 ---
-<Docs title="Long-form writing" status="experimental" lede="Notes, explainers, and blog posts: sidenotes, footnotes, theorem environments, and collapsible detail.">
+<Docs title="Long-form writing" status="experimental" lede="Notes, explainers, and blog posts: the post header, sidenotes, margin figures, footnotes, theorem environments, and collapsible detail.">
+  <h2>Post header</h2>
+  <PostHeader level={3} title="Example note: the Hodge Laplacian, drawn" lede="A worked example on one triangle." date="2026-09-14" minutes={6} tags={["Topology"]} />
+  <Code lang="astro" code={`<PostHeader
+  title="Example note: the Hodge Laplacian, drawn"
+  lede="A worked example on one triangle."
+  date="2026-09-14"
+  minutes={6}
+  tags={["Topology"]}
+/>`} />
+  <p>The title is set like a paper's, so a site's posts and papers read as one series. The date prints in full, as "14 September 2026"; pass <code>locale</code> for another language. In an <code>&lt;Article&gt;</code>, give it <code>slot="header"</code> and it lines up with the text. The <a href={u("/patterns/post/")}>blog post pattern</a> shows the whole page.</p>
+
   <h2>Theorem environments</h2>
   <Env kind="definition" num="2.1" name="Simplicial complex">
     A simplicial complex <M tex={String.raw`K`} /> on a vertex set <M tex={String.raw`V`} /> is a set of nonempty finite subsets of <M tex={String.raw`V`} /> such that every nonempty subset of a member is also a member.
@@ -23,8 +38,21 @@ import Stability from "@dario-loi/polytope/astro/Stability.astro";
   <p>Kinds: definition, theorem, lemma, proposition, corollary, remark, example, proof. Theorems and lemmas set their body in italics, as print does; definitions sit on the wall gray; proofs end with a tomato box.</p>
 
   <h2>Sidenotes</h2>
-  <p>A sidenote keeps a remark next to the sentence it belongs to.<Sidenote n={1}>When the column has room beside it, as on a paper page, it sits in the right margin. Here, next to the on-this-page list, it drops below the line.</Sidenote> Use them for asides a curious reader wants and a hurried one can skip.</p>
+  <p>A sidenote keeps a remark next to the sentence it belongs to.<Sidenote n={1}>When the page has room after the text, the note sits there, in the margin. On a narrow screen it drops below the line.</Sidenote> Use them for asides a curious reader wants and a hurried one can skip.</p>
   <Code lang="astro" code={`<p>A sentence.<Sidenote n={1}>The aside.</Sidenote> More text.</p>`} />
+
+  <h2>In the margin</h2>
+  <Figure margin num={1}>
+    <CellSketch />
+    <Fragment slot="caption">A 2-cell and its three oriented edges.</Fragment>
+  </Figure>
+  <p>A small figure, table, or code block can sit in the same margin as the sidenotes, beside the paragraph after it. Place it before that paragraph and give it <code>.ply-margin</code>, or pass <code>margin</code> to <code>&lt;Figure&gt;</code>. Where the margin is closed, it stays in the text, above that paragraph.</p>
+  <Code lang="astro" code={`<Figure margin num={1}>
+  <img src={sketch.src} alt="A filled triangle with oriented edges." />
+  <Fragment slot="caption">A 2-cell and its three oriented edges.</Fragment>
+</Figure>
+<p>The paragraph it sits beside.</p>`} />
+  <p>Keep margin blocks small: 14rem wide is room for a sketch, a short table, or a few lines of code. Anything larger belongs in the <a href={u("/foundations/layout/#articles")}>text</a>.</p>
 
   <h2>Collapsible detail</h2>
   <details class="ply-details">

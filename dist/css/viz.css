@@ -6,6 +6,8 @@
   .ply-chart__title { font-weight: var(--ply-weight-bold); font-size: var(--ply-size-md); line-height: 1.3; margin: 0; }
   .ply-chart__subtitle { font-size: var(--ply-size-sm); color: var(--ply-color-text-muted); margin-top: var(--ply-space-1); }
   .ply-chart__plot { position: relative; overflow-x: auto; }
+  /* The data table toggle spans the chart, also when a wide chart runs past the measure. */
+  .ply-chart > .ply-details { max-width: none; }
   .ply-chart__hint { display: none; font-size: var(--ply-size-xs); color: var(--ply-color-text-muted); }
   @media (max-width: 40rem) { .ply-chart__hint { display: block; } }
   /* Charts keep a readable size on phones and scroll sideways; the data table holds the numbers. */

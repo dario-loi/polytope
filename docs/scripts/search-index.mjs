@@ -120,6 +120,7 @@ const shownIn = {
   Toc: "/components/navigation/", TopBar: "/components/navigation/", Search: "/components/navigation/",
   ThemeToggle: "/components/navigation/", Tag: "/components/buttons/", Mast: "/foundations/layout/",
   Atlas: "/components/atlas/", AtlasStop: "/components/atlas/", Seo: "/getting-started/seo/",
+  Article: "/foundations/layout/", PostHeader: "/components/writing/",
 };
 for (const file of readdirSync(join(root, "astro")).filter((f) => f.endsWith(".astro"))) {
   const name = file.replace(/\.astro$/, "");

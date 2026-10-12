@@ -8,74 +8,69 @@ import Env from "@dario-loi/polytope/astro/Env.astro";
 import Cite from "@dario-loi/polytope/astro/Cite.astro";
 import BibTeX from "@dario-loi/polytope/astro/BibTeX.astro";
 import Sidenote from "@dario-loi/polytope/astro/Sidenote.astro";
+import Figure from "@dario-loi/polytope/astro/Figure.astro";
+import Article from "@dario-loi/polytope/astro/Article.astro";
 import LineChartExample from "../../components/LineChartExample.astro";
+import CellSketch from "../../components/CellSketch.astro";
 ---
 <Pattern title="Paper page" current="Publications" description="An example paper page built with Polytope: a header with authors and links, figures, sidenotes, citations, BibTeX, and references.">
-  <div class="ply-container">
+  <Article>
     <PaperHeader
+      slot="header"
       venue="Example Venue 2026"
       title="Example title: higher-order message passing on cell complexes"
       authors={[{ name: "A. Author", affiliations: [1], equal: true }, { name: "John Doe", affiliations: [2], equal: true }, { name: "B. Author", affiliations: [1, 2] }]}
       affiliations={["Example University", "Another Institute"]}
       links={[{ label: "Paper", href: "#", icon: "paper" }, { label: "Code", href: "#", icon: "code" }, { label: "BibTeX", href: "#cite", icon: "quote" }]}
     />
-  </div>
-  <hr class="ply-rule" />
-  <div class="ply-container pp">
-    <div class="pp__main" data-toc-scope>
-      <div class="pp__figure"><LineChartExample legend={false} /></div>
-      <div class="ply-prose ply-has-sidenotes">
-        <Abstract>
-          <p>Example abstract. Message passing networks on graphs aggregate information over pairs of nodes. We extend the aggregation to cells of every dimension through the boundary maps of a cell complex, and show that the resulting layers are as expressive as the cellular Weisfeiler-Lehman test. On three synthetic benchmarks the model improves accuracy at a similar parameter count.</p>
-        </Abstract>
+    <LineChartExample legend={false} />
+    <Abstract>
+      <p>Example abstract. Message passing networks on graphs aggregate information over pairs of nodes. We extend the aggregation to cells of every dimension through the boundary maps of a cell complex, and show that the resulting layers are as expressive as the cellular Weisfeiler-Lehman test. On three synthetic benchmarks the model improves accuracy at a similar parameter count.</p>
+    </Abstract>
 
-        <h2>1. Introduction</h2>
-        <p>Graph neural networks pass messages along edges<Cite n={1} title="Example reference: neural message passing" authors="E. Author, F. Author" venue="Example Journal" year={2017} />. Cell complexes add faces of higher dimension, so a layer can also pass messages between edges that bound the same face.<Sidenote n={1}>A sidenote sits next to the sentence it explains, in the margin on wide screens.</Sidenote></p>
+    <h2>1. Introduction</h2>
+    <p>Graph neural networks pass messages along edges<Cite n={1} title="Example reference: neural message passing" authors="E. Author, F. Author" venue="Example Journal" year={2017} />. Cell complexes add faces of higher dimension, so a layer can also pass messages between edges that bound the same face.<Sidenote n={1}>A sidenote sits next to the sentence it explains, in the margin on wide screens.</Sidenote></p>
 
-        <h2>2. Method</h2>
-        <Env kind="definition" num="2.1" name="Boundary matrix">
-          For a cell complex <M tex={String.raw`X`} />, the boundary matrix <M tex={String.raw`B_k`} /> has one row per <M tex={String.raw`(k-1)`} />-cell and one column per <M tex={String.raw`k`} />-cell, with entry <M tex={String.raw`\pm 1`} /> when the row cell lies on the boundary of the column cell.
-        </Env>
-        <p>A layer updates the features <M tex={String.raw`H_k`} /> on <M tex={String.raw`k`} />-cells from both neighboring dimensions:</p>
-        <Equation tex={String.raw`H_k' = \sigma\left( B_k^{\top} H_{k-1} W_{\downarrow} + H_k W + B_{k+1} H_{k+1} W_{\uparrow} \right)`} num={1} />
-        <Env kind="theorem" num="2.2">With injective aggregation, the layer in equation (1) distinguishes any two cell complexes that the cellular Weisfeiler-Lehman test distinguishes.</Env>
-        <Env kind="proof">Example proof sketch. Replace with the argument from the paper.</Env>
+    <h2>2. Method</h2>
+    <Figure margin num={1}>
+      <CellSketch />
+      <Fragment slot="caption">A 2-cell. Its boundary is three edges, each with an orientation.</Fragment>
+    </Figure>
+    <Env kind="definition" num="2.1" name="Boundary matrix">
+      For a cell complex <M tex={String.raw`X`} />, the boundary matrix <M tex={String.raw`B_k`} /> has one row per <M tex={String.raw`(k-1)`} />-cell and one column per <M tex={String.raw`k`} />-cell, with entry <M tex={String.raw`\pm 1`} /> when the row cell lies on the boundary of the column cell.
+    </Env>
+    <p>A layer updates the features <M tex={String.raw`H_k`} /> on <M tex={String.raw`k`} />-cells from both neighboring dimensions:</p>
+    <Equation tex={String.raw`H_k' = \sigma\left( B_k^{\top} H_{k-1} W_{\downarrow} + H_k W + B_{k+1} H_{k+1} W_{\uparrow} \right)`} num={1} id="eq-1" />
+    <Env kind="theorem" num="2.2">With injective aggregation, the layer in <a href="#eq-1">equation (1)</a> distinguishes any two cell complexes that the cellular Weisfeiler-Lehman test distinguishes.</Env>
+    <Env kind="proof">Example proof sketch. Replace with the argument from the paper.</Env>
 
-        <h2>3. Results</h2>
-        <div class="ply-table-wrap">
-          <table class="ply-table">
-            <caption>Synthetic example. Test accuracy, mean of five seeds.</caption>
-            <thead><tr><th>Model</th><th class="ply-num">Task 1</th><th class="ply-num">Task 2</th><th class="ply-num">Task 3</th></tr></thead>
-            <tbody>
-              <tr><td>Model A</td><td class="ply-num"><strong>0.861</strong></td><td class="ply-num"><strong>0.774</strong></td><td class="ply-num">0.912</td></tr>
-              <tr><td>Model B</td><td class="ply-num">0.809</td><td class="ply-num">0.751</td><td class="ply-num"><strong>0.918</strong></td></tr>
-              <tr><td>Model C</td><td class="ply-num">0.740</td><td class="ply-num">0.702</td><td class="ply-num">0.880</td></tr>
-            </tbody>
-          </table>
-        </div>
+    <h2>3. Results</h2>
+    <div class="ply-table-wrap">
+      <table class="ply-table">
+        <caption>Synthetic example. Test accuracy, mean of five seeds.</caption>
+        <thead><tr><th>Model</th><th class="ply-num">Task 1</th><th class="ply-num">Task 2</th><th class="ply-num">Task 3</th></tr></thead>
+        <tbody>
+          <tr><td>Model A</td><td class="ply-num"><strong>0.861</strong></td><td class="ply-num"><strong>0.774</strong></td><td class="ply-num">0.912</td></tr>
+          <tr><td>Model B</td><td class="ply-num">0.809</td><td class="ply-num">0.751</td><td class="ply-num"><strong>0.918</strong></td></tr>
+          <tr><td>Model C</td><td class="ply-num">0.740</td><td class="ply-num">0.702</td><td class="ply-num">0.880</td></tr>
+        </tbody>
+      </table>
+    </div>
 
-        <h2 id="cite">Cite</h2>
-        <BibTeX entry={`@inproceedings{author2026example,
+    <h2 id="cite">Cite</h2>
+    <BibTeX entry={`@inproceedings{author2026example,
   title     = {Example title: higher-order message passing on cell complexes},
   author    = {Author, A. and Doe, John and Author, B.},
   booktitle = {Example Venue},
   year      = {2026}
 }`} />
 
-        <h2>References</h2>
-        <ol class="ply-footnotes pp__refs">
-          <li id="ref-1">E. Author, F. Author. Example reference: neural message passing. Example Journal, 2017.</li>
-        </ol>
-      </div>
-    </div>
-    <div class="pp__toc"><nav class="ply-toc" data-auto aria-label="On this page"><p class="ply-toc__heading">On this page</p><ul></ul></nav></div>
-  </div>
+    <h2>References</h2>
+    <ol class="ply-footnotes pp-refs">
+      <li id="ref-1">E. Author, F. Author. Example reference: neural message passing. Example Journal, 2017.</li>
+    </ol>
+  </Article>
 </Pattern>
 <style>
-  .pp { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--ply-space-7); padding-top: var(--ply-space-6); }
-  .pp__main { min-width: 0; container: ply-main / inline-size; }
-  .pp__toc { display: none; }
-  @media (min-width: 80rem) { .pp { grid-template-columns: minmax(0, 1fr) var(--ply-layout-toc); } .pp__toc { display: block; position: sticky; top: var(--ply-space-5); align-self: start; } }
-  .pp__figure { max-width: 52rem; margin-bottom: var(--ply-space-7); }
-  .pp__refs { margin-top: var(--ply-space-3); border-top: 0; padding-top: 0; }
+  .pp-refs { margin-top: var(--ply-space-3); border-top: 0; padding-top: 0; }
 </style>

@@ -44,6 +44,7 @@
     "components/form.css",
     "components/machine.css",
     "components/nav.css",
+    "components/research.css",
     "components/search.css",
     "components/tag.css",
     "components/writing.css",
@@ -334,6 +335,7 @@
     "components/code.css",
     "components/note.css",
     "components/research.css",
+    "components/table.css",
     "components/writing.css",
     "layout.css"
   ],
@@ -359,21 +361,35 @@
   "--ply-layout-toc": [
     "layout.css"
   ],
-  "--ply-space-4": [
+  "--ply-border-hair": [
     "components/atlas.css",
-    "components/button.css",
     "components/code.css",
     "components/demo.css",
-    "components/machine.css",
+    "components/nav.css",
+    "components/search.css",
+    "components/table.css",
+    "components/writing.css",
+    "layout.css"
+  ],
+  "--ply-color-rule": [
+    "components/atlas.css",
+    "components/demo.css",
+    "components/form.css",
+    "components/nav.css",
+    "components/search.css",
+    "components/table.css",
+    "components/viz.css",
+    "components/writing.css",
+    "layout.css"
+  ],
+  "--ply-size-ui": [
+    "components/atlas.css",
     "components/nav.css",
     "components/note.css",
     "components/research.css",
     "components/search.css",
     "components/table.css",
-    "components/viz.css",
-    "components/writing.css",
-    "layout.css",
-    "utilities.css"
+    "layout.css"
   ],
   "--ply-space-3": [
     "components/atlas.css",
@@ -394,6 +410,18 @@
     "modes.css",
     "utilities.css"
   ],
+  "--ply-layout-margin": [
+    "components/writing.css",
+    "layout.css"
+  ],
+  "--ply-space-1": [
+    "components/atlas.css",
+    "components/demo.css",
+    "components/nav.css",
+    "components/research.css",
+    "components/viz.css",
+    "layout.css"
+  ],
   "--ply-space-2": [
     "components/atlas.css",
     "components/button.css",
@@ -405,6 +433,28 @@
     "components/search.css",
     "components/table.css",
     "components/tag.css",
+    "components/viz.css",
+    "components/writing.css",
+    "layout.css",
+    "utilities.css"
+  ],
+  "--ply-layout-measure-wide": [
+    "layout.css"
+  ],
+  "--ply-size-body-wide": [
+    "layout.css"
+  ],
+  "--ply-space-4": [
+    "components/atlas.css",
+    "components/button.css",
+    "components/code.css",
+    "components/demo.css",
+    "components/machine.css",
+    "components/nav.css",
+    "components/note.css",
+    "components/research.css",
+    "components/search.css",
+    "components/table.css",
     "components/viz.css",
     "components/writing.css",
     "layout.css",
@@ -450,13 +500,6 @@
   "--ply-color-on-accent": [
     "components/button.css"
   ],
-  "--ply-space-1": [
-    "components/atlas.css",
-    "components/demo.css",
-    "components/nav.css",
-    "components/research.css",
-    "components/viz.css"
-  ],
   "--ply-color-text-muted": [
     "components/atlas.css",
     "components/demo.css",
@@ -471,14 +514,6 @@
     "components/viz.css",
     "components/writing.css",
     "utilities.css"
-  ],
-  "--ply-size-ui": [
-    "components/atlas.css",
-    "components/nav.css",
-    "components/note.css",
-    "components/research.css",
-    "components/search.css",
-    "components/table.css"
   ],
   "--ply-weight-medium": [
     "components/form.css",
@@ -507,6 +542,7 @@
     "components/form.css",
     "components/nav.css",
     "components/note.css",
+    "components/research.css",
     "components/search.css",
     "components/tag.css",
     "components/viz.css",
@@ -517,23 +553,6 @@
     "components/form.css",
     "components/research.css",
     "components/search.css"
-  ],
-  "--ply-border-hair": [
-    "components/atlas.css",
-    "components/code.css",
-    "components/demo.css",
-    "components/search.css",
-    "components/table.css",
-    "components/writing.css"
-  ],
-  "--ply-color-rule": [
-    "components/atlas.css",
-    "components/demo.css",
-    "components/form.css",
-    "components/search.css",
-    "components/table.css",
-    "components/viz.css",
-    "components/writing.css"
   ],
   "--ply-color-note-soft": [
     "components/note.css",

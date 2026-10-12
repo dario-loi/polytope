@@ -7,6 +7,28 @@ import ReleaseModel from "../../components/exhibits/ReleaseModel.astro";
   <link slot="head" rel="alternate" type="application/atom+xml" title="Polytope releases" href="https://github.com/dario-loi/polytope/releases.atom" />
   <section class="ply-wall ply-wide" aria-label="Releases">
     <div class="ply-wall__year">
+      <p class="ply-wall__label">0.6</p>
+      <ul class="ply-wall__entries">
+        <li class="ply-pub">
+          <p class="ply-pub__title">0.6.0, reading pages</p>
+          <p class="ply-pub__venue">12 October 2026</p>
+          <div class="ply-prose ply-small" style="margin-top: var(--ply-space-2)">
+            <ul>
+              <li>New: <code>.ply-article</code> and <code>&lt;Article&gt;</code>, the frame for a paper, a post, or a page of notes. The text sits at the centre of the page, the on-this-page list hangs in a rail at the left edge from 80rem, and the margin after the text holds sidenotes and margin figures. No block straddles the edge between text and margin: in an article, <code>.ply-wide</code> keeps to the text, and a long table or line of code scrolls in its own frame. Below 80rem the list waits in an "On this page" disclosure above the text, and the current section in the rail gets the tomato point. <code>&lt;Article&gt;</code> builds the list from the headings at build time, so it needs no script. Before, a paper page kept its text against the left edge, with the margin and the list both to its right. See <a href="../foundations/layout/#articles">Space and layout</a>.</li>
+              <li>New: <code>.ply-margin</code> and <code>&lt;Figure margin&gt;</code> put a small figure, table, or code block in the margin, beside the paragraph after it. On narrow screens it stays in the text.</li>
+              <li>New: <code>&lt;PostHeader&gt;</code>, for posts and notes: the title set like a paper's, a lede, the date, the reading time, and tags. The new <a href="../patterns/post/">blog post pattern</a> shows a whole post.</li>
+              <li>The margin widens with the page, from 14rem to 21rem, so sidenotes end at the page's edge. A section heading starts below any sidenote still beside the text, so a note no longer sits beside the next section. On a docs page, a wide block (<code>.ply-wide</code>) also starts below the note, so it no longer runs over one, and <code>&lt;Figure wide&gt;</code> runs past the text like any wide block; before, it only dropped its maximum width.</li>
+              <li>Docs pages put the text at the centre of the page once the sidebar has room beside it, and the on-this-page list hangs under the current page in the sidebar. Sidenotes open into the margin whenever the main column has room for it, without waiting for 90rem.</li>
+              <li>From 100rem, docs and article text is 18px in a 38rem column: the same 68 characters to a line, at a size that suits a wide screen. New tokens: <code>--ply-size-body-wide</code>, <code>--ply-layout-measure-wide</code>, and <code>--ply-layout-margin</code>.</li>
+              <li><code>&lt;SideNav&gt;</code> takes a <code>current</code> slot, shown under the current page's link. On docs pages the phone menu lists the page's sections there too.</li>
+              <li>Paper and post titles balance their lines and are capped in em, so a title breaks the same way at every wide width and does not reflow when Ultra arrives. Table captions keep to the measure and stay in view while a wide table scrolls. A screen reader reads a sidenote's number once. The auto on-this-page list skips the headings of a paper or post header shown inside a page, and stays hidden until it has entries.</li>
+              <li>To update: <code>npm install @dario-loi/polytope@^0.6.0</code>. A docs grid that still has <code>.ply-docs__toc</code> keeps its three columns from 80rem; to move the list into the sidebar, put it in the <code>current</code> slot of <code>&lt;SideNav&gt;</code>. A paper page built by hand can switch to <code>&lt;Article&gt;</code>, as the paper pattern's source does.</li>
+            </ul>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <div class="ply-wall__year">
       <p class="ply-wall__label">0.5</p>
       <ul class="ply-wall__entries">
         <li class="ply-pub">

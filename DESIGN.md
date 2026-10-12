@@ -191,7 +191,7 @@ Corners are square. The only round things are things that are round in the world
 A gallery palette: black, white, and gray carry the page, and three strong colors each mark one kind of thing.
 
 ### Primary
-- **Tomato** (`tomato`): the moving part. Fills the current-location point in the sidebar, the balls in the probability machine, the hovered vertex of the complex and its dashed reach, the current place on the Atlas with its dashed reach and the trail it leaves along the route, the full stop after titles and the wordmark, the picked radio ball, the switch ball when on, the slider thumb, list markers, sidenote and affiliation numbers, and, as tomato ink, the hover fill of primary buttons. It is a fill color. When tomato has to be read as text (field errors, the hovered pager title) use **Tomato Ink** (`tomato-ink`). In dark mode the accent becomes **Tomato Bright** (`tomato-bright`).
+- **Tomato** (`tomato`): the moving part. Fills the current-location point in the sidebar and in an article's on-this-page rail, the small ball between a post's date and reading time, the balls in the probability machine, the hovered vertex of the complex and its dashed reach, the current place on the Atlas with its dashed reach and the trail it leaves along the route, the full stop after titles and the wordmark, the picked radio ball, the switch ball when on, the slider thumb, list markers, sidenote and affiliation numbers, and, as tomato ink, the hover fill of primary buttons. It is a fill color. When tomato has to be read as text (field errors, the hovered pager title) use **Tomato Ink** (`tomato-ink`). In dark mode the accent becomes **Tomato Bright** (`tomato-bright`).
 
 ### Secondary
 - **Mustard** (`mustard`): notes, highlights, text selection, the `mark` element, the machine funnel, the filled triangles of the complex, the countries that hold a place on the Atlas, and the copied state of the copy button. It always carries exhibit-black text in both themes. **Mustard Soft** (`mustard-soft`) is the quieter note fill in light mode. **Mustard Light** (`mustard-light`) is the focus ring inside black panels and the code comment color, so explanations read first.
@@ -236,7 +236,7 @@ Charts use eight categorical slots in a fixed order: tomato, teal, cobalt, grass
 - **Wordmark** (Ultra 400, 24px): the top bar wordmark, pager titles, app and empty-state titles.
 - **Title** (Libre Franklin 700, 24px, line height 1.2): third-level headings. Fourth level is 20px bold.
 - **Lede** (Libre Franklin 400, 20px, line height 1.45): the paragraph under a mast title, capped at 36rem.
-- **Body** (Libre Franklin 400, 17px, line height 1.6): all running text, in a 36rem column (about 68 characters).
+- **Body** (Libre Franklin 400, 17px, line height 1.6): all running text, in a 36rem column (about 68 characters). From 100rem, docs and article text is 18px in a 38rem column.
 - **UI** (Libre Franklin 400, 15px): tabs, the search field, sidebar links, tables, notes, author lines (`--ply-size-ui`).
 - **Label** (Libre Franklin 700, 13px, line height 1.3): wall labels, tags, sidebar group headings, code bar text.
 - **Mono** (JetBrains Mono 400, 0.875em, line height 1.7 in blocks, ligatures off): code, keys, and numeric parameters. Tables and numbers use tabular figures.
@@ -248,19 +248,21 @@ Charts use eight categorical slots in a fixed order: tomato, teal, cobalt, grass
 
 ## Layout
 
-The page is a top bar, a mast, a 3px rule, then a three-column docs grid inside a 90rem container with a fluid gutter of 16px on phones to 72px on wide screens.
+The page is a top bar, a mast or a header, a 3px rule, then a docs grid or an article inside a 90rem container with a fluid gutter of 16px on phones to 72px on wide screens. Both frames put the text at the centre of the page when there is room: navigation hangs at the page's start edge, and the space after the text holds sidenotes and margin figures. In an article nothing else enters it, so no block straddles the edge between text and margin; on a docs page, a `.ply-wide` block may run through it to the page's end edge. Chrome (the wordmark, the sidebar, the rail) keeps the page's outer edge; the text and the header above it share an inner one.
 
 - **Top bar:** wordmark at left, chapter links, the search button and theme tools at right, 4.5rem tall, closed by a 3px rule. The links show where they fit. First they set closer, then search drops its word, then the chapters move into a details menu. Without JavaScript the switch is at 72rem.
 - **Mast:** one column on phones; from 64rem, title and lede at left and a 35rem exhibit at right. Every chapter landing puts its own working model in that slot as a black panel with a caption below.
-- **Docs grid:** reading column only on phones, with the chapter's pages in an "In this chapter" disclosure above the content; a 17.5rem sticky chapter sidebar from 56rem; a 15rem sticky on-this-page list from 80rem.
-- **Reading column:** 36rem. Notes, code blocks, and text in one column share that edge. Wide blocks opt out explicitly.
+- **Docs grid:** reading column only on phones, with the chapter's pages, and this page's sections under the current one, in an "In this chapter" disclosure above the content; from 56rem a 17.5rem sticky chapter sidebar, with the on-this-page list hung under the current page on a hairline. The text centres once the sidebar has room beside it.
+- **Article:** for papers, posts, and notes. One column below 60rem; from 60rem the margin opens after the text and the text moves toward the centre; from 80rem a 15rem sticky on-this-page rail opens at the start edge and the text is centred. Below 80rem the same list waits in an "On this page" disclosure above the text. The header (paper or post) sits in its own article row, so its title starts at the text's edge. A docs page's mast is chrome and spans the page.
+- **Reading column:** 36rem; from 100rem, docs and article text steps to 18px in a 38rem column, the same 68 characters. Notes, code blocks, and text in one column share that edge.
+- **Two lanes:** a block sits in the text or in the margin, never across both, because readers take the edge between them for a column line. Text width is the default, and a table with many columns or code with long lines scrolls in its own frame. `.ply-margin` (or `<Figure margin>`) puts a small figure, table, or code block in the margin beside the paragraph after it. `.ply-wide` (or `<Figure wide>`) keeps to the text in an article; on a docs page, where nothing hangs beside the text, it runs a block on to the page's end edge, below any note still beside the text.
 - **Rhythm:** a 4px-based scale from 0.25rem to 8rem. Paragraphs are 1rem apart, section headings get 3rem above and 0.75rem below, the mast pads 3rem to 4rem.
 - **Phones (below 40rem):** search collapses to an icon button, charts keep a 32rem minimum width and scroll sideways with soft scroll-shadow cues and a hint line, token tables stack.
 - **Very narrow (below 25rem):** the Menu button shows only its icon, and the pager stacks below 30rem, so nothing scrolls sideways at 320px.
 - **Touch (`pointer: coarse`):** tabs, small buttons, the menu, segmented controls, slider rails, and sidebar and on-this-page links grow to 44px targets.
-- **Sidenotes:** in the margin from 90rem, but only when the main column (container `ply-main`) has 52rem for the measure, the gap, and the note.
+- **Sidenotes and margin blocks:** in the margin whenever the main column (container `ply-main`) has 52rem for the measure, the 2rem gap, and the 14rem margin; outside a `ply-main` column, from 90rem. In a `ply-main` column the margin widens with the page to 21rem, so notes end at the page's end edge. A section heading (h2) starts below anything still in the margin, so a note never sits beside the next section; keep notes short. Otherwise they drop under their paragraph.
 - **Long content:** words and URLs break only when they would overflow. Names in a table's first column stay whole and a wide table scrolls in its wrap; long button labels wrap to balanced lines; a segmented row longer than its space scrolls inside its frame.
-- **Right to left:** sides are logical, so the switch, the select arrow, the sidebar point, the menu, the skip link, and sidenotes mirror. Code blocks stay left to right.
+- **Right to left:** sides are logical, so the switch, the select arrow, the sidebar point, the menu, the skip link, the article rail, sidenotes, and margin blocks mirror. Code blocks stay left to right.
 - **Contrast themes and print:** in forced colors, marks drawn as fills keep their shapes in system colors and picked states use Highlight; on paper the light theme applies, panels print as ink on white, fills that show a state (primary buttons, pressed segments, checked boxes) keep their ink, and the site chrome is hidden.
 
 ## Elevation & Depth
@@ -312,13 +314,18 @@ Square exhibit labels.
 ### Navigation
 - **Top bar tabs:** 15px medium caption gray; hover shows the gallery wall; the current chapter is a black wall-label tab with white semibold text.
 - **Sidebar:** caption gray links; the current page is bold black with a tomato point to its left.
-- **On this page:** 14px caption gray; the current section turns black and semibold.
+- **On this page:** 14px caption gray; the current section turns black and semibold. On docs pages it hangs under the current page in the sidebar, indented on a hairline; on articles it sits in the start rail under a bold heading, and the current section gets the tomato point.
 - **Search:** the top-bar field opens a square sheet over a dimmed page, closed by a 3px rule with the soft shadow of a floating layer; on phones it fills the screen. Results come from the site's own Pagefind index, grouped by page with up to three matching sections. A small black wall label names each result's kind, matches are pale mustard, and the highlighted result gets the tomato point. "/" and Ctrl or Cmd+K open it; the machine loader shows while the index loads.
 - **Pager:** a 3px rule, then previous and next with Ultra titles that turn tomato ink on hover. Crossing into another chapter, it names the chapter.
 - **Mobile:** chapters move into a native details menu with a 3px black border; search becomes icon-only.
 
 ### Code Blocks
-Black panels capped at the reading measure. A bar with the language in mono and a hairline copy button sits on top; the copy button turns mustard when copied, and its name says which block it copies. Long lines scroll with the same soft edge cue as tables and charts. Comments are mustard light, keywords tomato bright, strings teal light, numbers cobalt light.
+Black panels capped at the reading measure, so in an article they never cross into the margin; on a docs page `.ply-wide` runs one on past the text. A bar with the language in mono and a hairline copy button sits on top; the copy button turns mustard when copied, and its name says which block it copies. Long lines scroll with the same soft edge cue as tables and charts. Comments are mustard light, keywords tomato bright, strings teal light, numbers cobalt light.
+
+### Papers and Posts
+- **Headers:** the title in Ultra from 32px to 64px, balanced, at most 14.5em wide (about 22 characters), so it breaks the same way at every width. A paper adds authors in 20px semibold with tomato affiliation marks, the venue in bold 14px, and the links as small buttons. A post adds a 20px lede, a bold 14px date line with a small tomato ball between the date and the reading time, and outline tags.
+- **Sidenotes:** 14px caption gray with a bold tomato-ink number, in the margin or under their paragraph.
+- **Margin figures:** 14rem wide in the margin, the caption under them in 14px caption gray with a bold black "Figure n." lead.
 
 ### Vietoris-Rips Complex
 The signature model and the emblem: random points in a black panel at 100:56. Points closer than the radius join with chalk edges, and three pairwise joined points fill a mustard triangle at half strength. A radius slider and the edge and triangle counts sit under the panel; pointing at a vertex draws its reach as a dashed tomato circle. On the home page it grows on first view, the radius running from 0 to its value in under three seconds, so edges arrive before triangles; without script, or with reduced motion, it is drawn finished. Past 2000 triangles the fill is drawn as one shape, so even 120 points stay responsive. The favicon is the same object at its smallest: one filled triangle and one loose edge on black, with a tomato vertex.

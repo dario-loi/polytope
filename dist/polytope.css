@@ -1,4 +1,4 @@
-/* Polytope v0.5.1. Generated; edit css/src instead. */
+/* Polytope v0.6.0. Generated; edit css/src instead. */
 @layer ply.reset, ply.base, ply.layout, ply.components, ply.utilities;
 /* Self-hosted faces. Ultra: Apache 2.0. Libre Franklin and JetBrains Mono: SIL OFL 1.1. License texts: ./fonts/LICENSE-*.txt */
 @font-face { font-family: "Ultra"; font-style: normal; font-weight: 400; font-display: swap; src: url("./fonts/ultra-latin-400.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
@@ -66,6 +66,7 @@
   --ply-size-ui: 0.9375rem;
   --ply-size-md: 1rem;
   --ply-size-body: 1.0625rem;
+  --ply-size-body-wide: 1.125rem;
   --ply-size-lg: 1.25rem;
   --ply-size-xl: 1.5rem;
   --ply-size-2xl: 2rem;
@@ -103,6 +104,8 @@
   --ply-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --ply-ease-gravity: cubic-bezier(0.55, 0, 1, 0.45);
   --ply-layout-measure: 36rem;
+  --ply-layout-measure-wide: 38rem;
+  --ply-layout-margin: 14rem;
   --ply-layout-gutter: clamp(1rem, 0.2rem + 4vw, 4.5rem);
   --ply-layout-sidebar: 17.5rem;
   --ply-layout-toc: 15rem;
@@ -351,7 +354,7 @@
 
 /* ---- layout.css ---- */
 @layer ply.layout {
-  /* Page frame: top bar, mast, then the three-column docs grid. */
+  /* Page frame: top bar, mast, then the docs grid or an article. */
   .ply-container { width: 100%; max-width: var(--ply-layout-max); margin-inline: auto; padding-inline: var(--ply-layout-gutter); }
 
   .ply-rule { border: 0; border-top: var(--ply-border-rule) solid var(--ply-color-rule-strong); margin: 0; }
@@ -365,18 +368,57 @@
     .ply-mast { grid-template-columns: minmax(0, 1fr) minmax(0, 35rem); gap: var(--ply-space-7); padding-block: var(--ply-space-7) var(--ply-space-8); }
   }
 
+  /* Reading frames: the docs grid and the article. Both put the text at the centre of the
+     page when there is room, with navigation at the page's start edge. Their main column
+     (container ply-main) runs from the text's edge to the page's end edge, and the space
+     after the text holds sidenotes and margin figures; on a docs page, wide blocks run on
+     into it as well. Each side track is
+     at least what it holds; past that they split the rest evenly, which centres the text. */
+
+  /* Docs grid: the chapter sidebar, with the on-this-page list under the current page. */
   .ply-docs { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0; }
   .ply-docs__nav { display: none; }
   .ply-docs__toc { display: none; }
   .ply-docs__main { min-width: 0; padding-block: var(--ply-space-6) var(--ply-space-9); container: ply-main / inline-size; }
   @media (min-width: 56rem) {
-    .ply-docs { grid-template-columns: var(--ply-layout-sidebar) minmax(0, 1fr); }
-    .ply-docs__nav { display: block; padding-block: var(--ply-space-6); position: sticky; top: 0; align-self: start; max-height: 100dvh; overflow-y: auto; }
-    .ply-docs__main { padding-inline-start: var(--ply-space-7); }
+    .ply-docs { grid-template-columns: minmax(calc(var(--ply-layout-sidebar) + var(--ply-space-7)), 1fr) minmax(0, var(--ply-layout-measure)) minmax(0, 1fr); }
+    .ply-docs__nav { display: block; grid-column: 1; grid-row: 1; width: var(--ply-layout-sidebar); padding-block: var(--ply-space-6); position: sticky; top: 0; align-self: start; max-height: 100dvh; overflow-y: auto; }
+    .ply-docs__main { grid-column: 2 / -1; grid-row: 1; }
+  }
+  /* Deprecated in 0.6.0: an on-this-page column after the main column. A grid that still
+     has one keeps the old three columns from 80rem; new pages put the list in the sidebar. */
+  @media (min-width: 80rem) {
+    .ply-docs:has(> .ply-docs__toc) { grid-template-columns: var(--ply-layout-sidebar) minmax(0, 1fr) var(--ply-layout-toc); }
+    .ply-docs:has(> .ply-docs__toc) > .ply-docs__nav { width: auto; }
+    .ply-docs:has(> .ply-docs__toc) > .ply-docs__main { grid-column: 2; padding-inline-start: var(--ply-space-7); }
+    .ply-docs__toc { display: block; grid-column: 3; grid-row: 1; padding-block: var(--ply-space-6) 0; padding-inline-start: var(--ply-space-6); position: sticky; top: 0; align-self: start; }
+  }
+
+  /* Article: a paper, a post, a page of notes. The on-this-page list hangs in a rail at the
+     page's start edge from 80rem. Below 60rem it is one column. A header set in a
+     .ply-article--head of its own lines up with the text under it. */
+  .ply-article { display: grid; grid-template-columns: minmax(0, 1fr); padding-block: var(--ply-space-6) var(--ply-space-8); }
+  .ply-article--head { padding-block: 0; }
+  .ply-article__rail { display: none; }
+  .ply-article__main { grid-column: 1 / -1; grid-row: 1; min-width: 0; container: ply-main / inline-size; }
+  /* Where the rail is closed, the same list waits in a disclosure above the text. */
+  .ply-article__contents { margin-bottom: var(--ply-space-6); border-bottom: var(--ply-border-hair) solid var(--ply-color-rule); }
+  .ply-article__contents > summary { font-size: var(--ply-size-ui); }
+  .ply-article__contents .ply-toc { padding-block-end: var(--ply-space-3); font-size: var(--ply-size-ui); }
+  @media (min-width: 60rem) {
+    .ply-article { grid-template-columns: minmax(var(--_lead, 0px), 1fr) minmax(0, var(--ply-layout-measure)) minmax(calc(var(--ply-space-6) + var(--ply-layout-margin)), 1fr); }
+    .ply-article__main { grid-column: 2 / -1; }
   }
   @media (min-width: 80rem) {
-    .ply-docs { grid-template-columns: var(--ply-layout-sidebar) minmax(0, 1fr) var(--ply-layout-toc); }
-    .ply-docs__toc { display: block; padding-block: var(--ply-space-6) 0; padding-inline-start: var(--ply-space-6); position: sticky; top: 0; align-self: start; }
+    .ply-article { --_lead: calc(var(--ply-layout-toc) + var(--ply-space-7)); }
+    .ply-article__rail { display: block; grid-column: 1; grid-row: 1; width: var(--ply-layout-toc); position: sticky; top: var(--ply-space-5); align-self: start; max-height: calc(100dvh - 2 * var(--ply-space-5)); overflow-y: auto; padding: var(--ply-space-1) var(--ply-space-2) var(--ply-space-1) 0; margin-block-start: calc(-1 * var(--ply-space-1)); }
+    .ply-article__contents { display: none; }
+  }
+
+  /* The widest screens set the text a step larger, in a column that grows with it. */
+  @media (min-width: 100rem) {
+    :is(.ply-docs, .ply-article) { --ply-layout-measure: var(--ply-layout-measure-wide); }
+    :is(.ply-docs, .ply-article) .ply-prose { font-size: var(--ply-size-body-wide); }
   }
 
   /* Reading column: everything inside keeps a readable measure; wide blocks opt out. */
@@ -512,6 +554,16 @@
   .ply-toc a:hover, .ply-toc a[aria-current="true"] { color: var(--ply-color-text); }
   .ply-toc a[aria-current="true"] { font-weight: var(--ply-weight-semibold); }
   .ply-toc .ply-toc__sub a { padding-inline-start: var(--ply-space-3); }
+  /* An auto list stays out of sight until the script fills it, so no label hangs over nothing. */
+  .ply-toc[data-auto]:not(:has(li)), .ply-article__contents:not(:has(.ply-toc li)) { display: none; }
+  /* In an article's rail, the current section gets the tomato point, as the sidebar's page does. */
+  .ply-article__rail .ply-toc ul { padding-inline-start: var(--ply-space-5); }
+  .ply-article__rail .ply-toc a { position: relative; }
+  .ply-article__rail .ply-toc a[aria-current="true"]::before { content: ""; position: absolute; inset-inline-start: calc(-1 * var(--ply-space-5)); top: 50%; width: 0.5625rem; height: 0.5625rem; margin-top: -0.28125rem; border-radius: var(--ply-radius-ball); background: var(--ply-color-accent); }
+  /* Inside a sidebar, the list hangs under the current page, on a hairline that ties it there. */
+  .ply-sidenav .ply-toc { margin-block: var(--ply-space-1) var(--ply-space-2); }
+  .ply-sidenav .ply-toc ul { padding-inline-start: var(--ply-space-3); border-inline-start: var(--ply-border-hair) solid var(--ply-color-rule); }
+  .ply-sidenav .ply-toc a { display: block; padding-block: 0.3rem; }
 
   .ply-breadcrumb { display: flex; flex-wrap: wrap; gap: var(--ply-space-2); font-size: var(--ply-size-sm); color: var(--ply-color-text-muted); list-style: none; padding: 0; }
   .ply-breadcrumb li + li::before { content: "/"; margin-inline-end: var(--ply-space-2); color: var(--ply-color-text-subtle); }
@@ -643,7 +695,7 @@
 
 /* ---- components/table.css ---- */
 @layer ply.components {
-  .ply-table-wrap { overflow-x: auto; max-width: 100%; border-top: var(--ply-border-rule) solid var(--ply-color-rule-strong); }
+  .ply-table-wrap { overflow-x: auto; max-width: 100%; border-top: var(--ply-border-rule) solid var(--ply-color-rule-strong); container-type: inline-size; }
   .ply-table { width: 100%; border-collapse: collapse; font-size: var(--ply-size-ui); line-height: var(--ply-leading-normal); font-variant-numeric: tabular-nums; }
   .ply-table th { text-align: start; font-weight: var(--ply-weight-bold); font-size: var(--ply-size-sm); padding-block: var(--ply-space-3) var(--ply-space-2); padding-inline: 0 var(--ply-space-4); border-bottom: var(--ply-border-control) solid var(--ply-color-rule-strong); vertical-align: bottom; white-space: nowrap; }
   .ply-table td { padding-block: var(--ply-space-3); padding-inline: 0 var(--ply-space-4); border-bottom: var(--ply-border-hair) solid var(--ply-color-rule); vertical-align: top; }
@@ -651,7 +703,9 @@
   .ply-table .ply-num { text-align: end; }
   /* The first column names things. Names stay whole; a wide table scrolls in its wrap. */
   .ply-table :is(th, td):first-child code { white-space: nowrap; }
-  .ply-table caption { caption-side: bottom; text-align: start; padding-top: var(--ply-space-3); font-size: var(--ply-size-sm); color: var(--ply-color-text-muted); }
+  /* A caption keeps to the measure and to the visible part of a table that scrolls, so it
+     reads whole on a phone while the table moves under it. */
+  .ply-table caption { caption-side: bottom; text-align: start; padding-top: var(--ply-space-3); font-size: var(--ply-size-sm); color: var(--ply-color-text-muted); max-width: min(var(--ply-layout-measure), 100cqi); position: sticky; inset-inline-start: 0; }
   .ply-table--striped tbody tr:nth-child(even) { background: var(--ply-color-surface-sunken); }
   .ply-table--striped td:first-child, .ply-table--striped th:first-child { padding-inline-start: var(--ply-space-3); }
   .ply-table tbody tr:hover { background: color-mix(in srgb, var(--ply-color-note) 18%, transparent); }
@@ -1005,8 +1059,17 @@
   /* Paper header: title, authors with affiliation marks, venue, and the link row. */
   .ply-paper { display: grid; gap: var(--ply-space-5); padding-block: var(--ply-space-7); }
   .ply-paper__venue { font-size: var(--ply-size-sm); font-weight: var(--ply-weight-bold); }
-  .ply-paper__title { font-family: var(--ply-font-display); font-weight: 400; font-size: clamp(var(--ply-size-2xl), 1.2rem + 3vw, var(--ply-size-4xl)); line-height: 1.02; letter-spacing: -0.01em; max-width: 22ch; }
+  /* The cap is in em, so a title breaks the same way at every width it reaches its full
+     size, and the same with the fallback face as with Ultra. */
+  .ply-paper__title, .ply-post__title { font-family: var(--ply-font-display); font-weight: 400; font-size: clamp(var(--ply-size-2xl), 1.2rem + 3vw, var(--ply-size-4xl)); line-height: 1.02; letter-spacing: -0.01em; max-width: 14.5em; text-wrap: balance; }
   .ply-paper__links { display: flex; flex-wrap: wrap; gap: var(--ply-space-2); }
+
+  /* Post header: title, lede, the date line, tags. The same title and rhythm as a paper's. */
+  .ply-post { display: grid; gap: var(--ply-space-4); padding-block: var(--ply-space-7); }
+  .ply-post__lede { font-size: var(--ply-size-lg); line-height: var(--ply-leading-normal); max-width: var(--ply-layout-measure); }
+  .ply-post__meta { display: flex; flex-wrap: wrap; gap: var(--ply-space-1) var(--ply-space-4); font-size: var(--ply-size-sm); font-weight: var(--ply-weight-bold); font-variant-numeric: tabular-nums; }
+  .ply-post__meta > * + *::before { content: ""; display: inline-block; width: 0.375rem; height: 0.375rem; margin-inline-end: var(--ply-space-4); border-radius: var(--ply-radius-ball); background: var(--ply-color-accent); vertical-align: 0.15em; }
+  .ply-post__tags { display: flex; flex-wrap: wrap; gap: var(--ply-space-2); list-style: none; padding: 0; }
 
   .ply-authors { display: flex; flex-wrap: wrap; gap: var(--ply-space-1) var(--ply-space-4); list-style: none; padding: 0; font-size: var(--ply-size-lg); font-weight: var(--ply-weight-semibold); }
   .ply-authors sup, .ply-affiliations sup { font-size: 0.65em; font-weight: var(--ply-weight-bold); color: var(--ply-color-accent-text); margin-inline-start: 0.1em; }
@@ -1018,7 +1081,8 @@
   .ply-abstract__label { font-family: var(--ply-font-display); font-size: var(--ply-size-xl); margin-bottom: var(--ply-space-2); }
   .ply-abstract p { font-size: var(--ply-size-lg); line-height: var(--ply-leading-relaxed); }
 
-  /* Numbered figures. Wide figures may break out of the reading column. */
+  /* Numbered figures. Margin figures sit in the margin after the text (.ply-margin). Wide
+     ones (.ply-wide) run on past the text on a docs page and keep to it in an article. */
   .ply-figure { margin: var(--ply-space-6) 0; }
   .ply-figure--wide { max-width: none; }
   .ply-figure img, .ply-figure svg, .ply-figure video { width: 100%; height: auto; }
@@ -1069,18 +1133,32 @@
 
 /* ---- components/writing.css ---- */
 @layer ply.components {
-  /* Sidenotes: in the margin on wide screens, inline under the paragraph on narrow ones. */
+  /* Sidenotes, and margin blocks (.ply-margin: a small figure, table, or code block placed
+     before the paragraph it goes with), sit in the margin after the text when there is room
+     for it, and under their paragraph when there is not. A main column that names itself
+     ply-main, as the docs and article frames do, decides by its own width: room for the
+     36rem measure, the 2rem gap, and the 14rem margin. There the margin also widens with the
+     page, up to half again, so notes end at the page's end edge. Without one, the
+     margin opens at 90rem, 14rem wide. A section heading starts below anything still in the
+     margin, so a note never sits beside the next section. */
   .ply-sidenote-ref { font-size: 0.72em; font-weight: var(--ply-weight-bold); color: var(--ply-color-accent-text); vertical-align: super; line-height: 0; margin-inline-start: 0.08em; }
   .ply-sidenote { display: block; margin: var(--ply-space-3) 0; padding-inline-start: var(--ply-space-4); font-size: var(--ply-size-sm); line-height: var(--ply-leading-normal); color: var(--ply-color-text-muted); position: relative; }
-  .ply-sidenote::before { content: attr(data-n); position: absolute; inset-inline-start: 0; font-weight: var(--ply-weight-bold); color: var(--ply-color-accent-text); }
+  /* The number is already read out from the reference mark just before the note. */
+  .ply-sidenote::before { content: attr(data-n); content: attr(data-n) / ""; position: absolute; inset-inline-start: 0; font-weight: var(--ply-weight-bold); color: var(--ply-color-accent-text); }
+  .ply-margin { max-width: var(--ply-layout-measure); }
   @media (min-width: 90rem) {
     .ply-has-sidenotes { position: relative; }
-    .ply-sidenote { float: inline-end; clear: inline-end; width: 14rem; margin-block: 0.2rem var(--ply-space-3); margin-inline: 0 calc(-14rem - var(--ply-space-6)); }
+    :is(.ply-sidenote, .ply-prose > .ply-margin) { --_side: var(--ply-layout-margin); float: inline-end; clear: inline-end; width: var(--_side); margin-block: 0.2rem var(--ply-space-3); margin-inline: 0 calc(-1 * (var(--_side) + var(--ply-space-6))); }
+    .ply-prose > h2 { clear: inline-end; }
   }
-  /* A main column that names itself ply-main keeps sidenotes inline until it has room for
-     the margin: the 36rem measure, the gap, and the 14rem note. */
+  @container ply-main (width >= 52rem) {
+    :is(.ply-sidenote, .ply-prose > .ply-margin) { --_side: clamp(var(--ply-layout-margin), 100cqi - var(--ply-layout-measure) - var(--ply-space-6), var(--ply-layout-margin) * 1.5); float: inline-end; clear: inline-end; width: var(--_side); margin-block: 0.2rem var(--ply-space-3); margin-inline: 0 calc(-1 * (var(--_side) + var(--ply-space-6))); }
+    .ply-prose > h2 { clear: inline-end; }
+  }
   @container ply-main (width < 52rem) {
     .ply-sidenote { float: none; width: auto; margin: var(--ply-space-3) 0; }
+    .ply-prose > .ply-margin { float: none; width: auto; margin-block: var(--ply-space-5) 0; margin-inline: 0; }
+    .ply-prose > h2 { clear: none; }
   }
 
   .ply-footnotes { margin-top: var(--ply-space-8); padding-top: var(--ply-space-4); border-top: var(--ply-border-control) solid var(--ply-color-rule-strong); font-size: var(--ply-size-sm); color: var(--ply-color-text-muted); max-width: var(--ply-layout-measure); }
@@ -1157,6 +1235,8 @@
   .ply-chart__title { font-weight: var(--ply-weight-bold); font-size: var(--ply-size-md); line-height: 1.3; margin: 0; }
   .ply-chart__subtitle { font-size: var(--ply-size-sm); color: var(--ply-color-text-muted); margin-top: var(--ply-space-1); }
   .ply-chart__plot { position: relative; overflow-x: auto; }
+  /* The data table toggle spans the chart, also when a wide chart runs past the measure. */
+  .ply-chart > .ply-details { max-width: none; }
   .ply-chart__hint { display: none; font-size: var(--ply-size-xs); color: var(--ply-color-text-muted); }
   @media (max-width: 40rem) { .ply-chart__hint { display: block; } }
   /* Charts keep a readable size on phones and scroll sideways; the data table holds the numbers. */
@@ -1200,9 +1280,14 @@
   .ply-mt-0 { margin-top: 0 !important; }
   @media (max-width: 40rem) { .ply-hide-narrow { display: none !important; } }
   /* A wide block inside the reading column runs to the edge of a main column that names
-     itself ply-main, such as a scale table whose samples need the room. In this layer so it
-     also beats a component's own max-width. */
-  @container ply-main (width > 0px) { .ply-prose > .ply-wide { width: 100cqi; max-width: none; } }
+     itself ply-main: on a docs page, from the text's edge to the page's end edge. It starts
+     below any sidenote or margin figure still beside the text, so it never runs over one.
+     An article keeps its margin for notes and margin figures, so a block there never
+     straddles the edge between text and margin: a wide one keeps to the text, and a long
+     table or line of code scrolls in its own frame. In this layer so it also beats a
+     component's own max-width. */
+  @container ply-main (width > 0px) { .ply-prose > .ply-wide { width: 100cqi; max-width: none; clear: inline-end; } }
+  .ply-article .ply-prose > .ply-wide { width: auto; clear: none; }
 }
 
 /* ---- modes.css ---- */
@@ -1257,14 +1342,14 @@
   /* Print. tokens.css switches paper to the light theme with ink-on-white panels;
      this hides the site chrome and keeps figures, code, and notes whole. */
   @media print {
-    .ply-skip, .ply-topbar, .ply-docs__nav, .ply-docs__toc, .ply-pager, .ply-menu,
+    .ply-skip, .ply-topbar, .ply-docs__nav, .ply-docs__toc, .ply-article__rail, .ply-pager, .ply-menu,
     .ply-theme-toggle, .ply-code__copy, .ply-chart__hint, .ply-cite__card, .ply-toast,
     .ply-atlas__controls, .ply-atlas__readout, .ply-atlas__filter { display: none !important; }
     /* The globe prints once at the top of its entries, as it stands. */
     .ply-atlas__stage { position: static; }
     .ply-atlas__map { height: 18rem; break-inside: avoid; }
     .ply-atlas__list { padding-block-end: 0; }
-    .ply-docs { display: block; }
+    .ply-docs, .ply-article { display: block; }
     .ply-panel, .ply-code { border: var(--ply-border-control) solid var(--ply-color-rule-strong); }
     .ply-code pre { white-space: pre-wrap; overflow: visible; }
     .ply-chart__plot { overflow: visible; }

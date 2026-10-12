@@ -5,6 +5,7 @@ import Complex from "@dario-loi/polytope/astro/Complex.astro";
 import PubList from "@dario-loi/polytope/astro/PubList.astro";
 import Button from "@dario-loi/polytope/astro/Button.astro";
 import Icon from "@dario-loi/polytope/astro/Icon.astro";
+import { u } from "../../data/nav";
 const pubs = [
   { year: 2026, title: "Example title: higher-order message passing on cell complexes", href: "#", authors: ["A. Author", "John Doe", "B. Author"], venue: "Example Venue 2026", links: [{ label: "Paper", href: "#" }, { label: "Code", href: "#" }, { label: "Page", href: "../paper/" }] },
   { year: 2026, title: "Example title: sheaf diffusion with learned restriction maps", href: "#", authors: ["John Doe", "C. Author"], venue: "Example Workshop 2026", links: [{ label: "Paper", href: "#" }] },
@@ -44,7 +45,7 @@ const notes = [
     <section class="hp-section">
       <h2 class="hp-h">Notes</h2>
       <ul class="hp-notes" role="list">
-        {notes.map(([t, d]) => <li><a href="#">{t}</a><span class="ply-small ply-muted ply-num">{d}</span></li>)}
+        {notes.map(([t, d], i) => <li><a href={i === 0 ? u("/patterns/post/") : "#"}>{t}</a><span class="ply-small ply-muted ply-num">{d}</span></li>)}
       </ul>
     </section>
   </div>

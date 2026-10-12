@@ -3,8 +3,17 @@
   /* Paper header: title, authors with affiliation marks, venue, and the link row. */
   .ply-paper { display: grid; gap: var(--ply-space-5); padding-block: var(--ply-space-7); }
   .ply-paper__venue { font-size: var(--ply-size-sm); font-weight: var(--ply-weight-bold); }
-  .ply-paper__title { font-family: var(--ply-font-display); font-weight: 400; font-size: clamp(var(--ply-size-2xl), 1.2rem + 3vw, var(--ply-size-4xl)); line-height: 1.02; letter-spacing: -0.01em; max-width: 22ch; }
+  /* The cap is in em, so a title breaks the same way at every width it reaches its full
+     size, and the same with the fallback face as with Ultra. */
+  .ply-paper__title, .ply-post__title { font-family: var(--ply-font-display); font-weight: 400; font-size: clamp(var(--ply-size-2xl), 1.2rem + 3vw, var(--ply-size-4xl)); line-height: 1.02; letter-spacing: -0.01em; max-width: 14.5em; text-wrap: balance; }
   .ply-paper__links { display: flex; flex-wrap: wrap; gap: var(--ply-space-2); }
+
+  /* Post header: title, lede, the date line, tags. The same title and rhythm as a paper's. */
+  .ply-post { display: grid; gap: var(--ply-space-4); padding-block: var(--ply-space-7); }
+  .ply-post__lede { font-size: var(--ply-size-lg); line-height: var(--ply-leading-normal); max-width: var(--ply-layout-measure); }
+  .ply-post__meta { display: flex; flex-wrap: wrap; gap: var(--ply-space-1) var(--ply-space-4); font-size: var(--ply-size-sm); font-weight: var(--ply-weight-bold); font-variant-numeric: tabular-nums; }
+  .ply-post__meta > * + *::before { content: ""; display: inline-block; width: 0.375rem; height: 0.375rem; margin-inline-end: var(--ply-space-4); border-radius: var(--ply-radius-ball); background: var(--ply-color-accent); vertical-align: 0.15em; }
+  .ply-post__tags { display: flex; flex-wrap: wrap; gap: var(--ply-space-2); list-style: none; padding: 0; }
 
   .ply-authors { display: flex; flex-wrap: wrap; gap: var(--ply-space-1) var(--ply-space-4); list-style: none; padding: 0; font-size: var(--ply-size-lg); font-weight: var(--ply-weight-semibold); }
   .ply-authors sup, .ply-affiliations sup { font-size: 0.65em; font-weight: var(--ply-weight-bold); color: var(--ply-color-accent-text); margin-inline-start: 0.1em; }
@@ -16,7 +25,8 @@
   .ply-abstract__label { font-family: var(--ply-font-display); font-size: var(--ply-size-xl); margin-bottom: var(--ply-space-2); }
   .ply-abstract p { font-size: var(--ply-size-lg); line-height: var(--ply-leading-relaxed); }
 
-  /* Numbered figures. Wide figures may break out of the reading column. */
+  /* Numbered figures. Margin figures sit in the margin after the text (.ply-margin). Wide
+     ones (.ply-wide) run on past the text on a docs page and keep to it in an article. */
   .ply-figure { margin: var(--ply-space-6) 0; }
   .ply-figure--wide { max-width: none; }
   .ply-figure img, .ply-figure svg, .ply-figure video { width: 100%; height: auto; }

@@ -1,0 +1,30 @@
+---
+// Header for a post or a note: title, lede, date and reading time, tags. Set like the paper
+// header, so a site's posts and papers read as one series.
+//   <PostHeader title="..." date="2026-09-14" minutes={6} tags={["Topology"]} lede="..." />
+import Tag from "./Tag.astro";
+interface Props {
+  title: string;
+  /** "2026-09-14", or a Date. Printed as "14 September 2026". */
+  date: string | Date;
+  lede?: string;
+  /** Reading time, in minutes. */
+  minutes?: number;
+  tags?: string[];
+  /** Heading level of the title: 1 on the post's own page. */
+  level?: 1 | 2 | 3;
+  /** Language for the printed date. */
+  locale?: string;
+}
+const { title, date, lede, minutes, tags = [], level = 1, locale = "en-GB" } = Astro.props;
+const H = `h${level}`;
+const d = date instanceof Date ? date : new Date(`${date}T00:00:00Z`);
+const iso = d.toISOString().slice(0, 10);
+const shown = d.toLocaleDateString(locale, { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" });
+---
+<header class="ply-post">
+  <H class="ply-post__title">{title}</H>
+  {lede && <p class="ply-post__lede">{lede}</p>}
+  <p class="ply-post__meta"><time datetime={iso}>{shown}</time>{minutes !== undefined && <span>{minutes} minute read</span>}</p>
+  {tags.length > 0 && <ul class="ply-post__tags" aria-label="Tags">{tags.map((t) => <li><Tag>{t}</Tag></li>)}</ul>}
+</header>

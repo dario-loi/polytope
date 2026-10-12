@@ -50,14 +50,14 @@
   /* Print. tokens.css switches paper to the light theme with ink-on-white panels;
      this hides the site chrome and keeps figures, code, and notes whole. */
   @media print {
-    .ply-skip, .ply-topbar, .ply-docs__nav, .ply-docs__toc, .ply-pager, .ply-menu,
+    .ply-skip, .ply-topbar, .ply-docs__nav, .ply-docs__toc, .ply-article__rail, .ply-pager, .ply-menu,
     .ply-theme-toggle, .ply-code__copy, .ply-chart__hint, .ply-cite__card, .ply-toast,
     .ply-atlas__controls, .ply-atlas__readout, .ply-atlas__filter { display: none !important; }
     /* The globe prints once at the top of its entries, as it stands. */
     .ply-atlas__stage { position: static; }
     .ply-atlas__map { height: 18rem; break-inside: avoid; }
     .ply-atlas__list { padding-block-end: 0; }
-    .ply-docs { display: block; }
+    .ply-docs, .ply-article { display: block; }
     .ply-panel, .ply-code { border: var(--ply-border-control) solid var(--ply-color-rule-strong); }
     .ply-code pre { white-space: pre-wrap; overflow: visible; }
     .ply-chart__plot { overflow: visible; }

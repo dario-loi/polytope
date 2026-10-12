@@ -1,5 +1,6 @@
 ---
-// A docs page: mast with an optional exhibit, chapter sidebar, reading column, on-this-page list, pager.
+// A docs page: mast with an optional exhibit, chapter sidebar with the on-this-page list
+// under the current page, reading column, pager.
 import Base from "./Base.astro";
 import Mast from "@dario-loi/polytope/astro/Mast.astro";
 import SideNav from "@dario-loi/polytope/astro/SideNav.astro";
@@ -25,13 +26,17 @@ const pagerLabel = (p: NonNullable<typeof here.next>) => (p.chapter === here.cha
     <hr class="ply-rule" />
     <div class="ply-container ply-docs" data-pagefind-meta={`kind:${here.chapter.label}`}>
       <div class="ply-docs__nav">
-        <SideNav groups={groups} label={`${here.chapter.label} pages`} />
+        <SideNav groups={groups} label={`${here.chapter.label} pages`}>
+          {toc && <div slot="current" class="ply-toc" data-auto data-pagefind-ignore><ul aria-label="On this page"></ul></div>}
+        </SideNav>
       </div>
       <div class="ply-docs__main" data-toc-scope>
         {siblings > 1 && (
           <details class="ply-details docs-chapter" data-pagefind-ignore>
             <summary>In this chapter <span class="docs-chapter__count">{siblings} pages</span></summary>
-            <SideNav groups={[{ items: groups[0].items }]} label={`${here.chapter.label} pages`} />
+            <SideNav groups={[{ items: groups[0].items }]} label={`${here.chapter.label} pages`}>
+              {toc && <div slot="current" class="ply-toc" data-auto data-pagefind-ignore><ul aria-label="On this page"></ul></div>}
+            </SideNav>
           </details>
         )}
         <div class:list={["ply-prose", wide && "ply-wide"]}>
@@ -42,9 +47,6 @@ const pagerLabel = (p: NonNullable<typeof here.next>) => (p.chapter === here.cha
           prev={here.prev && { label: pagerLabel(here.prev), href: u(here.prev.path) }}
           next={here.next && { label: pagerLabel(here.next), href: u(here.next.path) }}
         />
-      </div>
-      <div class="ply-docs__toc">
-        {toc && <nav class="ply-toc" data-auto aria-label="On this page"><p class="ply-toc__heading">On this page</p><ul></ul></nav>}
       </div>
     </div>
   </main>

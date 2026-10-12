@@ -44,6 +44,7 @@ export const chapters: Chapter[] = [
     { label: "Overview", path: "/patterns/" },
     { label: "Homepage", path: "/patterns/homepage/" },
     { label: "Paper page", path: "/patterns/paper/" },
+    { label: "Blog post", path: "/patterns/post/" },
     { label: "Demo page", path: "/patterns/demo/" },
     { label: "CV page", path: "/patterns/cv/" },
   ] },

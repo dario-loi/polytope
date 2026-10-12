@@ -1,0 +1,65 @@
+---
+// A reading page: a paper, a post, a page of notes. The text sits at the centre of the page
+// when there is room, with the on-this-page list in a rail at the start edge from 80rem and
+// in a disclosure above the text below that. Sidenotes and margin figures use the margin
+// after the text; every other block keeps to the text, .ply-wide included, so nothing
+// straddles the edge between them. A header in the "header" slot lines up with the text,
+// above a 3px rule.
+//   <Article><PaperHeader slot="header" ... /><h2>1. Introduction</h2><p>...</p></Article>
+// Put it in <main>. toc={false} drops the list; a string renames it.
+interface Props { toc?: boolean | string; class?: string }
+const { toc = true, class: className } = Astro.props;
+const label = typeof toc === "string" ? toc : "On this page";
+
+// The list is written here, from the text's h2 and h3 headings, so it is whole before any
+// script runs and nothing moves when it arrives. Headings without an id get one. An
+// abstract's label is not a section, so it stays out, as js/toc.js leaves it out.
+let body = await Astro.slots.render("default");
+const slug = (s: string) => s.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+const text = (html: string) => html.replace(/<[^>]*>/g, "").replace(/\s+/g, " ").trim();
+const used = new Set([...body.matchAll(/\sid="([^"]+)"/g)].map((m) => m[1]));
+const sections: { id: string; html: string; sub: boolean }[] = [];
+body = body.replace(/<h([23])((?:\s[^>]*)?)>([\s\S]*?)<\/h\1>/g, (all, level: string, attrs: string, inner: string) => {
+  if (/class="[^"]*\bply-abstract__label\b/.test(attrs)) return all;
+  let id = attrs.match(/\sid="([^"]+)"/)?.[1];
+  if (!id) {
+    id = slug(text(inner)) || "section";
+    while (used.has(id)) id += "-x";
+    used.add(id);
+    attrs = `${attrs} id="${id}"`;
+  }
+  sections.push({ id, html: text(inner), sub: level === "3" });
+  return `<h${level}${attrs}>${inner}</h${level}>`;
+});
+const listed = toc && sections.length >= 2;
+---
+{Astro.slots.has("header") && (
+  <>
+    <div class="ply-container ply-article ply-article--head">
+      <div class="ply-article__main"><slot name="header" /></div>
+    </div>
+    <hr class="ply-rule" />
+  </>
+)}
+<div class:list={["ply-container ply-article", className]}>
+  {listed && (
+    <div class="ply-article__rail">
+      <nav class="ply-toc" aria-label={label}>
+        <p class="ply-toc__heading">{label}</p>
+        <ul>{sections.map((s) => <li class={s.sub ? "ply-toc__sub" : undefined}><a href={`#${s.id}`} set:html={s.html} /></li>)}</ul>
+      </nav>
+    </div>
+  )}
+  <div class="ply-article__main" data-toc-scope>
+    {listed && (
+      <details class="ply-details ply-article__contents">
+        <summary>{label}</summary>
+        <div class="ply-toc">
+          <ul aria-label={label}>{sections.map((s) => <li class={s.sub ? "ply-toc__sub" : undefined}><a href={`#${s.id}`} set:html={s.html} /></li>)}</ul>
+        </div>
+      </details>
+    )}
+    <div class="ply-prose ply-has-sidenotes" set:html={body} />
+  </div>
+</div>
+<script>import "../dist/js/toc.js";</script>

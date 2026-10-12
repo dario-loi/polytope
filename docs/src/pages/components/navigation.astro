@@ -4,6 +4,7 @@ import Example from "../../components/Example.astro";
 import ApiTable from "../../components/ApiTable.astro";
 import Code from "@dario-loi/polytope/astro/Code.astro";
 import Stability from "@dario-loi/polytope/astro/Stability.astro";
+import { u } from "../../data/nav";
 
 const tabs = `<nav class="ply-cluster" style="--ply-cluster-gap: 0.25rem" aria-label="Example chapters">
   <a class="ply-tab" href="#" aria-current="page">Research</a>
@@ -15,7 +16,14 @@ const side = `<nav class="ply-sidenav" aria-label="Example sections">
   <p class="ply-sidenav__heading">Foundations</p>
   <ul>
     <li><a href="#">Color</a></li>
-    <li><a href="#" aria-current="page">Typography</a></li>
+    <li><a href="#" aria-current="page">Typography</a>
+      <div class="ply-toc">
+        <ul aria-label="On this page">
+          <li><a href="#" aria-current="true">Typefaces</a></li>
+          <li><a href="#">Scale</a></li>
+        </ul>
+      </div>
+    </li>
     <li><a href="#">Motion</a></li>
   </ul>
 </nav>`;
@@ -68,9 +76,13 @@ const pager = `<nav class="ply-pager" aria-label="Pages" style="margin-top:0">
 
   <h2>Sidebar</h2>
   <Example html={side} />
+  <p>The page's own sections hang under the current page, on a hairline. With Astro, put them in the <code>current</code> slot, and the auto list fills itself:</p>
+  <Code lang="astro" code={`<SideNav groups={groups}>
+  <div slot="current" class="ply-toc" data-auto><ul aria-label="On this page"></ul></div>
+</SideNav>`} />
 
   <h2>On this page</h2>
-  <p>The list on the right of this page. Give it <code>data-auto</code> and an empty <code>&lt;ul&gt;</code>, put <code>data-toc-scope</code> on the article, and the script fills it from the h2 and h3 headings and follows your scroll. With Astro and Markdown headings, <code>&lt;Toc headings={"{headings}"} /&gt;</code> renders it on the server instead.</p>
+  <p>The list under the current page in this page's sidebar, and in the rail at the left of an <a href={u("/foundations/layout/#articles")}>article</a>. Give it <code>data-auto</code> and an empty <code>&lt;ul&gt;</code>, put <code>data-toc-scope</code> on the article, and the script fills it from the h2 and h3 headings and follows your scroll. With Astro and Markdown headings, <code>&lt;Toc headings={"{headings}"} /&gt;</code> renders it on the server instead.</p>
 
   <h2>Breadcrumb</h2>
   <Example html={crumb} />

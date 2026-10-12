@@ -1,8 +1,11 @@
 ---
-interface Props { num?: number | string; id?: string; wide?: boolean; class?: string }
-const { num, id, wide = false, class: className } = Astro.props;
+// margin puts a small figure in the margin after the text, beside the paragraph after it,
+// and keeps it in the text on narrow screens. wide runs a figure on past the text on a docs
+// page; an article keeps it to the text, since its margin belongs to the notes.
+interface Props { num?: number | string; id?: string; wide?: boolean; margin?: boolean; class?: string }
+const { num, id, wide = false, margin = false, class: className } = Astro.props;
 ---
-<figure class:list={["ply-figure", wide && "ply-figure--wide", className]} id={id}>
+<figure class:list={["ply-figure", wide && "ply-figure--wide ply-wide", margin && "ply-margin", className]} id={id}>
   <slot />
   {Astro.slots.has("caption") && (
     <figcaption>{num !== undefined && <span class="ply-figure__num">Figure {num}.</span>}<slot name="caption" /></figcaption>

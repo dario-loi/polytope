@@ -39,6 +39,7 @@
   --ply-size-ui: 0.9375rem;
   --ply-size-md: 1rem;
   --ply-size-body: 1.0625rem;
+  --ply-size-body-wide: 1.125rem;
   --ply-size-lg: 1.25rem;
   --ply-size-xl: 1.5rem;
   --ply-size-2xl: 2rem;
@@ -76,6 +77,8 @@
   --ply-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --ply-ease-gravity: cubic-bezier(0.55, 0, 1, 0.45);
   --ply-layout-measure: 36rem;
+  --ply-layout-measure-wide: 38rem;
+  --ply-layout-margin: 14rem;
   --ply-layout-gutter: clamp(1rem, 0.2rem + 4vw, 4.5rem);
   --ply-layout-sidebar: 17.5rem;
   --ply-layout-toc: 15rem;

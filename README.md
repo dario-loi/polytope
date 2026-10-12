@@ -62,8 +62,8 @@ In a project that has Polytope installed, npx runs that copy. The command won't 
 A site without npm (a static site built by Python, for example) can fetch the same files pinned to a release and link the hosted stylesheet in its template:
 
 ```sh
-curl -fsSLo DESIGN.md https://raw.githubusercontent.com/dario-loi/polytope/v0.5.1/DESIGN.md
-mkdir -p .impeccable && curl -fsSLo .impeccable/design.json https://raw.githubusercontent.com/dario-loi/polytope/v0.5.1/.impeccable/design.json
+curl -fsSLo DESIGN.md https://raw.githubusercontent.com/dario-loi/polytope/v0.6.0/DESIGN.md
+mkdir -p .impeccable && curl -fsSLo .impeccable/design.json https://raw.githubusercontent.com/dario-loi/polytope/v0.6.0/.impeccable/design.json
 ```
 
 Either way, new pages are then built inside Polytope and the design checker flags anything off the system. Run `/impeccable init` once so the site gets its own `PRODUCT.md`, and copy the files again whenever you upgrade Polytope.

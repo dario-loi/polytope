@@ -1,6 +1,8 @@
 ---
 import Docs from "../../layouts/Docs.astro";
+import Code from "@dario-loi/polytope/astro/Code.astro";
 import data from "@dario-loi/polytope/tokens.json";
+import { u } from "../../data/nav";
 const t = data.tokens as Record<string, any>;
 const space = Object.keys(t).filter((k) => k.startsWith("--ply-space-"));
 ---
@@ -14,10 +16,50 @@ const space = Object.keys(t).filter((k) => k.startsWith("--ply-space-"));
   <h2>Page frame</h2>
   <ul>
     <li>Side margin <code>--ply-layout-gutter</code>: 16px on phones, growing to 72px.</li>
-    <li>Reading column <code>--ply-layout-measure</code>: 36rem, about 68 characters of body text. Code, tables, and wide figures may run wider.</li>
-    <li>Docs pages add a chapter sidebar from 56rem and an on-this-page list from 80rem.</li>
+    <li>Reading column <code>--ply-layout-measure</code>: 36rem, about 68 characters of body text. On a docs page, examples and <code>.ply-wide</code> blocks may run wider; in an article, everything outside the margin keeps to it. From 100rem, docs and article pages set their text at 18px in a 38rem column (<code>--ply-layout-measure-wide</code>), which holds the same number of characters.</li>
+    <li>Docs pages add a chapter sidebar from 56rem, with the on-this-page list under the current page. The text sits at the centre of the page once there is room for the sidebar beside it.</li>
     <li>The page mast splits into title and exhibit from 64rem. Below that, the exhibit stacks under the title.</li>
-    <li>Sidenotes move into the margin from 90rem, when the main column (container <code>ply-main</code>) has 52rem for the measure, the gap, and the note. Docs pages, with their on-this-page list, keep them inline.</li>
+    <li>Sidenotes and margin figures move into the margin (<code>--ply-layout-margin</code>, at least 14rem) when the main column (container <code>ply-main</code>) has 52rem: the measure, a 2rem gap, and the margin. There the margin widens with the page, up to 21rem, so notes end at the page's edge. Outside a <code>ply-main</code> column, they move there from 90rem, 14rem wide.</li>
+  </ul>
+
+  <h2 id="articles">Articles</h2>
+  <p><code>.ply-article</code> is the frame for a paper, a post, or a page of notes. The text sits at the centre of the page. The on-this-page list hangs in a rail at the left edge, and the margin after the text holds sidenotes and margin figures. A header in an <code>.ply-article--head</code> of its own starts at the same edge as the text. The <a href={u("/patterns/paper/")}>paper</a> and <a href={u("/patterns/post/")}>post</a> patterns use it.</p>
+  <Code lang="html" code={`<div class="ply-container ply-article ply-article--head">
+  <div class="ply-article__main"><header class="ply-paper">...</header></div>
+</div>
+<hr class="ply-rule" />
+<div class="ply-container ply-article">
+  <div class="ply-article__rail">
+    <nav class="ply-toc" data-auto aria-label="On this page">
+      <p class="ply-toc__heading">On this page</p><ul></ul>
+    </nav>
+  </div>
+  <div class="ply-article__main" data-toc-scope>
+    <div class="ply-prose ply-has-sidenotes">...</div>
+  </div>
+</div>`} />
+  <p>In plain HTML, <code>js/toc.js</code> fills the list from the headings. In Astro, <code>&lt;Article&gt;</code> writes the same markup and builds the list from your h2 and h3 headings at build time, so it is there without JavaScript. Pass <code>toc=&#123;false&#125;</code> to drop the list.</p>
+  <Code lang="astro" code={`<Article>
+  <PaperHeader slot="header" title="..." authors={authors} />
+  <h2>1. Introduction</h2>
+  <p>...</p>
+</Article>`} />
+  <p>A block in an article sits in one of two lanes, and no block straddles the edge between them. Readers take that edge for a column line, so a block that crossed it would read as a mistake.</p>
+  <div class="ply-table-wrap">
+    <table class="ply-table">
+      <thead><tr><th>Lane</th><th>For</th><th>How</th></tr></thead>
+      <tbody>
+        <tr><td>Text</td><td>Paragraphs, equations, figures, tables, and code.</td><td>The default. A table with many columns or code with long lines scrolls in its own frame.</td></tr>
+        <tr><td>Margin</td><td>Sidenotes, and a small figure, table, or code block beside its paragraph.</td><td><code>&lt;Sidenote&gt;</code>; <code>.ply-margin</code> on a child placed before the paragraph, or <code>&lt;Figure margin&gt;</code>.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><code>.ply-wide</code> and <code>&lt;Figure wide&gt;</code> keep to the text in an article. On a docs page, where nothing hangs beside the text, they run a block on to the page's end edge.</p>
+  <ul>
+    <li>Below 60rem the article is one column. Sidenotes and margin blocks drop under their paragraph.</li>
+    <li>From 60rem the margin opens after the text, and the text moves toward the centre as the page widens.</li>
+    <li>From 80rem the rail opens at the left edge and the text is centred on the page. Below that, the same list waits in an "On this page" disclosure above the text.</li>
+    <li>A section heading starts below any sidenote or margin figure still beside the text, so a note never sits beside the next section. Keep notes short; a long one leaves a gap in the text.</li>
   </ul>
 
   <h2>Rules and borders</h2>

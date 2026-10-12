@@ -1,0 +1,32 @@
+---
+// A 2-cell drawn by hand: a filled triangle, its three oriented edges, and its vertices.
+// Sized by its container; used as a small margin figure on the paper and post patterns.
+---
+<svg class="cell-sketch" viewBox="0 0 220 186" role="img" aria-label="A filled triangle with vertices 0, 1, and 2. Arrows on its edges run from 0 to 1, 1 to 2, and 0 to 2.">
+  <defs>
+    <marker id="cell-arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="currentColor" /></marker>
+  </defs>
+  <path class="cell-sketch__face" d="M110,24 L30,160 L190,160 Z" />
+  <g class="cell-sketch__edges">
+    <path d="M30,160 L190,160" />
+    <path d="M30,160 L110,24" />
+    <path d="M190,160 L110,24" />
+  </g>
+  <g class="cell-sketch__arrows">
+    <path d="M100,160 L118,160" marker-end="url(#cell-arrow)" />
+    <path d="M65,100.5 L75,83.5" marker-end="url(#cell-arrow)" />
+    <path d="M155,100.5 L145,83.5" marker-end="url(#cell-arrow)" />
+  </g>
+  <g class="cell-sketch__points"><circle cx="30" cy="160" r="7" /><circle cx="190" cy="160" r="7" /><circle cx="110" cy="24" r="7" /></g>
+  <g class="cell-sketch__labels"><text x="14" y="182">0</text><text x="198" y="182">1</text><text x="122" y="16">2</text></g>
+</svg>
+<style is:global>
+  .cell-sketch { display: block; width: 100%; max-width: 14rem; height: auto; color: var(--ply-color-text); overflow: visible; }
+  /* Mustard at about two thirds, as the complex fills its triangles, so the edges and their
+     arrows hold their contrast on the face in both themes. */
+  .cell-sketch__face { fill: color-mix(in srgb, var(--ply-color-note) 65%, var(--ply-color-bg)); }
+  .cell-sketch__edges path { stroke: currentColor; stroke-width: 2.5; fill: none; }
+  .cell-sketch__arrows path { stroke: currentColor; stroke-width: 2.5; fill: none; }
+  .cell-sketch__points circle { fill: currentColor; }
+  .cell-sketch__labels text { fill: currentColor; font-family: var(--ply-font-text); font-size: 15px; font-weight: 700; }
+</style>

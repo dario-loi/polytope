@@ -1,14 +1,17 @@
 ---
+// Chapter sidebar. Content in the "current" slot sits under the current page's link, such as
+// the page's own sections:  <SideNav groups={groups}><div slot="current" class="ply-toc" data-auto><ul aria-label="On this page"></ul></div></SideNav>
 export interface NavGroup { heading?: string; items: { label: string; href: string; current?: boolean }[] }
 interface Props { groups: NavGroup[]; label?: string }
 const { groups, label = "Sections" } = Astro.props;
+const under = Astro.slots.has("current");
 ---
 <nav class="ply-sidenav" aria-label={label}>
   {groups.map((g) => (
     <div class="ply-sidenav__group">
       {g.heading && <p class="ply-sidenav__heading">{g.heading}</p>}
       <ul>
-        {g.items.map((i) => <li><a href={i.href} aria-current={i.current ? "page" : undefined}>{i.label}</a></li>)}
+        {g.items.map((i) => <li><a href={i.href} aria-current={i.current ? "page" : undefined}>{i.label}</a>{i.current && under && <slot name="current" />}</li>)}
       </ul>
     </div>
   ))}

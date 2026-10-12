@@ -1,0 +1,68 @@
+---
+import Pattern from "../../layouts/Pattern.astro";
+import Article from "@dario-loi/polytope/astro/Article.astro";
+import PostHeader from "@dario-loi/polytope/astro/PostHeader.astro";
+import Equation from "@dario-loi/polytope/astro/Equation.astro";
+import M from "@dario-loi/polytope/astro/M.astro";
+import Sidenote from "@dario-loi/polytope/astro/Sidenote.astro";
+import Figure from "@dario-loi/polytope/astro/Figure.astro";
+import Code from "@dario-loi/polytope/astro/Code.astro";
+import { u } from "../../data/nav";
+import CellSketch from "../../components/CellSketch.astro";
+---
+<Pattern title="Blog post" current="Notes" description="An example blog post built with Polytope: a post header, sidenotes, a margin figure, a table, equations, and code.">
+  <Article>
+    <PostHeader
+      slot="header"
+      title="Example note: the Hodge Laplacian, drawn"
+      lede="A worked example on one triangle: its boundary maps, the Laplacian they build, and what the Laplacian's kernel counts."
+      date="2026-09-14"
+      minutes={6}
+      tags={["Topology", "Graph learning"]}
+    />
+
+    <h2>One triangle</h2>
+    <p>Take the smallest cell complex with something to say: three vertices, the three edges between them, and the face those edges bound. Give each edge an orientation, from its lower vertex to its higher one. The orientation is bookkeeping. It fixes the signs below, and any other choice gives the same answers.<Sidenote n={1}>Flipping an edge changes the sign of its column in one matrix and of its row in the other. Ranks, kernels, and eigenvalues stay the same.</Sidenote></p>
+
+    <h2>Boundary maps</h2>
+    <Figure margin num={1}>
+      <CellSketch />
+      <Fragment slot="caption">The complex in this note: three vertices, three edges, and the face they bound. Each arrow is an edge's orientation.</Fragment>
+    </Figure>
+    <p>The boundary of an edge is its head minus its tail. The boundary of the face is the sum of its edges, each signed by whether it runs with or against the loop <M tex={String.raw`0 \to 1 \to 2 \to 0`} />. Edges <M tex={String.raw`(0,1)`} /> and <M tex={String.raw`(1,2)`} /> run with it; <M tex={String.raw`(0,2)`} /> runs against. With the vertices as rows and the edges <M tex={String.raw`(0,1), (0,2), (1,2)`} /> as columns:</p>
+    <Equation tex={String.raw`B_1 = \begin{pmatrix} -1 & -1 & 0 \\ 1 & 0 & -1 \\ 0 & 1 & 1 \end{pmatrix}, \qquad B_2 = \begin{pmatrix} 1 \\ -1 \\ 1 \end{pmatrix}`} num={1} />
+    <p>Their product is zero, <M tex={String.raw`B_1 B_2 = 0`} />: the boundary of a boundary is empty. Every complex has this property, and the rest of the note leans on it.</p>
+
+    <h2>The Laplacian on edges</h2>
+    <p>The Hodge Laplacian on edges adds the view from below, through the vertices, to the view from above, through the face:</p>
+    <Equation tex={String.raw`L_1 = B_1^{\top} B_1 + B_2 B_2^{\top}`} num={2} />
+    <p>For the filled triangle the two terms add up to <M tex={String.raw`3I`} />, and its kernel holds only zero: every edge signal shows up in one view or the other. Remove the face and only the first term remains. Its kernel is spanned by <M tex={String.raw`(1, -1, 1)`} />, the loop around the triangle: a hole.</p>
+    <div class="ply-table-wrap">
+      <table class="ply-table">
+        <caption>Two complexes on the same three vertices and edges. The dimension of the kernel of the edge Laplacian counts the holes that edges go around.</caption>
+        <thead><tr><th>Complex</th><th>Boundary of the face</th><th>Eigenvalues of <M tex={String.raw`L_1`} /></th><th>Kernel of <M tex={String.raw`L_1`} /></th><th class="ply-num">Holes</th></tr></thead>
+        <tbody>
+          <tr><td>Hollow triangle</td><td>None</td><td class="ply-num">0, 3, 3</td><td><M tex={String.raw`(1, -1, 1)`} /></td><td class="ply-num">1</td></tr>
+          <tr><td>Filled triangle</td><td><M tex={String.raw`(1, -1, 1)^{\top}`} /></td><td class="ply-num">3, 3, 3</td><td>Only zero</td><td class="ply-num">0</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>This is the Hodge theorem in miniature: over the reals, the kernel of <M tex={String.raw`L_k`} /> has one dimension for each <M tex={String.raw`k`} />-dimensional hole. Checking it takes a few lines:</p>
+    <Code lang="python" title="laplacian.py" code={`import numpy as np
+
+B1 = np.array([[-1, -1,  0],
+               [ 1,  0, -1],
+               [ 0,  1,  1]])
+B2 = np.array([[1], [-1], [1]])
+assert not (B1 @ B2).any()     # the boundary of a boundary
+
+L1 = B1.T @ B1 + B2 @ B2.T
+print(np.linalg.eigvalsh(L1))  # [3. 3. 3.]: no holes
+
+# Without the face, one eigenvalue is zero: one hole.
+print(np.linalg.eigvalsh(B1.T @ B1))  # about [0. 3. 3.]`} />
+
+    <h2>What a network gets from it</h2>
+    <p>The two halves of <M tex={String.raw`L_1`} /> are two ways for edges to be neighbors. <M tex={String.raw`B_1^{\top} B_1`} /> links edges that share a vertex, and <M tex={String.raw`B_2 B_2^{\top}`} /> links edges that lie on a common face. A message passing layer on edges can give each its own weights. The layer on the <a href={u("/patterns/paper/")}>paper page</a> passes its messages along the same two boundary maps.</p>
+  </Article>
+</Pattern>

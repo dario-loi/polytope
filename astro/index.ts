@@ -3,6 +3,7 @@
 // Equation and M bring KaTeX's stylesheet themselves, on the pages that use them.
 export { default as Abstract } from "./Abstract.astro";
 export { default as AppShell } from "./AppShell.astro";
+export { default as Article } from "./Article.astro";
 export { default as Atlas } from "./Atlas.astro";
 export { default as AtlasStop } from "./AtlasStop.astro";
 export { default as BibTeX } from "./BibTeX.astro";
@@ -24,6 +25,7 @@ export { default as Mast } from "./Mast.astro";
 export { default as Note } from "./Note.astro";
 export { default as Pager } from "./Pager.astro";
 export { default as PaperHeader } from "./PaperHeader.astro";
+export { default as PostHeader } from "./PostHeader.astro";
 export { default as PubList } from "./PubList.astro";
 export { default as Readout } from "./Readout.astro";
 export { default as Seo } from "./Seo.astro";

@@ -13,7 +13,12 @@
   .ply-mt-0 { margin-top: 0 !important; }
   @media (max-width: 40rem) { .ply-hide-narrow { display: none !important; } }
   /* A wide block inside the reading column runs to the edge of a main column that names
-     itself ply-main, such as a scale table whose samples need the room. In this layer so it
-     also beats a component's own max-width. */
-  @container ply-main (width > 0px) { .ply-prose > .ply-wide { width: 100cqi; max-width: none; } }
+     itself ply-main: on a docs page, from the text's edge to the page's end edge. It starts
+     below any sidenote or margin figure still beside the text, so it never runs over one.
+     An article keeps its margin for notes and margin figures, so a block there never
+     straddles the edge between text and margin: a wide one keeps to the text, and a long
+     table or line of code scrolls in its own frame. In this layer so it also beats a
+     component's own max-width. */
+  @container ply-main (width > 0px) { .ply-prose > .ply-wide { width: 100cqi; max-width: none; clear: inline-end; } }
+  .ply-article .ply-prose > .ply-wide { width: auto; clear: none; }
 }

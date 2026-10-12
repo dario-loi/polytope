@@ -62,6 +62,16 @@
   .ply-toc a:hover, .ply-toc a[aria-current="true"] { color: var(--ply-color-text); }
   .ply-toc a[aria-current="true"] { font-weight: var(--ply-weight-semibold); }
   .ply-toc .ply-toc__sub a { padding-inline-start: var(--ply-space-3); }
+  /* An auto list stays out of sight until the script fills it, so no label hangs over nothing. */
+  .ply-toc[data-auto]:not(:has(li)), .ply-article__contents:not(:has(.ply-toc li)) { display: none; }
+  /* In an article's rail, the current section gets the tomato point, as the sidebar's page does. */
+  .ply-article__rail .ply-toc ul { padding-inline-start: var(--ply-space-5); }
+  .ply-article__rail .ply-toc a { position: relative; }
+  .ply-article__rail .ply-toc a[aria-current="true"]::before { content: ""; position: absolute; inset-inline-start: calc(-1 * var(--ply-space-5)); top: 50%; width: 0.5625rem; height: 0.5625rem; margin-top: -0.28125rem; border-radius: var(--ply-radius-ball); background: var(--ply-color-accent); }
+  /* Inside a sidebar, the list hangs under the current page, on a hairline that ties it there. */
+  .ply-sidenav .ply-toc { margin-block: var(--ply-space-1) var(--ply-space-2); }
+  .ply-sidenav .ply-toc ul { padding-inline-start: var(--ply-space-3); border-inline-start: var(--ply-border-hair) solid var(--ply-color-rule); }
+  .ply-sidenav .ply-toc a { display: block; padding-block: 0.3rem; }
 
   .ply-breadcrumb { display: flex; flex-wrap: wrap; gap: var(--ply-space-2); font-size: var(--ply-size-sm); color: var(--ply-color-text-muted); list-style: none; padding: 0; }
   .ply-breadcrumb li + li::before { content: "/"; margin-inline-end: var(--ply-space-2); color: var(--ply-color-text-subtle); }

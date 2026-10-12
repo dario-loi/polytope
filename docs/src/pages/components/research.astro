@@ -7,6 +7,7 @@ import Cite from "@dario-loi/polytope/astro/Cite.astro";
 import BibTeX from "@dario-loi/polytope/astro/BibTeX.astro";
 import PubList from "@dario-loi/polytope/astro/PubList.astro";
 import Figure from "@dario-loi/polytope/astro/Figure.astro";
+import { u } from "../../data/nav";
 import Code from "@dario-loi/polytope/astro/Code.astro";
 import Note from "@dario-loi/polytope/astro/Note.astro";
 import Stability from "@dario-loi/polytope/astro/Stability.astro";
@@ -57,6 +58,11 @@ const examplePubs = [
     <div class="ply-panel" style="aspect-ratio: 16/6; display: grid; place-items: center"><span class="ply-muted">Figure content goes here</span></div>
     <Fragment slot="caption">Captions start with what the figure shows, then how to read it.</Fragment>
   </Figure>
+  <p>On an <a href={u("/foundations/layout/#articles")}>article</a> page, <code>margin</code> puts a small figure in the margin after the text, beside the paragraph after it. On narrow screens it stays in the text. Every other figure keeps to the text column, even with <code>wide</code>, which runs a figure past the text only on a docs page.</p>
+  <Code lang="astro" code={`<Figure num={2} margin>
+  <img src={plot.src} alt="..." />
+  <Fragment slot="caption">What the figure shows, then how to read it.</Fragment>
+</Figure>`} />
 
   <h2 id="bibtex">BibTeX</h2>
   <BibTeX entry={`@inproceedings{author2026example,

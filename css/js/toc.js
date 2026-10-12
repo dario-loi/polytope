@@ -1,13 +1,14 @@
 // On-this-page lists. A .ply-toc[data-auto] fills itself from the h2/h3 headings inside
-// [data-toc-scope], giving headings ids where they lack one. Every .ply-toc then marks the
-// section you are reading with aria-current="true".
+// [data-toc-scope], giving headings ids where they lack one and skipping the headings of
+// specimens shown in the page (a paper or post header, an app, an Atlas). Every .ply-toc
+// then marks the section you are reading with aria-current="true".
 const slug = (s) => s.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 
 function build(toc) {
   const scope = document.querySelector("[data-toc-scope]");
   const list = toc.querySelector("ul");
   if (!scope || !list) return;
-  const heads = [...scope.querySelectorAll("h2, h3")].filter((h) => !h.closest("[data-toc-skip], .ex__live, .ply-app, .ply-abstract, .ply-atlas"));
+  const heads = [...scope.querySelectorAll("h2, h3")].filter((h) => !h.closest("[data-toc-skip], .ex__live, .ply-app, .ply-abstract, .ply-atlas, .ply-paper, .ply-post"));
   if (heads.length < 2) { toc.hidden = true; return; }
   const used = new Set();
   for (const h of heads) {

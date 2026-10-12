@@ -7,7 +7,7 @@ import ThemeToggle from "@dario-loi/polytope/astro/ThemeToggle.astro";
 import { u } from "../data/nav";
 interface Props { title: string; current: string; description?: string }
 const { title, current, description } = Astro.props;
-const pages: Record<string, string> = { Research: u("/patterns/homepage/"), CV: u("/patterns/cv/") };
+const pages: Record<string, string> = { Research: u("/patterns/homepage/"), Publications: u("/patterns/paper/"), Notes: u("/patterns/post/"), CV: u("/patterns/cv/") };
 const links = ["Research", "Publications", "Teaching", "Notes", "CV"].map((l) => ({ label: l, href: pages[l] ?? "#", current: l === current }));
 ---
 <Base title={title} headTitle={`${title} pattern - Polytope`} description={description} chrome={false}>

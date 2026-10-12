@@ -1,6 +1,6 @@
 @layer ply.reset, ply.base, ply.layout, ply.components, ply.utilities;
 @layer ply.layout {
-  /* Page frame: top bar, mast, then the three-column docs grid. */
+  /* Page frame: top bar, mast, then the docs grid or an article. */
   .ply-container { width: 100%; max-width: var(--ply-layout-max); margin-inline: auto; padding-inline: var(--ply-layout-gutter); }
 
   .ply-rule { border: 0; border-top: var(--ply-border-rule) solid var(--ply-color-rule-strong); margin: 0; }
@@ -14,18 +14,57 @@
     .ply-mast { grid-template-columns: minmax(0, 1fr) minmax(0, 35rem); gap: var(--ply-space-7); padding-block: var(--ply-space-7) var(--ply-space-8); }
   }
 
+  /* Reading frames: the docs grid and the article. Both put the text at the centre of the
+     page when there is room, with navigation at the page's start edge. Their main column
+     (container ply-main) runs from the text's edge to the page's end edge, and the space
+     after the text holds sidenotes and margin figures; on a docs page, wide blocks run on
+     into it as well. Each side track is
+     at least what it holds; past that they split the rest evenly, which centres the text. */
+
+  /* Docs grid: the chapter sidebar, with the on-this-page list under the current page. */
   .ply-docs { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0; }
   .ply-docs__nav { display: none; }
   .ply-docs__toc { display: none; }
   .ply-docs__main { min-width: 0; padding-block: var(--ply-space-6) var(--ply-space-9); container: ply-main / inline-size; }
   @media (min-width: 56rem) {
-    .ply-docs { grid-template-columns: var(--ply-layout-sidebar) minmax(0, 1fr); }
-    .ply-docs__nav { display: block; padding-block: var(--ply-space-6); position: sticky; top: 0; align-self: start; max-height: 100dvh; overflow-y: auto; }
-    .ply-docs__main { padding-inline-start: var(--ply-space-7); }
+    .ply-docs { grid-template-columns: minmax(calc(var(--ply-layout-sidebar) + var(--ply-space-7)), 1fr) minmax(0, var(--ply-layout-measure)) minmax(0, 1fr); }
+    .ply-docs__nav { display: block; grid-column: 1; grid-row: 1; width: var(--ply-layout-sidebar); padding-block: var(--ply-space-6); position: sticky; top: 0; align-self: start; max-height: 100dvh; overflow-y: auto; }
+    .ply-docs__main { grid-column: 2 / -1; grid-row: 1; }
+  }
+  /* Deprecated in 0.6.0: an on-this-page column after the main column. A grid that still
+     has one keeps the old three columns from 80rem; new pages put the list in the sidebar. */
+  @media (min-width: 80rem) {
+    .ply-docs:has(> .ply-docs__toc) { grid-template-columns: var(--ply-layout-sidebar) minmax(0, 1fr) var(--ply-layout-toc); }
+    .ply-docs:has(> .ply-docs__toc) > .ply-docs__nav { width: auto; }
+    .ply-docs:has(> .ply-docs__toc) > .ply-docs__main { grid-column: 2; padding-inline-start: var(--ply-space-7); }
+    .ply-docs__toc { display: block; grid-column: 3; grid-row: 1; padding-block: var(--ply-space-6) 0; padding-inline-start: var(--ply-space-6); position: sticky; top: 0; align-self: start; }
+  }
+
+  /* Article: a paper, a post, a page of notes. The on-this-page list hangs in a rail at the
+     page's start edge from 80rem. Below 60rem it is one column. A header set in a
+     .ply-article--head of its own lines up with the text under it. */
+  .ply-article { display: grid; grid-template-columns: minmax(0, 1fr); padding-block: var(--ply-space-6) var(--ply-space-8); }
+  .ply-article--head { padding-block: 0; }
+  .ply-article__rail { display: none; }
+  .ply-article__main { grid-column: 1 / -1; grid-row: 1; min-width: 0; container: ply-main / inline-size; }
+  /* Where the rail is closed, the same list waits in a disclosure above the text. */
+  .ply-article__contents { margin-bottom: var(--ply-space-6); border-bottom: var(--ply-border-hair) solid var(--ply-color-rule); }
+  .ply-article__contents > summary { font-size: var(--ply-size-ui); }
+  .ply-article__contents .ply-toc { padding-block-end: var(--ply-space-3); font-size: var(--ply-size-ui); }
+  @media (min-width: 60rem) {
+    .ply-article { grid-template-columns: minmax(var(--_lead, 0px), 1fr) minmax(0, var(--ply-layout-measure)) minmax(calc(var(--ply-space-6) + var(--ply-layout-margin)), 1fr); }
+    .ply-article__main { grid-column: 2 / -1; }
   }
   @media (min-width: 80rem) {
-    .ply-docs { grid-template-columns: var(--ply-layout-sidebar) minmax(0, 1fr) var(--ply-layout-toc); }
-    .ply-docs__toc { display: block; padding-block: var(--ply-space-6) 0; padding-inline-start: var(--ply-space-6); position: sticky; top: 0; align-self: start; }
+    .ply-article { --_lead: calc(var(--ply-layout-toc) + var(--ply-space-7)); }
+    .ply-article__rail { display: block; grid-column: 1; grid-row: 1; width: var(--ply-layout-toc); position: sticky; top: var(--ply-space-5); align-self: start; max-height: calc(100dvh - 2 * var(--ply-space-5)); overflow-y: auto; padding: var(--ply-space-1) var(--ply-space-2) var(--ply-space-1) 0; margin-block-start: calc(-1 * var(--ply-space-1)); }
+    .ply-article__contents { display: none; }
+  }
+
+  /* The widest screens set the text a step larger, in a column that grows with it. */
+  @media (min-width: 100rem) {
+    :is(.ply-docs, .ply-article) { --ply-layout-measure: var(--ply-layout-measure-wide); }
+    :is(.ply-docs, .ply-article) .ply-prose { font-size: var(--ply-size-body-wide); }
   }
 
   /* Reading column: everything inside keeps a readable measure; wide blocks opt out. */
