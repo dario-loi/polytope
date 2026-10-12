@@ -24,13 +24,14 @@
   @media (min-width: 72rem) {
     .ply-topbar__links { display: flex; align-items: center; gap: var(--ply-space-1); min-width: 0; overflow-x: auto; scrollbar-width: thin; padding: 5px; margin: -5px -5px -5px calc(var(--ply-space-5) - 5px); }
   }
-  .ply-topbar:is([data-ply-tabs="tabs"], [data-ply-tabs="tight"]) .ply-topbar__links { display: flex; align-items: center; gap: var(--ply-space-1); min-width: 0; overflow: visible; padding: 5px; margin: -5px -5px -5px calc(var(--ply-space-5) - 5px); }
+  .ply-topbar:is([data-ply-tabs="tabs"], [data-ply-tabs="snug"], [data-ply-tabs="tight"]) .ply-topbar__links { display: flex; align-items: center; gap: var(--ply-space-1); min-width: 0; overflow: visible; padding: 5px; margin: -5px -5px -5px calc(var(--ply-space-5) - 5px); }
   .ply-topbar[data-ply-tabs="menu"] .ply-topbar__links { display: none; }
-  /* Before giving up the tabs, the bar tightens: closer tabs, and the search field keeps its
-     icon and key but not its word (still read out). */
-  .ply-topbar[data-ply-tabs="tight"] .ply-topbar__inner { gap: var(--ply-space-3); }
-  .ply-topbar[data-ply-tabs="tight"] .ply-topbar__links { gap: 0; margin-inline-start: calc(var(--ply-space-3) - 5px); }
-  .ply-topbar[data-ply-tabs="tight"] .ply-tab { padding-inline: var(--ply-space-2); }
+  /* Before giving up the tabs, the bar tightens in two steps: first the tabs set closer (snug),
+     then the search field keeps its icon and key but not its word, which is still read out
+     (tight). */
+  .ply-topbar:is([data-ply-tabs="snug"], [data-ply-tabs="tight"]) .ply-topbar__inner { gap: var(--ply-space-3); }
+  .ply-topbar:is([data-ply-tabs="snug"], [data-ply-tabs="tight"]) .ply-topbar__links { gap: 0; margin-inline-start: calc(var(--ply-space-3) - 5px); }
+  .ply-topbar:is([data-ply-tabs="snug"], [data-ply-tabs="tight"]) .ply-tab { padding-inline: var(--ply-space-2); }
   .ply-topbar[data-ply-tabs="tight"] .ply-search-trigger { gap: var(--ply-space-2); }
   .ply-topbar[data-ply-tabs="tight"] .ply-search-trigger > span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
@@ -85,6 +86,6 @@
   .ply-menu > summary::-webkit-details-marker { display: none; }
   .ply-menu__panel { position: absolute; inset-inline-end: 0; top: calc(100% + var(--ply-space-2)); z-index: 100; min-width: 16rem; background: var(--ply-color-bg); border: var(--ply-border-rule) solid var(--ply-color-rule-strong); padding: var(--ply-space-3); display: grid; gap: var(--ply-space-1); }
   @media (min-width: 72rem) { .ply-menu--chapters { display: none; } }
-  .ply-topbar:is([data-ply-tabs="tabs"], [data-ply-tabs="tight"]) .ply-menu--chapters { display: none; }
+  .ply-topbar:is([data-ply-tabs="tabs"], [data-ply-tabs="snug"], [data-ply-tabs="tight"]) .ply-menu--chapters { display: none; }
   .ply-topbar[data-ply-tabs="menu"] .ply-menu--chapters { display: block; }
 }

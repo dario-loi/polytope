@@ -1,9 +1,9 @@
 // The Atlas's geometry, shared by the <ply-atlas> element (atlas.js) and the server render in
 // astro/Atlas.astro: places and the route from the stops, the globe's projection, the view
 // that shows every place, and the flight from one view to the next. No DOM here.
-import { geoOrthographic, geoPath, geoGraticule10, geoInterpolate, geoDistance, geoCentroid, geoContains } from "./atlas-geo.js";
+import { geoOrthographic, geoPath, geoGraticule10, geoInterpolate, geoCentroid, geoContains } from "./atlas-geo.js";
 
-export { geoPath, geoInterpolate, geoDistance };
+export { geoPath, geoInterpolate };
 
 // Zoom 1 shows the whole globe. A stop opens at 6, about 3000km across the panel.
 export const ZOOM = { min: 1, max: 16, stop: 6 };
@@ -13,18 +13,54 @@ export const DETAIL = 3.5;
 const RADIUS = 0.44;
 const DEG = 180 / Math.PI;
 
+// The great-circle distance in radians between two [lon, lat] points in degrees, as d3's
+// geoDistance gives it. d3 measures it as the length of a line, with exact sums, which is too
+// slow for the loops here: building the caps visits every point of every outline.
+export function geoDistance(a, b) {
+  const f1 = a[1] / DEG, f2 = b[1] / DEG;
+  const s = Math.sin((f2 - f1) / 2) ** 2 + Math.cos(f1) * Math.cos(f2) * Math.sin((b[0] - a[0]) / DEG / 2) ** 2;
+  return 2 * Math.asin(Math.min(1, Math.sqrt(s)));
+}
+
 export const graticule = geoGraticule10();
 export const sphere = { type: "Sphere" };
 
 // TopoJSON to GeoJSON geometries: the land, each country, and the borders between countries
-// (arcs that two countries share; coastlines belong to one).
+// (arcs that two countries share; coastlines belong to one). The server decodes in one go; the
+// browser decodes in slices (decodeSliced), so the page can respond in between.
 export function decode(topo) {
+  return run(decoding(topo));
+}
+
+export function decodeSliced(topo, pause) {
+  return runSliced(decoding(topo), pause);
+}
+
+function run(steps) {
+  let r;
+  while (!(r = steps.next()).done);
+  return r.value;
+}
+
+// Runs a generator, giving the page a turn whenever about 4ms have passed. The generators yield
+// after every small piece of work, so no slice runs long.
+async function runSliced(steps, pause) {
+  let r, t = performance.now();
+  while (!(r = steps.next()).done) {
+    if (performance.now() - t > 4) { await pause(); t = performance.now(); }
+  }
+  return r.value;
+}
+
+function* decoding(topo) {
   const [sx, sy] = topo.transform?.scale ?? [1, 1];
   const [tx, ty] = topo.transform?.translate ?? [0, 0];
-  const arcs = topo.arcs.map((arc) => {
+  const arcs = [];
+  for (const arc of topo.arcs) {
     let x = 0, y = 0;
-    return arc.map(([dx, dy]) => [(x += dx) * sx + tx, (y += dy) * sy + ty]);
-  });
+    arcs.push(arc.map(([dx, dy]) => [(x += dx) * sx + tx, (y += dy) * sy + ty]));
+    yield;
+  }
   const ring = (ids) => {
     const pts = [];
     for (const i of ids) {
@@ -37,46 +73,72 @@ export function decode(topo) {
     : g.type === "MultiPolygon" ? { type: "MultiPolygon", coordinates: g.arcs.map((p) => p.map(ring)) }
     : g.type === "GeometryCollection" ? { type: "GeometryCollection", geometries: g.geometries.map(geometry).filter(Boolean) }
     : null;
-  const countries = topo.objects.countries.geometries.map(geometry).filter(Boolean);
+  const countries = [];
+  for (const g of topo.objects.countries.geometries) {
+    const c = geometry(g);
+    if (c) countries.push(c);
+    yield;
+  }
   const owner = new Map(), shared = new Set();
-  topo.objects.countries.geometries.forEach((g, n) => {
+  for (const [n, g] of topo.objects.countries.geometries.entries()) {
     const visit = (ids) => { for (const i of ids) { const k = i < 0 ? ~i : i; const o = owner.get(k); if (o === undefined) owner.set(k, n); else if (o !== n) shared.add(k); } };
     if (g.type === "Polygon") g.arcs.forEach(visit);
     else if (g.type === "MultiPolygon") g.arcs.forEach((p) => p.forEach(visit));
-  });
-  const land = geometry(topo.objects.land);
+    yield;
+  }
+  // The land is one shape of many polygons, so it is built a polygon at a time.
+  const shapes = [];
+  for (const g of topo.objects.land.type === "GeometryCollection" ? topo.objects.land.geometries : [topo.objects.land]) {
+    if (g.type !== "MultiPolygon") { const one = geometry(g); if (one) shapes.push(one); yield; continue; }
+    const coordinates = [];
+    for (const p of g.arcs) { coordinates.push(p.map(ring)); yield; }
+    shapes.push({ type: "MultiPolygon", coordinates });
+  }
+  const land = topo.objects.land.type === "GeometryCollection" ? { type: "GeometryCollection", geometries: shapes } : shapes[0];
   const borders = { type: "MultiLineString", coordinates: [...shared].map((k) => arcs[k]) };
-  return { land, countries, borders, landParts: parts(land), borderParts: borders.coordinates.map((line) => ({ coords: line, ...cap(line) })) };
+  const landParts = [];
+  for (const part of polygons(land)) { landParts.push({ coords: part, ...cap(part[0]) }); yield; }
+  const borderParts = [];
+  for (const line of borders.coordinates) { borderParts.push({ coords: line, ...cap(line) }); yield; }
+  return { land, countries, borders, landParts, borderParts };
 }
 
 // The smallest cap around a set of points, roughly: centered on their mean direction, out to
 // the farthest one. A shape smaller than a hemisphere lies inside the cap of its outline.
 function cap(points) {
+  const n = points.length, v = new Float64Array(n * 3);
   let x = 0, y = 0, z = 0;
-  for (const [lon, lat] of points) {
-    const l = lon / DEG, f = lat / DEG;
-    x += Math.cos(f) * Math.cos(l); y += Math.cos(f) * Math.sin(l); z += Math.sin(f);
+  for (let i = 0; i < n; i++) {
+    const l = points[i][0] / DEG, f = points[i][1] / DEG, cf = Math.cos(f);
+    x += v[3 * i] = cf * Math.cos(l); y += v[3 * i + 1] = cf * Math.sin(l); z += v[3 * i + 2] = Math.sin(f);
   }
+  const len = Math.hypot(x, y, z) || 1;
   const c = [Math.atan2(y, x) * DEG, Math.atan2(z, Math.hypot(x, y)) * DEG];
-  let r = 0;
-  for (const p of points) r = Math.max(r, geoDistance(c, p));
-  return { c, r };
+  // The farthest point is the one whose direction is least like the center's.
+  let near = 1;
+  for (let i = 0; i < n; i++) near = Math.min(near, (v[3 * i] * x + v[3 * i + 1] * y + v[3 * i + 2] * z) / len);
+  return { c, r: Math.acos(Math.max(-1, Math.min(1, near))) };
 }
 
 // Polygons of a geometry, each with its cap, so a frame can skip the ones out of view.
 export function parts(g) {
-  const polys = g.type === "Polygon" ? [g.coordinates] : g.type === "MultiPolygon" ? g.coordinates
-    : g.type === "GeometryCollection" ? g.geometries.flatMap((x) => parts(x).map((p) => p.coords)) : [];
-  return polys.map((coords) => ({ coords, ...cap(coords[0]) }));
+  return polygons(g).map((coords) => ({ coords, ...cap(coords[0]) }));
 }
 
-// Only the parts whose caps meet the visible cap. Projecting the whole world at every frame
-// costs twice as much at a stop's zoom.
+function polygons(g) {
+  return g.type === "Polygon" ? [g.coordinates] : g.type === "MultiPolygon" ? g.coordinates
+    : g.type === "GeometryCollection" ? g.geometries.flatMap(polygons) : [];
+}
+
+// Only the parts whose caps meet the visible cap, and that would draw larger than half a
+// pixel. Projecting the whole world at every frame costs twice as much at a stop's zoom, and
+// simplification leaves some islands with almost no area.
 export function cull(items, view, w, h, type) {
   const r = radius(w, h, view.k);
   const seen = Math.asin(Math.min(1, Math.hypot(w, h) / 2 / r));
+  const tiny = 0.5 / r;
   const at = [view.lon, view.lat];
-  return { type, coordinates: items.filter((p) => geoDistance(p.c, at) - p.r < seen).map((p) => p.coords) };
+  return { type, coordinates: items.filter((p) => p.r >= tiny && geoDistance(p.c, at) - p.r < seen).map((p) => p.coords) };
 }
 
 // "2019", "2019-09", or "2019-09-15" to a number that sorts by time. "now" sorts last.
@@ -117,13 +179,30 @@ export function chart(stops) {
 // The country each place stands in. A coastal city can fall just outside simplified outlines,
 // so a place in no country takes the nearest one within about 100km.
 export function visited(countries, places) {
+  return run(visiting(countries, places));
+}
+
+export function visitedSliced(countries, places, pause) {
+  return runSliced(visiting(countries, places), pause);
+}
+
+function* visiting(countries, places) {
   const hit = new Set();
+  // The full test walks every edge of a country, so first rule out the countries whose caps,
+  // with 100km to spare, do not reach the place.
+  const caps = [];
+  for (const c of countries) {
+    caps.push((c.type === "Polygon" ? [c.coordinates] : c.coordinates).map((poly) => cap(poly[0])));
+    yield;
+  }
   for (const p of places) {
+    yield;
     const pt = [p.lon, p.lat];
-    let found = countries.find((c) => geoContains(c, pt));
+    const near = countries.filter((c, i) => caps[i].some((k) => geoDistance(k.c, pt) <= k.r + 0.016));
+    let found = near.find((c) => geoContains(c, pt));
     if (!found) {
       let best = 0.016;
-      for (const c of countries) {
+      for (const c of near) {
         const polys = c.type === "Polygon" ? [c.coordinates] : c.coordinates;
         for (const poly of polys) for (const v of poly[0]) {
           if (Math.abs(v[1] - p.lat) > 1 || Math.abs(v[0] - p.lon) > 1.5) continue;

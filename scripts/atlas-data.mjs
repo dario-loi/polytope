@@ -81,6 +81,9 @@ for (const [name, minKm2, points, note] of [
   ["50m", 150, 20000, "simplified for close views"],
 ]) {
   const topo = level(minKm2, points);
-  writeFileSync(join(out, `atlas-world-${name}.js`), `${header(note)}\nexport default ${JSON.stringify(topo)};\n`);
+  // As a string for JSON.parse, which browsers read several times faster than the same data
+  // written as a JavaScript object.
+  const text = JSON.stringify(topo).replace(/\\/g, "\\\\").replace(/'/g, "\\'");
+  writeFileSync(join(out, `atlas-world-${name}.js`), `${header(note)}\nexport default JSON.parse('${text}');\n`);
   console.log(`atlas-world-${name}.js: ${topo.arcs.reduce((n, a) => n + a.length, 0)} points, ${topo.objects.countries.geometries.length} countries`);
 }

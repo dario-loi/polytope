@@ -1,6 +1,11 @@
 @layer ply.components {
   /* Code sits in a black exhibit panel. Comments are mustard so the explanation reads first. */
   .ply-code { position: relative; background: var(--ply-color-panel); color: var(--ply-color-panel-text); max-width: var(--ply-layout-measure); }
+  /* A code block below the screen skips its layout and paint until the reader nears it: its
+     hundreds of highlighted spans are the costliest layout on most pages. The block scrolls and
+     takes focus already, so it clips nothing new. Tables and equations keep their layout, since
+     js/scroll.js has to measure their overflow to make them focusable. */
+  .ply-code pre { content-visibility: auto; contain-intrinsic-size: auto 10rem; }
   .ply-code pre { position: relative; direction: ltr; margin: 0; padding: var(--ply-space-4) var(--ply-space-5); overflow-x: auto; font-size: var(--ply-size-sm); line-height: 1.7; tab-size: 2; scrollbar-color: var(--ply-color-panel-rule) var(--ply-color-panel); --_cue-bg: var(--ply-color-panel); --_cue-shade: var(--ply-color-panel-text); background: var(--_cue) !important; }
   .ply-code pre code { background: none; padding: 0; font-size: inherit; }
   .ply-code__bar { display: flex; align-items: center; justify-content: space-between; gap: var(--ply-space-3); padding-block: var(--ply-space-2); padding-inline: var(--ply-space-5) var(--ply-space-2); border-bottom: var(--ply-border-hair) solid var(--ply-color-panel-rule); font-size: var(--ply-size-xs); color: var(--ply-color-panel-muted); }

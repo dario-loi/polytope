@@ -59,7 +59,7 @@ const sample = stops.filter((s) => ["Edinburgh, United Kingdom", "Lisbon, Portug
 
   <h2>The map</h2>
   <p>The outlines are Natural Earth's countries as the United States government recognizes them, the dataset's US point of view, so borders in disputed places follow the US position. Natural Earth is in the public domain. The globe uses two levels of detail made from its 1:10 million shapes: a coarse one for the whole globe and a finer one from zoom 3.5. It is drawn in the browser with d3-geo, so it needs no map tiles, keys, or outside service. It zooms from the whole globe to a region about 400km across; streets and roads are not part of it.</p>
-  <p>The page loads about 60KB, compressed, when the Atlas connects, and the close outlines, about 76KB more, when it comes near the screen. Under reduced motion the globe jumps instead of flying, and the ball does not travel.</p>
+  <p>The page loads about 60KB, compressed, when the Atlas connects, and the close outlines, about 76KB more, once it is near the screen and the reader scrolls, points, or presses a key, or as soon as a view needs them. It decodes the map and draws its first frame in short slices, so the page stays responsive while it does. Under reduced motion the globe jumps instead of flying, and the ball does not travel.</p>
 
   <h2>Without JavaScript</h2>
   <p>The server draws the globe with every place and the route, and the entries read as a plain list with their dates, places, and text. Contrast themes keep the globe's own colors, since the color is the content. In print the globe appears once above the entries, without its controls.</p>

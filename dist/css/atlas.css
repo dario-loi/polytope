@@ -31,6 +31,8 @@
   .ply-atlas__map:focus-visible { outline: 3px solid var(--ply-color-focus); outline-offset: -6px; }
   .ply-atlas__static, .ply-atlas__canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
   .ply-atlas[data-live] .ply-atlas__static { display: none; }
+  /* The canvas shows once its first frame is whole; until then the server's globe does. */
+  .ply-atlas:not([data-live]) .ply-atlas__canvas { visibility: hidden; }
   .ply-atlas__static path { fill: none; vector-effect: non-scaling-stroke; }
   .ply-atlas__static [data-layer="sea"] { fill: var(--_sea); fill-opacity: var(--_sea-a); stroke: var(--_limb); stroke-opacity: var(--_limb-a); stroke-width: 1.5; }
   .ply-atlas__static [data-layer="grid"] { stroke: var(--_grid); stroke-opacity: var(--_grid-a); stroke-width: 1; }

@@ -213,22 +213,22 @@ export const tokens = {
   "--ply-font-display": {
     "path": "font.family.display",
     "type": "fontFamily",
-    "value": "\"Ultra\", \"Ultra Fallback\", \"Rockwell Extra Bold\", Rockwell, Georgia, serif",
-    "ref": "\"Ultra\", \"Ultra Fallback\", \"Rockwell Extra Bold\", Rockwell, Georgia, serif",
+    "value": "\"Ultra\", \"Ultra Fallback\", \"Ultra Fallback Serif\", Georgia, serif",
+    "ref": "\"Ultra\", \"Ultra Fallback\", \"Ultra Fallback Serif\", Georgia, serif",
     "description": "Wood-type slab for titles, the wordmark, and big numerals. Never for running text."
   },
   "--ply-font-text": {
     "path": "font.family.text",
     "type": "fontFamily",
-    "value": "\"Libre Franklin Variable\", \"Libre Franklin\", \"Franklin Gothic Medium\", \"Helvetica Neue\", Arial, sans-serif",
-    "ref": "\"Libre Franklin Variable\", \"Libre Franklin\", \"Franklin Gothic Medium\", \"Helvetica Neue\", Arial, sans-serif",
+    "value": "\"Libre Franklin Variable\", \"Libre Franklin Fallback\", Arial, sans-serif",
+    "ref": "\"Libre Franklin Variable\", \"Libre Franklin Fallback\", Arial, sans-serif",
     "description": "Everything that gets read: body, UI, captions, tables."
   },
   "--ply-font-mono": {
     "path": "font.family.mono",
     "type": "fontFamily",
-    "value": "\"JetBrains Mono Variable\", \"JetBrains Mono\", ui-monospace, SFMono-Regular, Menlo, monospace",
-    "ref": "\"JetBrains Mono Variable\", \"JetBrains Mono\", ui-monospace, SFMono-Regular, Menlo, monospace",
+    "value": "\"JetBrains Mono Variable\", \"JetBrains Mono Fallback\", Menlo, monospace",
+    "ref": "\"JetBrains Mono Variable\", \"JetBrains Mono Fallback\", Menlo, monospace",
     "description": "Code, keyboard keys, and numeric parameters."
   },
   "--ply-size-xs": {

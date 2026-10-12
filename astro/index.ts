@@ -1,6 +1,6 @@
 // Astro components for the Polytope.
 // Import the CSS once in your layout:  import "@dario-loi/polytope/css";
-// For math, also:                      import "katex/dist/katex.min.css";
+// Equation and M bring KaTeX's stylesheet themselves, on the pages that use them.
 export { default as Abstract } from "./Abstract.astro";
 export { default as AppShell } from "./AppShell.astro";
 export { default as Atlas } from "./Atlas.astro";

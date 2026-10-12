@@ -1,6 +1,7 @@
 ---
-// Display math rendered by KaTeX at build time. Include katex/dist/katex.min.css once in your layout.
+// Display math rendered by KaTeX at build time. It brings KaTeX's stylesheet, so only pages with math load it.
 import katex from "katex";
+import "katex/dist/katex.min.css";
 interface Props { tex: string; num?: number | string; id?: string }
 const { tex, num, id } = Astro.props;
 // Astro 7 turns backslash sequences in quoted attributes into control characters

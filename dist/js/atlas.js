@@ -26,13 +26,19 @@ const ICONS = {
   all: "M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM3 12h18M12 3c-3.5 3.5-3.5 14.5 0 18M12 3c3.5 3.5 3.5 14.5 0 18",
 };
 const reduceMotion = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
+// What counts as the reader starting to read, for loading the close outlines.
+const MOVES = ["scroll", "wheel", "pointerdown", "keydown", "touchstart"];
 const mac = () => /Mac|iP(hone|ad|od)/.test(navigator.platform || navigator.userAgent);
 
 // Modules shared by every atlas on the page, fetched when the first one connects.
 let core, coarse, fine;
 const loadCore = () => (core ??= import("./atlas-core.js"));
-const loadCoarse = () => (coarse ??= Promise.all([loadCore(), import("./atlas-world-110m.js")]).then(([c, m]) => c.decode(m.default)));
-const loadFine = () => (fine ??= Promise.all([loadCore(), import("./atlas-world-50m.js")]).then(([c, m]) => c.decode(m.default)));
+const loadCoarse = () => (coarse ??= Promise.all([loadCore(), import("./atlas-world-110m.js")]).then(([c, m]) => c.decodeSliced(m.default, pause)));
+const loadFine = () => (fine ??= Promise.all([loadCore(), import("./atlas-world-50m.js")]).then(([c, m]) => c.decodeSliced(m.default, pause)));
+
+// Gives the page a turn between slices of work, so decoding the map and drawing its first frame
+// never hold up a click or a scroll for long.
+const pause = () => (globalThis.scheduler?.yield ? scheduler.yield() : new Promise((r) => setTimeout(r, 0)));
 
 function el(tag, cls, parent) {
   const node = document.createElement(tag);
@@ -78,10 +84,10 @@ class PlyAtlas extends HTMLElement {
       this.places = places;
       this._pins();
       this._filter("");
-      return loadCoarse();
-    }).then((world) => {
+      return pause().then(loadCoarse);
+    }).then((world) => this._dress(world)).then((world) => {
       if (!this.isConnected) return;
-      this._coarse = this._dress(world);
+      this._coarse = world;
       this._start();
     }).catch((err) => console.warn("[polytope] atlas: could not load the map", err));
   }
@@ -93,6 +99,8 @@ class PlyAtlas extends HTMLElement {
     this._halt?.();
     this._ro?.disconnect();
     this._mo?.disconnect();
+    this._io?.disconnect();
+    for (const t of MOVES) removeEventListener(t, this._onMove);
     for (const [target, type, fn] of this._global ?? []) target.removeEventListener(type, fn);
   }
 
@@ -214,30 +222,43 @@ class PlyAtlas extends HTMLElement {
     this._resize();
     this.view = this.core.overview(this._shown(), this._w, this._h);
     this._live = true;
-    this.setAttribute("data-live", "");
     this._readout();
     this._follow();
-    this._paint();
-    // The close outlines are needed as soon as the reader reaches an entry.
+    // The server's globe stays up until the first frame is whole; a flight that starts first
+    // draws its own frames, and those count.
+    if (!this._anim) this._firstFrame();
+    // The close outlines are needed as soon as the reader reaches an entry: once the globe is
+    // near the screen and the reader has scrolled, pointed, or pressed a key. On load they would
+    // only compete with the page, and a view that needs them sooner asks in _draw.
+    const go = () => { if (this._near && this._moved) this._fine(); };
+    this._onMove = () => {
+      for (const t of MOVES) removeEventListener(t, this._onMove);
+      this._moved = true; go();
+    };
+    for (const t of MOVES) addEventListener(t, this._onMove, { passive: true });
     this._io = new IntersectionObserver((entries) => {
-      if (entries.some((e) => e.isIntersecting)) { this._io.disconnect(); this._fine(); }
+      if (entries.some((e) => e.isIntersecting)) { this._io.disconnect(); this._near = true; go(); }
     }, { rootMargin: "600px 0px" });
     this._io.observe(this);
-    document.fonts?.ready.then(() => { this._measured = false; this._paint(); });
+    // The labels are measured in the fonts they show in; when those arrive, only the labels move.
+    document.fonts?.ready.then(() => {
+      this._measured = false;
+      if (this.view && !this._raf) this._place(this.core.projection(this._w, this._h, this.view));
+    });
   }
 
   _fine() {
     if (this._fineLoading) return;
     this._fineLoading = true;
-    loadFine().then((world) => {
-      this._detail = this._dress(world);
+    loadFine().then((world) => this._dress(world)).then((world) => {
+      this._detail = world;
       this._paint();
     }).catch(() => {});
   }
 
   // A dataset with the countries that hold a place, split into parts for culling.
-  _dress(world) {
-    const visited = this.core.visited(world.countries, this.places);
+  async _dress(world) {
+    const visited = await this.core.visitedSliced(world.countries, this.places, pause);
     return { ...world, visitedParts: visited.flatMap((g) => this.core.parts(g)) };
   }
 
@@ -275,7 +296,24 @@ class PlyAtlas extends HTMLElement {
     this._raf = requestAnimationFrame(() => { this._raf = 0; this._draw(); });
   }
 
+  // A whole frame at once. It replaces a first frame still being drawn in slices.
   _draw() {
+    this._slices = null;
+    for (const _ of this._layers(false));
+  }
+
+  // The first frame, drawn a few layers at a time, then shown in place of the server's globe.
+  async _firstFrame() {
+    const token = this._slices = {};
+    const steps = this._layers(true);
+    let t = performance.now();
+    while (this._slices === token && !steps.next().done) {
+      if (performance.now() - t > 4) { await pause(); t = performance.now(); }
+    }
+    if (this._slices === token) this._slices = null;
+  }
+
+  *_layers(sliced) {
     const { core, ctx } = this;
     const w = this._w, h = this._h;
     if (!w || !h || !this._coarse) return;
@@ -303,12 +341,23 @@ class PlyAtlas extends HTMLElement {
     };
     const v = this.view;
     fill("sea", path, core.sphere);
+    yield;
     stroke("grid", 1, path, core.graticule);
+    yield;
     if (world.visitedParts.length) fill("visited", outline, core.cull(world.visitedParts, v, w, h, "MultiPolygon"));
+    yield;
     // The land is drawn in chalk, like the complex: a faint fill, then its coast on the same path.
-    fill("land", outline, core.cull(world.landParts, v, w, h, "MultiPolygon"));
-    ctx.globalAlpha = c.coast.a; ctx.strokeStyle = c.coast.color; ctx.lineWidth = 1; ctx.stroke();
+    // Land polygons never touch, so a frame in slices fills them a few at a time with the same
+    // result. Countries do touch, so the visited fill and the borders stay one path each.
+    const land = core.cull(world.landParts, v, w, h, "MultiPolygon").coordinates;
+    const batch = sliced ? 8 : Math.max(1, land.length);
+    for (let i = 0; i < land.length; i += batch) {
+      fill("land", outline, { type: "MultiPolygon", coordinates: land.slice(i, i + batch) });
+      ctx.globalAlpha = c.coast.a; ctx.strokeStyle = c.coast.color; ctx.lineWidth = 1; ctx.stroke();
+      yield;
+    }
     stroke("border", 0.75, outline, core.cull(world.borderParts, v, w, h, "MultiLineString"));
+    yield;
     stroke("limb", 1.5, path, core.sphere);
     stroke("route", 1.5, path, this._route);
     if (this._trace) {
@@ -326,6 +375,8 @@ class PlyAtlas extends HTMLElement {
       ctx.lineCap = "butt";
     }
     ctx.globalAlpha = 1;
+    // Live before placing, so the names keep clear of the controls it shows.
+    if (!this.hasAttribute("data-live")) this.setAttribute("data-live", "");
     this._place(proj);
   }
 

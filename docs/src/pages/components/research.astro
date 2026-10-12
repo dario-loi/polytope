@@ -44,7 +44,7 @@ const examplePubs = [
   <Equation tex={String.raw`L_k = B_k^{\top} B_k + B_{k+1} B_{k+1}^{\top}`} num={1} />
   <Code lang="astro" code={`<p>... on <M tex="k" />-simplices ...</p>
 <Equation tex={String.raw\`L_k = B_k^{\\top} B_k + B_{k+1} B_{k+1}^{\\top}\`} num={1} />`} />
-  <p>Load <code>katex/dist/katex.min.css</code> once in the layout. When the TeX contains a backslash, pass it as <code>tex={"{String.raw`...`}"}</code>: Astro 7 reads backslash sequences inside quoted attributes as escape characters, so <code>\binom</code> in quotes arrives as a backspace and <code>inom</code>. The components stop the build with a clear message if that happens.</p>
+  <p><code>Equation</code> and <code>M</code> bring KaTeX's stylesheet, so only pages with math load it. When the TeX contains a backslash, pass it as <code>tex={"{String.raw`...`}"}</code>: Astro 7 reads backslash sequences inside quoted attributes as escape characters, so <code>\binom</code> in quotes arrives as a backspace and <code>inom</code>. The components stop the build with a clear message if that happens.</p>
 
   <h2>Citations</h2>
   <p>Hover or focus a citation to see the reference without leaving the sentence<Cite n={1} title="Example reference title" authors="E. Author, F. Author" venue="Example Journal" year={2024} />. The number links to the reference list.</p>

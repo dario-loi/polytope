@@ -10,6 +10,21 @@ import ReleaseModel from "../../components/exhibits/ReleaseModel.astro";
       <p class="ply-wall__label">0.5</p>
       <ul class="ply-wall__entries">
         <li class="ply-pub">
+          <p class="ply-pub__title">0.5.1, faster pages</p>
+          <p class="ply-pub__venue">12 October 2026</p>
+          <div class="ply-prose ply-small" style="margin-top: var(--ply-space-2)">
+            <ul>
+              <li>Text keeps its size while the fonts load. New fallback faces scale Arial or Liberation Sans to Libre Franklin and Menlo, Liberation Mono, or Courier New to JetBrains Mono, and Ultra falls back to Liberation Serif Bold where Georgia is missing. Before, on a machine without Georgia, titles jumped when Ultra arrived. The font tokens name the new faces, which come with <code>polytope.css</code>.</li>
+              <li><code>Equation</code> and <code>M</code> bring KaTeX's stylesheet, so only pages with math load it. An import of <code>katex/dist/katex.min.css</code> in your layout is no longer needed, and keeping it does no harm.</li>
+              <li>Code blocks below the screen skip their layout until the reader nears them.</li>
+              <li>The Atlas decodes its map and draws its first frame in short slices, so the page stays responsive while it does, and the server's globe stays up until the first frame is whole. The close outlines load once the reader scrolls, points, or presses a key. Its geometry runs about three times faster, with the same result.</li>
+              <li>The top bar keeps the search field's word wherever the tabs fit set closer, and drops it only when they need the room. Under reduced motion it could show the menu where the tabs fit; it now measures after its own changes settle, and again when fonts arrive.</li>
+              <li>A Copy button on a block titled with a file name reads "Copy train.py from Code panels".</li>
+              <li>To update: <code>npm update</code>. Nothing to change in your pages.</li>
+            </ul>
+          </div>
+        </li>
+        <li class="ply-pub">
           <p class="ply-pub__title">0.5.0, search engines</p>
           <p class="ply-pub__venue">12 October 2026</p>
           <div class="ply-prose ply-small" style="margin-top: var(--ply-space-2)">

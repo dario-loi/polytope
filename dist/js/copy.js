@@ -54,8 +54,9 @@ document.addEventListener("click", async (e) => {
 });
 
 // Name each button for the section it sits in, so the buttons on a page read as a list of
-// sections ("Copy the HTML for Text fields"). Where no heading is found, the button keeps
-// the name the server gave it, which quotes the code's first line.
+// sections ("Copy the HTML for Text fields", or "Copy train.py from Code panels" when the block
+// is titled with a file name). Where no heading is found, the button keeps the name the server
+// gave it, which quotes the code's first line.
 function section(el) {
   for (let node = el; node && node !== document.body; node = node.parentElement) {
     for (let prev = node.previousElementSibling; prev; prev = prev.previousElementSibling) {
@@ -71,7 +72,8 @@ for (const btn of document.querySelectorAll("[data-ply-copy]")) {
   if (!where) continue;
   const raw = code.querySelector(".ply-code__lang")?.textContent.trim() || "code";
   const lang = { html: "HTML", astro: "Astro", css: "CSS", js: "JavaScript", ts: "TypeScript", sh: "shell", bash: "shell", py: "Python", python: "Python", json: "JSON", tex: "TeX", latex: "LaTeX" }[raw.toLowerCase()] ?? raw;
-  const base = `Copy the ${lang} for ${where}`;
+  // A language label is a short word; a file name has a dot or a slash.
+  const base = /[./]/.test(raw) ? `Copy ${raw} from ${where}` : `Copy the ${lang} for ${where}`;
   const n = (named.get(base) ?? 0) + 1;
   named.set(base, n);
   btn.setAttribute("aria-label", n > 1 ? `${base}, part ${n}` : base);

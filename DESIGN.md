@@ -35,50 +35,50 @@ colors:
   status-critical: "#B3261E"
 typography:
   display:
-    fontFamily: "Ultra, Ultra Fallback, Rockwell Extra Bold, Rockwell, Georgia, serif"
+    fontFamily: "Ultra, Ultra Fallback, Ultra Fallback Serif, Georgia, serif"
     fontSize: "clamp(3rem, 1.6rem + 4.4vw, 5.75rem)"
     fontWeight: 400
     lineHeight: 0.98
     letterSpacing: "-0.01em"
   headline:
-    fontFamily: "Ultra, Ultra Fallback, Rockwell Extra Bold, Rockwell, Georgia, serif"
+    fontFamily: "Ultra, Ultra Fallback, Ultra Fallback Serif, Georgia, serif"
     fontSize: "2rem"
     fontWeight: 400
     lineHeight: 1.1
     letterSpacing: "-0.01em"
   wordmark:
-    fontFamily: "Ultra, Ultra Fallback, Rockwell Extra Bold, Rockwell, Georgia, serif"
+    fontFamily: "Ultra, Ultra Fallback, Ultra Fallback Serif, Georgia, serif"
     fontSize: "1.5rem"
     fontWeight: 400
     lineHeight: 1
   title:
-    fontFamily: "Libre Franklin Variable, Libre Franklin, Franklin Gothic Medium, Helvetica Neue, Arial, sans-serif"
+    fontFamily: "Libre Franklin Variable, Libre Franklin Fallback, Arial, sans-serif"
     fontSize: "1.5rem"
     fontWeight: 700
     lineHeight: 1.2
     letterSpacing: "-0.01em"
   lede:
-    fontFamily: "Libre Franklin Variable, Libre Franklin, Franklin Gothic Medium, Helvetica Neue, Arial, sans-serif"
+    fontFamily: "Libre Franklin Variable, Libre Franklin Fallback, Arial, sans-serif"
     fontSize: "1.25rem"
     fontWeight: 400
     lineHeight: 1.45
   body:
-    fontFamily: "Libre Franklin Variable, Libre Franklin, Franklin Gothic Medium, Helvetica Neue, Arial, sans-serif"
+    fontFamily: "Libre Franklin Variable, Libre Franklin Fallback, Arial, sans-serif"
     fontSize: "1.0625rem"
     fontWeight: 400
     lineHeight: 1.6
   ui:
-    fontFamily: "Libre Franklin Variable, Libre Franklin, Franklin Gothic Medium, Helvetica Neue, Arial, sans-serif"
+    fontFamily: "Libre Franklin Variable, Libre Franklin Fallback, Arial, sans-serif"
     fontSize: "0.9375rem"
     fontWeight: 400
     lineHeight: 1.5
   label:
-    fontFamily: "Libre Franklin Variable, Libre Franklin, Franklin Gothic Medium, Helvetica Neue, Arial, sans-serif"
+    fontFamily: "Libre Franklin Variable, Libre Franklin Fallback, Arial, sans-serif"
     fontSize: "0.8125rem"
     fontWeight: 700
     lineHeight: 1.3
   mono:
-    fontFamily: "JetBrains Mono Variable, JetBrains Mono, ui-monospace, SFMono-Regular, Menlo, monospace"
+    fontFamily: "JetBrains Mono Variable, JetBrains Mono Fallback, Menlo, monospace"
     fontSize: "0.875rem"
     fontWeight: 400
     lineHeight: 1.7
@@ -224,9 +224,9 @@ Charts use eight categorical slots in a fixed order: tomato, teal, cobalt, grass
 
 ## Typography
 
-**Display Font:** Ultra (with Ultra Fallback, which is Georgia Bold scaled to Ultra's metrics, then Rockwell Extra Bold, Rockwell, Georgia, serif)
-**Body Font:** Libre Franklin Variable (with Franklin Gothic Medium, Helvetica Neue, Arial, sans-serif)
-**Label/Mono Font:** JetBrains Mono Variable (with ui-monospace, SFMono-Regular, Menlo, monospace)
+**Display Font:** Ultra (with Ultra Fallback, Georgia Bold scaled to Ultra's metrics, then Ultra Fallback Serif, Liberation Serif Bold or Times New Roman Bold scaled the same way, then Georgia, serif)
+**Body Font:** Libre Franklin Variable (with Libre Franklin Fallback, Arial or Liberation Sans scaled to its metrics, then Arial, sans-serif)
+**Label/Mono Font:** JetBrains Mono Variable (with JetBrains Mono Fallback, Menlo, Liberation Mono, or Courier New at its line metrics, then Menlo, monospace)
 
 **Character:** Ultra is a fat wood-type slab, loud and friendly like exhibition signage; Libre Franklin is a plain American gothic that reads quietly at length. All three faces are self-hosted.
 
@@ -250,7 +250,7 @@ Charts use eight categorical slots in a fixed order: tomato, teal, cobalt, grass
 
 The page is a top bar, a mast, a 3px rule, then a three-column docs grid inside a 90rem container with a fluid gutter of 16px on phones to 72px on wide screens.
 
-- **Top bar:** wordmark at left, chapter links, the search button and theme tools at right, 4.5rem tall, closed by a 3px rule. The links show where they fit. First they set closer and search drops its word, then the chapters move into a details menu. Without JavaScript the switch is at 72rem.
+- **Top bar:** wordmark at left, chapter links, the search button and theme tools at right, 4.5rem tall, closed by a 3px rule. The links show where they fit. First they set closer, then search drops its word, then the chapters move into a details menu. Without JavaScript the switch is at 72rem.
 - **Mast:** one column on phones; from 64rem, title and lede at left and a 35rem exhibit at right. Every chapter landing puts its own working model in that slot as a black panel with a caption below.
 - **Docs grid:** reading column only on phones, with the chapter's pages in an "In this chapter" disclosure above the content; a 17.5rem sticky chapter sidebar from 56rem; a 15rem sticky on-this-page list from 80rem.
 - **Reading column:** 36rem. Notes, code blocks, and text in one column share that edge. Wide blocks opt out explicitly.

@@ -274,11 +274,26 @@ for (const [from, to] of fontLicenses) {
 const range = "U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD";
 const fontsCss = `/* Self-hosted faces. Ultra: Apache 2.0. Libre Franklin and JetBrains Mono: SIL OFL 1.1. License texts: ./fonts/LICENSE-*.txt */
 @font-face { font-family: "Ultra"; font-style: normal; font-weight: 400; font-display: swap; src: url("./fonts/ultra-latin-400.woff2") format("woff2"); unicode-range: ${range}; }
-/* Georgia Bold scaled to Ultra's metrics, so titles keep their size and line breaks while Ultra loads.
-   fontTools gives a letter-frequency average advance of 0.6425em for Ultra and 0.5203em for Georgia
-   Bold (123.48%); the docs titles measured 0.9% wide at that, so size-adjust is 122.34%.
-   The overrides are Ultra's ascent 2066, descent 561, and line gap 0 on a 2048 em, divided by it. */
+/* Fallback faces: installed fonts scaled to the metrics of the self-hosted ones, so text keeps its
+   size and line breaks while the real faces load, and nothing moves when they arrive. Each one is a
+   single named face, so a browser resolves it once; a list of system family names would be looked
+   up again at every size and weight, which is slow where many fonts are installed.
+   size-adjust is the width of the docs' titles, ledes, and code in the real face over the same text
+   in the fallback, measured in Chromium. The overrides are the real face's ascent, descent, and
+   line gap over its em, divided by size-adjust.
+   Ultra (ascent 2066, descent 561, gap 0 on 2048): Georgia Bold, on macOS and Windows, at 122.34%;
+   where Georgia is missing, Liberation Serif Bold or Times New Roman Bold, which share metrics, at
+   147.12%. Linux has Liberation wherever Chrome does. */
 @font-face { font-family: "Ultra Fallback"; font-style: normal; font-weight: 400; src: local("Georgia Bold"), local("Georgia-Bold"); size-adjust: 122.34%; ascent-override: 82.46%; descent-override: 22.39%; line-gap-override: 0%; }
+@font-face { font-family: "Ultra Fallback Serif"; font-style: normal; font-weight: 400; src: local("Liberation Serif Bold"), local("LiberationSerif-Bold"), local("Times New Roman Bold"), local("TimesNewRomanPS-BoldMT"); size-adjust: 147.12%; ascent-override: 68.57%; descent-override: 18.62%; line-gap-override: 0%; }
+/* Libre Franklin (ascent 966, descent 246, gap 0 on 1000): Arial, or Liberation Sans, which shares
+   its metrics. Regular and medium text measured 102.9% and 104.0% of Arial; semibold and bold,
+   98.0% and 99.1% of Arial Bold. Each face takes a value near the weight most text uses. */
+@font-face { font-family: "Libre Franklin Fallback"; font-style: normal; font-weight: 100 549; src: local("Arial"), local("ArialMT"), local("Liberation Sans"), local("LiberationSans"); size-adjust: 103%; ascent-override: 93.79%; descent-override: 23.88%; line-gap-override: 0%; }
+@font-face { font-family: "Libre Franklin Fallback"; font-style: normal; font-weight: 550 900; src: local("Arial Bold"), local("Arial-BoldMT"), local("Liberation Sans Bold"), local("LiberationSans-Bold"); size-adjust: 98.5%; ascent-override: 98.07%; descent-override: 24.97%; line-gap-override: 0%; }
+/* JetBrains Mono (ascent 1020, descent 300, gap 0 on 1000): Menlo, Liberation Mono, or Courier New,
+   all 0.6em wide like it. */
+@font-face { font-family: "JetBrains Mono Fallback"; font-style: normal; font-weight: 100 800; src: local("Menlo Regular"), local("Menlo-Regular"), local("Liberation Mono"), local("LiberationMono"), local("Courier New"), local("CourierNewPSMT"); ascent-override: 102%; descent-override: 30%; line-gap-override: 0%; }
 @font-face { font-family: "Libre Franklin Variable"; font-style: normal; font-weight: 100 900; font-display: swap; src: url("./fonts/libre-franklin-latin-wght.woff2") format("woff2-variations"); unicode-range: ${range}; }
 @font-face { font-family: "Libre Franklin Variable"; font-style: italic; font-weight: 100 900; font-display: swap; src: url("./fonts/libre-franklin-latin-wght-italic.woff2") format("woff2-variations"); unicode-range: ${range}; }
 @font-face { font-family: "JetBrains Mono Variable"; font-style: normal; font-weight: 100 800; font-display: swap; src: url("./fonts/jetbrains-mono-latin-wght.woff2") format("woff2-variations"); unicode-range: ${range}; }

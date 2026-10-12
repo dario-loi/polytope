@@ -1,6 +1,7 @@
 ---
 // Inline math: <M tex="L = D - A" />, or tex={String.raw`\\sigma`} when the TeX has backslashes.
 import katex from "katex";
+import "katex/dist/katex.min.css";
 interface Props { tex: string }
 const { tex } = Astro.props;
 // Astro 7 turns backslash sequences in quoted attributes into control characters

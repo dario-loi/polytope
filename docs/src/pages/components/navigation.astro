@@ -31,7 +31,7 @@ const pager = `<nav class="ply-pager" aria-label="Pages" style="margin-top:0">
 ---
 <Docs title="Navigation" status="stable" lede="A black wall label marks the chapter you are in; a tomato point marks the page.">
   <h2>Top bar</h2>
-  <p>The top bar of this site is the component: wordmark at left, chapter tabs, tools at right, a 3px rule underneath. Where the tabs do not fit, they set closer and the search field drops its word; where they still do not fit, they fold into a Menu button that opens a native <code>&lt;details&gt;</code> panel. <code>js/topbar.js</code> measures the fit, so a site with three chapters keeps its tabs on a phone and one with nine folds them on a small laptop. Without the script the tabs fold below 72rem, and the menu still works.</p>
+  <p>The top bar of this site is the component: wordmark at left, chapter tabs, tools at right, a 3px rule underneath. Where the tabs do not fit, they first set closer, then the search field drops its word; where they still do not fit, they fold into a Menu button that opens a native <code>&lt;details&gt;</code> panel. <code>js/topbar.js</code> measures the fit, so a site with three chapters keeps its tabs on a phone and one with nine folds them on a small laptop. Without the script the tabs fold below 72rem, and the menu still works.</p>
   <Code lang="astro" code={`<TopBar brand="John Doe" brandHref="/" links={[
   { label: "Research", href: "/research/", current: true },
   { label: "Teaching", href: "/teaching/" },
