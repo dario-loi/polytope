@@ -1,6 +1,7 @@
 {
   "--ply-color-bg": [
     "base.css",
+    "components/atlas.css",
     "components/button.css",
     "components/demo.css",
     "components/form.css",
@@ -13,6 +14,7 @@
   ],
   "--ply-color-text": [
     "base.css",
+    "components/atlas.css",
     "components/button.css",
     "components/form.css",
     "components/machine.css",
@@ -28,6 +30,7 @@
   ],
   "--ply-font-text": [
     "base.css",
+    "components/atlas.css",
     "components/button.css",
     "components/viz.css"
   ],
@@ -37,6 +40,7 @@
   ],
   "--ply-color-accent": [
     "base.css",
+    "components/atlas.css",
     "components/form.css",
     "components/machine.css",
     "components/nav.css",
@@ -72,6 +76,7 @@
   ],
   "--ply-font-display": [
     "base.css",
+    "components/atlas.css",
     "components/demo.css",
     "components/nav.css",
     "components/research.css",
@@ -93,12 +98,14 @@
   ],
   "--ply-size-xl": [
     "base.css",
+    "components/atlas.css",
     "components/demo.css",
     "components/nav.css",
     "components/research.css"
   ],
   "--ply-weight-bold": [
     "base.css",
+    "components/atlas.css",
     "components/demo.css",
     "components/form.css",
     "components/nav.css",
@@ -117,6 +124,7 @@
   ],
   "--ply-size-lg": [
     "base.css",
+    "components/atlas.css",
     "components/research.css",
     "components/search.css",
     "components/writing.css",
@@ -136,6 +144,7 @@
   ],
   "--ply-weight-semibold": [
     "base.css",
+    "components/atlas.css",
     "components/button.css",
     "components/code.css",
     "components/form.css",
@@ -146,6 +155,7 @@
   ],
   "--ply-duration-fast": [
     "base.css",
+    "components/atlas.css",
     "components/button.css",
     "components/form.css",
     "components/nav.css",
@@ -153,6 +163,7 @@
   ],
   "--ply-ease-out": [
     "base.css",
+    "components/atlas.css",
     "components/button.css",
     "components/demo.css",
     "components/form.css",
@@ -167,11 +178,13 @@
   ],
   "--ply-color-focus": [
     "base.css",
+    "components/atlas.css",
     "components/form.css",
     "components/search.css"
   ],
   "--ply-color-panel-muted": [
     "base.css",
+    "components/atlas.css",
     "components/button.css",
     "components/code.css"
   ],
@@ -180,6 +193,7 @@
   ],
   "--ply-color-panel-text": [
     "base.css",
+    "components/atlas.css",
     "components/button.css",
     "components/code.css",
     "components/demo.css",
@@ -191,6 +205,7 @@
   ],
   "--ply-color-panel": [
     "base.css",
+    "components/atlas.css",
     "components/button.css",
     "components/code.css",
     "components/demo.css",
@@ -211,6 +226,7 @@
   ],
   "--ply-size-sm": [
     "base.css",
+    "components/atlas.css",
     "components/button.css",
     "components/code.css",
     "components/demo.css",
@@ -228,6 +244,7 @@
   ],
   "--ply-border-rule": [
     "base.css",
+    "components/atlas.css",
     "components/demo.css",
     "components/nav.css",
     "components/research.css",
@@ -237,6 +254,7 @@
   ],
   "--ply-color-rule-strong": [
     "base.css",
+    "components/atlas.css",
     "components/demo.css",
     "components/form.css",
     "components/nav.css",
@@ -249,12 +267,14 @@
   ],
   "--ply-space-7": [
     "base.css",
+    "components/atlas.css",
     "components/demo.css",
     "components/research.css",
     "layout.css"
   ],
   "--ply-color-note": [
     "base.css",
+    "components/atlas.css",
     "components/code.css",
     "components/machine.css",
     "components/note.css",
@@ -263,6 +283,7 @@
   ],
   "--ply-font-mono": [
     "base.css",
+    "components/atlas.css",
     "components/code.css",
     "components/demo.css",
     "components/form.css",
@@ -271,6 +292,7 @@
   ],
   "--ply-color-surface-sunken": [
     "base.css",
+    "components/atlas.css",
     "components/button.css",
     "components/form.css",
     "components/nav.css",
@@ -281,6 +303,7 @@
   ],
   "--ply-space-5": [
     "base.css",
+    "components/atlas.css",
     "components/button.css",
     "components/code.css",
     "components/demo.css",
@@ -293,6 +316,7 @@
   ],
   "--ply-leading-normal": [
     "base.css",
+    "components/atlas.css",
     "components/demo.css",
     "components/form.css",
     "components/note.css",
@@ -306,6 +330,7 @@
   ],
   "--ply-layout-measure": [
     "base.css",
+    "components/atlas.css",
     "components/code.css",
     "components/note.css",
     "components/research.css",
@@ -319,6 +344,7 @@
     "layout.css"
   ],
   "--ply-space-6": [
+    "components/atlas.css",
     "components/research.css",
     "components/search.css",
     "components/writing.css",
@@ -334,6 +360,7 @@
     "layout.css"
   ],
   "--ply-space-4": [
+    "components/atlas.css",
     "components/button.css",
     "components/code.css",
     "components/demo.css",
@@ -349,6 +376,7 @@
     "utilities.css"
   ],
   "--ply-space-3": [
+    "components/atlas.css",
     "components/button.css",
     "components/code.css",
     "components/demo.css",
@@ -367,6 +395,7 @@
     "utilities.css"
   ],
   "--ply-space-2": [
+    "components/atlas.css",
     "components/button.css",
     "components/code.css",
     "components/demo.css",
@@ -397,6 +426,7 @@
     "layout.css"
   ],
   "--ply-border-control": [
+    "components/atlas.css",
     "components/button.css",
     "components/demo.css",
     "components/form.css",
@@ -421,12 +451,14 @@
     "components/button.css"
   ],
   "--ply-space-1": [
+    "components/atlas.css",
     "components/demo.css",
     "components/nav.css",
     "components/research.css",
     "components/viz.css"
   ],
   "--ply-color-text-muted": [
+    "components/atlas.css",
     "components/demo.css",
     "components/form.css",
     "components/machine.css",
@@ -441,6 +473,7 @@
     "utilities.css"
   ],
   "--ply-size-ui": [
+    "components/atlas.css",
     "components/nav.css",
     "components/note.css",
     "components/research.css",
@@ -453,6 +486,7 @@
     "components/search.css"
   ],
   "--ply-size-xs": [
+    "components/atlas.css",
     "components/code.css",
     "components/demo.css",
     "components/nav.css",
@@ -468,6 +502,7 @@
     "components/writing.css"
   ],
   "--ply-radius-ball": [
+    "components/atlas.css",
     "components/demo.css",
     "components/form.css",
     "components/nav.css",
@@ -478,11 +513,13 @@
     "components/writing.css"
   ],
   "--ply-duration-base": [
+    "components/atlas.css",
     "components/form.css",
     "components/research.css",
     "components/search.css"
   ],
   "--ply-border-hair": [
+    "components/atlas.css",
     "components/code.css",
     "components/demo.css",
     "components/search.css",
@@ -490,6 +527,7 @@
     "components/writing.css"
   ],
   "--ply-color-rule": [
+    "components/atlas.css",
     "components/demo.css",
     "components/form.css",
     "components/search.css",
@@ -542,14 +580,15 @@
   "--ply-loading-count": [
     "components/machine.css"
   ],
+  "--ply-duration-slow": [
+    "components/atlas.css",
+    "components/demo.css"
+  ],
   "--ply-size-4xl": [
     "components/research.css"
   ],
   "--ply-size-3xl": [
     "components/research.css"
-  ],
-  "--ply-duration-slow": [
-    "components/demo.css"
   ],
   "--ply-viz-1": [
     "components/viz.css"

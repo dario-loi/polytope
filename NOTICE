@@ -11,3 +11,11 @@ texts are shipped next to the font files in dist/fonts/:
   (https://github.com/googlefonts/Libre-Franklin). SIL Open Font License, Version 1.1.
 - JetBrains Mono, Copyright 2020 The JetBrains Mono Project Authors
   (https://github.com/JetBrains/JetBrainsMono). SIL Open Font License, Version 1.1.
+
+The Atlas (dist/js/atlas-*.js) bundles code and data under their own terms:
+
+- d3-geo and d3-array, Copyright 2010-2024 Mike Bostock. ISC License. d3-geo includes
+  code from GeographicLib, Copyright 2008-2012 Charles Karney. MIT License. The notices
+  are at the top of dist/js/atlas-geo.js.
+- Country outlines from Natural Earth (naturalearthdata.com), v5.1.1, United States point
+  of view, simplified. Natural Earth is in the public domain.

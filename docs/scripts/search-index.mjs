@@ -61,7 +61,7 @@ for (const [name, t] of Object.entries(tokens)) {
 const cssPage = {
   "button.css": "/components/buttons/", "tag.css": "/components/buttons/", "nav.css": "/components/navigation/",
   "search.css": "/components/navigation/", "note.css": "/components/notes/", "form.css": "/components/forms/",
-  "table.css": "/components/tables/", "code.css": "/components/code/", "machine.css": "/components/machine/",
+  "table.css": "/components/tables/", "code.css": "/components/code/", "machine.css": "/components/machine/", "atlas.css": "/components/atlas/",
   "research.css": "/components/research/", "writing.css": "/components/writing/", "demo.css": "/components/demo/",
   "viz.css": "/components/charts/", "panel.css": "/components/", "layout.css": "/foundations/layout/",
   "utilities.css": "/foundations/layout/",
@@ -95,6 +95,7 @@ const shownIn = {
   Chart: "/components/charts/", Exhibit: "/components/", Pager: "/components/navigation/", SideNav: "/components/navigation/",
   Toc: "/components/navigation/", TopBar: "/components/navigation/", Search: "/components/navigation/",
   ThemeToggle: "/components/navigation/", Tag: "/components/buttons/", Mast: "/foundations/layout/",
+  Atlas: "/components/atlas/", AtlasStop: "/components/atlas/",
 };
 for (const file of readdirSync(join(root, "astro")).filter((f) => f.endsWith(".astro"))) {
   const name = file.replace(/\.astro$/, "");

@@ -6,6 +6,24 @@ import ReleaseModel from "../../components/exhibits/ReleaseModel.astro";
   <ReleaseModel slot="exhibit" />
   <section class="ply-wall ply-wide" aria-label="Releases">
     <div class="ply-wall__year">
+      <p class="ply-wall__label">0.4</p>
+      <ul class="ply-wall__entries">
+        <li class="ply-pub">
+          <p class="ply-pub__title">0.4.0, the Atlas</p>
+          <p class="ply-pub__venue">12 October 2026</p>
+          <div class="ply-prose ply-small" style="margin-top: var(--ply-space-2)">
+            <ul>
+              <li>New: <code>&lt;Atlas&gt;</code> and <code>&lt;AtlasStop&gt;</code>, a globe of the places in a CV beside the entries that happened there. As the reader scrolls, the globe turns to each entry's place and a tomato ball travels the route to it. Pins pick entries, a filter shows one kind of entry, and drag, pinch, or <kbd>Ctrl</kbd> and scroll move the globe. See <a href="../components/atlas/">Atlas</a> and the new <a href="../patterns/cv/">CV page</a> pattern.</li>
+              <li>The kit draws the map itself, from Natural Earth country outlines with borders as the United States recognizes them, so there are no map tiles, keys, or outside services. About 60KB, compressed, loads when an Atlas connects, and 76KB more for close views when it nears the screen.</li>
+              <li>Without JavaScript the server draws the finished globe with its places and route. Under reduced motion the globe jumps instead of flying, and on paper it prints once above the entries.</li>
+              <li><code>js/all.js</code> now registers <code>&lt;ply-atlas&gt;</code>. The map code and data load only on pages that have one.</li>
+              <li>To update: <code>npm install @dario-loi/polytope@^0.4.0</code>. Nothing that already existed changed.</li>
+            </ul>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <div class="ply-wall__year">
       <p class="ply-wall__label">0.3</p>
       <ul class="ply-wall__entries">
         <li class="ply-pub">

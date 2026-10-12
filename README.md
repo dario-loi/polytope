@@ -17,11 +17,11 @@ Each page gets one working model. The emblem is a Vietoris-Rips complex: random 
 ## What's included
 
 - About 30 CSS components, from buttons and forms to paper headers, citations, theorem environments, a publication list, demo chrome, and site search over a static Pagefind index. Light and dark themes switch on their own.
-- 33 Astro components that print the same markup.
-- The two working models as custom elements, `<ply-machine>` and `<ply-complex>`.
+- 35 Astro components that print the same markup.
+- The two working models as custom elements, `<ply-machine>` and `<ply-complex>`, and the Atlas, `<ply-atlas>`: a globe of the places in a CV that turns to each entry as you read.
 - A chart palette of eight colors, checked for color vision deficiency in both themes, with matplotlib, plotly, Gradio, and Streamlit themes that use it.
 - Exports for Tailwind v4, Sass, LaTeX (xcolor and a pgfplots cycle list), TypeScript, Figma token plugins, and a code theme for Shiki and VS Code.
-- The documentation site itself, with three full example pages: a homepage, a paper page, and a demo.
+- The documentation site itself, with four full example pages: a homepage, a paper page, a demo, and a CV.
 
 ## Install
 
@@ -62,8 +62,8 @@ In a project that has Polytope installed, npx runs that copy. The command won't 
 A site without npm (a static site built by Python, for example) can fetch the same files pinned to a release and link the hosted stylesheet in its template:
 
 ```sh
-curl -fsSLo DESIGN.md https://raw.githubusercontent.com/dario-loi/polytope/v0.3.0/DESIGN.md
-mkdir -p .impeccable && curl -fsSLo .impeccable/design.json https://raw.githubusercontent.com/dario-loi/polytope/v0.3.0/.impeccable/design.json
+curl -fsSLo DESIGN.md https://raw.githubusercontent.com/dario-loi/polytope/v0.4.0/DESIGN.md
+mkdir -p .impeccable && curl -fsSLo .impeccable/design.json https://raw.githubusercontent.com/dario-loi/polytope/v0.4.0/.impeccable/design.json
 ```
 
 Either way, new pages are then built inside Polytope and the design checker flags anything off the system. Run `/impeccable init` once so the site gets its own `PRODUCT.md`, and copy the files again whenever you upgrade Polytope.

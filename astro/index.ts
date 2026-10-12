@@ -3,6 +3,8 @@
 // For math, also:                      import "katex/dist/katex.min.css";
 export { default as Abstract } from "./Abstract.astro";
 export { default as AppShell } from "./AppShell.astro";
+export { default as Atlas } from "./Atlas.astro";
+export { default as AtlasStop } from "./AtlasStop.astro";
 export { default as BibTeX } from "./BibTeX.astro";
 export { default as Button } from "./Button.astro";
 export { default as Chart } from "./Chart.astro";

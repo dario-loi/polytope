@@ -1,0 +1,52 @@
+---
+// One entry of an Atlas: what you did, when, and where. Entries at the same coordinates share
+// a pin, and the dates order the route between places.
+//   <AtlasStop title="MSc in Computer Science" org="Example University" kind="Education"
+//     place="Toronto, Canada" lat={43.65} lon={-79.38} from="2019-09" to="2021-06">
+//     <p>What you did there.</p>
+//   </AtlasStop>
+interface Props {
+  title: string;
+  /** Place name as it should read, such as "Toronto, Canada". */
+  place: string;
+  lat: number;
+  lon: number;
+  /** Start, as 2019, 2019-09, or 2019-09-15. Orders the route. */
+  from?: string;
+  /** End in the same form, or "now". Leave it out for a single date. */
+  to?: string;
+  /** Kind of entry, such as Education, Work, or Academia. Shown as a label and offered as a filter. */
+  kind?: string;
+  /** Institution or company. */
+  org?: string;
+  /** Text that replaces the printed dates, such as "Summer 2024". */
+  when?: string;
+  /** Zoom while this entry is current, from 1 (the whole globe) to 16. Default 6. */
+  zoom?: number;
+  /** Heading level of the title. */
+  level?: 2 | 3 | 4 | 5 | 6;
+  id?: string;
+}
+const { title, place, lat, lon, from, to, kind, org, when, zoom, level = 3, id } = Astro.props;
+const H = `h${level}` as "h3";
+const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+const now = (d?: string) => Boolean(d && /^(now|present)$/i.test(d.trim()));
+const date = (d: string) => {
+  const m = d.match(/^(\d{4})(?:-(\d{1,2}))?/);
+  return m ? (m[2] ? `${MONTHS[+m[2] - 1]} ${m[1]}` : m[1]) : d;
+};
+---
+<li class="ply-atlas__stop" id={id} data-place={place} data-lat={lat} data-lon={lon} data-from={from} data-kind={kind} data-zoom={zoom}>
+  <H class="ply-atlas__title">{title}</H>
+  {(when || from) && (
+    <p class="ply-atlas__when">{when ?? (
+      <><time datetime={from}>{date(from!)}</time>{to && <> to {now(to) ? "now" : <time datetime={to}>{date(to)}</time>}</>}</>
+    )}</p>
+  )}
+  {org && <p class="ply-atlas__org">{org}</p>}
+  <p class="ply-atlas__meta">
+    {kind && <span class="ply-label">{kind}</span>}
+    <span class="ply-atlas__place"><span class="ply-atlas__dot" aria-hidden="true"></span>{place}</span>
+  </p>
+  {Astro.slots.has("default") && <div class="ply-atlas__body ply-prose ply-small"><slot /></div>}
+</li>
