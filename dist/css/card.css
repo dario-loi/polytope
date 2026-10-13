@@ -1,0 +1,41 @@
+@layer ply.reset, ply.base, ply.layout, ply.components, ply.utilities;
+@layer ply.components {
+  /* Cards: entries (papers, posts, projects) hung as exhibits on a list page. A black panel
+     holds the entry's figure, or a complex of its own; under it, the title (the one link a
+     keyboard reaches), a meta line, and a summary. The panel is a second, pointer-only way in.
+     The grid takes up to three columns of at least 16rem, and a grid with fewer cards than
+     columns shares the row between them, so it never leaves an empty column. */
+  .ply-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, max(16rem, (100% - 2 * var(--ply-space-6)) / 3)), 1fr)); gap: var(--ply-space-7) var(--ply-space-6); container-type: inline-size; }
+  /* The columns are as many as the cards besides the lead, up to three, so a lead with two
+     cards under it sets them half and half. */
+  .ply-cards:not(:has(> :nth-child(3 of :not(.ply-card--lead)))) { grid-template-columns: repeat(auto-fit, minmax(min(100%, max(16rem, (100% - var(--ply-space-6)) / 2)), 1fr)); }
+  .ply-cards:not(:has(> :nth-child(2 of :not(.ply-card--lead)))) { grid-template-columns: minmax(0, 1fr); }
+  .ply-card { display: grid; grid-template-rows: auto 1fr; gap: var(--ply-space-4); align-content: start; min-width: 0; }
+  .ply-card__panel { position: relative; display: block; background: var(--ply-color-panel); aspect-ratio: 100 / 56; overflow: hidden; text-decoration: none; }
+  .ply-card__panel :is(img, video) { display: block; width: 100%; height: 100%; object-fit: cover; }
+  .ply-card__panel :is(.ply-complex-wrap, .ply-complex) { height: 100%; }
+  /* A hairline frame, so a light screenshot keeps its edge on the white wall. */
+  .ply-card__panel:has(img, video)::after { content: ""; position: absolute; inset: 0; border: var(--ply-border-hair) solid var(--ply-color-rule); pointer-events: none; }
+  .ply-card__labels { position: absolute; inset-block-start: var(--ply-space-3); inset-inline-start: var(--ply-space-3); display: flex; flex-wrap: wrap; gap: var(--ply-space-2); pointer-events: none; }
+  .ply-card__body { display: grid; gap: var(--ply-space-2); align-content: start; }
+  .ply-card__title { margin: 0; font-family: var(--ply-font-text); font-size: var(--ply-size-lg); font-weight: var(--ply-weight-bold); line-height: 1.25; letter-spacing: -0.01em; text-wrap: balance; overflow-wrap: break-word; }
+  .ply-card__title a { color: var(--ply-color-text); font-weight: inherit; text-decoration-color: var(--ply-color-rule); }
+  .ply-card:hover .ply-card__title a { text-decoration-color: var(--ply-color-accent); }
+  .ply-card__meta { display: flex; flex-wrap: wrap; gap: 0 var(--ply-space-3); font-size: var(--ply-size-sm); font-weight: var(--ply-weight-semibold); color: var(--ply-color-text-muted); font-variant-numeric: tabular-nums; }
+  .ply-card__meta > :first-child { color: var(--ply-color-text); }
+  .ply-card__summary { font-size: var(--ply-size-ui); line-height: var(--ply-leading-normal); color: var(--ply-color-text-muted); max-width: 40rem; }
+  .ply-card__tags { display: flex; flex-wrap: wrap; gap: var(--ply-space-2); list-style: none; padding: 0; margin-top: var(--ply-space-1); }
+  .ply-card__tags > li { margin: 0; }
+
+  /* The lead card, or a card alone in its grid or under the lead, spans the row; with room it
+     sets its panel beside the text and its title in wood type, the name over the subtitle. */
+  :is(.ply-card--lead, .ply-cards > .ply-card:only-child, .ply-card--lead + .ply-card:last-child) { grid-column: 1 / -1; }
+  .ply-card__sub-mark { display: inline; }
+  @container (min-width: 40rem) {
+    :is(.ply-card--lead, .ply-cards > .ply-card:only-child, .ply-card--lead + .ply-card:last-child) { grid-template-rows: none; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: var(--ply-space-6); align-items: start; }
+    :is(.ply-card--lead, .ply-cards > .ply-card:only-child, .ply-card--lead + .ply-card:last-child) .ply-card__title { font-family: var(--ply-font-display); font-weight: 400; font-size: var(--ply-size-2xl); line-height: 1.1; }
+    :is(.ply-card--lead, .ply-cards > .ply-card:only-child, .ply-card--lead + .ply-card:last-child) .ply-card__sub { display: block; margin-top: var(--ply-space-2); font-family: var(--ply-font-text); font-size: var(--ply-size-lg); font-weight: var(--ply-weight-semibold); line-height: var(--ply-leading-tight); }
+    :is(.ply-card--lead, .ply-cards > .ply-card:only-child, .ply-card--lead + .ply-card:last-child) .ply-card__sub-mark { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+    :is(.ply-card--lead, .ply-cards > .ply-card:only-child, .ply-card--lead + .ply-card:last-child) .ply-card__summary { font-size: var(--ply-size-md); }
+  }
+}

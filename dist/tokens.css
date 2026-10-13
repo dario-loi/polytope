@@ -122,6 +122,9 @@
   --ply-color-link-hover: var(--ply-ink-950);
   --ply-color-note: var(--ply-mustard-500);
   --ply-color-note-soft: var(--ply-mustard-100);
+  --ply-color-flag: var(--ply-mustard-100);
+  --ply-color-flag-text: var(--ply-ink-950);
+  --ply-color-flag-edge: var(--ply-mustard-500);
   --ply-color-focus: var(--ply-teal-700);
   --ply-color-focus-on-panel: var(--ply-mustard-400);
   --ply-color-selection: var(--ply-mustard-500);
@@ -160,6 +163,9 @@
     --ply-color-link-hover: #F2F2EE;
     --ply-color-note: var(--ply-mustard-500);
     --ply-color-note-soft: #3A2F14;
+    --ply-color-flag: var(--ply-mustard-100);
+    --ply-color-flag-text: var(--ply-ink-950);
+    --ply-color-flag-edge: var(--ply-mustard-500);
     --ply-color-focus: var(--ply-mustard-400);
     --ply-color-focus-on-panel: var(--ply-mustard-400);
     --ply-color-selection: var(--ply-mustard-500);
@@ -199,6 +205,9 @@
     --ply-color-link-hover: #F2F2EE;
     --ply-color-note: var(--ply-mustard-500);
     --ply-color-note-soft: #3A2F14;
+    --ply-color-flag: var(--ply-mustard-100);
+    --ply-color-flag-text: var(--ply-ink-950);
+    --ply-color-flag-edge: var(--ply-mustard-500);
     --ply-color-focus: var(--ply-mustard-400);
     --ply-color-focus-on-panel: var(--ply-mustard-400);
     --ply-color-selection: var(--ply-mustard-500);

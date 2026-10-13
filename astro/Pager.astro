@@ -1,10 +1,19 @@
 ---
-interface Props { prev?: { label: string; href: string }; next?: { label: string; href: string }; label?: string }
-const { prev, next, label = "Pages" } = Astro.props;
+// Previous and next pages. A label with a subtitle ("Name: what it does") shows the name, and
+// keeps the rest for screen readers, so a paper's long title does not outweigh the page.
+// Rename the directions where "Previous" is not the right word, as on a list newest first:
+//   <Pager prev={{ label, href }} next={{ label, href }} prevText="Newer" nextText="Older" />
+import { splitTitle } from "./title.ts";
+interface Link { label: string; href: string }
+interface Props { prev?: Link; next?: Link; label?: string; prevText?: string; nextText?: string; split?: boolean }
+const { prev, next, label = "Pages", prevText = "Previous", nextText = "Next", split = true } = Astro.props;
+const name = (l: Link) => (split ? splitTitle(l.label) : { name: l.label, sub: undefined });
+const p = prev && name(prev);
+const n = next && name(next);
 ---
 {(prev || next) && (
   <nav class="ply-pager" aria-label={label}>
-    {prev && <a href={prev.href} rel="prev"><span>Previous</span><strong>{prev.label}</strong></a>}
-    {next && <a class="ply-pager__next" href={next.href} rel="next"><span>Next</span><strong>{next.label}</strong></a>}
+    {prev && p && <a href={prev.href} rel="prev"><span>{prevText}</span><strong>{p.name}{p.sub && <span class="ply-visually-hidden">: {p.sub}</span>}</strong></a>}
+    {next && n && <a class="ply-pager__next" href={next.href} rel="next"><span>{nextText}</span><strong>{n.name}{n.sub && <span class="ply-visually-hidden">: {n.sub}</span>}</strong></a>}
   </nav>
 )}

@@ -37,11 +37,15 @@ import Code from "@dario-loi/polytope/astro/Code.astro";
 <script type="module" src="./kit/js/all.js"></script>`} />
 
   <h2>Only what you need</h2>
-  <p>Each component also ships as its own file. Load the tokens first.</p>
+  <p>Each component also ships as its own file. Load them in the order the full file has them: the fonts and tokens, the reset, base, and layout, your components, then utilities and modes.</p>
   <Code lang="html" code={`<link rel="stylesheet" href="./kit/fonts.css">
 <link rel="stylesheet" href="./kit/tokens.css">
+<link rel="stylesheet" href="./kit/css/reset.css">
 <link rel="stylesheet" href="./kit/css/base.css">
-<link rel="stylesheet" href="./kit/css/button.css">`} />
+<link rel="stylesheet" href="./kit/css/layout.css">
+<link rel="stylesheet" href="./kit/css/button.css">
+<link rel="stylesheet" href="./kit/css/utilities.css">
+<link rel="stylesheet" href="./kit/css/modes.css">`} />
 
   <h2>Generated pages</h2>
   <p>Python scripts that write HTML (reports, experiment dashboards) can paste the same two lines into their template. The class names are stable within a major version.</p>

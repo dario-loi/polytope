@@ -1,0 +1,59 @@
+---
+// One entry (a paper, post, or project) on a list page, hung like an exhibit: a black panel
+// holding the entry's figure (the "figure" slot), or else a Vietoris-Rips complex seeded from
+// its title, so every entry draws its own. Under it, the title, a meta line, a summary, and
+// tags. Put cards in a CardGrid.
+//   <CardGrid>
+//     <Card lead href="/papers/x/" title="Name: what it does" meta={["ICLR 2026"]} badge="Oral">
+//       <img slot="figure" src="/x.webp" alt="" />
+//     </Card>
+//   </CardGrid>
+// The panel repeats the title's link for a pointer only; the figure is decorative here, since
+// the title names the entry, so give it empty alt text.
+import Complex from "./Complex.astro";
+import { splitTitle, woodTitle } from "./title.ts";
+interface Props {
+  href: string;
+  title: string;
+  /** Heading level of the title in the page's outline. */
+  level?: 2 | 3 | 4;
+  /** Short facts under the title, such as a venue and a year; the first is set darker. */
+  meta?: string[];
+  /** Plain text; a "summary" slot replaces it with markup. */
+  summary?: string;
+  /** Wall labels on the panel, such as "Preprint" or "Top 3 paper". */
+  badge?: string | string[];
+  tags?: string[];
+  /** Spans the row and, with room, sets the panel beside the text. */
+  lead?: boolean;
+  /** Seeds the complex drawn when there is no figure; the title's own by default. */
+  seed?: number;
+  /** Attributes for the title's link, such as data attributes for analytics. */
+  link?: Record<string, string>;
+  /** Names the list of tags for a screen reader, for another language. */
+  tagsLabel?: string;
+  class?: string;
+}
+const { href, title, level = 3, meta = [], summary, badge, tags = [], lead = false, seed, link = {}, tagsLabel = "Topics", class: className } = Astro.props;
+const H = `h${level}`;
+const badges = badge === undefined ? [] : Array.isArray(badge) ? badge : [badge];
+const { name, sub } = splitTitle(title);
+const parts = woodTitle(name).parts;
+// A stable seed from the title: the same entry always draws the same complex.
+let h = 2166136261;
+for (const ch of title) h = Math.imul(h ^ (ch.codePointAt(0) ?? 0), 16777619);
+const s = seed ?? (h >>> 0) % 100000;
+---
+<article class:list={["ply-card", lead && "ply-card--lead", className]}>
+  <a class="ply-card__panel" href={href} tabindex="-1" aria-hidden="true" data-surface="panel">
+    {Astro.slots.has("figure") ? <slot name="figure" /> : <Complex seed={s} points={28} radius={0.17} controls={false} label={title} id={`cx-card-${s}`} />}
+    {badges.length > 0 && <span class="ply-card__labels">{badges.map((b) => <span class="ply-label ply-label--flag">{b}</span>)}</span>}
+  </a>
+  <div class="ply-card__body">
+    <H class="ply-card__title"><a href={href} {...link}>{parts.map((p) => (p.keep ? <span class="ply-nowrap">{p.text}</span> : p.text))}{sub && <><span class="ply-card__sub-mark">: </span><span class="ply-card__sub">{sub}</span></>}</a></H>
+    {meta.length > 0 && <p class="ply-card__meta">{meta.map((m) => <span>{m}</span>)}</p>}
+    {Astro.slots.has("summary") ? <p class="ply-card__summary"><slot name="summary" /></p> : summary && <p class="ply-card__summary">{summary}</p>}
+    {tags.length > 0 && <ul class="ply-card__tags" aria-label={tagsLabel}>{tags.map((t) => <li class="ply-tag">{t}</li>)}</ul>}
+    <slot />
+  </div>
+</article>

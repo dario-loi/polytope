@@ -10,6 +10,9 @@
   .ply-num { font-variant-numeric: tabular-nums; }
   .ply-nowrap { white-space: nowrap; }
   .ply-stop { color: var(--ply-color-accent); }
+  /* A link or button of your own that stands alone grows to a 44px target under a finger,
+     as Polytope's own controls do. */
+  @media (pointer: coarse) { .ply-target { display: inline-flex; align-items: center; min-height: 2.75rem; min-width: 2.75rem; } }
   .ply-flow > * + * { margin-top: var(--ply-flow, var(--ply-space-4)); }
   .ply-mt-0 { margin-top: 0 !important; }
   @media (max-width: 40rem) { .ply-hide-narrow { display: none !important; } }

@@ -3,7 +3,7 @@
 // header, so a site's posts and papers read as one series.
 //   <PostHeader title="..." date="2026-09-14" minutes={6} tags={["Topology"]} lede="..." />
 import Tag from "./Tag.astro";
-import { woodTitle } from "./title.ts";
+import WoodTitle from "./WoodTitle.astro";
 interface Props {
   title: string;
   /** "2026-09-14", or a Date. Printed as "14 September 2026". */
@@ -18,14 +18,12 @@ interface Props {
   locale?: string;
 }
 const { title, date, lede, minutes, tags = [], level = 1, locale = "en-GB" } = Astro.props;
-const H = `h${level}`;
-const t = woodTitle(title);
 const d = date instanceof Date ? date : new Date(`${date}T00:00:00Z`);
 const iso = d.toISOString().slice(0, 10);
 const shown = d.toLocaleDateString(locale, { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" });
 ---
 <header class="ply-post">
-  <H class="ply-post__title" style={`--_len: ${t.len}; --_chars: ${t.chars}`}>{t.parts.map((p) => (p.keep ? <span class="ply-nowrap">{p.text}</span> : p.text))}</H>
+  <WoodTitle class="ply-post__title" level={level} title={title} />
   {lede && <p class="ply-post__lede">{lede}</p>}
   <p class="ply-post__meta"><time datetime={iso}>{shown}</time>{minutes !== undefined && <span>{minutes} minute read</span>}</p>
   {tags.length > 0 && <ul class="ply-post__tags" aria-label="Tags">{tags.map((t) => <li><Tag>{t}</Tag></li>)}</ul>}

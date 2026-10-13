@@ -44,7 +44,9 @@ const sample = stops.filter((s) => ["Edinburgh, United Kingdom", "Lisbon, Portug
   <ApiTable rows={[
     ["label", "Names the map for assistive technology", "Places"],
     ["filter", "Offers a filter by kind when the entries have more than one kind", "true"],
+    ["quiet", "At rest the caption says only the label: no count of places, no line on how to drag. The current entry still shows there", "false"],
   ]} head={["Atlas prop", "Effect", "Default"]} />
+  <p>Put a title over the list in the <code>head</code> slot with <code>&lt;MastTitle title="Curriculum vitae" /&gt;</code>, which sizes it to the head's width.</p>
   <ApiTable rows={[
     ["title", "What you did: the degree, the job, the visit"],
     ["place", "Place name as it should read, such as Toronto, Canada"],

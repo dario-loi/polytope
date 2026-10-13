@@ -2,12 +2,20 @@
   /* Code sits in a black exhibit panel. Comments are mustard so the explanation reads first. */
   .ply-code { position: relative; background: var(--ply-color-panel); color: var(--ply-color-panel-text); max-width: var(--ply-layout-measure); }
   /* A code block below the screen skips its layout and paint until the reader nears it: its
-     hundreds of highlighted spans are the costliest layout on most pages. The block scrolls and
-     takes focus already, so it clips nothing new. Tables and equations keep their layout, since
-     js/scroll.js has to measure their overflow to make them focusable. */
+     hundreds of highlighted spans are the costliest layout on most pages. The block scrolls
+     already, so it clips nothing new. A block with long lines starts focusable, and
+     js/scroll.js measures it once it is laid out; tables and equations keep their layout,
+     since scroll.js has to measure their overflow to make them focusable. */
   .ply-code pre { content-visibility: auto; contain-intrinsic-size: auto 10rem; }
-  .ply-code pre { position: relative; direction: ltr; margin: 0; padding: var(--ply-space-4) var(--ply-space-5); overflow-x: auto; font-size: var(--ply-size-sm); line-height: 1.7; tab-size: 2; scrollbar-color: var(--ply-color-panel-rule) var(--ply-color-panel); --_cue-bg: var(--ply-color-panel); --_cue-shade: var(--ply-color-panel-text); background: var(--_cue) !important; }
+  .ply-code pre { position: relative; direction: ltr; margin: 0; padding: var(--ply-space-4) var(--ply-space-5); overflow-x: auto; font-size: var(--ply-size-sm); line-height: 1.7; tab-size: 2; scrollbar-color: var(--ply-color-panel-rule) var(--ply-color-panel); --_cue-bg: var(--ply-color-panel); --_cue-shade: var(--ply-color-panel-text); background: var(--_cue) !important; color: var(--ply-color-panel-text) !important; }
   .ply-code pre code { background: none; padding: 0; font-size: inherit; }
+  /* Wrapped code (wrap): each line wraps under its own indent, or under the value of a
+     "key = value" line (--_hang, in characters, from Code.astro). Words break only when one
+     is wider than the whole line, so a cite key stays whole. */
+  .ply-code--wrap pre { white-space: pre-wrap; overflow-wrap: break-word; container-type: inline-size; }
+  /* A hang never takes more than 40% of the line, so on a phone a long field name still
+     leaves its value room. */
+  .ply-code--wrap .line { --_h: min(var(--_hang, 0ch), 40cqi); display: inline-block; max-width: 100%; padding-inline-start: var(--_h); text-indent: calc(-1 * var(--_h)); }
   .ply-code__bar { display: flex; align-items: center; justify-content: space-between; gap: var(--ply-space-3); padding-block: var(--ply-space-2); padding-inline: var(--ply-space-5) var(--ply-space-2); border-bottom: var(--ply-border-hair) solid var(--ply-color-panel-rule); font-size: var(--ply-size-xs); color: var(--ply-color-panel-muted); }
   .ply-code__lang { font-family: var(--ply-font-mono); min-width: 0; overflow-wrap: anywhere; }
   .ply-code__copy { appearance: none; border: var(--ply-border-hair) solid var(--ply-color-panel-rule); background: transparent; color: var(--ply-color-panel-text); font-size: var(--ply-size-xs); font-weight: var(--ply-weight-semibold); padding: 0.3rem 0.6rem; cursor: pointer; }

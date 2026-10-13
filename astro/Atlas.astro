@@ -16,10 +16,13 @@ interface Props {
   label?: string;
   /** Offers a filter by kind when the entries have more than one kind. */
   filter?: boolean;
+  /** At rest the caption says only the label: no count of places, no line on how to drag.
+   *  The current entry still shows there as you scroll. */
+  quiet?: boolean;
   id?: string;
   class?: string;
 }
-const { label = "Places", filter = true, id, class: className } = Astro.props;
+const { label = "Places", filter = true, quiet = false, id, class: className } = Astro.props;
 
 // The entries render first; their data attributes give the places for the server's globe.
 const html = await Astro.slots.render("default");
@@ -65,7 +68,7 @@ function place(size: number, fixed: Label[]) {
 const narrow = place(340, []);
 const labels = [...narrow, ...place(720, narrow).map((l) => ({ ...l, wide: true }))];
 ---
-<ply-atlas class:list={["ply-atlas", className]} id={id} label={label}>
+<ply-atlas class:list={["ply-atlas", className]} id={id} label={label} quiet={quiet ? "" : undefined}>
   <div class="ply-atlas__frame">
     {Astro.slots.has("head") && <div class="ply-atlas__head"><slot name="head" /></div>}
     <div class="ply-atlas__stage">
@@ -82,7 +85,7 @@ const labels = [...narrow, ...place(720, narrow).map((l) => ({ ...l, wide: true 
           {labels.map((l) => <span class="ply-atlas__name" data-side={l.side} data-wide={l.wide ? "" : undefined} style={`--x: ${l.x.toFixed(4)}; --y: ${l.y.toFixed(4)}`}>{l.name}</span>)}
         </div>
       </div>
-      <p class="ply-atlas__caption"><b>{label}.</b> <span class="ply-atlas__tally">{tally(places.length, moves)}</span></p>
+      <p class="ply-atlas__caption"><b>{label}.</b> <span class="ply-atlas__tally">{quiet ? "" : tally(places.length, moves)}</span></p>
     </div>
     <div class="ply-atlas__list">
       {filter && <div class="ply-segmented ply-atlas__filter" role="group" aria-label="Show entries" hidden></div>}

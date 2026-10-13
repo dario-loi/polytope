@@ -1,0 +1,7 @@
+---
+// A grid of Cards: up to three columns of at least 16rem, one on phones. A grid with fewer
+// cards than columns shares the row between them, and a lone card sets like a lead.
+interface Props { class?: string }
+const { class: className } = Astro.props;
+---
+<div class:list={["ply-cards", className]}><slot /></div>

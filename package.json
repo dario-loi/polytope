@@ -1,6 +1,6 @@
 {
   "name": "@dario-loi/polytope",
-  "version": "0.6.3",
+  "version": "0.7.0",
   "description": "Polytope: tokens, CSS components, and Astro components for academic sites, paper pages, and research demos.",
   "type": "module",
   "license": "Apache-2.0",
@@ -25,6 +25,7 @@
     ".": "./dist/polytope.css",
     "./css": "./dist/polytope.css",
     "./tokens.css": "./dist/tokens.css",
+    "./fonts.css": "./dist/fonts.css",
     "./tokens.json": "./dist/tokens.json",
     "./tokens": {
       "types": "./dist/tokens.d.ts",

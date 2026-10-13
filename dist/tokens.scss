@@ -100,6 +100,9 @@ $ply-color-link: #0F6E73;
 $ply-color-link-hover: #141414;
 $ply-color-note: #E9A81C;
 $ply-color-note-soft: #FBEFD2;
+$ply-color-flag: #FBEFD2;
+$ply-color-flag-text: #141414;
+$ply-color-flag-edge: #E9A81C;
 $ply-color-focus: #0F6E73;
 $ply-color-focus-on-panel: #F2B83A;
 $ply-color-selection: #E9A81C;
@@ -126,6 +129,9 @@ $ply-theme-dark: (
   "-link-hover": #F2F2EE,
   "-note": #E9A81C,
   "-note-soft": #3A2F14,
+  "-flag": #FBEFD2,
+  "-flag-text": #141414,
+  "-flag-edge": #E9A81C,
   "-focus": #F2B83A,
   "-focus-on-panel": #F2B83A,
   "-selection": #E9A81C,

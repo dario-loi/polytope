@@ -40,6 +40,8 @@ const pager = `<nav class="ply-pager" aria-label="Pages" style="margin-top:0">
 <Docs title="Navigation" status="stable" lede="A black wall label marks the chapter you are in; a tomato point marks the page.">
   <h2>Top bar</h2>
   <p>The top bar of this site is the component: wordmark at left, chapter tabs, tools at right, a 3px rule underneath. Where the tabs do not fit, they first set closer, then the search field drops its word; where they still do not fit, they fold into a Menu button that opens a native <code>&lt;details&gt;</code> panel. <code>js/topbar.js</code> measures the fit, so a site with three chapters keeps its tabs on a phone and one with nine folds them on a small laptop. Without the script the tabs fold below 72rem, and the menu still works.</p>
+  <p>The script also closes the menu when it should get out of the way: <kbd>Esc</kbd> closes it and puts focus back on its button, and a press outside it, or focus moving on past it, closes it too.</p>
+  <p>The theme toggle flips light and dark and keeps the choice in <code>localStorage</code> under <code>ply-theme</code> ("light" or "dark", no identifier), so the next page opens in it. Say so in a privacy notice. <code>&lt;ThemeToggle persist={"{false}"} /&gt;</code> keeps the choice for the page only and clears a stored one; in plain HTML, add <code>data-ply-persist="false"</code> to the toggle.</p>
   <Code lang="astro" code={`<TopBar brand="John Doe" brandHref="/" links={[
   { label: "Research", href: "/research/", current: true },
   { label: "Teaching", href: "/teaching/" },
@@ -89,4 +91,7 @@ const pager = `<nav class="ply-pager" aria-label="Pages" style="margin-top:0">
 
   <h2>Pager</h2>
   <Example html={pager} />
+  <p>A label with a subtitle, such as a paper's "Name: what it does", shows the name and keeps the rest for screen readers, so a long title does not outweigh the page; <code>split={"{false}"}</code> shows it whole. The labels balance across their lines. Where "Previous" and "Next" are not the right words, as on a list newest first, rename them.</p>
+  <Code lang="astro" code={`<Pager label="More publications" prev={{ label: newer.title, href: newer.href }} next={{ label: older.title, href: older.href }}
+  prevText="Newer" nextText="Older" />`} />
 </Docs>

@@ -27,6 +27,18 @@ npm install "github:dario-loi/polytope#v${version}"`} />
       </tbody>
     </table>
   </div>
+  <p>The full stylesheet holds every component, about 120 KB (25 KB compressed). A site that uses a few can load only those, in the order the full file has them, so the layers stack the same: <code>fonts.css</code>, <code>tokens.css</code>, then <code>css/reset.css</code>, <code>css/base.css</code>, <code>css/layout.css</code>, the components you use, <code>css/utilities.css</code>, and <code>css/modes.css</code> (touch, contrast themes, print).</p>
+  <Code lang="astro" code={`import "@dario-loi/polytope/fonts.css";
+import "@dario-loi/polytope/tokens.css";
+import "@dario-loi/polytope/css/reset.css";
+import "@dario-loi/polytope/css/base.css";
+import "@dario-loi/polytope/css/layout.css";
+import "@dario-loi/polytope/css/button.css";
+import "@dario-loi/polytope/css/nav.css";
+import "@dario-loi/polytope/css/research.css";
+import "@dario-loi/polytope/css/card.css";
+import "@dario-loi/polytope/css/utilities.css";
+import "@dario-loi/polytope/css/modes.css";`} />
   <p>The <a href={u("/getting-started/targets/")}>other targets</a> page lists the Tailwind, Sass, LaTeX, Figma, and editor exports.</p>
 
   <h2>Using Polytope with Impeccable</h2>

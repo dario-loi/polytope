@@ -1,5 +1,6 @@
 ---
 // Publications as a history wall: one row per year, the year as a big numeral.
+import { foldAuthors } from "./authors.ts";
 export interface Pub {
   year: number;
   title: string;
@@ -8,12 +9,23 @@ export interface Pub {
   venue?: string;
   links?: { label: string; href: string }[];
 }
-// `me` is the author name to set in bold in every author list.
-interface Props { pubs: Pub[]; me?: string; label?: string }
-const { pubs, me, label = "Publications" } = Astro.props;
+interface Props {
+  pubs: Pub[];
+  /** The author name to set in bold in every author list. */
+  me?: string;
+  /** Names the list as a region. false when it sits in a section of yours that already has
+   *  a heading, so the page does not name two regions alike. */
+  label?: string | false;
+  /** Past this many authors a list folds to the first names, yours, and the last. */
+  fold?: number;
+  /** What a screen reader says for each gap in a folded list, for another language. */
+  gapText?: string;
+}
+const { pubs, me, label = "Publications", fold, gapText = "more authors" } = Astro.props;
 const years = [...new Set(pubs.map((p) => p.year))].sort((a, b) => b - a);
+const Wall = label === false ? "div" : "section";
 ---
-<section class="ply-wall" aria-label={label}>
+<Wall class="ply-wall" aria-label={label === false ? undefined : label}>
   {years.map((y) => (
     <div class="ply-wall__year">
       <p class="ply-wall__label">{y}</p>
@@ -21,7 +33,7 @@ const years = [...new Set(pubs.map((p) => p.year))].sort((a, b) => b - a);
         {pubs.filter((p) => p.year === y).map((p) => (
           <li class="ply-pub">
             <p class="ply-pub__title">{p.href ? <a href={p.href}>{p.title}</a> : p.title}</p>
-            <p class="ply-pub__authors">{p.authors.map((a, i) => <>{i > 0 && ", "}{a === me ? <span class="ply-me">{a}</span> : a}</>)}</p>
+            <p class="ply-pub__authors">{(fold ? foldAuthors(p.authors, me, fold) : p.authors).map((a, i) => <>{i > 0 && ", "}{a === me ? <span class="ply-me">{a}</span> : a === "..." ? <><span class="ply-pub__gap" aria-hidden="true">...</span><span class="ply-visually-hidden">{gapText}</span></> : a}</>)}</p>
             {p.venue && <p class="ply-pub__venue">{p.venue}</p>}
             {p.links && p.links.length > 0 && <p class="ply-pub__links">{p.links.map((l) => <a href={l.href}>{l.label}</a>)}</p>}
           </li>
@@ -29,4 +41,4 @@ const years = [...new Set(pubs.map((p) => p.year))].sort((a, b) => b - a);
       </ul>
     </div>
   ))}
-</section>
+</Wall>

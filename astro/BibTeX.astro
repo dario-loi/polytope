@@ -1,6 +1,8 @@
 ---
+// A BibTeX entry in a code panel with a copy button. Long fields wrap under their value, so
+// the whole entry reads before it is copied; wrap={false} scrolls them instead.
 import Code from "./Code.astro";
-interface Props { entry: string; title?: string }
-const { entry, title = "BibTeX" } = Astro.props;
+interface Props { entry: string; title?: string; wrap?: boolean }
+const { entry, title = "BibTeX", wrap = true } = Astro.props;
 ---
-<div class="ply-bibtex"><Code code={entry} lang="bibtex" title={title} /></div>
+<div class="ply-bibtex"><Code code={entry} lang="bibtex" title={title} wrap={wrap} /></div>

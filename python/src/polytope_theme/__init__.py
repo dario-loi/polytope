@@ -25,7 +25,7 @@ from __future__ import annotations
 
 from ._tokens import CATEGORICAL, COLORS, DIVERGING, FONTS, SEQUENTIAL, STATUS, SURFACE
 
-__version__ = "0.6.3"
+__version__ = "0.7.0"
 
 __all__ = [
     "CATEGORICAL",

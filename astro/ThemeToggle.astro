@@ -1,7 +1,11 @@
 ---
+// Light/dark toggle. The choice is kept in localStorage ("ply-theme", no identifier) so the
+// next page opens in it; persist={false} keeps it for this page only.
 import Icon from "./Icon.astro";
+interface Props { persist?: boolean }
+const { persist = true } = Astro.props;
 ---
-<button class="ply-button ply-button--ghost ply-button--icon ply-button--sm ply-theme-toggle" type="button" data-ply-theme-toggle aria-label="Dark theme" aria-pressed="false">
+<button class="ply-button ply-button--ghost ply-button--icon ply-button--sm ply-theme-toggle" type="button" data-ply-theme-toggle data-ply-persist={persist ? undefined : "false"} aria-label="Dark theme" aria-pressed="false">
   <span class="ply-theme-toggle__light"><Icon name="moon" /></span>
   <span class="ply-theme-toggle__dark"><Icon name="sun" /></span>
 </button>

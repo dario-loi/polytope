@@ -6,11 +6,20 @@
 
   .ply-mast { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--ply-space-6); padding-block: var(--ply-space-7) var(--ply-space-7); align-items: start; }
   .ply-mast > :first-child { container-type: inline-size; }
-  .ply-mast__title { font-family: var(--ply-font-display); font-size: min(var(--ply-size-display), calc(100cqi / (var(--_chars, 8) * 0.76))); line-height: var(--ply-leading-display); letter-spacing: -0.01em; font-weight: 400; }
+  /* The title sizes to its longest word: --_em is that word's width in em (MastTitle writes
+     it; --_chars, a count of characters, is the older estimate). Short of 24px a word too
+     long even for that breaks where it must. */
+  .ply-mast__title { font-family: var(--ply-font-display); font-size: min(var(--ply-size-display), max(var(--ply-size-xl), 100cqi / var(--_em, calc(var(--_chars, 8) * 0.76)))); line-height: var(--ply-leading-display); letter-spacing: -0.01em; font-weight: 400; }
+  .ply-mast--compact { padding-block: var(--ply-space-7) var(--ply-space-6); }
+  .ply-mast--compact .ply-mast__title { --ply-size-display: clamp(var(--ply-size-3xl), 1.4rem + 3.6vw, 4.5rem); }
   .ply-mast__stop { color: var(--ply-color-accent); }
   .ply-mast__lede { font-size: var(--ply-size-lg); line-height: var(--ply-leading-normal); max-width: 36rem; margin-top: var(--ply-space-5); }
+  /* The exhibit column opens only when there is an exhibit; a mast without one (a list page)
+     keeps the whole width for its title. */
   @media (min-width: 64rem) {
-    .ply-mast { grid-template-columns: minmax(0, 1fr) minmax(0, 35rem); gap: var(--ply-space-7); padding-block: var(--ply-space-7) var(--ply-space-8); }
+    .ply-mast { gap: var(--ply-space-7); padding-block: var(--ply-space-7) var(--ply-space-8); }
+    .ply-mast:has(> .ply-mast__exhibit:not(:empty)) { grid-template-columns: minmax(0, 1fr) minmax(0, 35rem); }
+    .ply-mast--compact { padding-block: var(--ply-space-7) var(--ply-space-6); }
   }
 
   /* Reading frames: the docs grid and the article. Both put the text at the centre of the

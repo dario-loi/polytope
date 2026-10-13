@@ -1,0 +1,27 @@
+---
+// A title in wood type that sizes to its column, as the paper and post headers set theirs:
+// about 22 characters to a line, longer lines for a long title, and never so big that its
+// longest word breaks. Use it for a header of your own, such as a project page's.
+//   <WoodTitle title="StapleGL" />  <WoodTitle level={2} title="Name: what it does" split />
+// It sizes to the nearest container (container-type: inline-size), else to the window.
+import { splitTitle, titleStyle, woodTitle } from "./title.ts";
+interface Props {
+  title: string;
+  /** Heading level: 1 for the page's own title. */
+  level?: 1 | 2 | 3 | 4;
+  /** Set the subtitle (after the first ": ") under the name in the text face. */
+  split?: boolean;
+  /** End in the tomato full stop, for a page that is a section rather than an entry. */
+  stop?: boolean;
+  class?: string;
+}
+const { title, level = 1, split = false, stop = false, class: className } = Astro.props;
+const H = `h${level}`;
+const { name, sub } = split ? splitTitle(title) : { name: title, sub: undefined };
+// The full stop stays with the last word, so it never wraps away from it.
+const words = name.split(" ");
+const last = stop ? words.pop() ?? "" : "";
+const head = woodTitle(stop ? words.join(" ") : name);
+const size = woodTitle(stop ? `${name}.` : name);
+---
+<H class:list={["ply-title", className]} style={titleStyle(size)}>{head.parts.map((p) => (p.keep ? <span class="ply-nowrap">{p.text}</span> : p.text))}{stop && <>{words.length > 0 && " "}<span class="ply-nowrap">{last}<span class="ply-mast__stop" aria-hidden="true">.</span></span></>}{sub && <><span class="ply-visually-hidden">: </span><span class="ply-title__sub">{sub}</span></>}</H>

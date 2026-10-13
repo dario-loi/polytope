@@ -42,7 +42,9 @@
 
   /* Range slider: a rail and a ball, with the value printed beside it. */
   .ply-range { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: var(--ply-space-3); }
-  .ply-range output { font-family: var(--ply-font-mono); font-size: var(--ply-size-sm); font-variant-numeric: tabular-nums; min-width: 3.5ch; text-align: end; }
+  /* The value is set in the text face with tabular figures, so a page with a slider and no
+     code loads no mono face. */
+  .ply-range output { font-size: var(--ply-size-sm); font-weight: var(--ply-weight-semibold); font-variant-numeric: tabular-nums; min-width: 3.5ch; text-align: end; }
   .ply-slider { appearance: none; width: 100%; height: 1.5rem; background: transparent; cursor: pointer; }
   .ply-slider::-webkit-slider-runnable-track { height: 3px; background: var(--ply-color-rule-strong); }
   .ply-slider::-moz-range-track { height: 3px; background: var(--ply-color-rule-strong); }
@@ -56,6 +58,8 @@
   .ply-segmented :is(button, label) + :is(button, label) { border-inline-start: var(--ply-border-control) solid var(--ply-color-rule-strong); }
   .ply-segmented [aria-pressed="true"], .ply-segmented label:has(input:checked) { background: var(--ply-color-text); color: var(--ply-color-bg); font-weight: var(--ply-weight-semibold); }
   .ply-segmented input { position: absolute; opacity: 0; pointer-events: none; }
+  /* On a phone the segments set closer, so a row of four short labels fits without scrolling. */
+  @media (max-width: 30rem) { .ply-segmented button, .ply-segmented label { padding-inline: var(--ply-space-2); } }
   .ply-segmented label:has(input:focus-visible), .ply-segmented button:focus-visible { outline: 3px solid var(--ply-color-focus); outline-offset: -5px; }
 
   .ply-panel :is(.ply-input, .ply-select, .ply-textarea) { background: transparent; color: var(--ply-color-panel-text); border-color: var(--ply-color-panel-text); }

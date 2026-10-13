@@ -15,7 +15,8 @@ def step(x, boundary, weight):
 for epoch in range(200):
     loss = F.cross_entropy(model(x), y)`} />
   <Code lang="astro" code={`<Code lang="python" title="train.py" code={source} />`} />
-  <ApiTable rows={[["code", "The source text"], ["lang", "Language for highlighting", "txt"], ["title", "Shown in the bar; defaults to the language"], ["copy", "Show the copy button", "true"]]} head={["Prop", "Effect", "Default"]} />
+  <ApiTable rows={[["code", "The source text"], ["lang", "Language for highlighting", "txt"], ["title", "Shown in the bar; defaults to the language"], ["copy", "Show the copy button", "true"], ["wrap", "Wrap long lines instead of scrolling them, each under its own indent, or under the value of a key = value line", "false"]]} head={["Prop", "Effect", "Default"]} />
+  <p>A block with a line wider than its panel scrolls sideways, and takes focus so a keyboard can scroll it; one whose lines fit never becomes a tab stop. <code>js/scroll.js</code> keeps that up to date as the page changes width.</p>
   <p>In plain HTML, wrap a <code>&lt;pre&gt;</code> in <code>.ply-code</code> and add a <code>.ply-code__bar</code> with a <code>[data-ply-copy]</code> button; <code>copy.js</code> handles the click. Spans with classes <code>c</code>, <code>k</code>, <code>s</code>, and <code>n</code> color comments, keywords, strings, and numbers if you highlight by hand.</p>
 
   <h2>Inline code and keys</h2>

@@ -18,7 +18,7 @@ const pairs = [
   ["color-link", "color-bg", 4.5], ["color-link", "color-surface-sunken", 4.5], ["color-accent-text", "color-bg", 4.5],
   ["color-panel-text", "color-panel", 4.5], ["color-panel-muted", "color-panel", 4.5],
   ["color-code-comment", "color-panel", 4.5], ["color-code-keyword", "color-panel", 4.5], ["color-code-string", "color-panel", 4.5], ["color-code-number", "color-panel", 4.5],
-  ["ink-950", "color-note", 4.5, "note text"], ["color-text", "color-note-soft", 4.5],
+  ["ink-950", "color-note", 4.5, "note text"], ["color-flag-text", "color-flag", 4.5, "label on a figure"], ["color-text", "color-note-soft", 4.5],
   ["color-bg", "color-text", 4.5, "inverted tab and button"],
   ["color-accent", "color-bg", 3, "non-text: points, balls"], ["color-focus", "color-bg", 3, "focus ring"], ["color-focus-on-panel", "color-panel", 3, "focus ring on panel"],
   ["color-rule-strong", "color-bg", 3, "control borders"],

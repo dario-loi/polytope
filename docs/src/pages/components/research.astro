@@ -41,7 +41,21 @@ const examplePubs = [
   links={[{ label: "Paper", href: "/paper.pdf", icon: "paper" }, { label: "Code", href: repo, icon: "code" }]}
 />`} />
   <p>The title is the page's <code>h1</code>. When the header sits inside another page, as it does above, pass <code>level={2}</code>. Pass <code>me</code> with your name as it reads in <code>authors</code> to set it in bold, as on the publication wall; the other names drop to regular weight. In plain HTML, give your <code>li</code> the class <code>ply-me</code>.</p>
-  <p>The title sizes to the header's own width, not the window's, so it sets the same in a column beside an exhibit as across the page. It runs about 22 characters to a line, and longer lines for a long title, so most titles keep to three lines. A title with a subtitle (the part after the first colon) sets the name in wood type and the subtitle under it in the text face. The colon stays in the heading, hidden, so screen readers and copies keep the whole title. Pass <code>split={"{false}"}</code> to keep the whole title in wood type. In plain HTML, write the subtitle as <code>&lt;span class="ply-visually-hidden"&gt;: &lt;/span&gt;&lt;span class="ply-paper__subtitle"&gt;...&lt;/span&gt;</code> inside the heading, and set <code>--_len</code> (the length of the name) and <code>--_chars</code> (its longest word) on the heading, as the component does.</p>
+  <p>The title sizes to the header's own width, not the window's, so it sets the same in a column beside an exhibit as across the page. It runs about 22 characters to a line, and longer lines for a long title, so most titles keep to three lines. A title with a subtitle (the part after the first colon) sets the name in wood type and the subtitle under it in the text face. The colon stays in the heading, hidden, so screen readers and copies keep the whole title. Pass <code>split={"{false}"}</code> to keep the whole title in wood type. In plain HTML, write the subtitle as <code>&lt;span class="ply-visually-hidden"&gt;: &lt;/span&gt;&lt;span class="ply-title__sub"&gt;...&lt;/span&gt;</code> inside the heading, and set <code>--_len</code> (the length of the name) and <code>--_em</code> (the width of its longest word, from <code>emWidth</code>) on it, as the component does.</p>
+  <p>Because the header measures its own width, it takes its width from where it sits, never from its text. In a grid column or a block it fills its space; in a box that shrinks to fit its content, such as an inline-block or a <code>fit-content</code> box, give it a width. The first link is the primary button; give another link <code>primary: true</code> to make it the one, such as the PDF when the first link is the venue's page.</p>
+  <h3>Long author lists</h3>
+  <p>A report with dozens of authors folds: pass <code>fold</code> with the most names to show whole, and a longer list shows the first half of that number, yours, and the last author, with a gap where names are left out and a button for the whole list. The fold is in the page as built, so nothing moves while it loads. Without script, and on paper, the list shows whole. In plain HTML, load <code>js/fold.js</code> (it is part of <code>js/all.js</code>).</p>
+  <div class="ex__live" style="border: 2px solid var(--ply-color-rule-strong); padding: 1.5rem">
+    <PaperHeader
+      level={4}
+      title="Example report: a shared benchmark for cell complexes"
+      authors={["A. Author", "B. Author", "C. Author", "D. Author", "E. Author", "F. Author", "G. Author", "H. Author", "John Doe", "I. Author", "J. Author", "K. Author", "L. Author", "M. Author"].map((name) => ({ name }))}
+      me="John Doe"
+      fold={8}
+      venue="Example Workshop 2026"
+    />
+  </div>
+  <Code lang="astro" code={`<PaperHeader title="..." authors={authors} me="John Doe" fold={12} />`} />
 
   <h2>Equations</h2>
   <p>KaTeX renders math at build time, so pages ship HTML and MathML and no math script. The Hodge Laplacian on <M tex={String.raw`k`} />-simplices combines a down and an up part:</p>
@@ -68,6 +82,7 @@ const examplePubs = [
 </Figure>`} />
 
   <h2 id="bibtex">BibTeX</h2>
+  <p>Long fields wrap under their value, so the whole entry reads before it is copied, and a cite key never breaks unless it is wider than the block. Pass <code>wrap={"{false}"}</code> to let lines scroll instead. <code>Code</code> takes the same <code>wrap</code>.</p>
   <BibTeX entry={`@inproceedings{author2026example,
   title     = {Example title: Higher-order message passing on cell complexes},
   author    = {Author, A. and Doe, John and Author, B.},
@@ -79,4 +94,5 @@ const examplePubs = [
   <p>Publications grouped by year, the year in wood type, the site owner's name in bold in each author list.</p>
   <PubList pubs={examplePubs} me="John Doe" />
   <Code lang="astro" code={`<PubList pubs={pubs} me="John Doe" />`} />
+  <p>The wall is a region named <code>label</code> ("Publications"). When it sits in a section of yours that has its own heading, pass <code>label={"{false}"}</code>, so the page does not name two regions alike. <code>fold</code> folds a long author list here as in the header, as text: the first names, yours, and the last.</p>
 </Docs>

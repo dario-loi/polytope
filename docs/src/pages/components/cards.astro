@@ -1,0 +1,45 @@
+---
+import Docs from "../../layouts/Docs.astro";
+import Card from "@dario-loi/polytope/astro/Card.astro";
+import CardGrid from "@dario-loi/polytope/astro/CardGrid.astro";
+import Code from "@dario-loi/polytope/astro/Code.astro";
+import Note from "@dario-loi/polytope/astro/Note.astro";
+---
+<Docs title="Cards" status="experimental" lede="Entries on a list page, hung as exhibits: a black panel with the entry's figure or its own complex, then the title, a meta line, and a summary.">
+  <Note kind="info">Every title and venue on this page is example content.</Note>
+
+  <h2>A list page</h2>
+  <p>The first card leads: it spans the row and, with room, sets its panel beside the text and its title in wood type, with the subtitle under the name. The others share the rows, up to three to a row.</p>
+  <CardGrid class="ply-wide">
+    <Card lead href="#" title="Example title: Higher-order message passing on cell complexes" meta={["Example Venue 2026", "Oral"]} badge="Top 3 paper" summary="A one-sentence summary of the paper, set in the text face under the meta line." />
+    <Card href="#" title="Example title: a second paper in the same year" meta={["Example Workshop 2026"]} badge="Preprint" summary="Each card without a figure draws a complex seeded from its own title." />
+    <Card href="#" title="Example title: an earlier preprint" meta={["arXiv preprint"]} summary="The panel repeats the title's link for a pointer; a keyboard reaches the title only." tags={["Topology", "Graphs"]} />
+  </CardGrid>
+  <Code lang="astro" code={`<CardGrid>
+  <Card lead href="/papers/x/" title="Name: what it does" meta={["ICLR 2026", "Oral"]} badge="Top 3 paper" summary="...">
+    <Picture slot="figure" src={figure} alt="" />
+  </Card>
+  <Card href="/papers/y/" title="..." meta={["Preprint"]} />
+</CardGrid>`} />
+  <ul>
+    <li>Put the figure in the <code>figure</code> slot with empty alt text: the title names the entry, and the panel is a second way to the same page. Without a figure, the card draws a Vietoris-Rips complex seeded from its title, so each entry has its own; <code>seed</code> picks another.</li>
+    <li><code>badge</code> hangs wall labels on the panel. They carry their own pale ground and edge (<code>.ply-label--flag</code>, the <code>flag</code> tokens), so they read on a white screenshot and a black panel, in both themes.</li>
+    <li>The grid shares a row between fewer cards than it has columns, so a year with two papers sets two wide cards, and a card alone sets like a lead.</li>
+    <li><code>level</code> sets the title's heading level (3 by default), and <code>link</code> passes attributes to the title's link, such as data attributes for analytics.</li>
+  </ul>
+
+  <h2>Plain HTML</h2>
+  <Code lang="html" code={`<div class="ply-cards">
+  <article class="ply-card ply-card--lead">
+    <a class="ply-card__panel" href="/papers/x/" tabindex="-1" aria-hidden="true">
+      <img src="/x.webp" alt="" />
+      <span class="ply-card__labels"><span class="ply-label ply-label--flag">Top 3 paper</span></span>
+    </a>
+    <div class="ply-card__body">
+      <h3 class="ply-card__title"><a href="/papers/x/">Name<span class="ply-card__sub-mark">: </span><span class="ply-card__sub">what it does</span></a></h3>
+      <p class="ply-card__meta"><span>ICLR 2026</span><span>Oral</span></p>
+      <p class="ply-card__summary">...</p>
+    </div>
+  </article>
+</div>`} />
+</Docs>

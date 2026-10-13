@@ -1,18 +1,19 @@
 ---
 // Page mast: the title (with the tomato full stop), a lede, and an exhibit slot on the right.
-interface Props { title: string; lede?: string; stop?: boolean; class?: string }
-const { title, lede, stop = true, class: className } = Astro.props;
-// Size the title to its longest word so a long single word never overflows its column,
-// and keep the full stop attached to the last word.
-const words = title.split(" ");
-const last = words.pop() ?? "";
-const chars = Math.max(...[...words, last + (stop ? "." : "")].map((w) => w.length));
+// Without an exhibit the mast stays one column. `compact` sets a smaller title, for a list
+// page under the chapter landings.
+import MastTitle from "./MastTitle.astro";
+interface Props { title: string; lede?: string; stop?: boolean; compact?: boolean; class?: string }
+const { title, lede, stop = true, compact = false, class: className } = Astro.props;
+// A slot passed on from a layout counts as filled even when it is empty, so look at what it
+// holds.
+const exhibit = Astro.slots.has("exhibit") ? (await Astro.slots.render("exhibit")).trim() : "";
 ---
-<header class:list={["ply-container ply-mast", className]}>
+<header class:list={["ply-container ply-mast", compact && "ply-mast--compact", className]}>
   <div>
-    <h1 class="ply-mast__title" style={`--_chars: ${chars}`}>{words.length > 0 && `${words.join(" ")} `}<span class="ply-nowrap">{last}{stop && <span class="ply-mast__stop" aria-hidden="true">.</span>}</span></h1>
+    <MastTitle title={title} stop={stop} />
     {lede && <p class="ply-mast__lede">{lede}</p>}
     <slot name="after" />
   </div>
-  {Astro.slots.has("exhibit") && <div class="ply-mast__exhibit"><slot name="exhibit" /></div>}
+  {exhibit && <div class="ply-mast__exhibit"><Fragment set:html={exhibit} /></div>}
 </header>

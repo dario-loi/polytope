@@ -1,4 +1,4 @@
-/* Polytope v0.6.3. Generated; edit css/src instead. */
+/* Polytope v0.7.0. Generated; edit css/src instead. */
 @layer ply.reset, ply.base, ply.layout, ply.components, ply.utilities;
 /* Self-hosted faces. Ultra: Apache 2.0. Libre Franklin and JetBrains Mono: SIL OFL 1.1. License texts: ./fonts/LICENSE-*.txt */
 @font-face { font-family: "Ultra"; font-style: normal; font-weight: 400; font-display: swap; src: url("./fonts/ultra-latin-400.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
@@ -149,6 +149,9 @@
   --ply-color-link-hover: var(--ply-ink-950);
   --ply-color-note: var(--ply-mustard-500);
   --ply-color-note-soft: var(--ply-mustard-100);
+  --ply-color-flag: var(--ply-mustard-100);
+  --ply-color-flag-text: var(--ply-ink-950);
+  --ply-color-flag-edge: var(--ply-mustard-500);
   --ply-color-focus: var(--ply-teal-700);
   --ply-color-focus-on-panel: var(--ply-mustard-400);
   --ply-color-selection: var(--ply-mustard-500);
@@ -187,6 +190,9 @@
     --ply-color-link-hover: #F2F2EE;
     --ply-color-note: var(--ply-mustard-500);
     --ply-color-note-soft: #3A2F14;
+    --ply-color-flag: var(--ply-mustard-100);
+    --ply-color-flag-text: var(--ply-ink-950);
+    --ply-color-flag-edge: var(--ply-mustard-500);
     --ply-color-focus: var(--ply-mustard-400);
     --ply-color-focus-on-panel: var(--ply-mustard-400);
     --ply-color-selection: var(--ply-mustard-500);
@@ -226,6 +232,9 @@
     --ply-color-link-hover: #F2F2EE;
     --ply-color-note: var(--ply-mustard-500);
     --ply-color-note-soft: #3A2F14;
+    --ply-color-flag: var(--ply-mustard-100);
+    --ply-color-flag-text: var(--ply-ink-950);
+    --ply-color-flag-edge: var(--ply-mustard-500);
     --ply-color-focus: var(--ply-mustard-400);
     --ply-color-focus-on-panel: var(--ply-mustard-400);
     --ply-color-selection: var(--ply-mustard-500);
@@ -361,11 +370,20 @@
 
   .ply-mast { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--ply-space-6); padding-block: var(--ply-space-7) var(--ply-space-7); align-items: start; }
   .ply-mast > :first-child { container-type: inline-size; }
-  .ply-mast__title { font-family: var(--ply-font-display); font-size: min(var(--ply-size-display), calc(100cqi / (var(--_chars, 8) * 0.76))); line-height: var(--ply-leading-display); letter-spacing: -0.01em; font-weight: 400; }
+  /* The title sizes to its longest word: --_em is that word's width in em (MastTitle writes
+     it; --_chars, a count of characters, is the older estimate). Short of 24px a word too
+     long even for that breaks where it must. */
+  .ply-mast__title { font-family: var(--ply-font-display); font-size: min(var(--ply-size-display), max(var(--ply-size-xl), 100cqi / var(--_em, calc(var(--_chars, 8) * 0.76)))); line-height: var(--ply-leading-display); letter-spacing: -0.01em; font-weight: 400; }
+  .ply-mast--compact { padding-block: var(--ply-space-7) var(--ply-space-6); }
+  .ply-mast--compact .ply-mast__title { --ply-size-display: clamp(var(--ply-size-3xl), 1.4rem + 3.6vw, 4.5rem); }
   .ply-mast__stop { color: var(--ply-color-accent); }
   .ply-mast__lede { font-size: var(--ply-size-lg); line-height: var(--ply-leading-normal); max-width: 36rem; margin-top: var(--ply-space-5); }
+  /* The exhibit column opens only when there is an exhibit; a mast without one (a list page)
+     keeps the whole width for its title. */
   @media (min-width: 64rem) {
-    .ply-mast { grid-template-columns: minmax(0, 1fr) minmax(0, 35rem); gap: var(--ply-space-7); padding-block: var(--ply-space-7) var(--ply-space-8); }
+    .ply-mast { gap: var(--ply-space-7); padding-block: var(--ply-space-7) var(--ply-space-8); }
+    .ply-mast:has(> .ply-mast__exhibit:not(:empty)) { grid-template-columns: minmax(0, 1fr) minmax(0, 35rem); }
+    .ply-mast--compact { padding-block: var(--ply-space-7) var(--ply-space-6); }
   }
 
   /* Reading frames: the docs grid and the article. Both put the text at the centre of the
@@ -474,6 +492,9 @@
   .ply-button--secondary { --_bg: transparent; --_fg: var(--ply-color-text); --_bd: var(--ply-color-text); }
   .ply-button--secondary:hover:not(:disabled, [aria-disabled="true"]) { --_bg: var(--ply-color-text); --_fg: var(--ply-color-bg); --_bd: var(--ply-color-text); background: var(--ply-color-text); color: var(--ply-color-bg); }
   .ply-button--ghost { --_bg: transparent; --_fg: var(--ply-color-text); --_bd: transparent; padding-inline: var(--ply-space-3); }
+  /* In a row of buttons a ghost button's word lines up with the row's edge when it wraps to a
+     new line, as a filled button's box does: it draws its padding into the gap before it. */
+  .ply-cluster > .ply-button--ghost:not(.ply-button--icon) { margin-inline-start: calc(-1 * var(--ply-space-3)); }
   .ply-button--ghost:hover:not(:disabled, [aria-disabled="true"]) { --_bg: var(--ply-color-surface-sunken); --_fg: var(--ply-color-text); --_bd: transparent; background: var(--ply-color-surface-sunken); color: var(--ply-color-text); }
   .ply-button--sm { min-height: 2.25rem; padding-inline: var(--ply-space-4); font-size: var(--ply-size-sm); }
   .ply-button--icon { padding: 0; width: 2.75rem; }
@@ -571,9 +592,9 @@
 
   /* Previous and next at the end of a page. */
   .ply-pager { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--ply-space-4); margin-top: var(--ply-space-8); border-top: var(--ply-border-rule) solid var(--ply-color-rule-strong); padding-top: var(--ply-space-5); }
-  .ply-pager a { display: block; text-decoration: none; color: var(--ply-color-text); padding: var(--ply-space-3) 0; }
-  .ply-pager a span { display: block; font-size: var(--ply-size-sm); color: var(--ply-color-text-muted); font-weight: var(--ply-weight-medium); }
-  .ply-pager a strong { font-family: var(--ply-font-display); font-weight: 400; font-size: var(--ply-size-xl); line-height: 1.1; overflow-wrap: break-word; }
+  .ply-pager a { position: relative; display: block; text-decoration: none; color: var(--ply-color-text); padding: var(--ply-space-3) 0; }
+  .ply-pager a > span { display: block; font-size: var(--ply-size-sm); color: var(--ply-color-text-muted); font-weight: var(--ply-weight-medium); }
+  .ply-pager a strong { display: block; font-family: var(--ply-font-display); font-weight: 400; font-size: var(--ply-size-xl); line-height: 1.1; overflow-wrap: break-word; text-wrap: balance; }
   .ply-pager a:hover strong { color: var(--ply-color-accent-text); }
   .ply-pager__next { text-align: end; grid-column: 2; }
   @media (max-width: 30rem) {
@@ -667,6 +688,9 @@
 
   /* A wall-label: small black tag naming an exhibit. */
   .ply-label { display: inline-block; background: var(--ply-color-text); color: var(--ply-color-bg); font-size: var(--ply-size-xs); font-weight: var(--ply-weight-bold); padding: 0.2rem 0.5rem; line-height: 1.3; }
+  /* A label hung over a figure (a card's Preprint): its own pale ground and edge, so it reads
+     on a white screenshot and a black panel alike, in both themes. */
+  .ply-label--flag { background: var(--ply-color-flag); color: var(--ply-color-flag-text); outline: 1.5px solid var(--ply-color-flag-edge); outline-offset: -1.5px; }
 }
 
 /* ---- components/note.css ---- */
@@ -757,7 +781,9 @@
 
   /* Range slider: a rail and a ball, with the value printed beside it. */
   .ply-range { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: var(--ply-space-3); }
-  .ply-range output { font-family: var(--ply-font-mono); font-size: var(--ply-size-sm); font-variant-numeric: tabular-nums; min-width: 3.5ch; text-align: end; }
+  /* The value is set in the text face with tabular figures, so a page with a slider and no
+     code loads no mono face. */
+  .ply-range output { font-size: var(--ply-size-sm); font-weight: var(--ply-weight-semibold); font-variant-numeric: tabular-nums; min-width: 3.5ch; text-align: end; }
   .ply-slider { appearance: none; width: 100%; height: 1.5rem; background: transparent; cursor: pointer; }
   .ply-slider::-webkit-slider-runnable-track { height: 3px; background: var(--ply-color-rule-strong); }
   .ply-slider::-moz-range-track { height: 3px; background: var(--ply-color-rule-strong); }
@@ -771,6 +797,8 @@
   .ply-segmented :is(button, label) + :is(button, label) { border-inline-start: var(--ply-border-control) solid var(--ply-color-rule-strong); }
   .ply-segmented [aria-pressed="true"], .ply-segmented label:has(input:checked) { background: var(--ply-color-text); color: var(--ply-color-bg); font-weight: var(--ply-weight-semibold); }
   .ply-segmented input { position: absolute; opacity: 0; pointer-events: none; }
+  /* On a phone the segments set closer, so a row of four short labels fits without scrolling. */
+  @media (max-width: 30rem) { .ply-segmented button, .ply-segmented label { padding-inline: var(--ply-space-2); } }
   .ply-segmented label:has(input:focus-visible), .ply-segmented button:focus-visible { outline: 3px solid var(--ply-color-focus); outline-offset: -5px; }
 
   .ply-panel :is(.ply-input, .ply-select, .ply-textarea) { background: transparent; color: var(--ply-color-panel-text); border-color: var(--ply-color-panel-text); }
@@ -787,12 +815,20 @@
   /* Code sits in a black exhibit panel. Comments are mustard so the explanation reads first. */
   .ply-code { position: relative; background: var(--ply-color-panel); color: var(--ply-color-panel-text); max-width: var(--ply-layout-measure); }
   /* A code block below the screen skips its layout and paint until the reader nears it: its
-     hundreds of highlighted spans are the costliest layout on most pages. The block scrolls and
-     takes focus already, so it clips nothing new. Tables and equations keep their layout, since
-     js/scroll.js has to measure their overflow to make them focusable. */
+     hundreds of highlighted spans are the costliest layout on most pages. The block scrolls
+     already, so it clips nothing new. A block with long lines starts focusable, and
+     js/scroll.js measures it once it is laid out; tables and equations keep their layout,
+     since scroll.js has to measure their overflow to make them focusable. */
   .ply-code pre { content-visibility: auto; contain-intrinsic-size: auto 10rem; }
-  .ply-code pre { position: relative; direction: ltr; margin: 0; padding: var(--ply-space-4) var(--ply-space-5); overflow-x: auto; font-size: var(--ply-size-sm); line-height: 1.7; tab-size: 2; scrollbar-color: var(--ply-color-panel-rule) var(--ply-color-panel); --_cue-bg: var(--ply-color-panel); --_cue-shade: var(--ply-color-panel-text); background: var(--_cue) !important; }
+  .ply-code pre { position: relative; direction: ltr; margin: 0; padding: var(--ply-space-4) var(--ply-space-5); overflow-x: auto; font-size: var(--ply-size-sm); line-height: 1.7; tab-size: 2; scrollbar-color: var(--ply-color-panel-rule) var(--ply-color-panel); --_cue-bg: var(--ply-color-panel); --_cue-shade: var(--ply-color-panel-text); background: var(--_cue) !important; color: var(--ply-color-panel-text) !important; }
   .ply-code pre code { background: none; padding: 0; font-size: inherit; }
+  /* Wrapped code (wrap): each line wraps under its own indent, or under the value of a
+     "key = value" line (--_hang, in characters, from Code.astro). Words break only when one
+     is wider than the whole line, so a cite key stays whole. */
+  .ply-code--wrap pre { white-space: pre-wrap; overflow-wrap: break-word; container-type: inline-size; }
+  /* A hang never takes more than 40% of the line, so on a phone a long field name still
+     leaves its value room. */
+  .ply-code--wrap .line { --_h: min(var(--_hang, 0ch), 40cqi); display: inline-block; max-width: 100%; padding-inline-start: var(--_h); text-indent: calc(-1 * var(--_h)); }
   .ply-code__bar { display: flex; align-items: center; justify-content: space-between; gap: var(--ply-space-3); padding-block: var(--ply-space-2); padding-inline: var(--ply-space-5) var(--ply-space-2); border-bottom: var(--ply-border-hair) solid var(--ply-color-panel-rule); font-size: var(--ply-size-xs); color: var(--ply-color-panel-muted); }
   .ply-code__lang { font-family: var(--ply-font-mono); min-width: 0; overflow-wrap: anywhere; }
   .ply-code__copy { appearance: none; border: var(--ply-border-hair) solid var(--ply-color-panel-rule); background: transparent; color: var(--ply-color-panel-text); font-size: var(--ply-size-xs); font-weight: var(--ply-weight-semibold); padding: 0.3rem 0.6rem; cursor: pointer; }
@@ -1058,23 +1094,26 @@
 
 /* ---- components/research.css ---- */
 @layer ply.components {
-  /* Paper header: title, authors with affiliation marks, venue, and the link row. */
-  .ply-paper { display: grid; gap: var(--ply-space-5); padding-block: var(--ply-space-7); container-type: inline-size; }
+  /* Paper header: title, authors with affiliation marks, venue, and the link row. A header
+     measures its own width to size its title (container-type), so it takes its width from
+     where it sits, never from its text: in a box that shrinks to fit, give it a width. */
+  .ply-paper { display: grid; gap: var(--ply-space-5); padding-block: var(--ply-space-7); container-type: inline-size; width: 100%; }
   .ply-paper__venue { font-size: var(--ply-size-sm); font-weight: var(--ply-weight-bold); text-wrap: balance; }
-  /* The title sizes to the header's own width, not the window's, so it sets the same in a
-     narrow column beside an exhibit as across the page. About 22 characters to a line, more
-     for a long title (--_len, its length) so it keeps to about three lines, and never so
-     big that its longest word (--_chars) breaks. On a phone it keeps to 32px, or nearer 24px
-     for a long title. The cap is in em, so a title breaks the same way at every width it
-     reaches its full size, with the fallback face as with Ultra. */
-  .ply-paper__title, .ply-post__title { --_cpl: max(22, var(--_len, 0) / 2.7); font-family: var(--ply-font-display); font-weight: 400; font-size: min(var(--ply-size-4xl), 100cqi / (var(--_chars, 8) * 0.76), max(var(--ply-size-xl), var(--ply-size-2xl) - max(0, var(--_len, 0) - 40) * 0.0075rem, 100cqi / (var(--_cpl) * 0.66))); line-height: 1.02; letter-spacing: -0.01em; max-width: calc(var(--_cpl) * 0.66em); text-wrap: balance; }
+  /* A wood-type title (WoodTitle, and the paper and post headers' own) sizes to its column,
+     not the window, so it sets the same in a narrow column beside an exhibit as across the
+     page. About 22 characters to a line, more for a long title (--_len, its length) so it
+     keeps to about three lines, and never so big that its longest word (--_em, its width in
+     em) breaks, short of 24px: a word too long even for that breaks where it must. On a phone it keeps to 32px, or nearer 24px for a long title. The cap is in
+     em, so a title breaks the same way at every width it reaches its full size, with the
+     fallback face as with Ultra. */
+  :is(.ply-title, .ply-paper__title, .ply-post__title) { --_cpl: max(22, var(--_len, 0) / 2.7); font-family: var(--ply-font-display); font-weight: 400; font-size: min(var(--ply-size-4xl), max(var(--ply-size-xl), 100cqi / var(--_em, calc(var(--_chars, 8) * 0.76))), max(var(--ply-size-xl), var(--ply-size-2xl) - max(0, var(--_len, 0) - 40) * 0.0075rem, 100cqi / (var(--_cpl) * 0.66))); line-height: 1.02; letter-spacing: -0.01em; max-width: calc(var(--_cpl) * 0.66em); text-wrap: balance; }
   /* A subtitle (what follows the colon) is read, so it is in the text face, under the name
      and sized from it. */
-  .ply-paper__subtitle { display: block; margin-top: var(--ply-space-3); font-family: var(--ply-font-text); font-size: clamp(var(--ply-size-lg), 0.42em, var(--ply-size-2xl)); font-weight: var(--ply-weight-semibold); line-height: var(--ply-leading-tight); max-width: 32em; }
+  :is(.ply-title__sub, .ply-paper__subtitle) { display: block; margin-top: var(--ply-space-3); font-family: var(--ply-font-text); font-size: clamp(var(--ply-size-lg), 0.42em, var(--ply-size-2xl)); font-weight: var(--ply-weight-semibold); line-height: var(--ply-leading-tight); max-width: 32em; }
   .ply-paper__links { display: flex; flex-wrap: wrap; gap: var(--ply-space-2); }
 
   /* Post header: title, lede, the date line, tags. The same title and rhythm as a paper's. */
-  .ply-post { display: grid; gap: var(--ply-space-4); padding-block: var(--ply-space-7); container-type: inline-size; }
+  .ply-post { display: grid; gap: var(--ply-space-4); padding-block: var(--ply-space-7); container-type: inline-size; width: 100%; }
   .ply-post__lede { font-size: var(--ply-size-lg); line-height: var(--ply-leading-normal); max-width: var(--ply-layout-measure); }
   .ply-post__meta { display: flex; flex-wrap: wrap; gap: var(--ply-space-1) var(--ply-space-4); font-size: var(--ply-size-sm); font-weight: var(--ply-weight-bold); font-variant-numeric: tabular-nums; }
   .ply-post__meta > * + *::before { content: ""; display: inline-block; width: 0.375rem; height: 0.375rem; margin-inline-end: var(--ply-space-4); border-radius: var(--ply-radius-ball); background: var(--ply-color-accent); vertical-align: 0.15em; }
@@ -1089,10 +1128,26 @@
   /* The rows keep one baseline inside .ply-prose, which spaces list items apart. */
   :is(.ply-authors, .ply-affiliations, .ply-post__tags) > li { margin: 0; }
   .ply-affiliations { display: flex; flex-wrap: wrap; gap: var(--ply-space-1) var(--ply-space-4); list-style: none; padding: 0; font-size: var(--ply-size-sm); color: var(--ply-color-text-muted); }
+  /* A folded list (PaperHeader fold): the names past the fold hide and a gap mark stands in
+     for each run of them, only while script can unfold the list. Without script (or where a
+     browser cannot tell), and on paper, the list shows whole. */
+  .ply-authors__gap { display: none; color: var(--ply-color-text-muted); }
+  .ply-authors__toggle { display: none; }
+  @media (scripting: enabled) {
+    .ply-authors[data-folded] .ply-authors__more { display: none; }
+    .ply-authors[data-folded] .ply-authors__gap, .ply-authors__toggle { display: list-item; }
+  }
+  .ply-authors__toggle button { display: inline-flex; align-items: center; min-height: 1.75rem; padding: 0; border: 0; background: none; color: inherit; font: inherit; font-size: var(--ply-size-ui); font-weight: var(--ply-weight-semibold); cursor: pointer; text-decoration: underline var(--ply-border-control) var(--ply-color-rule); text-underline-offset: 0.25em; }
+  .ply-authors__toggle button:hover { text-decoration-color: var(--ply-color-accent); }
+  @media print {
+    .ply-authors[data-folded] .ply-authors__more { display: revert; }
+    :is(.ply-authors__gap, .ply-authors__toggle) { display: none; }
+  }
   .ply-authors__note { font-size: var(--ply-size-sm); color: var(--ply-color-text-muted); }
 
   .ply-abstract { max-width: var(--ply-layout-measure); }
-  .ply-abstract__label { font-family: var(--ply-font-display); font-size: var(--ply-size-xl); margin-bottom: var(--ply-space-2); }
+  /* The label is the section's heading, set as the page's other h2s are. */
+  .ply-abstract__label { font-family: var(--ply-font-display); font-size: var(--ply-size-2xl); line-height: 1.1; margin-bottom: var(--ply-space-3); }
   .ply-abstract p { font-size: var(--ply-size-lg); line-height: var(--ply-leading-relaxed); }
 
   /* Numbered figures. Margin figures sit in the margin after the text (.ply-margin). Wide
@@ -1143,6 +1198,48 @@
   .ply-pub__venue { font-size: var(--ply-size-sm); font-weight: var(--ply-weight-semibold); }
   .ply-pub__links { display: flex; flex-wrap: wrap; gap: var(--ply-space-3); font-size: var(--ply-size-sm); margin-top: var(--ply-space-1); }
   .ply-pub__links a { display: inline-flex; align-items: center; min-height: 1.5rem; }
+}
+
+/* ---- components/card.css ---- */
+@layer ply.components {
+  /* Cards: entries (papers, posts, projects) hung as exhibits on a list page. A black panel
+     holds the entry's figure, or a complex of its own; under it, the title (the one link a
+     keyboard reaches), a meta line, and a summary. The panel is a second, pointer-only way in.
+     The grid takes up to three columns of at least 16rem, and a grid with fewer cards than
+     columns shares the row between them, so it never leaves an empty column. */
+  .ply-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, max(16rem, (100% - 2 * var(--ply-space-6)) / 3)), 1fr)); gap: var(--ply-space-7) var(--ply-space-6); container-type: inline-size; }
+  /* The columns are as many as the cards besides the lead, up to three, so a lead with two
+     cards under it sets them half and half. */
+  .ply-cards:not(:has(> :nth-child(3 of :not(.ply-card--lead)))) { grid-template-columns: repeat(auto-fit, minmax(min(100%, max(16rem, (100% - var(--ply-space-6)) / 2)), 1fr)); }
+  .ply-cards:not(:has(> :nth-child(2 of :not(.ply-card--lead)))) { grid-template-columns: minmax(0, 1fr); }
+  .ply-card { display: grid; grid-template-rows: auto 1fr; gap: var(--ply-space-4); align-content: start; min-width: 0; }
+  .ply-card__panel { position: relative; display: block; background: var(--ply-color-panel); aspect-ratio: 100 / 56; overflow: hidden; text-decoration: none; }
+  .ply-card__panel :is(img, video) { display: block; width: 100%; height: 100%; object-fit: cover; }
+  .ply-card__panel :is(.ply-complex-wrap, .ply-complex) { height: 100%; }
+  /* A hairline frame, so a light screenshot keeps its edge on the white wall. */
+  .ply-card__panel:has(img, video)::after { content: ""; position: absolute; inset: 0; border: var(--ply-border-hair) solid var(--ply-color-rule); pointer-events: none; }
+  .ply-card__labels { position: absolute; inset-block-start: var(--ply-space-3); inset-inline-start: var(--ply-space-3); display: flex; flex-wrap: wrap; gap: var(--ply-space-2); pointer-events: none; }
+  .ply-card__body { display: grid; gap: var(--ply-space-2); align-content: start; }
+  .ply-card__title { margin: 0; font-family: var(--ply-font-text); font-size: var(--ply-size-lg); font-weight: var(--ply-weight-bold); line-height: 1.25; letter-spacing: -0.01em; text-wrap: balance; overflow-wrap: break-word; }
+  .ply-card__title a { color: var(--ply-color-text); font-weight: inherit; text-decoration-color: var(--ply-color-rule); }
+  .ply-card:hover .ply-card__title a { text-decoration-color: var(--ply-color-accent); }
+  .ply-card__meta { display: flex; flex-wrap: wrap; gap: 0 var(--ply-space-3); font-size: var(--ply-size-sm); font-weight: var(--ply-weight-semibold); color: var(--ply-color-text-muted); font-variant-numeric: tabular-nums; }
+  .ply-card__meta > :first-child { color: var(--ply-color-text); }
+  .ply-card__summary { font-size: var(--ply-size-ui); line-height: var(--ply-leading-normal); color: var(--ply-color-text-muted); max-width: 40rem; }
+  .ply-card__tags { display: flex; flex-wrap: wrap; gap: var(--ply-space-2); list-style: none; padding: 0; margin-top: var(--ply-space-1); }
+  .ply-card__tags > li { margin: 0; }
+
+  /* The lead card, or a card alone in its grid or under the lead, spans the row; with room it
+     sets its panel beside the text and its title in wood type, the name over the subtitle. */
+  :is(.ply-card--lead, .ply-cards > .ply-card:only-child, .ply-card--lead + .ply-card:last-child) { grid-column: 1 / -1; }
+  .ply-card__sub-mark { display: inline; }
+  @container (min-width: 40rem) {
+    :is(.ply-card--lead, .ply-cards > .ply-card:only-child, .ply-card--lead + .ply-card:last-child) { grid-template-rows: none; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: var(--ply-space-6); align-items: start; }
+    :is(.ply-card--lead, .ply-cards > .ply-card:only-child, .ply-card--lead + .ply-card:last-child) .ply-card__title { font-family: var(--ply-font-display); font-weight: 400; font-size: var(--ply-size-2xl); line-height: 1.1; }
+    :is(.ply-card--lead, .ply-cards > .ply-card:only-child, .ply-card--lead + .ply-card:last-child) .ply-card__sub { display: block; margin-top: var(--ply-space-2); font-family: var(--ply-font-text); font-size: var(--ply-size-lg); font-weight: var(--ply-weight-semibold); line-height: var(--ply-leading-tight); }
+    :is(.ply-card--lead, .ply-cards > .ply-card:only-child, .ply-card--lead + .ply-card:last-child) .ply-card__sub-mark { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+    :is(.ply-card--lead, .ply-cards > .ply-card:only-child, .ply-card--lead + .ply-card:last-child) .ply-card__summary { font-size: var(--ply-size-md); }
+  }
 }
 
 /* ---- components/writing.css ---- */
@@ -1232,8 +1329,10 @@
 
   /* Empty state: what is missing and what to do about it. */
   .ply-empty { display: grid; justify-items: center; gap: var(--ply-space-3); text-align: center; padding: var(--ply-space-7) var(--ply-space-5); max-width: 28rem; margin-inline: auto; }
-  .ply-empty__mark { width: 2.5rem; height: 2.5rem; border-radius: var(--ply-radius-ball); border: var(--ply-border-rule) dashed currentColor; opacity: 0.6; }
-  .ply-empty__title { font-family: var(--ply-font-display); font-size: var(--ply-size-xl); font-weight: 400; line-height: 1.1; }
+  /* The mark is a complex with no edges yet: five loose points, which no one takes for a
+     spinner. */
+  .ply-empty__mark { --_dot: radial-gradient(circle, currentColor 0 0.1875rem, transparent 0.21875rem); width: 3.5rem; height: 2rem; background: var(--_dot) 8% 30% / 0.5rem 0.5rem no-repeat, var(--_dot) 38% 85% / 0.5rem 0.5rem no-repeat, var(--_dot) 55% 10% / 0.5rem 0.5rem no-repeat, var(--_dot) 78% 60% / 0.5rem 0.5rem no-repeat, var(--_dot) 97% 20% / 0.5rem 0.5rem no-repeat; opacity: 0.7; }
+  .ply-empty__title { margin: 0; font-family: var(--ply-font-display); font-size: var(--ply-size-xl); font-weight: 400; line-height: 1.1; }
   .ply-empty p:not(.ply-empty__title) { color: inherit; opacity: 0.85; font-size: var(--ply-size-md); }
 
   /* Toast for short confirmations. */
@@ -1290,6 +1389,9 @@
   .ply-num { font-variant-numeric: tabular-nums; }
   .ply-nowrap { white-space: nowrap; }
   .ply-stop { color: var(--ply-color-accent); }
+  /* A link or button of your own that stands alone grows to a 44px target under a finger,
+     as Polytope's own controls do. */
+  @media (pointer: coarse) { .ply-target { display: inline-flex; align-items: center; min-height: 2.75rem; min-width: 2.75rem; } }
   .ply-flow > * + * { margin-top: var(--ply-flow, var(--ply-space-4)); }
   .ply-mt-0 { margin-top: 0 !important; }
   @media (max-width: 40rem) { .ply-hide-narrow { display: none !important; } }
@@ -1351,6 +1453,11 @@
     .ply-check { padding-block: 0.625rem; }
     .ply-switch { min-height: 2.75rem; }
     :is(.ply-pub__links, .ply-paper__links) a { display: inline-flex; align-items: center; min-height: 2.75rem; }
+    .ply-wordmark { display: inline-flex; align-items: center; min-height: 2.75rem; }
+    .ply-authors__toggle button { min-height: 2.75rem; }
+    /* A publication's title runs as text, so it grows its target with padding, which leaves
+       the lines where they are. */
+    .ply-pub__title a { padding-block: 0.5rem; }
   }
 
   /* Print. tokens.css switches paper to the light theme with ink-on-white panels;
@@ -1368,7 +1475,19 @@
     .ply-code pre { white-space: pre-wrap; overflow: visible; }
     .ply-chart__plot { overflow: visible; }
     .ply-chart__plot > svg { min-width: 0; }
-    .ply-exhibit, .ply-figure, .ply-code, .ply-note, .ply-env, .ply-equation, tr { break-inside: avoid; }
+    .ply-exhibit, .ply-figure, .ply-note, .ply-env, .ply-equation, tr { break-inside: avoid; }
+    /* A code block may run on to the next page, so a long one (a BibTeX entry) never leaves a
+       page nearly blank before it; a short one stays whole, and the bar stays with its code. */
+    .ply-code__bar { break-after: avoid; }
+    .ply-code pre { orphans: 4; widows: 4; }
+    /* The highlighting colors are for a black panel; on paper the code prints in ink. */
+    .ply-code pre span { color: inherit !important; }
+    /* On paper a link cannot be followed, so a link to another site prints its address. The
+       paper header's buttons print as lines of text. */
+    :is(.ply-prose, .ply-pub__links, .ply-paper__links, .ply-footnotes) a[href^="http"]::after { content: " (" attr(href) ")"; font-size: 0.85em; font-weight: var(--ply-weight-regular); overflow-wrap: anywhere; }
+    .ply-paper__links { display: grid; gap: var(--ply-space-1); }
+    .ply-paper__links a { display: block; min-height: 0; padding: 0; border: 0; background: none; color: var(--ply-color-text); font-weight: var(--ply-weight-semibold); text-align: start; }
+    .ply-paper__links .ply-icon { display: none; }
     h2, h3, h4 { break-after: avoid; }
     /* Browsers drop backgrounds when printing. These fills carry a label or a state, so they
        keep their ink: without it a primary button or pressed segment prints white on white

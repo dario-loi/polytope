@@ -18,7 +18,7 @@ const space = Object.keys(t).filter((k) => k.startsWith("--ply-space-"));
     <li>Side margin <code>--ply-layout-gutter</code>: 16px on phones, growing to 72px.</li>
     <li>Reading column <code>--ply-layout-measure</code>: 36rem, about 68 characters of body text. On a docs page, examples and <code>.ply-wide</code> blocks may run wider; in an article, everything outside the margin keeps to it. From 100rem, docs and article pages set their text at 18px in a 38rem column (<code>--ply-layout-measure-wide</code>), which holds the same number of characters.</li>
     <li>Docs pages add a chapter sidebar from 56rem, with the on-this-page list under the current page. The text sits at the centre of the page once there is room for the sidebar beside it.</li>
-    <li>The page mast splits into title and exhibit from 64rem. Below that, the exhibit stacks under the title.</li>
+    <li>The page mast splits into title and exhibit from 64rem, when it has an exhibit; below that, the exhibit stacks under the title. A mast without one, as on a list page, keeps the whole width for its title. <code>&lt;Mast compact&gt;</code> sets a smaller title, for a list page under the chapter landings. For a mast you lay out yourself, such as an Atlas head, <code>&lt;MastTitle title="..." /&gt;</code> writes the title with its full stop, sized to its longest word.</li>
     <li>Sidenotes and margin figures move into the margin (<code>--ply-layout-margin</code>, at least 14rem) when the main column (container <code>ply-main</code>) has 52rem: the measure, a 2rem gap, and the margin. There the margin widens with the page, up to 21rem, so notes end at the page's edge. Outside a <code>ply-main</code> column, they move there from 90rem, 14rem wide.</li>
   </ul>
 
@@ -79,6 +79,10 @@ const space = Object.keys(t).filter((k) => k.startsWith("--ply-space-"));
 
   <h2>Layout helpers</h2>
   <p><code>.ply-stack</code> stacks children with a gap, <code>.ply-cluster</code> wraps them in a row, <code>.ply-grid</code> makes responsive columns from a minimum width. Each reads a custom property for its gap (<code>--ply-stack-gap</code>, <code>--ply-cluster-gap</code>, <code>--ply-grid-gap</code>).</p>
+  <p>In a <code>.ply-cluster</code> of buttons, a ghost button draws its padding into the gap before it, so its word lines up with the row's edge when it wraps to a new line, as a filled button's box does.</p>
+  <p>Polytope's own controls grow to 44px targets under a finger (<code>pointer: coarse</code>). Give a link or button of your own that stands alone the class <code>.ply-target</code> to do the same.</p>
+  <h3>Titles of your own</h3>
+  <p><code>&lt;WoodTitle title="..." /&gt;</code> is the title the paper and post headers use, for a header of your own, such as a project page's: about 22 characters to a line, longer lines for a long title, never so big that its longest word breaks, with <code>split</code> for a subtitle and <code>stop</code> for the tomato full stop. It sizes to the nearest container, so give its header <code>container-type: inline-size</code>. The helpers it uses, <code>woodTitle</code>, <code>splitTitle</code>, and <code>emWidth</code>, come from <code>@dario-loi/polytope/astro</code>.</p>
 </Docs>
 <style>
   .sp { list-style: none; padding: 0; display: grid; grid-template-columns: max-content minmax(0, 1fr) max-content; gap: var(--ply-space-2) var(--ply-space-3); }

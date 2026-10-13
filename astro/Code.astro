@@ -1,18 +1,43 @@
 ---
 // Highlighted code in a black panel, with an optional copy button.
 // Uses Astro's built-in Shiki with the system's code theme.
+// `wrap` wraps long lines instead of scrolling them, each under its own indent, or, on a
+// "key = value" line, under the value, so a BibTeX entry reads whole before it is copied.
 import { Code as Shiki } from "astro:components";
 import theme from "../dist/code-theme.json";
-interface Props { code: string; lang?: string; title?: string; copy?: boolean; class?: string }
-const { code, lang = "txt", title, copy = true, class: className } = Astro.props;
-const first = code.trim().split("\n")[0].trim();
-const copyName = `Copy ${title ?? lang} code: ${first.length > 48 ? `${first.slice(0, 45)}...` : first}`;
+interface Props { code: string; lang?: string; title?: string; copy?: boolean; wrap?: boolean; class?: string }
+const { code, lang = "txt", title, copy = true, wrap = false, class: className } = Astro.props;
+const src = code.replace(/^\n+|\s+$/g, "");
+const lines = src.split("\n");
+const first = lines[0].trim();
+const name = title ?? lang;
+const copyName = `Copy ${name} code: ${first.length > 48 ? `${first.slice(0, 45)}...` : first}`;
+// Where each line's wrapped rest hangs, in characters.
+const hang = lines.map((line) => {
+  const l = line.replace(/\t/g, "  ");
+  return l.match(/^\s*[\w-]+\s*=\s*["{]?/)?.[0].length ?? (l.match(/^\s*/)?.[0].length ?? 0) + 2;
+});
+// A block scrolls sideways only when a line is wider than its box, and then a keyboard can
+// only scroll it when the block takes focus. A block whose lines fit even a phone never takes
+// focus; any other starts focusable, and js/scroll.js takes the stop away again wherever the
+// block fits.
+const longest = Math.max(...lines.map((l) => l.replace(/\t/g, "  ").length));
+const transformers = [{
+  pre(node: any) {
+    delete node.properties.tabindex;
+    delete node.properties.tabIndex;
+    if (!wrap && longest > 38) Object.assign(node.properties, { tabindex: "0", role: "region", "aria-label": `${name} code`, "data-ply-scroll": "", "data-ply-scroll-role": "", "data-ply-scroll-label": "" });
+  },
+  line(node: any, n: number) {
+    if (wrap) node.properties.style = `--_hang: ${hang[n - 1] ?? 0}ch`;
+  },
+}];
 ---
-<div class:list={["ply-code", className]}>
+<div class:list={["ply-code", wrap && "ply-code--wrap", className]}>
   <div class="ply-code__bar">
-    <span class="ply-code__lang">{title ?? lang}</span>
+    <span class="ply-code__lang">{name}</span>
     {copy && <button class="ply-code__copy" type="button" data-ply-copy aria-label={copyName}>Copy</button>}
   </div>
-  <Shiki code={code.replace(/^\n+|\s+$/g, "")} lang={lang as any} theme={theme as any} />
+  <Shiki code={src} lang={lang as any} theme={theme as any} transformers={transformers} />
 </div>
-<script>import "../dist/js/copy.js";</script>
+<script>import "../dist/js/copy.js"; import "../dist/js/scroll.js";</script>

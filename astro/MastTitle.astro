@@ -1,0 +1,15 @@
+---
+// The mast title on its own, with the tomato full stop: for a mast you lay out yourself, such
+// as an Atlas head. It sizes to its longest word, so the word never breaks and the stop stays
+// attached. Its parent should be a container (container-type: inline-size), as .ply-mast's
+// first column and .ply-atlas__head are.
+//   <MastTitle title="Curriculum vitae" />
+import { longestRun } from "./title.ts";
+interface Props { title: string; stop?: boolean; level?: 1 | 2; class?: string }
+const { title, stop = true, level = 1, class: className } = Astro.props;
+const H = `h${level}`;
+const words = title.split(" ");
+const last = words.pop() ?? "";
+const em = Math.max(...[...words, last + (stop ? "." : "")].map(longestRun));
+---
+<H class:list={["ply-mast__title", className]} style={`--_em: ${em}`}>{words.length > 0 && `${words.join(" ")} `}<span class="ply-nowrap">{last}{stop && <span class="ply-mast__stop" aria-hidden="true">.</span>}</span></H>

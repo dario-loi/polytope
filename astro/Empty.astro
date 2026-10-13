@@ -1,11 +1,13 @@
 ---
 // Empty state: say what is missing and what to do next. Put the action in the default slot.
-interface Props { title: string; body?: string }
-const { title, body } = Astro.props;
+// Give the title a heading level when the empty state is the page's content, as on a 404.
+interface Props { title: string; body?: string; level?: 1 | 2 | 3 | 4 }
+const { title, body, level } = Astro.props;
+const T = level ? `h${level}` : "p";
 ---
 <div class="ply-empty">
   <span class="ply-empty__mark" aria-hidden="true"></span>
-  <p class="ply-empty__title">{title}</p>
+  <T class="ply-empty__title">{title}</T>
   {body && <p>{body}</p>}
   <slot />
 </div>

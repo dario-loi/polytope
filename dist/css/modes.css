@@ -45,6 +45,11 @@
     .ply-check { padding-block: 0.625rem; }
     .ply-switch { min-height: 2.75rem; }
     :is(.ply-pub__links, .ply-paper__links) a { display: inline-flex; align-items: center; min-height: 2.75rem; }
+    .ply-wordmark { display: inline-flex; align-items: center; min-height: 2.75rem; }
+    .ply-authors__toggle button { min-height: 2.75rem; }
+    /* A publication's title runs as text, so it grows its target with padding, which leaves
+       the lines where they are. */
+    .ply-pub__title a { padding-block: 0.5rem; }
   }
 
   /* Print. tokens.css switches paper to the light theme with ink-on-white panels;
@@ -62,7 +67,19 @@
     .ply-code pre { white-space: pre-wrap; overflow: visible; }
     .ply-chart__plot { overflow: visible; }
     .ply-chart__plot > svg { min-width: 0; }
-    .ply-exhibit, .ply-figure, .ply-code, .ply-note, .ply-env, .ply-equation, tr { break-inside: avoid; }
+    .ply-exhibit, .ply-figure, .ply-note, .ply-env, .ply-equation, tr { break-inside: avoid; }
+    /* A code block may run on to the next page, so a long one (a BibTeX entry) never leaves a
+       page nearly blank before it; a short one stays whole, and the bar stays with its code. */
+    .ply-code__bar { break-after: avoid; }
+    .ply-code pre { orphans: 4; widows: 4; }
+    /* The highlighting colors are for a black panel; on paper the code prints in ink. */
+    .ply-code pre span { color: inherit !important; }
+    /* On paper a link cannot be followed, so a link to another site prints its address. The
+       paper header's buttons print as lines of text. */
+    :is(.ply-prose, .ply-pub__links, .ply-paper__links, .ply-footnotes) a[href^="http"]::after { content: " (" attr(href) ")"; font-size: 0.85em; font-weight: var(--ply-weight-regular); overflow-wrap: anywhere; }
+    .ply-paper__links { display: grid; gap: var(--ply-space-1); }
+    .ply-paper__links a { display: block; min-height: 0; padding: 0; border: 0; background: none; color: var(--ply-color-text); font-weight: var(--ply-weight-semibold); text-align: start; }
+    .ply-paper__links .ply-icon { display: none; }
     h2, h3, h4 { break-after: avoid; }
     /* Browsers drop backgrounds when printing. These fills carry a label or a state, so they
        keep their ink: without it a primary button or pressed segment prints white on white

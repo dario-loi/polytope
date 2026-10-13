@@ -145,6 +145,10 @@ class PlyAtlas extends HTMLElement {
       b.addEventListener("click", fn);
     }
     this._probe = el("span", "ply-atlas__ink", map);
+    // Colors are read off this probe right after it changes. Under reduced motion the reset
+    // gives every change a 0.01ms transition, and a read during one returns the old color, so
+    // the probe opts out of it.
+    this._probe.dataset.plyMotion = "keep";
     // The caption under the globe says how to turn it, once it can turn.
     this.stage = this.querySelector(".ply-atlas__stage");
     const caption = this.querySelector(".ply-atlas__caption");
@@ -153,8 +157,10 @@ class PlyAtlas extends HTMLElement {
       this.capTally = caption.querySelector(".ply-atlas__tally");
       this._label = this.capLead?.textContent ?? "";
       if (!this.capLead || !this.capTally) this.capLead = null;
-      this.capHint = el("span", "ply-atlas__hint", caption);
-      this.capHint.textContent = matchMedia("(pointer: coarse)").matches ? " Drag sideways to turn the globe, pinch to zoom." : " Drag to turn the globe.";
+      if (!this.hasAttribute("quiet")) {
+        this.capHint = el("span", "ply-atlas__hint", caption);
+        this.capHint.textContent = matchMedia("(pointer: coarse)").matches ? " Drag sideways to turn the globe, pinch to zoom." : " Drag to turn the globe.";
+      }
     }
 
     // Each entry's place line becomes a button that shows it on the map.
@@ -575,7 +581,7 @@ class PlyAtlas extends HTMLElement {
     this._kept = this.stops.flatMap((s, i) => (s.el.hidden ? [] : [i]));
     const shown = this._chart = this.core.chart(this._kept.map((i) => ({ ...this.stops[i] })));
     this._route = shown.route;
-    this._tally = this.core.tally(this._shown().length, shown.moves);
+    this._tally = this.hasAttribute("quiet") ? "" : this.core.tally(this._shown().length, shown.moves);
     if (this.capTally && this.current < 0) this.capTally.textContent = this._tally;
     if (this.stops[this.current]?.el.hidden) { this.current = -1; this._ball = null; this._caption(null); }
     this._reheat(false);

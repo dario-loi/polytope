@@ -1,4 +1,7 @@
-// Light/dark toggle. Any element with [data-ply-theme-toggle] flips the theme and remembers it.
+// Light/dark toggle. Any element with [data-ply-theme-toggle] flips the theme and remembers
+// the choice in localStorage ("ply-theme": "light" or "dark", no identifier), so the next page
+// opens in it. Mention that in a privacy notice. A toggle with data-ply-persist="false" keeps
+// the choice for this page only and clears a stored one.
 // Put this inline in <head> before the stylesheet to avoid a flash on load:
 // <script>try{var t=localStorage.getItem("ply-theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
 const KEY = "ply-theme";
@@ -15,10 +18,14 @@ function sync() {
 }
 
 document.addEventListener("click", (e) => {
-  if (!e.target.closest?.("[data-ply-theme-toggle]")) return;
+  const toggle = e.target.closest?.("[data-ply-theme-toggle]");
+  if (!toggle) return;
   const next = current() === "dark" ? "light" : "dark";
   root.dataset.theme = next;
-  try { localStorage.setItem(KEY, next); } catch {}
+  try {
+    if (toggle.dataset.plyPersist === "false") localStorage.removeItem(KEY);
+    else localStorage.setItem(KEY, next);
+  } catch {}
   sync();
 });
 

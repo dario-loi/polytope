@@ -29,6 +29,30 @@ function fit(bar) {
   if (state !== "menu") bar.querySelector(".ply-menu--chapters")?.removeAttribute("open");
 }
 
+// The chapter menu is a native details element. Escape closes it and puts focus back on its
+// button; so does a press outside it, or focus moving on past it, so it never stays open over
+// the page.
+function closeMenu(menu, focus) {
+  menu.removeAttribute("open");
+  if (focus) menu.querySelector("summary")?.focus();
+}
+
+if (!window.__plyMenu) {
+  window.__plyMenu = true;
+  document.addEventListener("keydown", (e) => {
+    if (e.key !== "Escape") return;
+    const menu = e.target.closest?.("details.ply-menu[open]");
+    if (menu) { closeMenu(menu, true); e.preventDefault(); }
+  });
+  document.addEventListener("pointerdown", (e) => {
+    for (const menu of document.querySelectorAll("details.ply-menu[open]")) if (!menu.contains(e.target)) closeMenu(menu, false);
+  });
+  document.addEventListener("focusout", (e) => {
+    const menu = e.target.closest?.("details.ply-menu[open]");
+    if (menu && e.relatedTarget instanceof Node && !menu.contains(e.relatedTarget)) closeMenu(menu, false);
+  });
+}
+
 if (!window.__plyTopbar && "ResizeObserver" in window) {
   window.__plyTopbar = true;
   const ro = new ResizeObserver((entries) => {

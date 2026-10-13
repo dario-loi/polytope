@@ -17,6 +17,9 @@
   .ply-button--secondary { --_bg: transparent; --_fg: var(--ply-color-text); --_bd: var(--ply-color-text); }
   .ply-button--secondary:hover:not(:disabled, [aria-disabled="true"]) { --_bg: var(--ply-color-text); --_fg: var(--ply-color-bg); --_bd: var(--ply-color-text); background: var(--ply-color-text); color: var(--ply-color-bg); }
   .ply-button--ghost { --_bg: transparent; --_fg: var(--ply-color-text); --_bd: transparent; padding-inline: var(--ply-space-3); }
+  /* In a row of buttons a ghost button's word lines up with the row's edge when it wraps to a
+     new line, as a filled button's box does: it draws its padding into the gap before it. */
+  .ply-cluster > .ply-button--ghost:not(.ply-button--icon) { margin-inline-start: calc(-1 * var(--ply-space-3)); }
   .ply-button--ghost:hover:not(:disabled, [aria-disabled="true"]) { --_bg: var(--ply-color-surface-sunken); --_fg: var(--ply-color-text); --_bd: transparent; background: var(--ply-color-surface-sunken); color: var(--ply-color-text); }
   .ply-button--sm { min-height: 2.25rem; padding-inline: var(--ply-space-4); font-size: var(--ply-size-sm); }
   .ply-button--icon { padding: 0; width: 2.75rem; }

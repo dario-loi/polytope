@@ -7,6 +7,27 @@ import ReleaseModel from "../../components/exhibits/ReleaseModel.astro";
   <link slot="head" rel="alternate" type="application/atom+xml" title="Polytope releases" href="https://github.com/dario-loi/polytope/releases.atom" />
   <section class="ply-wall ply-wide" aria-label="Releases">
     <div class="ply-wall__year">
+      <p class="ply-wall__label">0.7</p>
+      <ul class="ply-wall__entries">
+        <li class="ply-pub">
+          <p class="ply-pub__title">0.7.0, list pages</p>
+          <p class="ply-pub__venue">13 October 2026</p>
+          <div class="ply-prose ply-small" style="margin-top: var(--ply-space-2)">
+            <ul>
+              <li>New <code>&lt;Card&gt;</code> and <code>&lt;CardGrid&gt;</code> for list pages of papers, posts, and projects: a black panel with the entry's figure, or a complex seeded from its title, then the title, a meta line, a summary, and tags. A lead card spans the row and sets its title in wood type; a grid with fewer cards than columns shares the row between them. Labels over a figure use the new <code>flag</code> tokens and <code>.ply-label--flag</code>. See <a href="../components/cards/">Cards</a>.</li>
+              <li><code>&lt;PaperHeader fold={"{12}"}&gt;</code> folds a long author list to the first names, yours, and the last, with a button for the rest. The fold is in the page as built, so nothing moves while it loads; without script, and on paper, the list shows whole. <code>&lt;PubList fold&gt;</code> folds author lines as text. A link with <code>primary: true</code> becomes the header's primary button.</li>
+              <li>The pager shows a title's name and keeps its subtitle for screen readers, so a paper's long title no longer outweighs the page. Its labels balance, and <code>prevText</code> and <code>nextText</code> rename the directions.</li>
+              <li>A mast without an exhibit stays one column at every width, so a list page's title is no longer squeezed beside an empty column. <code>&lt;Mast compact&gt;</code> sets a smaller title. New <code>&lt;MastTitle&gt;</code> and <code>&lt;WoodTitle&gt;</code> set mast and header titles in your own layouts, sized from a table of Ultra's widths, and the helpers behind them (<code>woodTitle</code>, <code>splitTitle</code>, <code>emWidth</code>) are exported.</li>
+              <li>BibTeX wraps long fields under their value instead of scrolling; <code>&lt;Code wrap&gt;</code> does the same for any block. A code block takes focus only while it scrolls.</li>
+              <li>Fixes: under reduced motion, a theme change no longer paints the whole Atlas tomato. The chapter menu closes on Escape, a press outside, or focus moving past it. Printed code is in ink, a long code block no longer leaves a page nearly blank, and links to other sites print their address. The wordmark, publication titles, and the author toggle grow to 44px targets under a finger, and <code>.ply-target</code> does the same for your own links. A segmented row fits a phone, a ghost button that wraps lines up with the row's edge, and the abstract's label is set as the other section headings.</li>
+              <li><code>&lt;Atlas quiet&gt;</code> drops the place count and drag hint from the caption. <code>&lt;Empty level&gt;</code> makes its title a heading, as a 404 needs, and its mark is now a few loose points. <code>&lt;PubList label={"{false}"}&gt;</code> drops the region name where your own section has a heading. <code>&lt;ThemeToggle persist={"{false}"}&gt;</code> keeps the choice for the page only; the docs now say the toggle stores <code>ply-theme</code> in localStorage. A slider's value is set in the text face, so a page without code loads no mono font, and <code>@dario-loi/polytope/fonts.css</code> is exported for loading the CSS a component at a time.</li>
+              <li>To update: <code>npm install @dario-loi/polytope@^0.7.0</code>, since <code>npm update</code> stays within 0.6. Headers in a box that shrinks to fit its content now need a width. Pager labels with a colon show only the name, and BibTeX blocks wrap; pass <code>split={"{false}"}</code> or <code>wrap={"{false}"}</code> to keep the old look.</li>
+            </ul>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <div class="ply-wall__year">
       <p class="ply-wall__label">0.6</p>
       <ul class="ply-wall__entries">
         <li class="ply-pub">

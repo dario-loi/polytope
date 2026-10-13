@@ -30,6 +30,7 @@ import Loading from "@dario-loi/polytope/astro/Loading.astro";
 
   <h2>Reduced motion</h2>
   <p>When the reader asks their system for reduced motion, every animation jumps to its end state. The complex is drawn finished, the machine draws its settled bell curve, the loading indicator shows a resting ball, and transitions take effect at once. The CSS reset handles this globally; scripts check <code>prefers-reduced-motion</code> before animating. Motion the reader starts and needs, such as a step-through animation, can opt out: mark its container <code>data-ply-motion="keep"</code>.</p>
+  <p>The reset does this by giving every change a transition of 0.01ms. A script that changes a style and reads it back at once gets the old value during that transition. Mark an element your script reads that way <code>data-ply-motion="keep"</code>, as the Atlas does with the probe it reads its colors from, or finish its transitions before reading (<code>el.getAnimations().forEach((a) =&gt; a.finish())</code>), as the top bar does before it measures.</p>
 </Docs>
 <style>
   .mo { display: grid; grid-template-columns: 9rem 1fr; gap: var(--ply-space-5); align-items: center; }

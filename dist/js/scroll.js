@@ -1,12 +1,13 @@
-// Scroll boxes: a wide table, a long equation, or a scroll cue scrolls sideways, and a
-// keyboard can only scroll it when the box itself takes focus. While its content overflows,
-// each box gets tabindex="0", role="region", and a name; when it fits again they come off,
-// so a box that fits is never an empty tab stop. A box the author already made focusable, or
-// named, keeps what the author gave it.
+// Scroll boxes: a wide table, a long equation, code with long lines, or a scroll cue scrolls
+// sideways, and a keyboard can only scroll it when the box itself takes focus. While its
+// content overflows, each box gets tabindex="0", role="region", and a name; when it fits again
+// they come off, so a box that fits is never an empty tab stop. A box the author already made
+// focusable, or named, keeps what the author gave it. (Code.astro writes these on code with
+// long lines and marks them as this script's, so the block is focusable before it loads.)
 //   <script type="module" src=".../js/scroll.js"></script>  (also part of js/all.js)
 // Boxes added later, by a script or a client-side route, are picked up too.
 
-const BOXES = ".ply-table-wrap, .ply-equation__body, .ply-scroll-cue";
+const BOXES = ".ply-table-wrap, .ply-equation__body, .ply-scroll-cue, .ply-code pre";
 const OURS = "data-ply-scroll";
 
 // A name a screen reader can say on entering the box: the table's caption, the equation's
@@ -14,6 +15,7 @@ const OURS = "data-ply-scroll";
 function name(box) {
   const caption = box.querySelector("caption")?.textContent.trim();
   if (caption) return `${caption}, table`;
+  if (box.matches(".ply-code pre")) return `${box.closest(".ply-code")?.querySelector(".ply-code__lang")?.textContent.trim() || "Code"} code`;
   if (box.matches(".ply-equation__body")) {
     const num = box.parentElement?.querySelector(".ply-equation__num")?.textContent.trim();
     return num ? `Equation ${num}` : "Equation";
@@ -31,6 +33,9 @@ function name(box) {
 }
 
 function update(box) {
+  // A block below the screen (content-visibility: auto) is not laid out yet, so its overflow
+  // cannot be told; it keeps what it has until it is.
+  if (box.checkVisibility && !box.checkVisibility({ contentVisibilityAuto: true })) return;
   const overflows = box.scrollWidth > box.clientWidth + 1;
   const mine = box.hasAttribute(OURS);
   if (overflows && !mine && !box.hasAttribute("tabindex")) {

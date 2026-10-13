@@ -20,6 +20,9 @@
   --color-link-hover: var(--ply-color-link-hover);
   --color-note: var(--ply-color-note);
   --color-note-soft: var(--ply-color-note-soft);
+  --color-flag: var(--ply-color-flag);
+  --color-flag-text: var(--ply-color-flag-text);
+  --color-flag-edge: var(--ply-color-flag-edge);
   --color-focus: var(--ply-color-focus);
   --color-focus-on-panel: var(--ply-color-focus-on-panel);
   --color-selection: var(--ply-color-selection);

@@ -16,6 +16,7 @@
     "base.css",
     "components/atlas.css",
     "components/button.css",
+    "components/card.css",
     "components/form.css",
     "components/machine.css",
     "components/nav.css",
@@ -26,12 +27,14 @@
     "components/tag.css",
     "components/viz.css",
     "layout.css",
+    "modes.css",
     "utilities.css"
   ],
   "--ply-font-text": [
     "base.css",
     "components/atlas.css",
     "components/button.css",
+    "components/card.css",
     "components/research.css",
     "components/viz.css"
   ],
@@ -42,6 +45,7 @@
   "--ply-color-accent": [
     "base.css",
     "components/atlas.css",
+    "components/card.css",
     "components/form.css",
     "components/machine.css",
     "components/nav.css",
@@ -79,6 +83,7 @@
   "--ply-font-display": [
     "base.css",
     "components/atlas.css",
+    "components/card.css",
     "components/demo.css",
     "components/nav.css",
     "components/research.css",
@@ -96,6 +101,7 @@
   ],
   "--ply-size-2xl": [
     "base.css",
+    "components/card.css",
     "components/research.css"
   ],
   "--ply-size-xl": [
@@ -103,11 +109,13 @@
     "components/atlas.css",
     "components/demo.css",
     "components/nav.css",
-    "components/research.css"
+    "components/research.css",
+    "layout.css"
   ],
   "--ply-weight-bold": [
     "base.css",
     "components/atlas.css",
+    "components/card.css",
     "components/demo.css",
     "components/form.css",
     "components/nav.css",
@@ -123,11 +131,13 @@
   ],
   "--ply-leading-tight": [
     "base.css",
+    "components/card.css",
     "components/research.css"
   ],
   "--ply-size-lg": [
     "base.css",
     "components/atlas.css",
+    "components/card.css",
     "components/research.css",
     "components/search.css",
     "components/writing.css",
@@ -136,6 +146,7 @@
   "--ply-size-md": [
     "base.css",
     "components/button.css",
+    "components/card.css",
     "components/demo.css",
     "components/form.css",
     "components/viz.css"
@@ -149,12 +160,14 @@
     "base.css",
     "components/atlas.css",
     "components/button.css",
+    "components/card.css",
     "components/code.css",
     "components/form.css",
     "components/nav.css",
     "components/research.css",
     "components/search.css",
-    "components/tag.css"
+    "components/tag.css",
+    "modes.css"
   ],
   "--ply-duration-fast": [
     "base.css",
@@ -210,6 +223,7 @@
     "base.css",
     "components/atlas.css",
     "components/button.css",
+    "components/card.css",
     "components/code.css",
     "components/demo.css",
     "components/form.css",
@@ -231,6 +245,7 @@
     "base.css",
     "components/atlas.css",
     "components/button.css",
+    "components/card.css",
     "components/code.css",
     "components/demo.css",
     "components/form.css",
@@ -271,6 +286,7 @@
   "--ply-space-7": [
     "base.css",
     "components/atlas.css",
+    "components/card.css",
     "components/demo.css",
     "components/research.css",
     "layout.css"
@@ -289,7 +305,6 @@
     "components/atlas.css",
     "components/code.css",
     "components/demo.css",
-    "components/form.css",
     "components/search.css",
     "utilities.css"
   ],
@@ -320,6 +335,7 @@
   "--ply-leading-normal": [
     "base.css",
     "components/atlas.css",
+    "components/card.css",
     "components/demo.css",
     "components/form.css",
     "components/note.css",
@@ -349,9 +365,14 @@
   ],
   "--ply-space-6": [
     "components/atlas.css",
+    "components/card.css",
     "components/research.css",
     "components/search.css",
     "components/writing.css",
+    "layout.css"
+  ],
+  "--ply-size-3xl": [
+    "components/research.css",
     "layout.css"
   ],
   "--ply-space-9": [
@@ -365,6 +386,7 @@
   ],
   "--ply-border-hair": [
     "components/atlas.css",
+    "components/card.css",
     "components/code.css",
     "components/demo.css",
     "components/nav.css",
@@ -375,9 +397,11 @@
   ],
   "--ply-color-rule": [
     "components/atlas.css",
+    "components/card.css",
     "components/demo.css",
     "components/form.css",
     "components/nav.css",
+    "components/research.css",
     "components/search.css",
     "components/table.css",
     "components/viz.css",
@@ -386,6 +410,7 @@
   ],
   "--ply-size-ui": [
     "components/atlas.css",
+    "components/card.css",
     "components/nav.css",
     "components/note.css",
     "components/research.css",
@@ -396,6 +421,7 @@
   "--ply-space-3": [
     "components/atlas.css",
     "components/button.css",
+    "components/card.css",
     "components/code.css",
     "components/demo.css",
     "components/form.css",
@@ -418,15 +444,18 @@
   ],
   "--ply-space-1": [
     "components/atlas.css",
+    "components/card.css",
     "components/demo.css",
     "components/nav.css",
     "components/research.css",
     "components/viz.css",
-    "layout.css"
+    "layout.css",
+    "modes.css"
   ],
   "--ply-space-2": [
     "components/atlas.css",
     "components/button.css",
+    "components/card.css",
     "components/code.css",
     "components/demo.css",
     "components/form.css",
@@ -449,6 +478,7 @@
   "--ply-space-4": [
     "components/atlas.css",
     "components/button.css",
+    "components/card.css",
     "components/code.css",
     "components/demo.css",
     "components/machine.css",
@@ -483,6 +513,7 @@
     "components/demo.css",
     "components/form.css",
     "components/nav.css",
+    "components/research.css",
     "components/search.css",
     "components/table.css",
     "components/writing.css",
@@ -504,6 +535,7 @@
   ],
   "--ply-color-text-muted": [
     "components/atlas.css",
+    "components/card.css",
     "components/demo.css",
     "components/form.css",
     "components/machine.css",
@@ -536,11 +568,11 @@
     "components/nav.css",
     "components/research.css",
     "components/search.css",
-    "components/writing.css"
+    "components/writing.css",
+    "modes.css"
   ],
   "--ply-radius-ball": [
     "components/atlas.css",
-    "components/demo.css",
     "components/form.css",
     "components/nav.css",
     "components/note.css",
@@ -562,6 +594,15 @@
   ],
   "--ply-color-code-string": [
     "components/code.css",
+    "components/panel.css"
+  ],
+  "--ply-color-flag": [
+    "components/panel.css"
+  ],
+  "--ply-color-flag-text": [
+    "components/panel.css"
+  ],
+  "--ply-color-flag-edge": [
     "components/panel.css"
   ],
   "--ply-ink-50": [
@@ -606,9 +647,6 @@
     "components/demo.css"
   ],
   "--ply-size-4xl": [
-    "components/research.css"
-  ],
-  "--ply-size-3xl": [
     "components/research.css"
   ],
   "--ply-viz-1": [
