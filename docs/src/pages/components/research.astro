@@ -12,7 +12,7 @@ import Code from "@dario-loi/polytope/astro/Code.astro";
 import Note from "@dario-loi/polytope/astro/Note.astro";
 import Stability from "@dario-loi/polytope/astro/Stability.astro";
 const examplePubs = [
-  { year: 2026, title: "Example title: higher-order message passing on cell complexes", authors: ["A. Author", "John Doe", "B. Author"], venue: "Example Venue 2026", links: [{ label: "Paper", href: "#" }, { label: "Code", href: "#" }] },
+  { year: 2026, title: "Example title: Higher-order message passing on cell complexes", authors: ["A. Author", "John Doe", "B. Author"], venue: "Example Venue 2026", links: [{ label: "Paper", href: "#" }, { label: "Code", href: "#" }] },
   { year: 2026, title: "Example title: a second paper in the same year", authors: ["John Doe", "C. Author"], venue: "Example Workshop 2026", links: [{ label: "Paper", href: "#" }] },
   { year: 2025, title: "Example title: an earlier preprint", authors: ["D. Author", "John Doe"], venue: "arXiv preprint", links: [{ label: "arXiv", href: "#" }] },
 ];
@@ -25,7 +25,7 @@ const examplePubs = [
     <PaperHeader
       level={2}
       venue="Example Venue 2026"
-      title="Example title: higher-order message passing on cell complexes"
+      title="Example title: Higher-order message passing on cell complexes"
       authors={[{ name: "A. Author", affiliations: [1], equal: true }, { name: "John Doe", affiliations: [2], equal: true }, { name: "B. Author", affiliations: [1, 2] }]}
       affiliations={["Example University", "Another Institute"]}
       me="John Doe"
@@ -41,6 +41,7 @@ const examplePubs = [
   links={[{ label: "Paper", href: "/paper.pdf", icon: "paper" }, { label: "Code", href: repo, icon: "code" }]}
 />`} />
   <p>The title is the page's <code>h1</code>. When the header sits inside another page, as it does above, pass <code>level={2}</code>. Pass <code>me</code> with your name as it reads in <code>authors</code> to set it in bold, as on the publication wall; the other names drop to regular weight. In plain HTML, give your <code>li</code> the class <code>ply-me</code>.</p>
+  <p>The title sizes to the header's own width, not the window's, so it sets the same in a column beside an exhibit as across the page. It runs about 22 characters to a line, and longer lines for a long title, so most titles keep to three lines. A title with a subtitle (the part after the first colon) sets the name in wood type and the subtitle under it in the text face. The colon stays in the heading, hidden, so screen readers and copies keep the whole title. Pass <code>split={"{false}"}</code> to keep the whole title in wood type. In plain HTML, write the subtitle as <code>&lt;span class="ply-visually-hidden"&gt;: &lt;/span&gt;&lt;span class="ply-paper__subtitle"&gt;...&lt;/span&gt;</code> inside the heading, and set <code>--_len</code> (the length of the name) and <code>--_chars</code> (its longest word) on the heading, as the component does.</p>
 
   <h2>Equations</h2>
   <p>KaTeX renders math at build time, so pages ship HTML and MathML and no math script. The Hodge Laplacian on <M tex={String.raw`k`} />-simplices combines a down and an up part:</p>
@@ -68,7 +69,7 @@ const examplePubs = [
 
   <h2 id="bibtex">BibTeX</h2>
   <BibTeX entry={`@inproceedings{author2026example,
-  title     = {Example title: higher-order message passing on cell complexes},
+  title     = {Example title: Higher-order message passing on cell complexes},
   author    = {Author, A. and Doe, John and Author, B.},
   booktitle = {Example Venue},
   year      = {2026}

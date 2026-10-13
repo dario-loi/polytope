@@ -32,6 +32,7 @@
     "base.css",
     "components/atlas.css",
     "components/button.css",
+    "components/research.css",
     "components/viz.css"
   ],
   "--ply-leading-relaxed": [
@@ -121,7 +122,8 @@
     "utilities.css"
   ],
   "--ply-leading-tight": [
-    "base.css"
+    "base.css",
+    "components/research.css"
   ],
   "--ply-size-lg": [
     "base.css",

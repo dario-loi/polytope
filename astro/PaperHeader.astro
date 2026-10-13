@@ -1,6 +1,7 @@
 ---
 // Header for a paper page: venue, title, authors with affiliation marks, link row.
 import Icon from "./Icon.astro";
+import { woodTitle } from "./title.ts";
 export interface Author { name: string; href?: string; affiliations?: number[]; equal?: boolean }
 interface Props {
   title: string;
@@ -13,13 +14,20 @@ interface Props {
   level?: 1 | 2 | 3;
   /** The author name to set in bold, as in PubList; the other names drop to regular. */
   me?: string;
+  /** A title with a subtitle ("Name: what it does") sets the name in wood type and the
+   *  subtitle under it in the text face. false keeps the whole title in wood type. */
+  split?: boolean;
 }
-const { title, venue, authors, affiliations = [], links = [], equalNote = "Equal contribution", level = 1, me } = Astro.props;
+const { title, venue, authors, affiliations = [], links = [], equalNote = "Equal contribution", level = 1, me, split = true } = Astro.props;
 const H = `h${level}`;
 const anyEqual = authors.some((a) => a.equal);
+// The colon stays in the heading's text, hidden, so it is still read out and copied.
+const cut = split ? title.indexOf(": ") : -1;
+const hasSub = cut > 0 && cut + 2 < title.length;
+const name = woodTitle(hasSub ? title.slice(0, cut) : title);
 ---
 <header class="ply-paper">
-  <H class="ply-paper__title">{title}</H>
+  <H class="ply-paper__title" style={`--_len: ${name.len}; --_chars: ${name.chars}`}>{name.parts.map((p) => (p.keep ? <span class="ply-nowrap">{p.text}</span> : p.text))}{hasSub && <><span class="ply-visually-hidden">: </span><span class="ply-paper__subtitle">{title.slice(cut + 2)}</span></>}</H>
   <div class="ply-stack" style="--ply-stack-gap: var(--ply-space-2)">
     <ul class="ply-authors" aria-label="Authors">
       {authors.map((a) => {

@@ -1,4 +1,4 @@
-/* Polytope v0.6.2. Generated; edit css/src instead. */
+/* Polytope v0.6.3. Generated; edit css/src instead. */
 @layer ply.reset, ply.base, ply.layout, ply.components, ply.utilities;
 /* Self-hosted faces. Ultra: Apache 2.0. Libre Franklin and JetBrains Mono: SIL OFL 1.1. License texts: ./fonts/LICENSE-*.txt */
 @font-face { font-family: "Ultra"; font-style: normal; font-weight: 400; font-display: swap; src: url("./fonts/ultra-latin-400.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
@@ -1059,15 +1059,22 @@
 /* ---- components/research.css ---- */
 @layer ply.components {
   /* Paper header: title, authors with affiliation marks, venue, and the link row. */
-  .ply-paper { display: grid; gap: var(--ply-space-5); padding-block: var(--ply-space-7); }
-  .ply-paper__venue { font-size: var(--ply-size-sm); font-weight: var(--ply-weight-bold); }
-  /* The cap is in em, so a title breaks the same way at every width it reaches its full
-     size, and the same with the fallback face as with Ultra. */
-  .ply-paper__title, .ply-post__title { font-family: var(--ply-font-display); font-weight: 400; font-size: clamp(var(--ply-size-2xl), 1.2rem + 3vw, var(--ply-size-4xl)); line-height: 1.02; letter-spacing: -0.01em; max-width: 14.5em; text-wrap: balance; }
+  .ply-paper { display: grid; gap: var(--ply-space-5); padding-block: var(--ply-space-7); container-type: inline-size; }
+  .ply-paper__venue { font-size: var(--ply-size-sm); font-weight: var(--ply-weight-bold); text-wrap: balance; }
+  /* The title sizes to the header's own width, not the window's, so it sets the same in a
+     narrow column beside an exhibit as across the page. About 22 characters to a line, more
+     for a long title (--_len, its length) so it keeps to about three lines, and never so
+     big that its longest word (--_chars) breaks. On a phone it keeps to 32px, or nearer 24px
+     for a long title. The cap is in em, so a title breaks the same way at every width it
+     reaches its full size, with the fallback face as with Ultra. */
+  .ply-paper__title, .ply-post__title { --_cpl: max(22, var(--_len, 0) / 2.7); font-family: var(--ply-font-display); font-weight: 400; font-size: min(var(--ply-size-4xl), 100cqi / (var(--_chars, 8) * 0.76), max(var(--ply-size-xl), var(--ply-size-2xl) - max(0, var(--_len, 0) - 40) * 0.0075rem, 100cqi / (var(--_cpl) * 0.66))); line-height: 1.02; letter-spacing: -0.01em; max-width: calc(var(--_cpl) * 0.66em); text-wrap: balance; }
+  /* A subtitle (what follows the colon) is read, so it is in the text face, under the name
+     and sized from it. */
+  .ply-paper__subtitle { display: block; margin-top: var(--ply-space-3); font-family: var(--ply-font-text); font-size: clamp(var(--ply-size-lg), 0.42em, var(--ply-size-2xl)); font-weight: var(--ply-weight-semibold); line-height: var(--ply-leading-tight); max-width: 32em; }
   .ply-paper__links { display: flex; flex-wrap: wrap; gap: var(--ply-space-2); }
 
   /* Post header: title, lede, the date line, tags. The same title and rhythm as a paper's. */
-  .ply-post { display: grid; gap: var(--ply-space-4); padding-block: var(--ply-space-7); }
+  .ply-post { display: grid; gap: var(--ply-space-4); padding-block: var(--ply-space-7); container-type: inline-size; }
   .ply-post__lede { font-size: var(--ply-size-lg); line-height: var(--ply-leading-normal); max-width: var(--ply-layout-measure); }
   .ply-post__meta { display: flex; flex-wrap: wrap; gap: var(--ply-space-1) var(--ply-space-4); font-size: var(--ply-size-sm); font-weight: var(--ply-weight-bold); font-variant-numeric: tabular-nums; }
   .ply-post__meta > * + *::before { content: ""; display: inline-block; width: 0.375rem; height: 0.375rem; margin-inline-end: var(--ply-space-4); border-radius: var(--ply-radius-ball); background: var(--ply-color-accent); vertical-align: 0.15em; }
@@ -1079,6 +1086,8 @@
   /* The owner's name (.ply-me) is bold, and the other names drop to regular so it shows. */
   .ply-authors:has(.ply-me) { font-weight: var(--ply-weight-regular); }
   .ply-authors .ply-me { font-weight: var(--ply-weight-bold); }
+  /* The rows keep one baseline inside .ply-prose, which spaces list items apart. */
+  :is(.ply-authors, .ply-affiliations, .ply-post__tags) > li { margin: 0; }
   .ply-affiliations { display: flex; flex-wrap: wrap; gap: var(--ply-space-1) var(--ply-space-4); list-style: none; padding: 0; font-size: var(--ply-size-sm); color: var(--ply-color-text-muted); }
   .ply-authors__note { font-size: var(--ply-size-sm); color: var(--ply-color-text-muted); }
 

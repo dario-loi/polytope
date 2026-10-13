@@ -10,6 +10,18 @@ import ReleaseModel from "../../components/exhibits/ReleaseModel.astro";
       <p class="ply-wall__label">0.6</p>
       <ul class="ply-wall__entries">
         <li class="ply-pub">
+          <p class="ply-pub__title">0.6.3, long titles</p>
+          <p class="ply-pub__venue">12 October 2026</p>
+          <div class="ply-prose ply-small" style="margin-top: var(--ply-space-2)">
+            <ul>
+              <li>Paper and post titles size to the header's own width, not the window's, so a title in a column beside an exhibit sets as it does across the page. Before, it kept its full size there, about nine characters to a line. A title runs about 22 characters to a line, and longer lines for a long title, so most keep to three lines. On phones a long title can drop toward 24px, and a title's longest word never breaks.</li>
+              <li>A paper title with a subtitle (the part after the first colon) sets the name in wood type and the subtitle under it in the text face. The colon stays in the heading, hidden, so screen readers and copies keep the whole title. Pass <code>split={"{false}"}</code> to keep the whole title in wood type. See <a href="../components/research/">Research</a> for the plain HTML.</li>
+              <li>Short hyphenated terms such as Test-Time stay on one line. The venue line is balanced, so its last word is not left alone. Author, affiliation, and tag rows keep one baseline inside <code>.ply-prose</code>.</li>
+              <li>To update: <code>npm update</code>. A title with a colon now shows its subtitle under the name; pass <code>split={"{false}"}</code> where you want one kept whole.</li>
+            </ul>
+          </div>
+        </li>
+        <li class="ply-pub">
           <p class="ply-pub__title">0.6.2, your name in bold</p>
           <p class="ply-pub__venue">12 October 2026</p>
           <div class="ply-prose ply-small" style="margin-top: var(--ply-space-2)">
