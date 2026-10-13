@@ -323,7 +323,7 @@ Square exhibit labels.
 Black panels capped at the reading measure, so in an article they never cross into the margin; on a docs page `.ply-wide` runs one on past the text. A bar with the language in mono and a hairline copy button sits on top; the copy button turns mustard when copied, and its name says which block it copies. Long lines scroll with the same soft edge cue as tables and charts. Comments are mustard light, keywords tomato bright, strings teal light, numbers cobalt light.
 
 ### Papers and Posts
-- **Headers:** the title in Ultra from 32px to 64px, balanced, at most 14.5em wide (about 22 characters), so it breaks the same way at every width. A paper adds authors in 20px semibold with tomato affiliation marks, the venue in bold 14px, and the links as small buttons. A post adds a 20px lede, a bold 14px date line with a small tomato ball between the date and the reading time, and outline tags.
+- **Headers:** the title in Ultra from 32px to 64px, balanced, at most 14.5em wide (about 22 characters), so it breaks the same way at every width. A paper adds authors in 20px semibold with tomato affiliation marks (with the owner's name marked, it is bold and the other names regular, as in a publication list), the venue in bold 14px, and the links as small buttons. A post adds a 20px lede, a bold 14px date line with a small tomato ball between the date and the reading time, and outline tags.
 - **Sidenotes:** 14px caption gray with a bold tomato-ink number, in the margin or under their paragraph.
 - **Margin figures:** 14rem wide in the margin, the caption under them in 14px caption gray with a bold black "Figure n." lead.
 

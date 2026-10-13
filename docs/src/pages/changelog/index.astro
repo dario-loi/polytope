@@ -10,6 +10,16 @@ import ReleaseModel from "../../components/exhibits/ReleaseModel.astro";
       <p class="ply-wall__label">0.6</p>
       <ul class="ply-wall__entries">
         <li class="ply-pub">
+          <p class="ply-pub__title">0.6.2, your name in bold</p>
+          <p class="ply-pub__venue">12 October 2026</p>
+          <div class="ply-prose ply-small" style="margin-top: var(--ply-space-2)">
+            <ul>
+              <li><code>&lt;PaperHeader&gt;</code> takes <code>me</code>, the author name to set in bold, as <code>&lt;PubList&gt;</code> already did. The other names drop to regular weight so yours shows; every name was semibold, so a bolder weight alone would not. In plain HTML, give your <code>li</code> in <code>.ply-authors</code> the class <code>ply-me</code>. See <a href="../components/research/">Research</a>.</li>
+              <li>To update: <code>npm update</code>, then pass <code>me</code> with your name as it reads in <code>authors</code>. A header without it looks as before.</li>
+            </ul>
+          </div>
+        </li>
+        <li class="ply-pub">
           <p class="ply-pub__title">0.6.1, long routes</p>
           <p class="ply-pub__venue">12 October 2026</p>
           <div class="ply-prose ply-small" style="margin-top: var(--ply-space-2)">

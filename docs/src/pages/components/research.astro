@@ -28,6 +28,7 @@ const examplePubs = [
       title="Example title: higher-order message passing on cell complexes"
       authors={[{ name: "A. Author", affiliations: [1], equal: true }, { name: "John Doe", affiliations: [2], equal: true }, { name: "B. Author", affiliations: [1, 2] }]}
       affiliations={["Example University", "Another Institute"]}
+      me="John Doe"
       links={[{ label: "Paper", href: "#", icon: "paper" }, { label: "Code", href: "#", icon: "code" }, { label: "BibTeX", href: "#bibtex", icon: "quote" }]}
     />
   </div>
@@ -36,9 +37,10 @@ const examplePubs = [
   title="..."
   authors={[{ name: "John Doe", affiliations: [1], equal: true }, ...]}
   affiliations={["Example University"]}
+  me="John Doe"
   links={[{ label: "Paper", href: "/paper.pdf", icon: "paper" }, { label: "Code", href: repo, icon: "code" }]}
 />`} />
-  <p>The title is the page's <code>h1</code>. When the header sits inside another page, as it does above, pass <code>level={2}</code>.</p>
+  <p>The title is the page's <code>h1</code>. When the header sits inside another page, as it does above, pass <code>level={2}</code>. Pass <code>me</code> with your name as it reads in <code>authors</code> to set it in bold, as on the publication wall; the other names drop to regular weight. In plain HTML, give your <code>li</code> the class <code>ply-me</code>.</p>
 
   <h2>Equations</h2>
   <p>KaTeX renders math at build time, so pages ship HTML and MathML and no math script. The Hodge Laplacian on <M tex={String.raw`k`} />-simplices combines a down and an up part:</p>

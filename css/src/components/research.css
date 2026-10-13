@@ -17,6 +17,9 @@
   .ply-authors { display: flex; flex-wrap: wrap; gap: var(--ply-space-1) var(--ply-space-4); list-style: none; padding: 0; font-size: var(--ply-size-lg); font-weight: var(--ply-weight-semibold); }
   .ply-authors sup, .ply-affiliations sup { font-size: 0.65em; font-weight: var(--ply-weight-bold); color: var(--ply-color-accent-text); margin-inline-start: 0.1em; }
   .ply-authors a { color: inherit; }
+  /* The owner's name (.ply-me) is bold, and the other names drop to regular so it shows. */
+  .ply-authors:has(.ply-me) { font-weight: var(--ply-weight-regular); }
+  .ply-authors .ply-me { font-weight: var(--ply-weight-bold); }
   .ply-affiliations { display: flex; flex-wrap: wrap; gap: var(--ply-space-1) var(--ply-space-4); list-style: none; padding: 0; font-size: var(--ply-size-sm); color: var(--ply-color-text-muted); }
   .ply-authors__note { font-size: var(--ply-size-sm); color: var(--ply-color-text-muted); }
 

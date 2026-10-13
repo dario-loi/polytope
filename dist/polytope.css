@@ -1,4 +1,4 @@
-/* Polytope v0.6.1. Generated; edit css/src instead. */
+/* Polytope v0.6.2. Generated; edit css/src instead. */
 @layer ply.reset, ply.base, ply.layout, ply.components, ply.utilities;
 /* Self-hosted faces. Ultra: Apache 2.0. Libre Franklin and JetBrains Mono: SIL OFL 1.1. License texts: ./fonts/LICENSE-*.txt */
 @font-face { font-family: "Ultra"; font-style: normal; font-weight: 400; font-display: swap; src: url("./fonts/ultra-latin-400.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
@@ -1076,6 +1076,9 @@
   .ply-authors { display: flex; flex-wrap: wrap; gap: var(--ply-space-1) var(--ply-space-4); list-style: none; padding: 0; font-size: var(--ply-size-lg); font-weight: var(--ply-weight-semibold); }
   .ply-authors sup, .ply-affiliations sup { font-size: 0.65em; font-weight: var(--ply-weight-bold); color: var(--ply-color-accent-text); margin-inline-start: 0.1em; }
   .ply-authors a { color: inherit; }
+  /* The owner's name (.ply-me) is bold, and the other names drop to regular so it shows. */
+  .ply-authors:has(.ply-me) { font-weight: var(--ply-weight-regular); }
+  .ply-authors .ply-me { font-weight: var(--ply-weight-bold); }
   .ply-affiliations { display: flex; flex-wrap: wrap; gap: var(--ply-space-1) var(--ply-space-4); list-style: none; padding: 0; font-size: var(--ply-size-sm); color: var(--ply-color-text-muted); }
   .ply-authors__note { font-size: var(--ply-size-sm); color: var(--ply-color-text-muted); }
 

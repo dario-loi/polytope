@@ -11,8 +11,10 @@ interface Props {
   equalNote?: string;
   /** Heading level of the title: 1 on a paper page, 2 when the header sits inside another page. */
   level?: 1 | 2 | 3;
+  /** The author name to set in bold, as in PubList; the other names drop to regular. */
+  me?: string;
 }
-const { title, venue, authors, affiliations = [], links = [], equalNote = "Equal contribution", level = 1 } = Astro.props;
+const { title, venue, authors, affiliations = [], links = [], equalNote = "Equal contribution", level = 1, me } = Astro.props;
 const H = `h${level}`;
 const anyEqual = authors.some((a) => a.equal);
 ---
@@ -22,7 +24,7 @@ const anyEqual = authors.some((a) => a.equal);
     <ul class="ply-authors" aria-label="Authors">
       {authors.map((a) => {
         const marks = [...(a.affiliations ?? []).map(String), ...(a.equal ? ["*"] : [])].join(",");
-        return <li>{a.href ? <a href={a.href}>{a.name}</a> : a.name}{marks && <sup>{marks}</sup>}</li>;
+        return <li class={me && a.name === me ? "ply-me" : undefined}>{a.href ? <a href={a.href}>{a.name}</a> : a.name}{marks && <sup>{marks}</sup>}</li>;
       })}
     </ul>
     {affiliations.length > 0 && (
