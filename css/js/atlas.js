@@ -26,6 +26,8 @@ const ICONS = {
   all: "M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM3 12h18M12 3c-3.5 3.5-3.5 14.5 0 18M12 3c3.5 3.5 3.5 14.5 0 18",
 };
 const reduceMotion = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
+// How long the route takes to settle on the weights of a new current entry, in ms.
+const HEAT = 400;
 // What counts as the reader starting to read, for loading the close outlines.
 const MOVES = ["scroll", "wheel", "pointerdown", "keydown", "touchstart"];
 const mac = () => /Mac|iP(hone|ad|od)/.test(navigator.platform || navigator.userAgent);
@@ -96,6 +98,8 @@ class PlyAtlas extends HTMLElement {
     cancelAnimationFrame(this._raf);
     cancelAnimationFrame(this._frame);
     this._raf = this._frame = 0;
+    clearTimeout(this._levelTimer);
+    cancelAnimationFrame(this._heatRaf);
     this._halt?.();
     this._ro?.disconnect();
     this._mo?.disconnect();
@@ -359,7 +363,7 @@ class PlyAtlas extends HTMLElement {
     stroke("border", 0.75, outline, core.cull(world.borderParts, v, w, h, "MultiLineString"));
     yield;
     stroke("limb", 1.5, path, core.sphere);
-    stroke("route", 1.5, path, this._route);
+    this._legs(path, c);
     if (this._trace) {
       ctx.lineCap = "round";
       ctx.beginPath();
@@ -528,6 +532,7 @@ class PlyAtlas extends HTMLElement {
     if (i === this.current) return;
     this.current = i;
     this.stops.forEach((s, n) => s.el.toggleAttribute("data-current", n === i));
+    this._reheat(true);
     const s = this.stops[i];
     const { core } = this;
     if (!s) {
@@ -567,12 +572,14 @@ class PlyAtlas extends HTMLElement {
     this.querySelectorAll(".ply-atlas__filter [data-kind]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.kind === kind)));
     this.stops.forEach((s) => { s.el.hidden = Boolean(kind) && s.kind !== kind; });
     for (const p of this.places ?? []) p.pin?.toggleAttribute("data-out", p.stops.every((i) => this.stops[i].el.hidden));
-    const shown = this.core.chart(this.stops.filter((s) => !s.el.hidden).map((s) => ({ ...s })));
+    this._kept = this.stops.flatMap((s, i) => (s.el.hidden ? [] : [i]));
+    const shown = this._chart = this.core.chart(this._kept.map((i) => ({ ...this.stops[i] })));
     this._route = shown.route;
     this._tally = this.core.tally(this._shown().length, shown.moves);
     if (this.capTally && this.current < 0) this.capTally.textContent = this._tally;
-    if (!this._live) return;
     if (this.stops[this.current]?.el.hidden) { this.current = -1; this._ball = null; this._caption(null); }
+    this._reheat(false);
+    if (!this._live) return;
     this._followed = null;
     this._follow();
     if (this.current < 0) this._fly(this.core.overview(this._shown(), this._w, this._h));
@@ -629,6 +636,50 @@ class PlyAtlas extends HTMLElement {
     this._anim = requestAnimationFrame(step);
   }
 
+  // The route's weights for the current entry (see core.heat), eased in from what is on screen
+  // over 400ms, or set at once.
+  _reheat(ease) {
+    if (!this._chart) return;
+    const now = performance.now();
+    const next = this.core.heat(this._chart, this._kept.indexOf(this.current));
+    const shown = this._heat && this._heat.to.length === next.length ? this._legHeat(now) : null;
+    const changed = shown && shown.some((a, n) => Math.abs(a - next[n]) > 0.005);
+    this._heat = { from: ease && changed && !reduceMotion() ? shown : next, to: next, t0: now };
+    cancelAnimationFrame(this._heatRaf);
+    if (this._heat.from === next) return;
+    // A flight draws every frame anyway; a change with no flight needs frames of its own.
+    const tick = () => {
+      if (!this._anim && this._live) this._draw();
+      this._heatRaf = performance.now() - this._heat.t0 < HEAT ? requestAnimationFrame(tick) : 0;
+    };
+    this._heatRaf = requestAnimationFrame(tick);
+  }
+
+  // Each leg's weight now.
+  _legHeat(now) {
+    const { from, to, t0 } = this._heat;
+    const p = Math.min(1, (now - t0) / HEAT);
+    return to.map((t, n) => from[n] + (t - from[n]) * p);
+  }
+
+  // The route in chalk, drawn as one path for each opacity.
+  _legs(path, c) {
+    const { ctx } = this;
+    const legs = this._route.coordinates;
+    const heat = this._heat?.to.length === legs.length ? this._legHeat(performance.now()) : null;
+    const groups = new Map();
+    legs.forEach((leg, n) => {
+      const a = Math.round(c.route.a * (heat ? heat[n] : 1) * 100) / 100;
+      if (groups.has(a)) groups.get(a).push(leg); else groups.set(a, [leg]);
+    });
+    ctx.strokeStyle = c.route.color; ctx.lineWidth = 1.5;
+    for (const [a, group] of groups) {
+      ctx.beginPath();
+      path({ type: "MultiLineString", coordinates: group });
+      ctx.globalAlpha = a; ctx.stroke();
+    }
+  }
+
   // The closing beat: each leg of the route lights tomato in date order, the way the reader
   // travelled it, then the whole route fades back to chalk. About two and a half seconds.
   _traceRoute() {
@@ -682,7 +733,17 @@ class PlyAtlas extends HTMLElement {
     const { core } = this;
     const k = Math.max(core.ZOOM.min, Math.min(core.ZOOM.max, this.view.k * scale));
     const keep = this._ball;
-    this._fly(this._zoomed(k, cx, cy), keep);
+    this._fly({ ...this._zoomed(k, cx, cy), roll: 0 }, keep);
+  }
+
+  // A flight stopped on its way can leave the globe rolled. Once the drag, scroll, or key
+  // that stopped it is done, the globe turns back to north up where it is.
+  _level() {
+    clearTimeout(this._levelTimer);
+    this._levelTimer = setTimeout(() => {
+      if (this._anim || this._ptrs.size || Math.abs(this.view?.roll || 0) < 0.5) return;
+      this._fly({ ...this.view, roll: 0 }, this._ball ?? undefined);
+    }, 300);
   }
 
   // The view at zoom k that keeps the point under (cx, cy) in place, or the center.
@@ -694,7 +755,7 @@ class PlyAtlas extends HTMLElement {
     const p = core.projection(this._w, this._h, v).invert([cx - r.left, cy - r.top]);
     if (!p || !p.every(Number.isFinite)) return { ...v, k };
     const [lon, lat] = core.geoInterpolate([v.lon, v.lat], p)(1 - v.k / k);
-    return { lon, lat, k };
+    return { lon, lat, k, roll: v.roll || 0 };
   }
 
   _showAll() {
@@ -707,7 +768,10 @@ class PlyAtlas extends HTMLElement {
     const { core } = this;
     const v = this.view;
     const deg = core.toDegrees(1, this._w, this._h, v.k);
-    this.view = { lon: ((v.lon - dx * deg + 540) % 360) - 180, lat: Math.max(-80, Math.min(80, v.lat + dy * deg)), k: v.k };
+    // A flight stopped on its way leaves the globe rolled; the drag turns with it.
+    const r = (v.roll || 0) * Math.PI / 180;
+    const ex = dx * Math.cos(r) - dy * Math.sin(r), ey = dx * Math.sin(r) + dy * Math.cos(r);
+    this.view = { lon: ((v.lon - ex * deg + 540) % 360) - 180, lat: Math.max(-80, Math.min(80, v.lat + ey * deg)), k: v.k, roll: v.roll || 0 };
     this._paint();
   }
 
@@ -743,7 +807,7 @@ class PlyAtlas extends HTMLElement {
 
   _up(e) {
     this._ptrs.delete(e.pointerId);
-    if (!this._ptrs.size) this.map.removeAttribute("data-dragging");
+    if (!this._ptrs.size) { this.map.removeAttribute("data-dragging"); this._level(); }
   }
 
   // Plain scroll keeps scrolling the page; Ctrl or Cmd and scroll (and a trackpad pinch,
@@ -763,13 +827,14 @@ class PlyAtlas extends HTMLElement {
     const k = Math.max(core.ZOOM.min, Math.min(core.ZOOM.max, this.view.k * Math.exp(-step * 0.0025)));
     this.view = this._zoomed(k, e.clientX, e.clientY);
     this._paint();
+    this._level();
   }
 
   _key(e) {
     if (e.target !== this.map || !this._live) return;
     const step = Math.min(this._w, this._h) * 0.15;
     const moves = { ArrowLeft: [-step, 0], ArrowRight: [step, 0], ArrowUp: [0, -step], ArrowDown: [0, step] };
-    if (moves[e.key]) { e.preventDefault(); this._halt(); this._turn(-moves[e.key][0], -moves[e.key][1]); }
+    if (moves[e.key]) { e.preventDefault(); this._halt(); this._turn(-moves[e.key][0], -moves[e.key][1]); this._level(); }
     else if (e.key === "+" || e.key === "=") { e.preventDefault(); this._zoomBy(2); }
     else if (e.key === "-" || e.key === "_") { e.preventDefault(); this._zoomBy(0.5); }
     else if (e.key === "0" || e.key === "Home") { e.preventDefault(); this._showAll(); }

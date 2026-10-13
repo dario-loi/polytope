@@ -27,13 +27,14 @@ const sample = stops.filter((s) => ["Edinburgh, United Kingdom", "Lisbon, Portug
 </Atlas>`} />
 
   <h2>What it is</h2>
-  <p>The Atlas is for the CV or the about page of a personal site. Each entry is a stop: what you did, when, and where. The globe is drawn like the complex: places are points, the route between them in date order is a line of edges, and the entry you are reading is the tomato ball, with its dashed reach. Countries that hold a place fill mustard.</p>
+  <p>The Atlas is for the CV or the about page of a personal site. Each entry is a stop: what you did, when, and where. The globe is drawn like the complex: places are points, the route between them in date order is a line of great-circle edges, and the entry you are reading is the tomato ball, with its dashed reach. The legs into and out of that place stay full chalk; the rest of the route fades with each move away from it, so a long CV does not cover the globe in lines. Countries that hold a place fill mustard.</p>
   <p>The example above holds four entries. In a column this narrow the globe stays pinned above the entries; give it 52rem or more and the entries run on the left with the globe in view beside them, as on the <a href={u("/patterns/cv/")}>CV page pattern</a>.</p>
 
   <h2>Reading it</h2>
   <ul>
     <li>Side by side, an entry becomes current when its top crosses a line 45% down the screen. Stacked, the current entry is the topmost one showing below the pinned globe, so the globe always names the entry you can read, and the caption under it gives that entry's title, organization, and dates. The globe flies to the place, and the ball travels the great circle from the last place, leaving a tomato trail that fades when it lands.</li>
-    <li>Past the last entry the globe pulls back to every place. The first time, the route lights up leg by leg in date order, then fades back to chalk.</li>
+    <li>Past the last entry the globe pulls back to every place, with the whole route in chalk. The first time, the route lights up leg by leg in date order, then fades back to chalk.</li>
+    <li>A flight that passes near a pole turns the globe smoothly as it goes and lands with north up. If you stop a flight by dragging, the globe turns back to north up once you let go.</li>
     <li>A pin, or the place line of an entry, picks that entry. A pin holding several entries picks the next one each time.</li>
     <li>Drag turns the globe. <kbd>Ctrl</kbd> or <kbd>Cmd</kbd> and scroll zooms, so plain scrolling over the globe still scrolls the page; on touch screens a sideways drag turns it and a pinch zooms. The buttons zoom and show every place. With the globe focused, arrow keys turn it, <kbd>+</kbd> and <kbd>-</kbd> zoom, and <kbd>0</kbd> shows every place.</li>
     <li>With more than one kind of entry, a filter above the list shows one kind; the other places dim.</li>

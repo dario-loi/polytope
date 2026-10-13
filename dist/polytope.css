@@ -1,4 +1,4 @@
-/* Polytope v0.6.0. Generated; edit css/src instead. */
+/* Polytope v0.6.1. Generated; edit css/src instead. */
 @layer ply.reset, ply.base, ply.layout, ply.components, ply.utilities;
 /* Self-hosted faces. Ultra: Apache 2.0. Libre Franklin and JetBrains Mono: SIL OFL 1.1. License texts: ./fonts/LICENSE-*.txt */
 @font-face { font-family: "Ultra"; font-style: normal; font-weight: 400; font-display: swap; src: url("./fonts/ultra-latin-400.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
@@ -927,7 +927,9 @@
   /* Atlas: a globe of the places in a CV, beside the entries that happened there
      (css/js/atlas.js). The globe is a working model in a black panel, drawn like the complex:
      places are chalk points, the route between them chalk edges, and the current place is the
-     tomato ball with its dashed reach. Countries that hold a place fill mustard, like the
+     tomato ball with its dashed reach. The legs into and out of the current place keep the
+     full chalk, and the rest of the route fades with distance in time (css/js/atlas-core.js,
+     heat). Countries that hold a place fill mustard, like the
      complex's triangles. In a wide container the entries run on the left and the globe stays in
      view on the right; in a narrow one it stays pinned above the entries. */
   .ply-atlas { display: block; container: ply-atlas / inline-size; }

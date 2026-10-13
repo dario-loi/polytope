@@ -150,7 +150,9 @@ export function when(text) {
 }
 
 // Stops ({ place, lon, lat, from }) to places, each with the stops held there, the route (one
-// leg between each place and the next in date order), and the number of moves.
+// leg between each place and the next in date order), and the number of moves. Also the stops
+// in date order (order, as indexes into stops) and each move in that order (trips: the leg it
+// takes, and the stops it leaves and reaches), which heat() reads.
 export function chart(stops) {
   const places = [];
   const byKey = new Map();
@@ -166,14 +168,36 @@ export function chart(stops) {
   // Undated stops keep their written order, after the dated ones.
   dated.sort((a, b) => (Number.isNaN(a.t) ? Infinity : a.t) - (Number.isNaN(b.t) ? Infinity : b.t) || a.i - b.i);
   // The route draws each pair of places once; moves counts every change of place.
-  const legs = [];
-  let moves = 0;
+  const legs = [], trips = [];
   for (let n = 1; n < dated.length; n++) {
     const a = places[dated[n - 1].s.at], b = places[dated[n].s.at];
-    if (a !== b) moves++;
-    if (a !== b && !legs.some(([x, y]) => (x === a && y === b) || (x === b && y === a))) legs.push([a, b]);
+    if (a === b) continue;
+    let leg = legs.findIndex(([x, y]) => (x === a && y === b) || (x === b && y === a));
+    if (leg < 0) leg = legs.push([a, b]) - 1;
+    trips.push({ leg, from: dated[n - 1].i, to: dated[n].i });
   }
-  return { places, moves, route: { type: "MultiLineString", coordinates: legs.map(([a, b]) => [[a.lon, a.lat], [b.lon, b.lat]]) } };
+  return {
+    places, moves: trips.length, trips, order: dated.map((d) => d.i),
+    route: { type: "MultiLineString", coordinates: legs.map(([a, b]) => [[a.lon, a.lat], [b.lon, b.lat]]) },
+  };
+}
+
+// How much each leg of a chart's route stands out while one stop (an index into its stops) is
+// current, as a share of the route's opacity. The moves into and out of the current place keep
+// the full chalk; every other leg fades with each move between it and the current place (0.55,
+// 0.3, then 0.15), so a long CV does not cover the globe in lines. With no stop current, every
+// leg is full chalk.
+export function heat(shown, current) {
+  const FADE = [1, 0.55, 0.3];
+  const n = shown.route.coordinates.length;
+  const at = shown.order.indexOf(current);
+  if (at < 0) return new Array(n).fill(1);
+  const rank = new Map(shown.order.map((i, k) => [i, k]));
+  // Moves made by the time of the current stop: the last of them reaches its place.
+  const made = shown.trips.filter((t) => rank.get(t.to) <= at).length;
+  const away = new Array(n).fill(Infinity);
+  shown.trips.forEach((t, k) => { away[t.leg] = Math.min(away[t.leg], k < made ? made - 1 - k : k - made); });
+  return away.map((d) => FADE[d] ?? 0.15);
 }
 
 // The country each place stands in. A coastal city can fall just outside simplified outlines,
@@ -216,9 +240,11 @@ function* visiting(countries, places) {
   return [...hit];
 }
 
+// A view is a center, a zoom, and a roll: the bearing, in degrees clockwise from north, that
+// points up the panel. Views at rest have no roll; a flight rolls on its way (see flight).
 export function projection(w, h, view) {
   return geoOrthographic()
-    .rotate([-view.lon, -view.lat])
+    .rotate([-view.lon, -view.lat, view.roll || 0])
     .scale(RADIUS * Math.min(w, h) * view.k)
     .translate([w / 2, h / 2])
     .clipExtent([[-8, -8], [w + 8, h + 8]])
@@ -259,26 +285,79 @@ const inOut = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2)
 // arrives just after it.
 export const lead = (t) => inOut(Math.min(1, t / 0.85));
 
+// The bearing from a to b, in degrees clockwise from north.
+function bearing(a, b) {
+  const f1 = a[1] / DEG, f2 = b[1] / DEG, dl = (b[0] - a[0]) / DEG;
+  return Math.atan2(Math.sin(dl) * Math.cos(f2), Math.cos(f1) * Math.sin(f2) - Math.sin(f1) * Math.cos(f2) * Math.cos(dl)) * DEG;
+}
+const wrap = (deg) => ((((deg + 180) % 360) + 360) % 360) - 180;
+
+// How far the panel's roll should sit from north-up at point p, e of the way along a route
+// d radians long: the route's bearing there, less its bearing at the start, less that change
+// smoothed along the route (a Gaussian 15 degrees of arc wide, with the ends held in place).
+// The roll then follows the smoothed change, which goes round a pole without a jump. On a
+// route shorter than three times that, smoothing comes to the same as spreading the change
+// evenly, which is cheaper, so the change is spread evenly.
+function turning(path, from, to, d) {
+  if (d <= 1e-4) return { offset: () => 0 };
+  const heading = (p, e) => (e < 0.5 ? bearing(p, to) : bearing(p, from) + 180);
+  const h0 = heading(from, 0), N = 256, sigma = (15 / DEG / d) * N;
+  // The change in bearing, unwrapped: no step between samples is half a turn or more.
+  const u = [0];
+  for (let i = 1; i <= N; i++) { const e = i / N, x = heading(path(e), e) - h0; u.push(u[i - 1] + wrap(x - u[i - 1])); }
+  // Smooth what is left after the straight line from 0 to the whole change. Reflected oddly
+  // past each end, that remainder stays 0 at both ends.
+  const line = (i) => (i / N) * u[N];
+  let smooth = u.map((_, i) => line(i));
+  const span = Math.ceil(3 * sigma);
+  if (span < N) {
+    const rem = new Float64Array(N + 1 + 2 * span);
+    for (let j = -span; j <= N + span; j++) {
+      const m = j < 0 ? -j : j > N ? 2 * N - j : j;
+      rem[j + span] = (j < 0 || j > N ? -1 : 1) * (u[m] - line(m));
+    }
+    const kernel = new Float64Array(2 * span + 1);
+    for (let j = -span; j <= span; j++) kernel[j + span] = Math.exp(-0.5 * (j / sigma) ** 2);
+    const total = kernel.reduce((x, y) => x + y, 0);
+    smooth = smooth.map((l, i) => { let s = 0; for (let j = 0; j <= 2 * span; j++) s += kernel[j] * rem[i + j]; return l + s / total; });
+  }
+  return {
+    offset(p, e) {
+      const x = e * N, i = Math.min(N - 1, Math.floor(x)), f = x - i;
+      return heading(p, e) - h0 - (smooth[i] + (smooth[i + 1] - smooth[i]) * f);
+    },
+  };
+}
+
 // A flight from view a to view b: the center travels the great circle between them, and the
 // zoom pulls back far enough mid-flight to show both ends. A zoom in place is quicker.
+// Keeping north up all the way would spin the globe half a turn in a frame where the route
+// passes near a pole. Instead the panel turns as the route's bearing turns, smoothed, so it
+// keeps north up wherever the bearing changes slowly and takes the half turn at a pole over
+// about a third of the route. Any roll the flight starts or ends with is eased in or out.
 export function flight(a, b, w, h) {
   const from = [a.lon, a.lat], to = [b.lon, b.lat];
   const path = geoInterpolate(from, to);
   const d = geoDistance(from, to);
+  const turn = turning(path, from, to, d);
+  const ra = a.roll || 0, rb = b.roll || 0, rest = wrap(ra - rb);
   const half = Math.min(w, h) * 0.4;
   const fit = d > 1e-6 ? Math.max(ZOOM.min, half / (radius(w, h, 1) * Math.sin(Math.min(d, Math.PI) / 2))) : Infinity;
   const low = Math.min(a.k, b.k);
   const dip = fit < low ? Math.log(low / fit) : 0;
   const k0 = Math.log(a.k), k1 = Math.log(b.k);
   const dk = Math.abs(k1 - k0);
-  const duration = d < 1e-4 ? (dk < 1e-3 ? 0 : Math.round(260 + 140 * Math.min(1, dk / Math.log(4))))
+  const dr = Math.abs(rest) / 90;
+  const duration = d < 1e-4 ? (dk < 1e-3 && dr < 0.005 ? 0 : Math.round(260 + 140 * Math.min(1, Math.max(dk / Math.log(4), dr))))
     : Math.round(650 + 700 * Math.min(1, dip / Math.log(ZOOM.stop)) + 350 * Math.min(1, d / 0.6) + 120 * Math.min(1, dk));
   return {
     duration,
     at(t) {
       const e = inOut(t);
       const [lon, lat] = path(e);
-      return { lon, lat, k: Math.exp(k0 + (k1 - k0) * e - dip * Math.sin(Math.PI * e)) };
+      const r = wrap(ra + turn.offset([lon, lat], e) - rest * e);
+      const roll = e === 1 || !Number.isFinite(r) ? rb : r;
+      return { lon, lat, k: Math.exp(k0 + (k1 - k0) * e - dip * Math.sin(Math.PI * e)), roll };
     },
   };
 }
