@@ -29,8 +29,10 @@ const html = await Astro.slots.render("default");
 const unescape = (s: string) => s.replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&amp;/g, "&");
 const attr = (tag: string, name: string) => { const m = tag.match(new RegExp(`\\sdata-${name}="([^"]*)"`)); return m ? unescape(m[1]) : undefined; };
 const stops = [...html.matchAll(/<li\b[^>]*\bclass="ply-atlas__stop"[^>]*>/g)].map(([tag]) => ({
-  place: attr(tag, "place") ?? "", lon: parseFloat(attr(tag, "lon") ?? ""), lat: parseFloat(attr(tag, "lat") ?? ""), from: attr(tag, "from"),
+  place: attr(tag, "place") ?? "", lon: parseFloat(attr(tag, "lon") ?? ""), lat: parseFloat(attr(tag, "lat") ?? ""), from: attr(tag, "from"), kind: attr(tag, "kind"),
 }));
+// The filter's buttons are drawn here, so the entries do not move down when the script runs.
+const kinds = [...new Set(stops.map((s) => s.kind).filter(Boolean))];
 
 const S = 1000;
 const W = decode(world);
@@ -88,7 +90,11 @@ const labels = [...narrow, ...place(720, narrow).map((l) => ({ ...l, wide: true 
       <p class="ply-atlas__caption"><b>{label}.</b> <span class="ply-atlas__tally">{quiet ? "" : tally(places.length, moves)}</span></p>
     </div>
     <div class="ply-atlas__list">
-      {filter && <div class="ply-segmented ply-atlas__filter" role="group" aria-label="Show entries" hidden></div>}
+      {filter && kinds.length > 1 && (
+        <div class="ply-segmented ply-atlas__filter" role="group" aria-label="Show entries">
+          {["", ...kinds].map((k) => <button type="button" data-kind={k} aria-pressed={String(k === "")}>{k || "All"}</button>)}
+        </div>
+      )}
       <ol class="ply-atlas__stops"><Fragment set:html={html} /></ol>
     </div>
   </div>

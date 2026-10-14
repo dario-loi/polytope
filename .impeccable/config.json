@@ -82,5 +82,12 @@
         "reason": "Claude: unchosen decision-round sketches, each drawn in its own candidate world's fonts on purpose; archived record of the direction choice, never shipped"
       }
     ]
+  },
+  "hook": {
+    "enabled": true,
+    "limits": {
+      "maxFindings": 5,
+      "maxChars": 8000
+    }
   }
 }

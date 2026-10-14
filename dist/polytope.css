@@ -1,4 +1,4 @@
-/* Polytope v0.7.0. Generated; edit css/src instead. */
+/* Polytope v0.7.1. Generated; edit css/src instead. */
 @layer ply.reset, ply.base, ply.layout, ply.components, ply.utilities;
 /* Self-hosted faces. Ultra: Apache 2.0. Libre Franklin and JetBrains Mono: SIL OFL 1.1. License texts: ./fonts/LICENSE-*.txt */
 @font-face { font-family: "Ultra"; font-style: normal; font-weight: 400; font-display: swap; src: url("./fonts/ultra-latin-400.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
@@ -946,6 +946,15 @@
   .ply-complex { display: block; position: relative; background: var(--ply-color-panel); aspect-ratio: 100 / 56; width: 100%; }
   .ply-complex svg { position: absolute; inset: 0; width: 100%; height: 100%; }
   .ply-complex[data-live] .ply-complex__static { display: none; }
+  /* A complex that grows on first view waits as bare points from the first paint, so the
+     server's finished drawing does not show and then vanish when the script starts the growth.
+     If no script takes over within five seconds, the finished drawing comes back. */
+  @media screen and (scripting: enabled) and (prefers-reduced-motion: no-preference) {
+    .ply-complex[autoplay="visible"]:not([data-live]) :is(.ply-complex__tri, .ply-complex__edge) { visibility: hidden; animation: ply-complex-wait 0s 5s forwards; }
+  }
+  @keyframes ply-complex-wait { to { visibility: visible; } }
+  /* Its slider and counts start at 0 to match. Without script they cannot move, so they hide. */
+  @media (scripting: none) { .ply-complex-controls[data-grows] { display: none; } }
   .ply-complex__tri { fill: var(--ply-color-note); fill-opacity: 0.5; }
   .ply-complex__tri--dense { fill-opacity: 0.85; }
   .ply-complex__edge { stroke: var(--ply-color-panel-text); stroke-opacity: 0.7; stroke-width: 0.28; }
@@ -1032,6 +1041,9 @@
   /* A wall-label caption under the globe, as under every exhibit. */
   .ply-atlas__caption { margin: var(--ply-space-2) 0 0; font-size: var(--ply-size-sm); line-height: var(--ply-leading-normal); color: var(--ply-color-text-muted); }
   .ply-atlas__caption b { color: var(--ply-color-text); }
+  /* Stacked, the caption is part of the pinned stage. It keeps two lines, so a longer name
+     does not push the entries down and change which one is current under the reader. */
+  .ply-atlas__caption { min-block-size: calc(2em * var(--ply-leading-normal)); display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden; }
   /* On the panel's own ground, so it reads over land and mustard alike. */
   .ply-atlas__readout { position: absolute; inset-inline-start: var(--ply-space-3); inset-block-end: var(--ply-space-3); max-width: calc(100% - 10rem); margin: 0; padding: 0.15rem 0.45rem; background: var(--ply-color-panel); font-family: var(--ply-font-mono); font-size: var(--ply-size-xs); line-height: 1.4; color: var(--ply-color-panel-muted); font-variant-numeric: tabular-nums; pointer-events: none; }
   .ply-atlas__readout[data-hint] { color: var(--ply-color-panel-text); }
@@ -1051,6 +1063,7 @@
   /* The entries: a history wall, each one dated in wood type. */
   .ply-atlas__list { display: grid; align-content: start; gap: var(--ply-space-4); padding-block: var(--ply-space-4) 20svh; }
   .ply-atlas__filter { justify-self: start; }
+  @media (scripting: none) { .ply-atlas__filter { display: none; } }
   .ply-atlas__stops { list-style: none; margin: 0; padding: 0; border-top: var(--ply-border-rule) solid var(--ply-color-rule-strong); }
   .ply-atlas__stop { display: flex; flex-direction: column; gap: var(--ply-space-1); padding-block: var(--ply-space-5) var(--ply-space-6); border-bottom: var(--ply-border-hair) solid var(--ply-color-rule); scroll-margin-block: var(--ply-space-6); }
   .ply-atlas__when { order: -1; margin: 0 0 var(--ply-space-2); font-family: var(--ply-font-display); font-size: var(--ply-size-xl); line-height: 1.1; font-variant-numeric: tabular-nums; text-wrap: balance; }
@@ -1069,6 +1082,7 @@
   @container ply-atlas (min-width: 52rem) {
     .ply-atlas__frame { grid-template-columns: minmax(17rem, 25rem) minmax(0, 1fr); grid-template-rows: auto 1fr; column-gap: var(--ply-space-7); align-items: start; }
     .ply-atlas__head { grid-column: 1; grid-row: 1; }
+    .ply-atlas__caption { min-block-size: 0; display: block; -webkit-line-clamp: none; line-clamp: none; overflow: visible; }
     .ply-atlas__stage { grid-column: 2; grid-row: 1 / span 2; top: var(--ply-space-5); padding: 0; background: none; border: 0; }
     /* Room for the caption under the stuck globe. The controls and readout sit at the top,
        which is on screen from the first paint, before the globe has stuck. */

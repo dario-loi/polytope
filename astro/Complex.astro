@@ -2,6 +2,8 @@
 // A Vietoris-Rips complex with a radius slider. Server-renders the same complex from the
 // seed so it is complete without JavaScript; complex.js makes the slider live.
 // autoplay="visible" grows it from bare points on first view; the default draws it finished.
+// With autoplay the server's edges and triangles stay hidden while the script loads (machine.css),
+// and the slider and counts start at 0 to match; without script they do nothing, so they hide.
 interface Props { points?: number; radius?: number; seed?: number; label?: string; controls?: boolean; autoplay?: "visible" | "none"; id?: string; class?: string }
 const { points = 36, radius = 0.16, seed = 7, label = "A random complex", controls = true, autoplay = "none", id = `cx-${seed}-${points}`, class: className } = Astro.props;
 
@@ -22,6 +24,8 @@ for (let i = 0; i < points; i++) for (let j = i + 1; j < points; j++) {
 }
 const tris: [number, number, number][] = [];
 for (const [i, j] of edges) for (const k of adj[i]) if (k > j && adj[j].has(k)) tris.push([i, j, k]);
+const grows = autoplay === "visible";
+const shown = grows ? { radius: 0, edges: 0, triangles: 0 } : { radius, edges: edges.length, triangles: tris.length };
 ---
 <div class:list={["ply-complex-wrap", className]}>
   <ply-complex class="ply-complex" id={id} points={points} radius={radius} seed={seed} label={label} autoplay={autoplay} role="img" aria-label={`${label}: ${points} points, ${edges.length} edges, ${tris.length} filled triangles.`}>
@@ -36,17 +40,17 @@ for (const [i, j] of edges) for (const k of adj[i]) if (k > j && adj[j].has(k)) 
     </svg>
   </ply-complex>
   {controls && (
-    <div class="ply-complex-controls">
+    <div class="ply-complex-controls" data-grows={grows ? "" : undefined}>
       <div class="ply-control" data-ply-slider data-format="fixed2">
         <label class="ply-control__label" for={`${id}-r`}>Radius</label>
         <div class="ply-range">
-          <input class="ply-slider" type="range" id={`${id}-r`} min="0" max="0.32" step="0.01" value={radius} data-ply-complex-radius for={id} />
-          <output for={`${id}-r`}>{radius.toFixed(2)}</output>
+          <input class="ply-slider" type="range" id={`${id}-r`} min="0" max="0.32" step="0.01" value={shown.radius} data-ply-complex-radius for={id} />
+          <output for={`${id}-r`}>{shown.radius.toFixed(2)}</output>
         </div>
       </div>
       <p class="ply-complex-counts">
-        <span><b data-count="edges">{edges.length}</b> edges</span>
-        <span><b data-count="triangles">{tris.length}</b> triangles</span>
+        <span><b data-count="edges">{shown.edges}</b> edges</span>
+        <span><b data-count="triangles">{shown.triangles}</b> triangles</span>
       </p>
     </div>
   )}
@@ -58,10 +62,14 @@ for (const [i, j] of edges) for (const k of adj[i]) if (k > j && adj[j].has(k)) 
     const el = e.target as HTMLElement;
     const wrap = el.closest(".ply-complex-wrap");
     const d = (e as CustomEvent).detail;
-    wrap?.querySelectorAll<HTMLElement>("[data-count]").forEach((b) => { b.textContent = String(d[b.dataset.count!]); });
+    // Written only when a count changes: most frames of the growth leave them as they were.
+    wrap?.querySelectorAll<HTMLElement>("[data-count]").forEach((b) => { const v = String(d[b.dataset.count!]); if (b.textContent !== v) b.textContent = v; });
     // The slider reads out the counts with its value, once per step, instead of a live region
     // that queues an announcement for every step. rAF: after controls.js sets the plain value.
     const input = wrap?.querySelector<HTMLInputElement>("[data-ply-complex-radius]");
-    if (input) requestAnimationFrame(() => input.setAttribute("aria-valuetext", `${d.radius.toFixed(2)}: ${d.edges} edges, ${d.triangles} triangles`));
+    if (input) requestAnimationFrame(() => {
+      const text = `${d.radius.toFixed(2)}: ${d.edges} edges, ${d.triangles} triangles`;
+      if (input.getAttribute("aria-valuetext") !== text) input.setAttribute("aria-valuetext", text);
+    });
   });
 </script>

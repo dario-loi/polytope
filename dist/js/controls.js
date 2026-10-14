@@ -13,7 +13,7 @@ document.addEventListener("input", (e) => {
   const text = fmt(Number(input.value), wrap.dataset.format);
   input.setAttribute("aria-valuetext", text);
   const out = wrap.querySelector("output");
-  if (out) out.textContent = text;
+  if (out && out.textContent !== text) out.textContent = text;
 });
 
 document.addEventListener("click", (e) => {

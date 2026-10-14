@@ -33,7 +33,7 @@ const crumbs = !here.page || home ? undefined : [
 // The home page says what the site is and what it documents.
 const author = { "@type": "Person", name: "Dario Loi", affiliation: { "@type": "Organization", name: "Northeastern University" } };
 const schema = home ? [
-  { "@type": "WebSite", name: "Polytope", url: new URL(u("/"), Astro.site).href, description, inLanguage: "en" },
+  { "@type": "WebSite", "@id": `${new URL(u("/"), Astro.site).href}#website`, name: "Polytope", url: new URL(u("/"), Astro.site).href, description, inLanguage: "en" },
   {
     "@type": "SoftwareSourceCode", name: "Polytope", description, codeRepository: repo, version,
     programmingLanguage: ["CSS", "JavaScript", "Astro", "Python"], license: "https://www.apache.org/licenses/LICENSE-2.0",

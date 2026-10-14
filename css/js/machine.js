@@ -73,8 +73,11 @@ class PlyMachine extends HTMLElement {
       this.settle();
     } else {
       this._io = new IntersectionObserver((entries) => {
-        if (entries.some((e) => e.isIntersecting)) { this._io.disconnect(); this.run(true, AUTOPLAY_BUDGET); }
+        if (entries.some((e) => e.isIntersecting)) { this._io.disconnect(); this._io = null; this.run(true, AUTOPLAY_BUDGET); }
       }, { threshold: 0.3 });
+      // On paper a machine not yet seen, or still running, shows the settled curve.
+      this._onPrint = () => { if (this._io || this.active?.length) { this._io?.disconnect(); this._io = null; this.settle(); } };
+      addEventListener("beforeprint", this._onPrint);
       this._io.observe(this);
       this._draw();
     }
@@ -87,6 +90,7 @@ class PlyMachine extends HTMLElement {
     this._mo?.disconnect();
     this._mq?.removeEventListener("change", this._onTheme);
     this._rm?.removeEventListener("change", this._onMotion);
+    if (this._onPrint) removeEventListener("beforeprint", this._onPrint);
   }
 
   // New parameters redraw a settled pile for them. No done event: the samples are

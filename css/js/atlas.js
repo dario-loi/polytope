@@ -5,7 +5,7 @@
 //       <div class="ply-atlas__stage"><div class="ply-atlas__map" data-surface="panel">
 //         <svg class="ply-atlas__static">the server-drawn globe</svg></div></div>
 //       <div class="ply-atlas__list">
-//         <div class="ply-segmented ply-atlas__filter" hidden></div>
+//         <div class="ply-segmented ply-atlas__filter">buttons with data-kind, or empty and hidden</div>
 //         <ol class="ply-atlas__stops">
 //           <li class="ply-atlas__stop" data-place="Lisbon, Portugal" data-lat="38.72" data-lon="-9.14"
 //             data-from="2016-09" data-kind="Education"> ... <p class="ply-atlas__place">...</p> </li>
@@ -28,6 +28,14 @@ const ICONS = {
 const reduceMotion = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
 // How long the route takes to settle on the weights of a new current entry, in ms.
 const HEAT = 400;
+// Riding the route with the scroll: the most scroll a leg takes, as a share of the screen and
+// at most in px, and how the globe chases the reading position (time constant, top speed in
+// legs per ms) so a wheel step or a long scroll still passes every place on the way.
+const BAND = 0.25, BAND_MAX = 240, CHASE_MS = 110, CHASE_TOP = 0.0028;
+// A pause in the scroll this long lets the globe settle on the current entry (see _settle).
+const REST_MS = 160;
+// The zoom from which a moving globe draws the fine outlines (see _layers).
+const DETAIL_MOVING = 5;
 // What counts as the reader starting to read, for loading the close outlines.
 const MOVES = ["scroll", "wheel", "pointerdown", "keydown", "touchstart"];
 const mac = () => /Mac|iP(hone|ad|od)/.test(navigator.platform || navigator.userAgent);
@@ -99,6 +107,7 @@ class PlyAtlas extends HTMLElement {
     cancelAnimationFrame(this._frame);
     this._raf = this._frame = 0;
     clearTimeout(this._levelTimer);
+    clearTimeout(this._restTimer);
     cancelAnimationFrame(this._heatRaf);
     this._halt?.();
     this._ro?.disconnect();
@@ -188,7 +197,10 @@ class PlyAtlas extends HTMLElement {
       this._frame = requestAnimationFrame(() => { this._frame = 0; this._follow(); });
     };
     const theme = () => { this._colors = null; this._paint(); };
-    this._global = [[window, "scroll", scroll], [window, "resize", scroll]];
+    // A window that loses focus mid-drag may never send the pointer's release, and a touch
+    // left behind would turn the next drag into a pinch.
+    const lost = () => { if (this._ptrs.size) { this._ptrs.clear(); this.map.removeAttribute("data-dragging"); this._level(); } };
+    this._global = [[window, "scroll", scroll], [window, "resize", scroll], [window, "blur", lost]];
     for (const q of ["(prefers-color-scheme: dark)", "(forced-colors: active)", "print"]) this._global.push([matchMedia(q), "change", theme]);
     this._mo = new MutationObserver(theme);
     this._ro = new ResizeObserver(() => this._resize());
@@ -214,17 +226,21 @@ class PlyAtlas extends HTMLElement {
     // Filter buttons for each kind of entry, in the order they first appear.
     const box = this.querySelector(".ply-atlas__filter");
     const kinds = [...new Set(this.stops.map((s) => s.kind).filter(Boolean))];
-    if (box && kinds.length > 1 && !box.children.length) {
-      if (!box.getAttribute("aria-label")) box.setAttribute("aria-label", "Show entries");
-      box.setAttribute("role", "group");
-      for (const kind of ["", ...kinds]) {
-        const b = el("button", "", box);
-        b.type = "button";
-        b.textContent = kind || "All";
-        b.dataset.kind = kind;
-        b.addEventListener("click", () => this._filter(kind));
+    if (box && kinds.length > 1) {
+      // The Astro component draws the buttons on the server, so the entries stay put; plain
+      // HTML leaves the box empty and hidden, and the buttons are made here.
+      if (!box.children.length) {
+        if (!box.getAttribute("aria-label")) box.setAttribute("aria-label", "Show entries");
+        box.setAttribute("role", "group");
+        for (const kind of ["", ...kinds]) {
+          const b = el("button", "", box);
+          b.type = "button";
+          b.textContent = kind || "All";
+          b.dataset.kind = kind;
+        }
+        box.hidden = false;
       }
-      box.hidden = false;
+      box.querySelectorAll("[data-kind]").forEach((b) => b.addEventListener("click", () => this._filter(b.dataset.kind)));
     }
   }
 
@@ -279,6 +295,7 @@ class PlyAtlas extends HTMLElement {
     const dpr = Math.min(2, window.devicePixelRatio || 1);
     if (w === this._w && h === this._h && dpr === this._dpr) return;
     this._w = w; this._h = h; this._dpr = dpr;
+    this._rideLegs = null;
     this.canvas.width = Math.round(w * dpr);
     this.canvas.height = Math.round(h * dpr);
     if (this._live && this.current < 0 && !this._flight) this.view = this.core.overview(this._shown(), w, h);
@@ -329,7 +346,10 @@ class PlyAtlas extends HTMLElement {
     if (!w || !h || !this._coarse) return;
     if (!this._colors) this._readColors();
     if (this.view.k >= core.DETAIL && !this._detail) this._fine();
-    const world = this.view.k >= core.DETAIL && this._detail ? this._detail : this._coarse;
+    // In motion the coarse outlines hold on to a closer zoom: the fine ones cost twice as much
+    // to draw, and a moving globe does not show the difference. At rest the fine ones return.
+    const moving = this._riding || Boolean(this._flight?.leg);
+    const world = this.view.k >= (moving ? DETAIL_MOVING : core.DETAIL) && this._detail ? this._detail : this._coarse;
     const c = this._colors;
     const proj = core.projection(w, h, this.view);
     const path = core.geoPath(proj, ctx);
@@ -404,7 +424,7 @@ class PlyAtlas extends HTMLElement {
     // The controls and the readout are taken; names keep clear of them.
     const boxes = [this.controls, this.readout].filter((n) => n.offsetWidth).map((n) => [n.offsetLeft, n.offsetTop, n.offsetLeft + n.offsetWidth, n.offsetTop + n.offsetHeight]);
     const overlaps = (b) => boxes.some((o) => b[0] < o[2] && b[2] > o[0] && b[1] < o[3] && b[3] > o[1]);
-    const flying = Boolean(this._flight?.leg);
+    const flying = Boolean(this._flight?.leg) || this._riding;
 
     const drop = this._drop ? this._drop() : 0;
     if (this._ball && drop !== null && core.shows(proj, this.view, this._ball, w, h, -24)) {
@@ -517,23 +537,165 @@ class PlyAtlas extends HTMLElement {
     if (this.capHint) this.capHint.hidden = Boolean(s);
   }
 
+  // Between entries the globe and the ball ride the route with the scroll, forward and back:
+  // see _along and _chase. A flight takes over where the scroll cannot drive it: dropping
+  // the ball onto the first entry, pulling back past the ends, after the reader has moved the
+  // globe, and under reduced motion, where every move is a jump.
   _follow() {
     if (!this._live || this._hold) return;
     const pick = this._pick();
-    if (pick === this._followed) return;
-    this._followed = pick;
-    if (pick === -2) {
-      // The first finish on screen traces the route; later ones only pull back.
-      const r = this.map.getBoundingClientRect();
-      const seen = r.bottom > 0 && r.top < innerHeight;
-      this._traceNext = seen && !this._traced;
-      if (this._traceNext) this._traced = true;
+    const ride = pick >= 0 && Boolean(this._ball) && !this._free && !reduceMotion();
+    this._goal = ride ? this._along(pick) : null;
+    if (this._goal == null) this._park = null;
+    else if (this._park) {
+      // Parked by _settle: hold there until the scroll passes where the reader stopped.
+      const { at, from } = this._park;
+      if (this._goal >= Math.min(at, from) && this._goal <= Math.max(at, from)) this._goal = at;
+      else this._park = null;
     }
-    this.select(pick < 0 ? -1 : pick);
+    if (pick !== this._followed) {
+      this._followed = pick;
+      if (pick === -2) {
+        // The first finish on screen traces the route; later ones only pull back.
+        const r = this.map.getBoundingClientRect();
+        const seen = r.bottom > 0 && r.top < innerHeight;
+        this._traceNext = seen && !this._traced;
+        if (this._traceNext) this._traced = true;
+      }
+      this._go(pick < 0 ? -1 : pick, ride && this._u != null && !this._flight ? "ride" : "follow");
+    } else if (ride && this._u == null && !this._flight) {
+      // The route changed under the globe (a filter): fly to the entry, then ride on.
+      const spot = this._spot(pick);
+      if (spot) this._fly(spot.view, spot.to, null, this._kept.indexOf(pick), true);
+    } else if (this._goal == null && this._riding && reduceMotion()) {
+      // Reduced motion switched on mid-way: the globe jumps to the current entry.
+      const spot = this.current >= 0 ? this._spot(this.current) : null;
+      this._riding = false;
+      this._trail = null;
+      if (spot) { this.view = spot.view; this._ball = spot.to; this._u = this._kept.indexOf(this.current); }
+      this._paint();
+    }
+    if (this._goal != null) {
+      clearTimeout(this._restTimer);
+      this._restTimer = setTimeout(() => this._settle(), REST_MS);
+      this._chase();
+    }
+  }
+
+  // A reader who stops on the way between two entries gets the current one: the globe glides
+  // there and stays until the scroll moves past where the reader stopped, so it rests on a
+  // named place and never turns back against the scroll.
+  _settle() {
+    if (this._goal == null || this._park) return;
+    const at = Math.round(this._goal);
+    if (Math.abs(at - this._goal) < 0.002) return;
+    this._park = { at, from: this._goal };
+    this._goal = at;
+    this._chase();
+  }
+
+  // Where the reader is along the entries shown, as a number: n at rest on the nth, n + t on
+  // the way to the next. t runs from 0 to 1 over a stretch of scroll centered where the next
+  // entry takes the reading line (see _pick), so the nearer end is always the current entry.
+  // The stretch is at most a quarter of the screen, and a short entry keeps a moment of rest.
+  _along(pick) {
+    const kept = this._kept, line = this._line(), stacked = this._stacked();
+    const rects = kept.map((n) => this.stops[n].el.getBoundingClientRect());
+    // How far the scroll still has to go before entry k is current.
+    const due = (k) => (stacked ? (k ? rects[k - 1].bottom - line - 48 : rects[0].top - innerHeight * 0.85) : rects[k].top - line);
+    const band = Math.min(BAND_MAX, innerHeight * BAND);
+    let u = 0;
+    for (let k = 1; k < kept.length; k++) {
+      const d = due(k), before = d - due(k - 1), after = k + 1 < kept.length ? due(k + 1) - d : before;
+      const b = Math.max(1, Math.min(band, before * 0.7, after * 0.7));
+      u += Math.max(0, Math.min(1, 0.5 - d / b));
+    }
+    // At the end of the list the last entries may never reach the line; _pick names them.
+    const p = kept.indexOf(pick);
+    return u < p - 0.5 ? p : Math.min(u, p + 0.499);
+  }
+
+  // Move the globe toward the reading position: closely while the reader scrolls, and at a
+  // capped speed over a jump, so the ball still lands at every place it passes.
+  _chase() {
+    if (this._chaseRaf) return;
+    let last = performance.now();
+    const step = (now) => {
+      this._chaseRaf = 0;
+      if (this._goal == null || this._u == null || this._flight || this._free || !this._live) return;
+      const dt = Math.min(64, now - last);
+      last = now;
+      const gap = this._goal - this._u;
+      const move = Math.min(Math.abs(gap), Math.max(0.0005, Math.min(Math.abs(gap) / CHASE_MS, CHASE_TOP)) * dt);
+      this._u = Math.abs(gap) - move < 0.002 ? this._goal : this._u + Math.sign(gap) * move;
+      this._ride(this._u);
+      if (this._u !== this._goal) this._chaseRaf = requestAnimationFrame(step);
+    };
+    this._chaseRaf = requestAnimationFrame(step);
+  }
+
+  // Draw the globe at position u along the entries shown (see _along). A scroll that leaves
+  // the globe where it is draws nothing; anything else that moves the view gives it a new one.
+  _ride(u) {
+    if (u === this._rodeU && this.view === this._rodeView) return;
+    const kept = this._kept;
+    const n = Math.max(0, Math.min(kept.length - 1, Math.floor(u))), t = u - n;
+    const was = this._riding;
+    if (t <= 0 || n >= kept.length - 1) {
+      const spot = this._spot(kept[n]);
+      if (!spot) return;
+      this.view = spot.view;
+      this._ball = spot.to;
+      this._riding = false;
+      if (was && this._trail) this._fadeTrail();
+    } else {
+      const leg = this._rideLeg(kept[n], kept[n + 1]);
+      this.view = leg.f.at(t);
+      this._ball = leg.path ? leg.path(this.core.lead(t)) : leg.to;
+      this._trail = leg.path ? { from: leg.from, to: this._ball, alpha: 1 } : null;
+      this._riding = true;
+    }
+    this._rodeU = u;
+    this._rodeView = this.view;
+    this._draw();
+  }
+
+  // The flight between two entries' places, kept until the size or the filter changes.
+  _rideLeg(a, b) {
+    const key = `${a}>${b}`;
+    this._rideLegs ??= new Map();
+    let leg = this._rideLegs.get(key);
+    if (!leg) {
+      const { core } = this, A = this._spot(a) ?? this._spot(b), B = this._spot(b) ?? A;
+      const path = core.geoDistance(A.to, B.to) > 1e-4 ? core.geoInterpolate(A.to, B.to) : null;
+      leg = { f: core.flight(A.view, B.view, this._w, this._h), path, from: A.to, to: B.to };
+      this._rideLegs.set(key, leg);
+    }
+    return leg;
+  }
+
+  // Where entry n's flight ends: its place and the zoom to show it. An entry with no place,
+  // such as remote work, holds the globe at the nearest entry before it that has one, else
+  // after it; with none anywhere there is nowhere to go.
+  _spot(n) {
+    const { core } = this, kept = this._kept;
+    let s = this.stops[n];
+    if (s?.at === undefined) {
+      const k = kept.indexOf(n);
+      const near = [...kept.slice(0, Math.max(0, k)).reverse(), ...kept.slice(k + 1)].find((m) => this.stops[m].at !== undefined);
+      if (near === undefined) return null;
+      s = this.stops[near];
+    }
+    const p = this.places[s.at];
+    return { view: { lon: p.lon, lat: p.lat, k: Math.max(core.ZOOM.min, Math.min(core.ZOOM.max, s.zoom || core.ZOOM.stop)) }, to: [p.lon, p.lat] };
   }
 
   // Make entry i current and fly to its place; -1 shows every place.
-  select(i) {
+  select(i) { this._go(i, "fly"); }
+
+  // ride: the scroll moves the globe there (see _chase); follow: fly, then ride on with the
+  // scroll; fly: fly there and stay.
+  _go(i, how) {
     if (!this._live) return;
     if (i === this.current) return;
     this.current = i;
@@ -545,10 +707,13 @@ class PlyAtlas extends HTMLElement {
       this._ball = null;
       const trace = this._traceNext;
       this._traceNext = false;
+      this._u = null;
       this._fly(core.overview(this._shown(), this._w, this._h), undefined, trace ? () => this._traceRoute() : null);
-    } else {
-      const p = this.places[s.at];
-      this._fly({ lon: p.lon, lat: p.lat, k: Math.max(core.ZOOM.min, Math.min(core.ZOOM.max, s.zoom || core.ZOOM.stop)) }, [p.lon, p.lat]);
+    } else if (how !== "ride") {
+      this._free = false;
+      this._park = null;
+      const spot = this._spot(i);
+      if (spot) this._fly(spot.view, spot.to, null, this._kept.indexOf(i), how === "follow");
     }
     this._readout();
     this._caption(s);
@@ -585,6 +750,8 @@ class PlyAtlas extends HTMLElement {
     if (this.capTally && this.current < 0) this.capTally.textContent = this._tally;
     if (this.stops[this.current]?.el.hidden) { this.current = -1; this._ball = null; this._caption(null); }
     this._reheat(false);
+    this._rideLegs = null;
+    this._u = this._park = null;
     if (!this._live) return;
     this._followed = null;
     this._follow();
@@ -596,7 +763,9 @@ class PlyAtlas extends HTMLElement {
 
   // Fly to a view. With a place, the ball travels the great circle to it from wherever it
   // is, drawing a tomato trail that fades once it lands; with no ball yet, it drops in.
-  _fly(view, to, done) {
+  // at: the place in the entries shown that the flight lands on, where riding starts from;
+  // ride: ride on with the scroll once it lands.
+  _fly(view, to, done, at = null, ride = false) {
     const { core } = this;
     this._halt();
     const from = this._ball;
@@ -606,12 +775,13 @@ class PlyAtlas extends HTMLElement {
       this._ball = to ?? null;
       this._trail = null;
       this._paint();
+      if (at != null && at >= 0) this._u = at;
       if (!reduceMotion()) done?.();
       return;
     }
     const leg = from && to && core.geoDistance(from, to) > 1e-4 ? core.geoInterpolate(from, to) : null;
     const t0 = performance.now();
-    this._flight = { leg, to, view };
+    this._flight = { leg, to, view, at, ride };
     if (to && !from) {
       // The ball drops onto the place in the last third of the flight, on the gravity curve.
       const start = t0 + f.duration * 0.62, len = 360;
@@ -635,9 +805,12 @@ class PlyAtlas extends HTMLElement {
       this._anim = 0;
       this._flight = null;
       this._ball = to ?? null;
+      if (at != null && at >= 0) this._u = at;
       this._draw();
       if (this._trail) this._fadeTrail();
       else done?.();
+      // The reader may have scrolled on while it flew.
+      if (ride) this._follow();
     };
     this._anim = requestAnimationFrame(step);
   }
@@ -713,10 +886,10 @@ class PlyAtlas extends HTMLElement {
   }
 
   _fadeTrail() {
-    const t0 = performance.now();
+    const t0 = performance.now(), trail = this._trail;
     const step = (now) => {
       const t = (now - t0) / 480;
-      if (!this._trail) return;
+      if (!this._trail || this._trail !== trail) return;
       if (t >= 1) { this._trail = null; this._anim = 0; this._draw(); return; }
       this._trail.alpha = 1 - t;
       this._draw();
@@ -729,13 +902,19 @@ class PlyAtlas extends HTMLElement {
   _halt() {
     cancelAnimationFrame(this._anim);
     this._anim = 0;
-    if (this._flight) { this._ball = this._flight.to ?? this._ball; this._flight = null; }
+    if (this._flight) {
+      this._ball = this._flight.to ?? this._ball;
+      if (this._flight.at != null && this._flight.at >= 0) this._u = this._flight.at;
+      this._flight = null;
+    }
     this._trail = null;
     this._trace = null;
     this._drop = null;
+    this._riding = false;
   }
 
   _zoomBy(scale, cx, cy) {
+    this._free = true;
     const { core } = this;
     const k = Math.max(core.ZOOM.min, Math.min(core.ZOOM.max, this.view.k * scale));
     const keep = this._ball;
@@ -765,6 +944,7 @@ class PlyAtlas extends HTMLElement {
   }
 
   _showAll() {
+    this._free = true;
     this._fly(this.core.overview(this._shown(), this._w, this._h), this._ball ?? undefined);
   }
 
@@ -784,6 +964,7 @@ class PlyAtlas extends HTMLElement {
   _down(e) {
     if (!this._live || e.button > 0 || e.target.closest("button")) return;
     this._halt();
+    this._free = true;
     this._ptrs.set(e.pointerId, [e.clientX, e.clientY]);
     // A pointer the browser did not start, such as a synthetic one, cannot be captured.
     try { this.map.setPointerCapture(e.pointerId); } catch {}
@@ -828,6 +1009,7 @@ class PlyAtlas extends HTMLElement {
     }
     e.preventDefault();
     this._halt();
+    this._free = true;
     const { core } = this;
     const step = e.deltaMode === 1 ? e.deltaY * 16 : e.deltaY;
     const k = Math.max(core.ZOOM.min, Math.min(core.ZOOM.max, this.view.k * Math.exp(-step * 0.0025)));
@@ -840,7 +1022,7 @@ class PlyAtlas extends HTMLElement {
     if (e.target !== this.map || !this._live) return;
     const step = Math.min(this._w, this._h) * 0.15;
     const moves = { ArrowLeft: [-step, 0], ArrowRight: [step, 0], ArrowUp: [0, -step], ArrowDown: [0, step] };
-    if (moves[e.key]) { e.preventDefault(); this._halt(); this._turn(-moves[e.key][0], -moves[e.key][1]); this._level(); }
+    if (moves[e.key]) { e.preventDefault(); this._halt(); this._free = true; this._turn(-moves[e.key][0], -moves[e.key][1]); this._level(); }
     else if (e.key === "+" || e.key === "=") { e.preventDefault(); this._zoomBy(2); }
     else if (e.key === "-" || e.key === "_") { e.preventDefault(); this._zoomBy(0.5); }
     else if (e.key === "0" || e.key === "Home") { e.preventDefault(); this._showAll(); }
