@@ -34,6 +34,7 @@ import ApiTable from "../../components/ApiTable.astro";
 
   <h2>Without JavaScript</h2>
   <p>The server draws the same complex from the seed, so the figure is complete before any script runs, in RSS readers, and with scripts off. Under reduced motion it is drawn finished and does not grow.</p>
+  <p>With <code>autoplay="visible"</code> the server's edges and triangles stay hidden while the script loads, and the slider and counts start at 0, so the reader sees bare points from the first paint instead of a finished complex that vanishes when the growth starts. If no script takes over within five seconds, the finished drawing comes back. With scripts off the slider and counts are hidden, since they cannot move. Printing, or switching reduced motion on mid-growth, jumps to the finished complex.</p>
   <Code lang="html" code={`<ply-complex class="ply-complex" id="cx" points="36" radius="0.16" seed="7" role="img"
   aria-label="A random complex: 36 points, 82 edges, 51 filled triangles.">
   <svg class="ply-complex__static" viewBox="0 0 100 56" aria-hidden="true">

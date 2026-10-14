@@ -5,7 +5,10 @@
 // address comes out absolute; without it, the canonical link and og:url are left out.
 //   <Seo title="John Doe" description="PhD student at Example University." image={og} person={{ name: "John Doe" }} />
 // A paper page passes `citation`: the citation_ tags Google Scholar indexes papers by, and
-// a ScholarlyArticle record. Pass the same authors array PaperHeader takes.
+// a ScholarlyArticle record. Pass the same authors array PaperHeader takes. The record's @id
+// is the canonical address with #article, so a fuller record of the same paper that a site
+// writes itself, with the same @id, merges with it instead of counting as a second work.
+// Records that share an @id are written as one, with the fields given in `schema` winning.
 
 /** A paper, for Google Scholar and reference managers. */
 export interface Citation {
@@ -25,6 +28,9 @@ export interface Citation {
   /** The arXiv identifier: the part of the address after arxiv.org/abs/. */
   arxiv?: string;
   abstract?: string;
+  /** The ScholarlyArticle record's @id. Defaults to the canonical address with #article;
+   *  left out without one, as on a noindex page, unless given here. */
+  id?: string;
 }
 
 /** The person a homepage or CV is about. */
@@ -37,6 +43,8 @@ export interface Person {
   /** Profiles elsewhere: ORCID, Google Scholar, GitHub, a university page. */
   sameAs?: string[];
   image?: string;
+  /** The Person record's @id. Defaults to the site's home with #person, the same on every page. */
+  id?: string;
 }
 
 /** A picture for link previews, 1200 by 630 for most sites. An imported image works as is. */
@@ -67,7 +75,8 @@ interface Props {
   person?: Person;
   /** The trail from the home page to this one, last item this page. */
   breadcrumbs?: { name: string; href: string }[];
-  /** Further schema.org records, written out as they are given. */
+  /** Further schema.org records, written out as they are given. One with the @id of a record
+   *  written here is merged into it, and its fields win. */
   schema?: Record<string, unknown> | Record<string, unknown>[];
   /** The sitemap's address, as @astrojs/sitemap writes it: "/sitemap-index.xml" under your base. */
   sitemap?: string;
@@ -77,6 +86,8 @@ const { title, description, canonical, image, imageAlt, citation, person, breadc
 const type = Astro.props.type ?? (citation ? "article" : "website");
 const site = Astro.site;
 const here = site ? new URL(Astro.url.pathname, site) : undefined;
+// The site's home, with the slash a page address has whether or not base ends in one.
+const home = site ? new URL((import.meta.env.BASE_URL || "/").replace(/\/?$/, "/"), site).href : undefined;
 if (!site && import.meta.env.DEV) console.warn("[polytope] Seo: set `site` in astro.config so canonical and preview addresses are absolute.");
 
 // Addresses resolve the way an href on this page would.
@@ -88,13 +99,16 @@ const iso = (d: string | Date) => (d instanceof Date ? d.toISOString() : d);
 const day = (d: string | Date) => (d instanceof Date ? d.toISOString().slice(0, 10) : d);
 const names = (citation?.authors ?? []).map((a) => (typeof a === "string" ? a : a.name));
 const venue = citation?.journal ?? citation?.conference;
+const articleId = citation?.id ? abs(citation.id) : url && `${url.split("#")[0]}#article`;
+const personId = person?.id ? abs(person.id) : home && `${home}#person`;
+const lang = locale?.replace("_", "-");
 
 // One record per script. Text is escaped so a "</script>" inside a title cannot end the tag.
 const records: Record<string, unknown>[] = [];
 const ld = (node: Record<string, unknown>) => ({ "@context": "https://schema.org", ...node });
 if (person) {
   records.push(ld({
-    "@type": "Person", name: person.name, url: person.url ? abs(person.url) : url, jobTitle: person.jobTitle,
+    "@type": "Person", "@id": personId, name: person.name, url: person.url ? abs(person.url) : url, jobTitle: person.jobTitle,
     affiliation: person.affiliation && { "@type": "Organization", name: person.affiliation },
     sameAs: person.sameAs?.length ? person.sameAs : undefined, image: person.image && abs(person.image),
   }));
@@ -102,12 +116,19 @@ if (person) {
 if (citation) {
   const same = [citation.doi && `https://doi.org/${citation.doi}`, citation.arxiv && `https://arxiv.org/abs/${citation.arxiv}`].filter(Boolean);
   records.push(ld({
-    "@type": "ScholarlyArticle", headline: citation.title, name: citation.title,
+    "@type": "ScholarlyArticle", "@id": articleId, headline: citation.title, name: citation.title,
     author: (citation.authors ?? []).map((a) => (typeof a === "string" ? { "@type": "Person", name: a } : { "@type": "Person", name: a.name, url: a.href && abs(a.href) })),
-    datePublished: day(citation.date), abstract: citation.abstract, url,
+    datePublished: day(citation.date), abstract: citation.abstract, url, mainEntityOfPage: url, inLanguage: lang,
     isPartOf: venue && { "@type": citation.journal ? "Periodical" : "CreativeWork", name: venue },
+    pageStart: citation.firstPage, pageEnd: citation.lastPage,
+    image: pic && abs(pic.src),
+    encoding: citation.pdf && { "@type": "MediaObject", contentUrl: abs(citation.pdf), encodingFormat: "application/pdf" },
     sameAs: same.length ? same : undefined,
   }));
+}
+// The home page names the site, as search results show it.
+if (siteName && home && url?.replace(/\/$/, "") === home.replace(/\/$/, "")) {
+  records.push(ld({ "@type": "WebSite", "@id": `${home}#website`, name: siteName, url: home, inLanguage: lang }));
 }
 if (breadcrumbs?.length) {
   records.push(ld({
@@ -115,7 +136,20 @@ if (breadcrumbs?.length) {
     itemListElement: breadcrumbs.map((b, i) => ({ "@type": "ListItem", position: i + 1, name: b.name, item: abs(b.href) })),
   }));
 }
-for (const node of [schema ?? []].flat()) records.push("@context" in node ? node : ld(node));
+for (const node of [schema ?? []].flat()) records.push("@context" in node ? { ...node } : ld(node));
+// Records that share an @id are one thing, and consumers merge them field by field, so two
+// author lists for one paper would read as every author twice. They are written as one: the
+// first in place, with each later record's fields over it, and a field a later one leaves
+// out kept.
+const written: Record<string, unknown>[] = [];
+const byId = new Map<unknown, Record<string, unknown>>();
+for (const node of records) {
+  const id = node["@id"];
+  const first = id === undefined ? undefined : byId.get(id);
+  // Records in another vocabulary are left apart: the same @id would not mean the same thing.
+  if (!first || (node["@context"] !== undefined && node["@context"] !== first["@context"])) { if (id !== undefined && !first) byId.set(id, node); written.push(node); continue; }
+  for (const [k, v] of Object.entries(node)) if (k !== "@context" && v !== undefined) first[k] = v;
+}
 const json = (node: unknown) => JSON.stringify(node).replace(/</g, "\\u003c");
 ---
 <title>{title}</title>
@@ -155,4 +189,4 @@ const json = (node: unknown) => JSON.stringify(node).replace(/</g, "\\u003c");
   </>
 )}
 
-{records.map((r) => <script type="application/ld+json" set:html={json(r)} />)}
+{written.map((r) => <script type="application/ld+json" set:html={json(r)} />)}

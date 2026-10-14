@@ -52,7 +52,7 @@ export const GET: APIRoute = ({ site }) =>
   <Note>Crawlers read <code>robots.txt</code> only at the root of a host. A GitHub Pages project site lives under a path, such as <code>/my-paper/</code>, so its own <code>robots.txt</code> is never read. Add its sitemap to the robots.txt of your user site, or submit it in <a href="https://search.google.com/search-console">Google Search Console</a>. Search Console asks you to prove the site is yours: put the file it gives you in <code>public/</code>.</Note>
 
   <h2>Homepages and CVs</h2>
-  <p>On the page about you, <code>person</code> adds a Person record. Its <code>sameAs</code> list ties the page to your profiles elsewhere, so a search engine can tell that the ORCID, the Scholar profile, and the homepage belong to the same person and not to someone with the same name.</p>
+  <p>On the page about you, <code>person</code> adds a Person record. Its <code>sameAs</code> list ties the page to your profiles elsewhere, so a search engine can tell that the ORCID, the Scholar profile, and the homepage belong to the same person and not to someone with the same name. Its <code>@id</code> is the site's home followed by <code>#person</code>, the same on every page, so a paper's author can point at it with <code>{"{ \"@id\": ... }"}</code>; pass <code>id</code> to use another. On the home page, <code>siteName</code> also writes a WebSite record, <code>#website</code> on the home address, which is where search results read the site's name from.</p>
   <Code lang="astro" code={`<Seo
   title="John Doe"
   description="PhD student at Example University, working on graph learning."
@@ -88,6 +88,8 @@ const paper = {
   <PaperHeader title={paper.title} authors={authors} venue={paper.conference} />
   ...
 </body>`} />
+  <p>The ScholarlyArticle record's <code>@id</code> is the page's canonical address followed by <code>#article</code>, such as <code>https://example.org/papers/cell-complexes/#article</code>. Search engines merge JSON-LD records only when they share an <code>@id</code>, so a fuller record of the same paper that your site writes, with the abstract, keywords, a preview picture, or the author linked to your Person record, should use the same one; without it a page carries two records and they count as two works. Pass <code>id</code> in <code>citation</code> if your site already uses another convention. A <code>noindex</code> page has no canonical address, so its record has no <code>@id</code> unless you pass one.</p>
+  <p>Give that fuller record to <code>schema</code> and it is merged into the one <code>Seo</code> writes, so the page carries a single record of the paper. Consumers merge records with the same <code>@id</code> field by field, so two author lists would otherwise read as every author twice. Its fields win, and a field it leaves out, such as the PDF or the preview picture, stays as <code>Seo</code> wrote it. The same goes for any two records that share an <code>@id</code>.</p>
   <p>Scholar checks the tags against the page itself, so keep the title and the authors on the page as <code>PaperHeader</code> prints them, keep the abstract on the page, and give each paper a page of its own. A PDF on the same site, named by <code>pdf</code>, is the copy Scholar is most likely to pick up.</p>
 
   <h2>Props</h2>
@@ -97,14 +99,14 @@ const paper = {
     ["canonical", "The page's preferred address. Defaults to its address on site"],
     ["image, imageAlt", "The preview image, as a path or an imported image, and its text alternative"],
     ["type", "website, article, or profile. Defaults to article with a citation, else website"],
-    ["siteName, locale", "The site's name and its language, such as en_US, for previews"],
+    ["siteName, locale", "The site's name and its language, such as en_US, for previews and the records. On the home page siteName also writes a WebSite record"],
     ["twitter", "The site's account on X, such as @yourname"],
     ["noindex", "Keeps the page out of results, and drops the canonical link"],
     ["published, modified", "Dates for an article, as ISO text or a Date"],
-    ["person", "name, url, jobTitle, affiliation, sameAs, image: a Person record"],
-    ["citation", "title, authors, date, journal or conference, volume, issue, firstPage, lastPage, pdf, doi, arxiv, abstract"],
+    ["person", "name, url, jobTitle, affiliation, sameAs, image, and id: a Person record, by default with @id home#person"],
+    ["citation", "title, authors, date, journal or conference, volume, issue, firstPage, lastPage, pdf, doi, arxiv, abstract, and id: the record's @id, by default the canonical address with #article"],
     ["breadcrumbs", "The trail from the home page to this one, as name and href pairs. Search results may show it in place of the address"],
-    ["schema", "Further schema.org records, written out as given"],
+    ["schema", "Further schema.org records, written out as given. One with the @id of a record written here is merged into it, its fields winning"],
     ["sitemap", "The sitemap's address, for a link in the head"],
   ]} head={["Prop", "Effect"]} />
 

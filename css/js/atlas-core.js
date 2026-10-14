@@ -97,7 +97,7 @@ function* decoding(topo) {
   const land = topo.objects.land.type === "GeometryCollection" ? { type: "GeometryCollection", geometries: shapes } : shapes[0];
   const borders = { type: "MultiLineString", coordinates: [...shared].map((k) => arcs[k]) };
   const landParts = [];
-  for (const part of polygons(land)) { landParts.push({ coords: part, ...cap(part[0]) }); yield; }
+  for (const part of polygons(land)) { landParts.push(piece(part)); yield; }
   const borderParts = [];
   for (const line of borders.coordinates) { borderParts.push({ coords: line, ...cap(line) }); yield; }
   return { land, countries, borders, landParts, borderParts };
@@ -122,7 +122,44 @@ function cap(points) {
 
 // Polygons of a geometry, each with its cap, so a frame can skip the ones out of view.
 export function parts(g) {
-  return polygons(g).map((coords) => ({ coords, ...cap(coords[0]) }));
+  return polygons(g).map(piece);
+}
+
+// A polygon with its cap, and its long rings in runs (see trim).
+function piece(coords) {
+  return { coords, ...cap(coords[0]), runs: coords.some((ring) => ring.length >= RUN * 3) ? coords.map(runsOf) : null };
+}
+
+// A continent is one polygon of thousands of points, so it passes the cull whole even when a
+// stop's zoom shows a bay of it. Its long rings are kept in runs of RUN points, each with its
+// cap, and a frame stands in for a run out of view with the run's two ends.
+const RUN = 32;
+function runsOf(ring) {
+  if (ring.length < RUN * 3) return null;
+  const runs = [];
+  for (let a = 0; a < ring.length - 1; a += RUN) {
+    const b = Math.min(a + RUN, ring.length - 1);
+    runs.push({ a, b, ...cap(ring.slice(a, b + 1)) });
+  }
+  return runs;
+}
+
+// The ring with each run that cannot show replaced by its two ends. A run lies in its cap, and
+// the straight way between its ends stays in the cap too, so the change keeps out of view and
+// the fill on screen is the same. That holds for a run whose cap is wholly behind the globe,
+// and for one centered on the near side and clear of the visible cap (seen): seen from in
+// front, such a cap is a convex shape. A cap that reaches over the edge from behind keeps its
+// run whole.
+function trim(ring, runs, at, seen) {
+  if (!runs) return ring;
+  const out = [];
+  for (const { a, b, c, r } of runs) {
+    const d = geoDistance(c, at);
+    if (d - r >= Math.PI / 2 || (d <= Math.PI / 2 && d - r > seen)) out.push(ring[a]);
+    else for (let i = a; i < b; i++) out.push(ring[i]);
+  }
+  out.push(ring[ring.length - 1]);
+  return out;
 }
 
 function polygons(g) {
@@ -138,7 +175,12 @@ export function cull(items, view, w, h, type) {
   const seen = Math.asin(Math.min(1, Math.hypot(w, h) / 2 / r));
   const tiny = 0.5 / r;
   const at = [view.lon, view.lat];
-  return { type, coordinates: items.filter((p) => p.r >= tiny && geoDistance(p.c, at) - p.r < seen).map((p) => p.coords) };
+  return {
+    type,
+    coordinates: items.filter((p) => p.r >= tiny && geoDistance(p.c, at) - p.r < seen)
+      // With the whole disc in view no run is out of it, and checking them costs a little.
+      .map((p) => (p.runs && seen < Math.PI / 2 - 0.01 ? p.coords.map((ring, i) => trim(ring, p.runs[i], at, seen)) : p.coords)),
+  };
 }
 
 // "2019", "2019-09", or "2019-09-15" to a number that sorts by time. "now" sorts last.

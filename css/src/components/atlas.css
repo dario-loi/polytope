@@ -71,6 +71,9 @@
   /* A wall-label caption under the globe, as under every exhibit. */
   .ply-atlas__caption { margin: var(--ply-space-2) 0 0; font-size: var(--ply-size-sm); line-height: var(--ply-leading-normal); color: var(--ply-color-text-muted); }
   .ply-atlas__caption b { color: var(--ply-color-text); }
+  /* Stacked, the caption is part of the pinned stage. It keeps two lines, so a longer name
+     does not push the entries down and change which one is current under the reader. */
+  .ply-atlas__caption { min-block-size: calc(2em * var(--ply-leading-normal)); display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden; }
   /* On the panel's own ground, so it reads over land and mustard alike. */
   .ply-atlas__readout { position: absolute; inset-inline-start: var(--ply-space-3); inset-block-end: var(--ply-space-3); max-width: calc(100% - 10rem); margin: 0; padding: 0.15rem 0.45rem; background: var(--ply-color-panel); font-family: var(--ply-font-mono); font-size: var(--ply-size-xs); line-height: 1.4; color: var(--ply-color-panel-muted); font-variant-numeric: tabular-nums; pointer-events: none; }
   .ply-atlas__readout[data-hint] { color: var(--ply-color-panel-text); }
@@ -90,6 +93,7 @@
   /* The entries: a history wall, each one dated in wood type. */
   .ply-atlas__list { display: grid; align-content: start; gap: var(--ply-space-4); padding-block: var(--ply-space-4) 20svh; }
   .ply-atlas__filter { justify-self: start; }
+  @media (scripting: none) { .ply-atlas__filter { display: none; } }
   .ply-atlas__stops { list-style: none; margin: 0; padding: 0; border-top: var(--ply-border-rule) solid var(--ply-color-rule-strong); }
   .ply-atlas__stop { display: flex; flex-direction: column; gap: var(--ply-space-1); padding-block: var(--ply-space-5) var(--ply-space-6); border-bottom: var(--ply-border-hair) solid var(--ply-color-rule); scroll-margin-block: var(--ply-space-6); }
   .ply-atlas__when { order: -1; margin: 0 0 var(--ply-space-2); font-family: var(--ply-font-display); font-size: var(--ply-size-xl); line-height: 1.1; font-variant-numeric: tabular-nums; text-wrap: balance; }
@@ -108,6 +112,7 @@
   @container ply-atlas (min-width: 52rem) {
     .ply-atlas__frame { grid-template-columns: minmax(17rem, 25rem) minmax(0, 1fr); grid-template-rows: auto 1fr; column-gap: var(--ply-space-7); align-items: start; }
     .ply-atlas__head { grid-column: 1; grid-row: 1; }
+    .ply-atlas__caption { min-block-size: 0; display: block; -webkit-line-clamp: none; line-clamp: none; overflow: visible; }
     .ply-atlas__stage { grid-column: 2; grid-row: 1 / span 2; top: var(--ply-space-5); padding: 0; background: none; border: 0; }
     /* Room for the caption under the stuck globe. The controls and readout sit at the top,
        which is on screen from the first paint, before the globe has stuck. */
