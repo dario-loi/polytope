@@ -28,14 +28,9 @@ const ICONS = {
 const reduceMotion = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
 // How long the route takes to settle on the weights of a new current entry, in ms.
 const HEAT = 400;
-// Riding the route with the scroll: the most scroll a leg takes, as a share of the screen and
-// at most in px, and how the globe chases the reading position (time constant, top speed in
-// legs per ms) so a wheel step or a long scroll still passes every place on the way.
-const BAND = 0.25, BAND_MAX = 240, CHASE_MS = 110, CHASE_TOP = 0.0028;
-// A pause in the scroll this long lets the globe settle on the current entry (see _settle).
-const REST_MS = 160;
-// The zoom from which a moving globe draws the fine outlines (see _layers).
-const DETAIL_MOVING = 5;
+// Entries passed on the way that still get a landing (see _travel), and the share of a
+// flight's time each of those legs takes. More than that many is a jump, flown straight.
+const VIA_MAX = 2, VIA_PACE = 0.8;
 // What counts as the reader starting to read, for loading the close outlines.
 const MOVES = ["scroll", "wheel", "pointerdown", "keydown", "touchstart"];
 const mac = () => /Mac|iP(hone|ad|od)/.test(navigator.platform || navigator.userAgent);
@@ -107,7 +102,6 @@ class PlyAtlas extends HTMLElement {
     cancelAnimationFrame(this._frame);
     this._raf = this._frame = 0;
     clearTimeout(this._levelTimer);
-    clearTimeout(this._restTimer);
     cancelAnimationFrame(this._heatRaf);
     this._halt?.();
     this._ro?.disconnect();
@@ -295,7 +289,6 @@ class PlyAtlas extends HTMLElement {
     const dpr = Math.min(2, window.devicePixelRatio || 1);
     if (w === this._w && h === this._h && dpr === this._dpr) return;
     this._w = w; this._h = h; this._dpr = dpr;
-    this._rideLegs = null;
     this.canvas.width = Math.round(w * dpr);
     this.canvas.height = Math.round(h * dpr);
     if (this._live && this.current < 0 && !this._flight) this.view = this.core.overview(this._shown(), w, h);
@@ -346,10 +339,7 @@ class PlyAtlas extends HTMLElement {
     if (!w || !h || !this._coarse) return;
     if (!this._colors) this._readColors();
     if (this.view.k >= core.DETAIL && !this._detail) this._fine();
-    // In motion the coarse outlines hold on to a closer zoom: the fine ones cost twice as much
-    // to draw, and a moving globe does not show the difference. At rest the fine ones return.
-    const moving = this._riding || Boolean(this._flight?.leg);
-    const world = this.view.k >= (moving ? DETAIL_MOVING : core.DETAIL) && this._detail ? this._detail : this._coarse;
+    const world = this.view.k >= core.DETAIL && this._detail ? this._detail : this._coarse;
     const c = this._colors;
     const proj = core.projection(w, h, this.view);
     const path = core.geoPath(proj, ctx);
@@ -400,7 +390,7 @@ class PlyAtlas extends HTMLElement {
     if (this._trail) {
       ctx.lineCap = "round";
       ctx.beginPath();
-      path({ type: "LineString", coordinates: [this._trail.from, this._trail.to] });
+      path({ type: "LineString", coordinates: this._trail.line });
       ctx.globalAlpha = c.trail.a * this._trail.alpha; ctx.strokeStyle = c.trail.color; ctx.lineWidth = 3; ctx.stroke();
       ctx.lineCap = "butt";
     }
@@ -424,7 +414,7 @@ class PlyAtlas extends HTMLElement {
     // The controls and the readout are taken; names keep clear of them.
     const boxes = [this.controls, this.readout].filter((n) => n.offsetWidth).map((n) => [n.offsetLeft, n.offsetTop, n.offsetLeft + n.offsetWidth, n.offsetTop + n.offsetHeight]);
     const overlaps = (b) => boxes.some((o) => b[0] < o[2] && b[2] > o[0] && b[1] < o[3] && b[3] > o[1]);
-    const flying = Boolean(this._flight?.leg) || this._riding;
+    const flying = Boolean(this._flight?.leg);
 
     const drop = this._drop ? this._drop() : 0;
     if (this._ball && drop !== null && core.shows(proj, this.view, this._ball, w, h, -24)) {
@@ -537,141 +527,19 @@ class PlyAtlas extends HTMLElement {
     if (this.capHint) this.capHint.hidden = Boolean(s);
   }
 
-  // Between entries the globe and the ball ride the route with the scroll, forward and back:
-  // see _along and _chase. A flight takes over where the scroll cannot drive it: dropping
-  // the ball onto the first entry, pulling back past the ends, after the reader has moved the
-  // globe, and under reduced motion, where every move is a jump.
   _follow() {
     if (!this._live || this._hold) return;
     const pick = this._pick();
-    const ride = pick >= 0 && Boolean(this._ball) && !this._free && !reduceMotion();
-    this._goal = ride ? this._along(pick) : null;
-    if (this._goal == null) this._park = null;
-    else if (this._park) {
-      // Parked by _settle: hold there until the scroll passes where the reader stopped.
-      const { at, from } = this._park;
-      if (this._goal >= Math.min(at, from) && this._goal <= Math.max(at, from)) this._goal = at;
-      else this._park = null;
+    if (pick === this._followed) return;
+    this._followed = pick;
+    if (pick === -2) {
+      // The first finish on screen traces the route; later ones only pull back.
+      const r = this.map.getBoundingClientRect();
+      const seen = r.bottom > 0 && r.top < innerHeight;
+      this._traceNext = seen && !this._traced;
+      if (this._traceNext) this._traced = true;
     }
-    if (pick !== this._followed) {
-      this._followed = pick;
-      if (pick === -2) {
-        // The first finish on screen traces the route; later ones only pull back.
-        const r = this.map.getBoundingClientRect();
-        const seen = r.bottom > 0 && r.top < innerHeight;
-        this._traceNext = seen && !this._traced;
-        if (this._traceNext) this._traced = true;
-      }
-      this._go(pick < 0 ? -1 : pick, ride && this._u != null && !this._flight ? "ride" : "follow");
-    } else if (ride && this._u == null && !this._flight) {
-      // The route changed under the globe (a filter): fly to the entry, then ride on.
-      const spot = this._spot(pick);
-      if (spot) this._fly(spot.view, spot.to, null, this._kept.indexOf(pick), true);
-    } else if (this._goal == null && this._riding && reduceMotion()) {
-      // Reduced motion switched on mid-way: the globe jumps to the current entry.
-      const spot = this.current >= 0 ? this._spot(this.current) : null;
-      this._riding = false;
-      this._trail = null;
-      if (spot) { this.view = spot.view; this._ball = spot.to; this._u = this._kept.indexOf(this.current); }
-      this._paint();
-    }
-    if (this._goal != null) {
-      clearTimeout(this._restTimer);
-      this._restTimer = setTimeout(() => this._settle(), REST_MS);
-      this._chase();
-    }
-  }
-
-  // A reader who stops on the way between two entries gets the current one: the globe glides
-  // there and stays until the scroll moves past where the reader stopped, so it rests on a
-  // named place and never turns back against the scroll.
-  _settle() {
-    if (this._goal == null || this._park) return;
-    const at = Math.round(this._goal);
-    if (Math.abs(at - this._goal) < 0.002) return;
-    this._park = { at, from: this._goal };
-    this._goal = at;
-    this._chase();
-  }
-
-  // Where the reader is along the entries shown, as a number: n at rest on the nth, n + t on
-  // the way to the next. t runs from 0 to 1 over a stretch of scroll centered where the next
-  // entry takes the reading line (see _pick), so the nearer end is always the current entry.
-  // The stretch is at most a quarter of the screen, and a short entry keeps a moment of rest.
-  _along(pick) {
-    const kept = this._kept, line = this._line(), stacked = this._stacked();
-    const rects = kept.map((n) => this.stops[n].el.getBoundingClientRect());
-    // How far the scroll still has to go before entry k is current.
-    const due = (k) => (stacked ? (k ? rects[k - 1].bottom - line - 48 : rects[0].top - innerHeight * 0.85) : rects[k].top - line);
-    const band = Math.min(BAND_MAX, innerHeight * BAND);
-    let u = 0;
-    for (let k = 1; k < kept.length; k++) {
-      const d = due(k), before = d - due(k - 1), after = k + 1 < kept.length ? due(k + 1) - d : before;
-      const b = Math.max(1, Math.min(band, before * 0.7, after * 0.7));
-      u += Math.max(0, Math.min(1, 0.5 - d / b));
-    }
-    // At the end of the list the last entries may never reach the line; _pick names them.
-    const p = kept.indexOf(pick);
-    return u < p - 0.5 ? p : Math.min(u, p + 0.499);
-  }
-
-  // Move the globe toward the reading position: closely while the reader scrolls, and at a
-  // capped speed over a jump, so the ball still lands at every place it passes.
-  _chase() {
-    if (this._chaseRaf) return;
-    let last = performance.now();
-    const step = (now) => {
-      this._chaseRaf = 0;
-      if (this._goal == null || this._u == null || this._flight || this._free || !this._live) return;
-      const dt = Math.min(64, now - last);
-      last = now;
-      const gap = this._goal - this._u;
-      const move = Math.min(Math.abs(gap), Math.max(0.0005, Math.min(Math.abs(gap) / CHASE_MS, CHASE_TOP)) * dt);
-      this._u = Math.abs(gap) - move < 0.002 ? this._goal : this._u + Math.sign(gap) * move;
-      this._ride(this._u);
-      if (this._u !== this._goal) this._chaseRaf = requestAnimationFrame(step);
-    };
-    this._chaseRaf = requestAnimationFrame(step);
-  }
-
-  // Draw the globe at position u along the entries shown (see _along). A scroll that leaves
-  // the globe where it is draws nothing; anything else that moves the view gives it a new one.
-  _ride(u) {
-    if (u === this._rodeU && this.view === this._rodeView) return;
-    const kept = this._kept;
-    const n = Math.max(0, Math.min(kept.length - 1, Math.floor(u))), t = u - n;
-    const was = this._riding;
-    if (t <= 0 || n >= kept.length - 1) {
-      const spot = this._spot(kept[n]);
-      if (!spot) return;
-      this.view = spot.view;
-      this._ball = spot.to;
-      this._riding = false;
-      if (was && this._trail) this._fadeTrail();
-    } else {
-      const leg = this._rideLeg(kept[n], kept[n + 1]);
-      this.view = leg.f.at(t);
-      this._ball = leg.path ? leg.path(this.core.lead(t)) : leg.to;
-      this._trail = leg.path ? { from: leg.from, to: this._ball, alpha: 1 } : null;
-      this._riding = true;
-    }
-    this._rodeU = u;
-    this._rodeView = this.view;
-    this._draw();
-  }
-
-  // The flight between two entries' places, kept until the size or the filter changes.
-  _rideLeg(a, b) {
-    const key = `${a}>${b}`;
-    this._rideLegs ??= new Map();
-    let leg = this._rideLegs.get(key);
-    if (!leg) {
-      const { core } = this, A = this._spot(a) ?? this._spot(b), B = this._spot(b) ?? A;
-      const path = core.geoDistance(A.to, B.to) > 1e-4 ? core.geoInterpolate(A.to, B.to) : null;
-      leg = { f: core.flight(A.view, B.view, this._w, this._h), path, from: A.to, to: B.to };
-      this._rideLegs.set(key, leg);
-    }
-    return leg;
+    this.select(pick < 0 ? -1 : pick, true);
   }
 
   // Where entry n's flight ends: its place and the zoom to show it. An entry with no place,
@@ -690,12 +558,9 @@ class PlyAtlas extends HTMLElement {
     return { view: { lon: p.lon, lat: p.lat, k: Math.max(core.ZOOM.min, Math.min(core.ZOOM.max, s.zoom || core.ZOOM.stop)) }, to: [p.lon, p.lat] };
   }
 
-  // Make entry i current and fly to its place; -1 shows every place.
-  select(i) { this._go(i, "fly"); }
-
-  // ride: the scroll moves the globe there (see _chase); follow: fly, then ride on with the
-  // scroll; fly: fly there and stay.
-  _go(i, how) {
+  // Make entry i current and fly to its place; -1 shows every place. With via, as when the
+  // reader scrolls, the ball also lands at the places of a few entries passed on the way.
+  select(i, via = false) {
     if (!this._live) return;
     if (i === this.current) return;
     this.current = i;
@@ -707,17 +572,59 @@ class PlyAtlas extends HTMLElement {
       this._ball = null;
       const trace = this._traceNext;
       this._traceNext = false;
-      this._u = null;
       this._fly(core.overview(this._shown(), this._w, this._h), undefined, trace ? () => this._traceRoute() : null);
-    } else if (how !== "ride") {
-      this._free = false;
-      this._park = null;
-      const spot = this._spot(i);
-      if (spot) this._fly(spot.view, spot.to, null, this._kept.indexOf(i), how === "follow");
-    }
+      this._at = -1;
+    } else this._travel(i, via);
     this._readout();
     this._caption(s);
     this.dispatchEvent(new CustomEvent("ply-atlas-change", { bubbles: true, detail: { index: i, place: s ? s.place : null } }));
+  }
+
+  // The ball's way to entry i. A short entry can be current for a moment only, or be passed
+  // between two frames; with via the ball still lands at its place, and at each entry passed
+  // on the way, in the order the reader passed them, up to VIA_MAX. A flight already going
+  // that way finishes first. Anything else, a turn back or a jump, turns the ball from where
+  // it is, and its trail carries on from the one it leaves.
+  _travel(i, via) {
+    const kept = this._kept, at = (n) => kept.indexOf(n);
+    const going = this._flight?.leg && this._flight.entry != null ? this._flight : null;
+    const start = going ? going.entry : this._at;
+    const s0 = at(start), c = at(i);
+    let seq = null;
+    if (via && this._ball && !reduceMotion() && s0 >= 0 && c >= 0 && s0 !== c) {
+      const dir = Math.sign(c - s0), between = [];
+      // Entries at the place before them, or with no place, add no landing.
+      let place = this.stops[start].at;
+      for (let n = s0 + dir; n !== c; n += dir) {
+        const p = this.stops[kept[n]].at;
+        if (p !== undefined && p !== place) { between.push(kept[n]); place = p; }
+      }
+      if (between.length <= VIA_MAX) seq = [...between, i];
+    }
+    const ahead = going && seq && at(going.from) >= 0 && Math.sign(c - s0) === Math.sign(s0 - at(going.from));
+    if (ahead) {
+      going.end = { entry: i, to: this._spot(i)?.to };
+      going.next = (past) => this._hops(seq, past, going.entry);
+      return;
+    }
+    const past = going && this._trail?.line ? this._trail.line.slice(0, -1) : [];
+    this._flight = null;
+    this._hops(seq ?? [i], past, start);
+  }
+
+  // Fly through the entries in seq in turn. A leg with more to come takes VIA_PACE of its
+  // time, so a landing on the way reads as a stop, not a second flight.
+  _hops(seq, past, from) {
+    const [n, ...rest] = seq;
+    const spot = this._spot(n);
+    if (!spot) return;
+    const end = seq[seq.length - 1];
+    this._at = n;
+    this._fly(spot.view, spot.to, null, {
+      pace: rest.length ? VIA_PACE : 1, past, entry: n, from,
+      end: { entry: end, to: this._spot(end)?.to },
+      next: rest.length ? (trail) => this._hops(rest, trail, n) : null,
+    });
   }
 
   // A pin picks the next entry at its place and scrolls it to the reading line. The scroll
@@ -750,8 +657,6 @@ class PlyAtlas extends HTMLElement {
     if (this.capTally && this.current < 0) this.capTally.textContent = this._tally;
     if (this.stops[this.current]?.el.hidden) { this.current = -1; this._ball = null; this._caption(null); }
     this._reheat(false);
-    this._rideLegs = null;
-    this._u = this._park = null;
     if (!this._live) return;
     this._followed = null;
     this._follow();
@@ -762,10 +667,10 @@ class PlyAtlas extends HTMLElement {
   // ------------------------------------------------------------- motion
 
   // Fly to a view. With a place, the ball travels the great circle to it from wherever it
-  // is, drawing a tomato trail that fades once it lands; with no ball yet, it drops in.
-  // at: the place in the entries shown that the flight lands on, where riding starts from;
-  // ride: ride on with the scroll once it lands.
-  _fly(view, to, done, at = null, ride = false) {
+  // is, drawing a tomato trail that fades once it lands; with no ball yet, it drops in. A leg
+  // of a longer way (see _hops) takes a pace, the trail so far, the entries it joins, where
+  // the way ends, and what flies next.
+  _fly(view, to, done, { pace = 1, past = [], entry = null, from: fromEntry = null, end = null, next = null } = {}) {
     const { core } = this;
     this._halt();
     const from = this._ball;
@@ -775,16 +680,17 @@ class PlyAtlas extends HTMLElement {
       this._ball = to ?? null;
       this._trail = null;
       this._paint();
-      if (at != null && at >= 0) this._u = at;
-      if (!reduceMotion()) done?.();
+      if (next) next([]);
+      else if (!reduceMotion()) done?.();
       return;
     }
+    const duration = f.duration * pace;
     const leg = from && to && core.geoDistance(from, to) > 1e-4 ? core.geoInterpolate(from, to) : null;
     const t0 = performance.now();
-    this._flight = { leg, to, view, at, ride };
+    this._flight = { leg, to, view, entry, from: fromEntry, end, next };
     if (to && !from) {
       // The ball drops onto the place in the last third of the flight, on the gravity curve.
-      const start = t0 + f.duration * 0.62, len = 360;
+      const start = t0 + duration * 0.62, len = 360;
       this._drop = () => {
         const t = (performance.now() - start) / len;
         if (t >= 1) { this._drop = null; return 0; }
@@ -793,24 +699,23 @@ class PlyAtlas extends HTMLElement {
       this._ball = to;
     }
     const step = (now) => {
-      const t = Math.min(1, (now - t0) / f.duration);
+      const t = Math.min(1, (now - t0) / duration);
       this.view = f.at(t);
       if (leg) {
         const pos = leg(core.lead(t));
         this._ball = pos;
-        this._trail = { from, to: pos, alpha: 1 };
+        this._trail = { line: [...past, from, pos], alpha: 1 };
       }
       this._draw();
       if (t < 1 || this._drop) { this._anim = requestAnimationFrame(step); return; }
       this._anim = 0;
+      const then = this._flight?.next;
       this._flight = null;
       this._ball = to ?? null;
-      if (at != null && at >= 0) this._u = at;
       this._draw();
-      if (this._trail) this._fadeTrail();
+      if (then) then(leg ? [...past, from] : past);
+      else if (this._trail) this._fadeTrail();
       else done?.();
-      // The reader may have scrolled on while it flew.
-      if (ride) this._follow();
     };
     this._anim = requestAnimationFrame(step);
   }
@@ -903,18 +808,17 @@ class PlyAtlas extends HTMLElement {
     cancelAnimationFrame(this._anim);
     this._anim = 0;
     if (this._flight) {
-      this._ball = this._flight.to ?? this._ball;
-      if (this._flight.at != null && this._flight.at >= 0) this._u = this._flight.at;
+      const { end } = this._flight;
+      this._ball = end?.to ?? this._flight.to ?? this._ball;
+      if (end) this._at = end.entry;
       this._flight = null;
     }
     this._trail = null;
     this._trace = null;
     this._drop = null;
-    this._riding = false;
   }
 
   _zoomBy(scale, cx, cy) {
-    this._free = true;
     const { core } = this;
     const k = Math.max(core.ZOOM.min, Math.min(core.ZOOM.max, this.view.k * scale));
     const keep = this._ball;
@@ -944,7 +848,6 @@ class PlyAtlas extends HTMLElement {
   }
 
   _showAll() {
-    this._free = true;
     this._fly(this.core.overview(this._shown(), this._w, this._h), this._ball ?? undefined);
   }
 
@@ -964,7 +867,6 @@ class PlyAtlas extends HTMLElement {
   _down(e) {
     if (!this._live || e.button > 0 || e.target.closest("button")) return;
     this._halt();
-    this._free = true;
     this._ptrs.set(e.pointerId, [e.clientX, e.clientY]);
     // A pointer the browser did not start, such as a synthetic one, cannot be captured.
     try { this.map.setPointerCapture(e.pointerId); } catch {}
@@ -1009,7 +911,6 @@ class PlyAtlas extends HTMLElement {
     }
     e.preventDefault();
     this._halt();
-    this._free = true;
     const { core } = this;
     const step = e.deltaMode === 1 ? e.deltaY * 16 : e.deltaY;
     const k = Math.max(core.ZOOM.min, Math.min(core.ZOOM.max, this.view.k * Math.exp(-step * 0.0025)));
@@ -1022,7 +923,7 @@ class PlyAtlas extends HTMLElement {
     if (e.target !== this.map || !this._live) return;
     const step = Math.min(this._w, this._h) * 0.15;
     const moves = { ArrowLeft: [-step, 0], ArrowRight: [step, 0], ArrowUp: [0, -step], ArrowDown: [0, step] };
-    if (moves[e.key]) { e.preventDefault(); this._halt(); this._free = true; this._turn(-moves[e.key][0], -moves[e.key][1]); this._level(); }
+    if (moves[e.key]) { e.preventDefault(); this._halt(); this._turn(-moves[e.key][0], -moves[e.key][1]); this._level(); }
     else if (e.key === "+" || e.key === "=") { e.preventDefault(); this._zoomBy(2); }
     else if (e.key === "-" || e.key === "_") { e.preventDefault(); this._zoomBy(0.5); }
     else if (e.key === "0" || e.key === "Home") { e.preventDefault(); this._showAll(); }
