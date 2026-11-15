@@ -1,0 +1,36 @@
+---
+// A paper page's reference list, in the order you give it (byAuthorYear sorts). Each entry is
+// #ref-<key>, the target of the body's citation links (rehype-cite-links.mjs writes them, or
+// <Cite href="#ref-key">); the entry a link jumped to is tinted with a tomato bar beside it,
+// the system's mark for "here". The title links to the version of record and an alternate copy,
+// when there is one, gets its own link.
+//   <References refs={refs} />
+//   refs = [{ key: "bodnar-2022", authors: ["C. Bodnar", "F. Frasca"], year: 2022, title: "Weisfeiler and Lehman go topological", venue: "ICLR", href: "https://doi.org/..." }]
+import { refAuthors, type Reference } from "./references.ts";
+interface Props {
+  refs: Reference[];
+  /** The section's heading, and its id. */
+  title?: string;
+  id?: string;
+  level?: 2 | 3 | 4;
+  /** Attributes for each title's link, such as data attributes for analytics. */
+  linkAttrs?: Record<string, string>;
+  class?: string;
+}
+const { refs, title = "References", id = "references", level = 2, linkAttrs = {}, class: className } = Astro.props;
+const H = `h${level}`;
+---
+{refs.length > 0 && (
+  <section class:list={["ply-refs", className]} aria-labelledby={id}>
+    <H id={id}>{title}</H>
+    <ul class="ply-refs__list" role="list">
+      {refs.map((r) => (
+        <li id={`ref-${r.key}`} class="ply-refs__item">
+          {refAuthors(r.authors)} ({r.year}). {r.href ? <a href={r.href} {...linkAttrs}>{r.title}</a> : r.title}.
+          {r.venue && <> <i>{r.venue}</i>.</>}
+          {r.alt && <> <a href={r.alt.href} class="ply-refs__alt" aria-label={`${r.alt.label}: ${r.title}`}>{r.alt.label}</a></>}
+        </li>
+      ))}
+    </ul>
+  </section>
+)}

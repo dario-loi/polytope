@@ -65,7 +65,7 @@ const space = Object.keys(t).filter((k) => k.startsWith("--ply-space-"));
 
   <h2 id="space">Space around things</h2>
   <p>Empty space is for a single focus. Around one central element, such as a paper title or a mast, it draws the eye. On a page that shows many elements side by side, such as a home page, a list, or a wall, an empty region reads as a gap, so it holds content: a block moves into it, a column widens, or a body sets in two columns. A card grid keeps three tracks at wide widths (<code>.ply-cards--tracks</code>) so a row never leaves one empty, and a wall's body splits into a description and a list (<code>.ply-wall__body--split</code>).</p>
-  <p>On a page with many parts, space that separates nothing comes down a step or two. Rules, panels, and display type do the grouping. A mast over a list pads <code>--ply-space-6</code> above its title and <code>--ply-space-5</code> below, card rows sit as far apart as the columns, the sections after a mast carry their own 3px rule as the divider, and a long list of projects sets compact rows on a phone.</p>
+  <p>On a page with many parts, space that separates nothing comes down a step or two. Rules, panels, and display type do the grouping. A <code>dense</code> mast pads 2rem under its title, and a dense compact mast pads <code>--ply-space-6</code> above it and <code>--ply-space-5</code> below. <code>.ply-cards--dense</code> sets card rows as far apart as the columns. The sections after a mast carry their own 3px rule as the divider, and a long list of projects sets compact rows on a phone.</p>
 
   <h3 id="edges">Two edges</h3>
   <p>A page has two edges. Labels (titles, years, topic names) start at the first, and everything they label starts one column in, at the width of an article's rail (<code>--ply-layout-toc</code>). Every wall, list, and home section uses the same label column, so the content of all of them starts on one line down the page.</p>
@@ -73,6 +73,19 @@ const space = Object.keys(t).filter((k) => k.startsWith("--ply-space-"));
   <h3 id="ledes">List pages and entry pages</h3>
   <p>A list page sets its lede as wide as a title line, up to 52rem, and balances it, so a sentence a little longer than the measure never leaves one word on a line. An entry page (a paper, a post, a project) sets its title to its own column with a container query, and its lede keeps the reading measure.</p>
   <Code lang="html" code={`<p class="ply-mast__lede ply-mast__lede--wide">Papers, newest first, with the topics they belong to.</p>`} />
+  <p><code>Mast</code> takes these as props, so a list page is one line: <code>wideLede</code> sets that lede, and <code>rule</code> closes the mast on a 3px rule.</p>
+  <Code lang="astro" code={`<Mast title="Publications" lede="Papers, newest first, with the topics they belong to." compact wideLede rule dense />`} />
+  <p><code>PostHeader</code> serves an entry page that has no date, such as a project: <code>meta</code> takes the facts for its meta line, <code>stop</code> ends the title in the tomato full stop for a page that is a section, and the default slot sits under the tags for actions.</p>
+  <Code lang="astro" code={`<PostHeader title="StapleGL" meta={["Open source", "2025"]} lede="A plotting library.">
+  <a class="ply-button" href="https://github.com/...">Source</a>
+</PostHeader>`} />
+
+  <h3 id="mast">A mast with its exhibit beside it</h3>
+  <p>A home page puts its exhibit beside the title from 48rem, where <code>Mast</code> waits for 64rem. <code>side</code> sets the exhibit in a column of at most 35rem and 40% of the mast, and stacks it under the title at 24rem or less, on the content edge, below that. The left column runs the exhibit's height, and what is in the mast's <code>after</code> slot closes on the line where the exhibit's caption does, so a list such as <a href={u("/components/navigation/#dated-list")}>DatedList</a> fills the column and leaves no gap under the title.</p>
+  <Code lang="astro" code={`<Mast title="John Doe" lede="PhD student." dense side>
+  <div slot="after"><a class="ply-button" href="/cv/">CV</a><DatedList items={latest} /></div>
+  <Complex slot="exhibit" seed={7} autoplay="visible" />
+</Mast>`} />
 
   <h2 id="narrow">Enlarged text and narrow windows</h2>
   <p>Layouts are built for 200% text-only zoom at 320px with the real copy in them, and at that size nothing scrolls sideways. Below 30rem, which is 960px at 200% text, these hold:</p>

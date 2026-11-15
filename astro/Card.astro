@@ -1,16 +1,21 @@
 ---
 // One entry (a paper, post, or project) on a list page, hung like an exhibit: a black panel
 // holding the entry's figure (the "figure" slot), or else a Vietoris-Rips complex seeded from
-// its title, so every entry draws its own. Under it, the title, a meta line, a summary, and
-// tags. Put cards in a CardGrid.
-//   <CardGrid>
-//     <Card lead href="/papers/x/" title="Name: what it does" meta={["ICLR 2026"]} badge="Oral">
+// its title, so every entry draws its own. Under it, the title, a meta line, a summary, an
+// authors line, tags, and a row of links. Put cards in a CardGrid.
+//   <CardGrid class="ply-cards--aligned">
+//     <Card lead href="/papers/x/" title="Name: what it does" meta={["ICLR 2026"]} badge="Oral"
+//       authors={["A. Author", "John Doe"]} me="John Doe" links={[{ label: "Paper", href: "/x.pdf" }]}>
 //       <img slot="figure" src="/x.webp" alt="" />
 //     </Card>
 //   </CardGrid>
 // The panel repeats the title's link for a pointer only; the figure is decorative here, since
-// the title names the entry, so give it empty alt text.
+// the title names the entry, so give it empty alt text. Under a figure the card draws the same
+// complex it would draw alone (server-rendered, no script), so a picture that is slow, missing,
+// or failed leaves the complex and never a black void; the loaded picture covers it.
+import ComplexStatic from "./ComplexStatic.astro";
 import Complex from "./Complex.astro";
+import { foldAuthors } from "./authors.ts";
 import { splitTitle, woodTitle } from "./title.ts";
 interface Props {
   href: string;
@@ -23,7 +28,19 @@ interface Props {
   summary?: string;
   /** Wall labels on the panel, such as "Preprint" or "Top 3 paper". */
   badge?: string | string[];
-  tags?: string[];
+  /** A tag is a name, or a name with an address to make it a link (Tag's `href`). */
+  tags?: (string | { label: string; href?: string; current?: boolean })[];
+  /** The authors line under the summary. A name may carry an address to link it. */
+  authors?: (string | { name: string; href?: string })[];
+  /** The owner's name in `authors`, set darker. */
+  me?: string;
+  /** Past this many authors the line folds to the first names, yours, and the last. */
+  fold?: number;
+  /** What a screen reader says for each gap in a folded list, for another language. */
+  gapText?: string;
+  /** A row of small links under the card's text: its paper, code, and BibTeX. `attrs` adds
+   *  attributes to a link, such as data attributes for analytics. */
+  links?: { label: string; href: string; attrs?: Record<string, string> }[];
   /** Spans the row and, with room, sets the panel beside the text. */
   lead?: boolean;
   /** Seeds the complex drawn when there is no figure; the title's own by default. */
@@ -34,7 +51,7 @@ interface Props {
   tagsLabel?: string;
   class?: string;
 }
-const { href, title, level = 3, meta = [], summary, badge, tags = [], lead = false, seed, link = {}, tagsLabel = "Topics", class: className } = Astro.props;
+const { href, title, level = 3, meta = [], summary, badge, tags = [], authors = [], me, fold, gapText = "more authors", links = [], lead = false, seed, link = {}, tagsLabel = "Topics", class: className } = Astro.props;
 const H = `h${level}`;
 const badges = badge === undefined ? [] : Array.isArray(badge) ? badge : [badge];
 const { name, sub } = splitTitle(title);
@@ -43,17 +60,25 @@ const parts = woodTitle(name).parts;
 let h = 2166136261;
 for (const ch of title) h = Math.imul(h ^ (ch.codePointAt(0) ?? 0), 16777619);
 const s = seed ?? (h >>> 0) % 100000;
+// A slot passed on from a layout counts as filled even when it renders nothing, so look at
+// what the figure holds.
+const figure = Astro.slots.has("figure") ? (await Astro.slots.render("figure")).trim() : "";
+const names = authors.map((a) => (typeof a === "string" ? { name: a } : a));
+const shown = fold ? foldAuthors(names.map((a) => a.name), me, fold) : names.map((a) => a.name);
+const hrefOf = (n: string) => names.find((a) => a.name === n)?.href;
 ---
 <article class:list={["ply-card", lead && "ply-card--lead", className]}>
   <a class="ply-card__panel" href={href} tabindex="-1" aria-hidden="true" data-surface="panel">
-    {Astro.slots.has("figure") ? <slot name="figure" /> : <Complex seed={s} points={28} radius={0.17} controls={false} label={title} id={`cx-card-${s}`} />}
+    {figure ? <><div class="ply-card__fallback" aria-hidden="true"><ComplexStatic seed={s} points={28} radius={0.17} /></div><Fragment set:html={figure} /></> : <Complex seed={s} points={28} radius={0.17} controls={false} label={title} id={`cx-card-${s}`} />}
     {badges.length > 0 && <span class="ply-card__labels">{badges.map((b) => <span class="ply-label ply-label--flag">{b}</span>)}</span>}
   </a>
   <div class="ply-card__body">
     <H class="ply-card__title"><a href={href} {...link}>{parts.map((p) => (p.keep ? <span class="ply-nowrap">{p.text}</span> : p.text))}{sub && <><span class="ply-card__sub-mark">: </span><span class="ply-card__sub">{sub}</span></>}</a></H>
     {meta.length > 0 && <p class="ply-card__meta">{meta.map((m) => <span>{m}</span>)}</p>}
     {Astro.slots.has("summary") ? <p class="ply-card__summary"><slot name="summary" /></p> : summary && <p class="ply-card__summary">{summary}</p>}
-    {tags.length > 0 && <ul class="ply-card__tags" aria-label={tagsLabel}>{tags.map((t) => <li class="ply-tag">{t}</li>)}</ul>}
+    {shown.length > 0 && <p class="ply-card__authors">{shown.map((a, i) => <>{i > 0 && ", "}{a === me ? <span class="ply-me">{a}</span> : a === "..." ? <><span aria-hidden="true">...</span><span class="ply-visually-hidden">{gapText}</span></> : hrefOf(a) ? <a href={hrefOf(a)}>{a}</a> : a}</>)}</p>}
+    {tags.length > 0 && <ul class="ply-card__tags" aria-label={tagsLabel}>{tags.map((t) => typeof t === "string" ? <li class="ply-tag">{t}</li> : t.href ? <li><a class:list={["ply-tag ply-tag--link", t.current && "ply-tag--solid"]} href={t.href} rel="tag" aria-current={t.current ? "page" : undefined}>{t.label}</a></li> : <li class="ply-tag">{t.label}</li>)}</ul>}
+    {links.length > 0 && <p class="ply-card__links">{links.map((l) => <a href={l.href} data-astro-prefetch={/\.pdf([?#]|$)/i.test(l.href) ? "false" : undefined} {...l.attrs}>{l.label}</a>)}</p>}
     <slot />
   </div>
 </article>

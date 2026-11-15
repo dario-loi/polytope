@@ -13,6 +13,11 @@
   .ply-card__panel { position: relative; display: block; background: var(--ply-color-panel); aspect-ratio: 100 / 56; overflow: hidden; text-decoration: none; }
   .ply-card__panel :is(img, video) { display: block; width: 100%; height: 100%; object-fit: cover; }
   .ply-card__panel :is(.ply-complex-wrap, .ply-complex) { height: 100%; }
+  /* Under a figure the card draws its complex (ComplexStatic) and the picture paints over it, so a
+     picture that is slow, missing, or failed leaves the complex and never a black void. */
+  .ply-card__fallback { position: absolute; inset: 0; }
+  .ply-card__fallback ~ :is(picture, img, video) { position: relative; }
+  .ply-card__fallback ~ picture img { position: relative; }
   /* A hairline frame, so a light screenshot keeps its edge on the white wall. */
   .ply-card__panel:has(img, video)::after { content: ""; position: absolute; inset: 0; border: var(--ply-border-hair) solid var(--ply-color-rule); pointer-events: none; }
   .ply-card__labels { position: absolute; inset-block-start: var(--ply-space-3); inset-inline-start: var(--ply-space-3); display: flex; flex-wrap: wrap; gap: var(--ply-space-2); pointer-events: none; }
@@ -25,6 +30,9 @@
   .ply-card__summary { font-size: var(--ply-size-ui); line-height: var(--ply-leading-normal); color: var(--ply-color-text-muted); max-width: 40rem; }
   .ply-card__tags { display: flex; flex-wrap: wrap; gap: var(--ply-space-2); list-style: none; padding: 0; margin-top: var(--ply-space-1); }
   .ply-card__tags > li { margin: 0; }
+  /* Rows 2rem apart, as the columns are (ply-cards--dense), for a page that shows many elements; an
+     aligned grid sets its own row gap with the cards' margins. */
+  .ply-cards.ply-cards--dense:not(.ply-cards--aligned) { row-gap: var(--ply-space-6); }
   /* An authors line (the owner's name, .ply-me, is set darker) and a row of links under the summary. */
   .ply-card__authors { font-size: var(--ply-size-sm); line-height: var(--ply-leading-normal); color: var(--ply-color-text-muted); }
   .ply-card__authors .ply-me { color: var(--ply-color-text); font-weight: var(--ply-weight-semibold); }

@@ -1,5 +1,13 @@
 ---
 // Header for a paper page: venue, title, authors with affiliation marks, link row.
+// Two optional slots finish the page's front matter. "figure" is the key figure, at the width of
+// the header and the margin together (a Figure with `column` keeps to the text's width, with
+// `split` it sets a long caption in two columns). "exhibit" is a picture or a complex for a paper
+// with no figure: it hangs in the margin beside the header from 60rem and stacks under it
+// below.
+//   <PaperHeader title="..." authors={[...]}>
+//     <Figure slot="figure" num={1}><img src="/teaser.webp" alt="..." /><span slot="caption">...</span></Figure>
+//   </PaperHeader>
 import Icon from "./Icon.astro";
 import WoodTitle from "./WoodTitle.astro";
 import { keptWhenFolded } from "./authors.ts";
@@ -31,8 +39,14 @@ const more = foldText.more.replace("{n}", String(authors.length));
 const anyEqual = authors.some((a) => a.equal);
 const primary = Math.max(0, links.findIndex((l) => l.primary));
 const folds = fold !== undefined && fold > 0 && authors.length > fold;
+// A slot passed on from a layout counts as filled even when it is empty, so look at what it holds.
+const figure = Astro.slots.has("figure") ? (await Astro.slots.render("figure")).trim() : "";
+const exhibit = Astro.slots.has("exhibit") ? (await Astro.slots.render("exhibit")).trim() : "";
+const Wrap = figure || exhibit ? "div" : Fragment;
+const wrap = figure || exhibit ? { class: ["ply-paper-head", exhibit && "ply-paper-head--exhibit"].filter(Boolean).join(" ") } : {};
 const kept = folds ? keptWhenFolded(authors.length, authors.findIndex((a) => a.name === me), fold) : () => true;
 ---
+<Wrap {...wrap}>
 <header class="ply-paper">
   <WoodTitle class="ply-paper__title" level={level} title={title} split={split} />
   <div class="ply-stack" style="--ply-stack-gap: var(--ply-space-2)">
@@ -62,4 +76,7 @@ const kept = folds ? keptWhenFolded(authors.length, authors.findIndex((a) => a.n
     </div>
   )}
 </header>
+{figure && <Fragment set:html={figure} />}
+{exhibit && <div class="ply-paper-head__exhibit"><Fragment set:html={exhibit} /></div>}
+</Wrap>
 <script>import "../dist/js/fold.js";</script>

@@ -1,0 +1,21 @@
+---
+// A Vietoris-Rips complex drawn on the server and left alone: the drawing of Complex.astro (the
+// same generator, classes, and pixels), but a plain element with no custom element, no slider,
+// and no script behind it. For a drawing that sits under a picture or takes no input, where
+// upgrading it would only spend main-thread time: Card draws one under every figure.
+//   <ComplexStatic seed={7} points={28} radius={0.17} />
+// Decorative by default (hidden from a screen reader); pass `label` to make it an image.
+import { complexLayout } from "./complex.ts";
+interface Props { seed?: number; points?: number; radius?: number; label?: string; class?: string }
+const { seed = 7, points = 28, radius = 0.17, label, class: className } = Astro.props;
+const { pts, edges, tris } = complexLayout(seed, points, radius);
+---
+<div class:list={["ply-complex-wrap", className]}>
+  <div class="ply-complex" role={label ? "img" : undefined} aria-label={label} aria-hidden={label ? undefined : "true"}>
+    <svg class="ply-complex__static" viewBox="0 0 100 56" aria-hidden="true" focusable="false">
+      <g>{tris.map(([a, b, c]) => <polygon class="ply-complex__tri" points={`${pts[a]} ${pts[b]} ${pts[c]}`} />)}</g>
+      <g>{edges.map(([a, b]) => <line class="ply-complex__edge" x1={pts[a][0]} y1={pts[a][1]} x2={pts[b][0]} y2={pts[b][1]} />)}</g>
+      <g>{pts.map(([x, y]) => <circle class="ply-complex__pt" cx={x} cy={y} r="0.9" />)}</g>
+    </svg>
+  </div>
+</div>

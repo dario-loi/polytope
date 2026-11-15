@@ -1,0 +1,21 @@
+---
+// A small, static fragment of a Vietoris-Rips complex for a page's recurring mark: points and
+// edges in the text color (ink, chalk in the dark theme) and mustard triangles at half strength,
+// set straight on the page ground. Seed it from a name (seedOf) and each section draws its own
+// fragment, and none of them moves, so a mast's live complex stays the page's one motion.
+//   <ComplexMark seed={seedOf("Publications")} />
+import { complexLayout } from "./complex.ts";
+interface Props {
+  seed: number;
+  points?: number;
+  radius?: number;
+  class?: string;
+}
+const { seed, points = 15, radius = 0.23, class: className } = Astro.props;
+const { pts, edges, tris } = complexLayout(seed, points, radius);
+---
+<svg class:list={["ply-complex-mark", className]} viewBox="0 0 100 56" aria-hidden="true" focusable="false">
+  <g>{tris.map(([a, b, c]) => <polygon class="ply-complex-mark__tri" points={`${pts[a]} ${pts[b]} ${pts[c]}`} />)}</g>
+  <g>{edges.map(([a, b]) => <line class="ply-complex-mark__edge" x1={pts[a][0]} y1={pts[a][1]} x2={pts[b][0]} y2={pts[b][1]} />)}</g>
+  <g>{pts.map(([x, y]) => <circle class="ply-complex-mark__pt" cx={x} cy={y} r="2" />)}</g>
+</svg>

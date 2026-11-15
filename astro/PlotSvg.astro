@@ -1,0 +1,38 @@
+---
+// A plot saved as inline SVG (a matplotlib figure from polytope_theme.save_inline_svg), with its
+// ink and series colors following the theme: the file holds currentColor and
+// var(--ply-viz-1, light value), so one SVG serves both themes. Its text stays real text, for
+// readers and crawlers. The width is capped at the figure's own size (the SVG's `pt` width), and
+// the figure is a numbered Figure at the text's width.
+//   <PlotSvg svg={svgText} alt="Accuracy against width, three models." num={2}>
+//     <span slot="caption">Accuracy rises with width.</span>
+//   </PlotSvg>
+// Read the file as text at build time, with the ?raw suffix on its import. The SVG is trusted
+// markup.
+import Figure from "./Figure.astro";
+interface Props {
+  /** The SVG file's text. */
+  svg: string;
+  /** What the plot shows, for a screen reader: the trend, not the axes alone. */
+  alt: string;
+  num?: number | string;
+  /** Keep the figure to the text's width. false lets it run as wide as its own size and the column allow. */
+  column?: boolean;
+  class?: string;
+}
+const { svg, alt, num, column = true, class: className } = Astro.props;
+const size = svg.match(/<svg[^>]*\swidth="([\d.]+)pt"/);
+const max = size ? `${(parseFloat(size[1]) * 4) / 3}px` : "100%";
+const label = alt.replace(/&/g, "&amp;").replace(/"/g, "&quot;");
+const labeled = svg.replace("<svg ", `<svg role="img" aria-label="${label}" `);
+---
+{Astro.slots.has("caption") ? (
+  <Figure class={className} column={column} num={num}>
+    <div class="ply-plot" style={`--ply-plot-max:${max}`} set:html={labeled} />
+    <slot name="caption" slot="caption" />
+  </Figure>
+) : (
+  <Figure class={className} column={column}>
+    <div class="ply-plot" style={`--ply-plot-max:${max}`} set:html={labeled} />
+  </Figure>
+)}

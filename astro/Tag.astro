@@ -1,5 +1,22 @@
 ---
-interface Props { variant?: "outline" | "solid" | "note"; class?: string }
-const { variant = "outline", class: className } = Astro.props;
+// A tag: a short word that names a topic or a state. With `href` it is a link, set like a tag
+// in a row of navigation: teal and underlined, ink fill on hover. `current` marks the one for
+// the page you are on, as the solid tag, and tells a screen reader. Put tags in a list:
+//   <ul class="ply-tag-list"><li><Tag href="/topics/graphs/" rel="tag">Graphs</Tag></li></ul>
+// Other attributes, such as data attributes for analytics, go on the element.
+interface Props {
+  variant?: "outline" | "solid" | "note";
+  /** Makes the tag a link. */
+  href?: string;
+  /** This tag's page is the one showing: the solid tag, with aria-current="page". */
+  current?: boolean;
+  class?: string;
+  [attr: string]: unknown;
+}
+const { variant = "outline", href, current = false, class: className, ...rest } = Astro.props;
+const solid = variant === "solid" || (href !== undefined && current);
+const classes = ["ply-tag", href !== undefined && "ply-tag--link", solid ? "ply-tag--solid" : variant !== "outline" && `ply-tag--${variant}`, className];
 ---
-<span class:list={["ply-tag", variant !== "outline" && `ply-tag--${variant}`, className]}><slot /></span>
+{href !== undefined
+  ? <a class:list={classes} href={href} aria-current={current ? "page" : undefined} {...rest}><slot /></a>
+  : <span class:list={classes} {...rest}><slot /></span>}

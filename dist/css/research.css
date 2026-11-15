@@ -71,6 +71,9 @@
   .ply-equation__num { font-variant-numeric: tabular-nums; color: var(--ply-color-text-muted); font-size: var(--ply-size-sm); }
   .ply-math { font-size: 1.05em; }
   .ply-math .katex { line-height: inherit; }
+  /* Math in text from data (Tex) keeps each formula on one line: KaTeX lets inline math break after an
+     operator, which splits a short formula across lines. */
+  .ply-math--line { white-space: nowrap; }
 
   /* Inline citation with a preview card on hover or focus. */
   .ply-cite { position: relative; display: inline; }
@@ -89,6 +92,52 @@
   .ply-bibtex .ply-code { max-width: var(--ply-layout-measure); }
   /* The download row under it: small secondary buttons for the .bib and .ris files. */
   .ply-bibtex__files { display: flex; flex-wrap: wrap; gap: var(--ply-space-3); margin-top: var(--ply-space-3); max-width: var(--ply-layout-measure); }
+
+  /* Front matter of a paper page. A header with a key figure or an exhibit (PaperHeader's slots)
+     sits in .ply-paper-head. The key figure takes the head's whole width, text and margin
+     together, so it ends where the margin column does; a Figure with column takes the text's
+     width. Its caption runs the figure's width. */
+  .ply-paper-head { display: grid; gap: 0 var(--ply-space-6); }
+  .ply-paper-head > .ply-paper { padding-block: var(--ply-space-6) var(--ply-space-5); }
+  .ply-paper-head > .ply-figure { max-width: none; margin-top: 0; margin-bottom: var(--ply-space-6); }
+  .ply-paper-head > .ply-figure.ply-figure--column { max-width: var(--ply-layout-measure); }
+  .ply-paper-head > .ply-figure figcaption { max-width: none; text-wrap: pretty; }
+  /* With no key figure, the exhibit stacks under the header, then hangs in the margin column beside it
+     from 60rem. */
+  .ply-paper-head__exhibit { margin-bottom: var(--ply-space-6); max-width: 30rem; }
+  .ply-paper-head__exhibit img { width: 100%; height: auto; }
+  @media (min-width: 60rem) {
+    .ply-paper-head--exhibit { grid-template-columns: minmax(0, var(--ply-layout-measure)) minmax(0, 1fr); align-items: start; }
+    .ply-paper-head--exhibit > .ply-paper { padding-bottom: var(--ply-space-6); }
+    .ply-paper-head__exhibit { margin-block: var(--ply-space-6); }
+  }
+  /* A figure kept to the text's width (Figure column), and a long caption under a wide figure set in two
+     balanced columns from 60rem (Figure split), so its lines stay near the reading measure and its
+     edges are the figure's. */
+  .ply-figure--column { max-width: var(--ply-layout-measure); }
+  .ply-figure--split figcaption { max-width: none; text-wrap: pretty; }
+  @media (min-width: 60rem) {
+    .ply-figure--split figcaption { columns: 2; column-gap: var(--ply-space-6); column-fill: balance; orphans: 2; widows: 2; }
+  }
+  /* The paper in one line (Tldr), at the lede's size under the header. */
+  .ply-tldr { font-size: var(--ply-size-lg); line-height: var(--ply-leading-normal); }
+  .ply-tldr .ply-label { vertical-align: 0.2em; margin-inline-end: var(--ply-space-2); }
+  /* A 3px rule that closes the front matter at the text's width (ply-rule--measure), before the text. */
+  .ply-rule--measure { clear: none; max-width: var(--ply-layout-measure); margin-block: var(--ply-space-6) var(--ply-space-5); }
+  /* What closes an article (Article's foot slot): the pager, at the text's edge, under the article's own padding. */
+  .ply-article__foot .ply-pager { max-width: var(--ply-layout-measure); margin-top: 0; }
+
+  /* A reference list (References): a hanging indent, and the entry a citation link jumped to tinted with
+     a tomato bar, the system's mark for "here", drawn outside the text. The hanging indent puts
+     the first line at the item's start edge, so the tint reaches 12px into the gutter and the bar
+     sits beyond it, clear of the text. */
+  .ply-refs { margin-top: var(--ply-space-7); }
+  .ply-refs__list { list-style: none; padding: 0; margin: 0; display: grid; gap: var(--ply-space-2); font-size: var(--ply-size-sm); line-height: var(--ply-leading-normal); }
+  .ply-prose .ply-refs__list { padding-inline-start: 0; }
+  .ply-prose .ply-refs__list > li + li { margin-top: 0; }
+  .ply-refs__item { padding-inline-start: 1.5em; text-indent: -1.5em; overflow-wrap: anywhere; text-wrap: pretty; }
+  .ply-refs__alt { font-size: var(--ply-size-xs); }
+  .ply-refs__item:target { background: var(--ply-color-surface-sunken); box-shadow: -12px 0 0 0 var(--ply-color-surface-sunken), -15px 0 0 0 var(--ply-color-accent); }
 
   /* History wall: entries grouped by year with the year as a big wood-type numeral.
      Used for publication lists and the changelog. */

@@ -1,0 +1,55 @@
+---
+// The footer of a site: a 3px rule, then who the site is (the name in wood type with the tomato
+// full stop, and a line under it), the links in groups by meaning, and a hairline-topped
+// colophon. The groups share one row when they fit and otherwise stack, right-aligned on one
+// edge, so no row holds a lone link. Links are 24px tall at rest and 44px under a finger.
+//   <SiteFooter name="John Doe" lede="PhD student, Example University, Boston.">
+//     <Fragment slot="links">
+//       <ul class="ply-site-footer__links ply-small" role="list">
+//         <li><a class="ply-target" href="...">GitHub</a></li>
+//       </ul>
+//       <ul class="ply-site-footer__links ply-small" role="list">
+//         <li><a class="ply-target" href="/privacy/">Privacy</a></li>
+//       </ul>
+//     </Fragment>
+//     <Fragment slot="colophon">&copy; 2026 John Doe. Built with <a href="https://github.com/dario-loi/polytope">Polytope</a>.</Fragment>
+//   </SiteFooter>
+// Slots: "who" replaces the name and lede, "links" holds the groups (one ul each, inside a nav
+// the component writes), "colophon" is the line under the rule. `top` adds a "Back to top" link to the colophon
+// for a phone and for a visitor without script (js/backtop.js makes it smooth, and a fine pointer
+// at 48rem and wider does not see it); pair it with <BackToTop /> in the body. `linksLabel`
+// names the nav for a screen reader.
+interface Props {
+  /** The name, set in wood type with the tomato full stop. */
+  name?: string;
+  /** One line under the name, such as a role and a place. */
+  lede?: string;
+  /** The words of a "Back to top" link at the end of the colophon; omit it to leave the link out. */
+  top?: string;
+  /** Names the links as a region, for a screen reader. */
+  linksLabel?: string;
+  class?: string;
+}
+const { name, lede, top, linksLabel = "Elsewhere", class: className } = Astro.props;
+// A slot passed on from a layout counts as filled even when it is empty, so look at what it holds.
+const links = Astro.slots.has("links") ? (await Astro.slots.render("links")).trim() : "";
+const colophon = Astro.slots.has("colophon") ? (await Astro.slots.render("colophon")).trim() : "";
+---
+<footer class:list={["ply-site-footer", className]}>
+  <div class="ply-container ply-site-footer__inner">
+    {(name || lede || Astro.slots.has("who")) && (
+      <div class="ply-site-footer__who">
+        <slot name="who">
+          {name && <p><span class="ply-display ply-site-footer__name">{name}<span class="ply-wordmark__stop" aria-hidden="true">.</span></span></p>}
+          {lede && <p class="ply-small ply-muted">{lede}</p>}
+        </slot>
+      </div>
+    )}
+    {links && <nav class="ply-site-footer__nav" aria-label={linksLabel}><Fragment set:html={links} /></nav>}
+  </div>
+  {(colophon || top) && (
+    <div class="ply-container">
+      <p class="ply-site-footer__colophon ply-small ply-muted">{colophon && <Fragment set:html={colophon} />}{top && <>{colophon && " "}<a class="ply-site-footer__top" href="#top" data-ply-backtop>{top}</a></>}</p>
+    </div>
+  )}
+</footer>

@@ -4,6 +4,7 @@ import Example from "../../components/Example.astro";
 import ApiTable from "../../components/ApiTable.astro";
 import Code from "@dario-loi/polytope/astro/Code.astro";
 import Stability from "@dario-loi/polytope/astro/Stability.astro";
+import Tag from "@dario-loi/polytope/astro/Tag.astro";
 
 const buttons = `<div class="ply-cluster">
   <button class="ply-button" type="button">Read the paper</button>
@@ -57,6 +58,16 @@ const status = `<div class="ply-cluster" style="--ply-cluster-gap: 1.5rem">
   <h3 id="link-tags">Link tags</h3>
   <p>A topic tag that leads to a list of its papers is a link. <code>.ply-tag--link</code> keeps the tag's shape and takes the link's look: teal, underlined, at least 28px tall (44px under a finger), filled with ink on hover. The current tag is the solid one, without the underline, and carries <code>aria-current="page"</code>. <code>.ply-tag-list</code> sets a <code>ul</code> of tags as a wrapping row, also inside <code>.ply-prose</code>, where list items would otherwise take the prose spacing.</p>
   <Example html={linkTags} />
+  <p>The <code>Tag</code> component writes the same markup. <code>href</code> makes it a link, and <code>current</code> marks the tag for the page showing, as the solid tag with <code>aria-current="page"</code>. Other attributes, such as <code>rel</code> or data attributes for analytics, go on the element. Put the tags in a <code>ul class="ply-tag-list"</code>.</p>
+  <ul class="ply-tag-list" role="list" aria-label="Topics">
+    <li><Tag href="#link-tags" rel="tag" current>Sheaves</Tag></li>
+    <li><Tag href="#link-tags" rel="tag">Topology</Tag></li>
+    <li><Tag href="#link-tags" rel="tag">Graphs</Tag></li>
+  </ul>
+  <Code lang="astro" code={`<ul class="ply-tag-list" aria-label="Topics">
+  <li><Tag href="/topics/sheaves/" rel="tag" current>Sheaves</Tag></li>
+  <li><Tag href="/topics/topology/" rel="tag">Topology</Tag></li>
+</ul>`} />
 
   <h2>Status</h2>
   <Example html={status} />

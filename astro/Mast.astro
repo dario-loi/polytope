@@ -2,18 +2,28 @@
 // Page mast: the title (with the tomato full stop), a lede, and an exhibit slot on the right.
 // Without an exhibit the mast stays one column. `compact` sets a smaller title, for a list
 // page under the chapter landings.
+//   rule         a 3px rule under the mast, as a list page has.
+//   wideLede     the lede runs up to 52rem and balances, so a sentence a little longer than the
+//                measure never leaves one word on a second line.
+//   dense        less space under the mast (2rem where it was 3), for a page that shows many
+//                elements: space that separates nothing comes down a step.
+//   side         the exhibit sits beside the title from 48rem, in a column of at most 35rem and
+//                40% of the mast, and stacks under it at 24rem or less on the content edge. The
+//                left column runs the exhibit's height, and what is in the "after" slot closes
+//                on the line where the exhibit's caption does.
 import MastTitle from "./MastTitle.astro";
-interface Props { title: string; lede?: string; stop?: boolean; compact?: boolean; class?: string }
-const { title, lede, stop = true, compact = false, class: className } = Astro.props;
+interface Props { title: string; lede?: string; stop?: boolean; compact?: boolean; rule?: boolean; wideLede?: boolean; dense?: boolean; side?: boolean; class?: string }
+const { title, lede, stop = true, compact = false, rule = false, wideLede = false, dense = false, side = false, class: className } = Astro.props;
 // A slot passed on from a layout counts as filled even when it is empty, so look at what it
 // holds.
 const exhibit = Astro.slots.has("exhibit") ? (await Astro.slots.render("exhibit")).trim() : "";
 ---
-<header class:list={["ply-container ply-mast", compact && "ply-mast--compact", className]}>
+<header class:list={["ply-container ply-mast", compact && "ply-mast--compact", dense && "ply-mast--dense", side && "ply-mast--side", className]}>
   <div>
     <MastTitle title={title} stop={stop} />
-    {lede && <p class="ply-mast__lede">{lede}</p>}
-    <slot name="after" />
+    {lede && <p class:list={["ply-mast__lede", wideLede && "ply-mast__lede--wide"]}>{lede}</p>}
+    {side ? <div class="ply-mast__after"><slot name="after" /></div> : <slot name="after" />}
   </div>
   {exhibit && <div class="ply-mast__exhibit"><Fragment set:html={exhibit} /></div>}
 </header>
+{rule && <hr class="ply-rule" />}

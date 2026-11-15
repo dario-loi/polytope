@@ -1,0 +1,39 @@
+---
+// A picture with a twin for the other theme: a light screenshot that would glare on a dark page
+// brings a dark one. The page shows the twin for the theme in use, the switch's first and then
+// the system's, and paper takes the light one (.ply-light-only and .ply-dark-only). The twin loads
+// lazily at normal priority, so the theme not in use never competes with the one on screen.
+//   <ThemedImage src={light} dark={dark} alt="" widths={widthsFor(light, 720)} sizes={`(min-width: 64rem) 30vw, ${column()}`} />
+// `src` is an imported image, which goes through Astro's <Picture> (AVIF and WebP, with the
+// widths and sizes you give), or an address, which is a plain <img>. Without `dark`, one
+// picture shows in both themes. A picture that fails to load is hidden, so the browser's broken
+// image never covers what lies under it (a Card's complex); empty alt text does the same in most
+// browsers. Do not set display on the picture: a rule of yours that outranks the utilities would
+// show both twins.
+import { Picture } from "astro:assets";
+import type { ImageMetadata } from "astro";
+import { pictureFormats } from "./images.ts";
+type Source = ImageMetadata | string;
+interface Props {
+  src: Source;
+  dark?: Source;
+  alt: string;
+  /** Width and height, for an address; an imported image has its own. */
+  width?: number;
+  height?: number;
+  widths?: number[];
+  sizes?: string;
+  loading?: "eager" | "lazy";
+  fetchpriority?: "high" | "low" | "auto";
+  class?: string;
+}
+const { src, dark, class: className, width, height, widths, sizes, loading, fetchpriority, alt } = Astro.props;
+const failed = "this.style.visibility='hidden'";
+const picture = { widths, sizes, loading, fetchpriority, alt, onerror: failed };
+---
+{typeof src === "string"
+  ? <img src={src} alt={alt} width={width} height={height} loading={loading} fetchpriority={fetchpriority} onerror={failed} class:list={[className, dark && "ply-light-only"]} />
+  : <Picture {...pictureFormats} {...picture} src={src} class:list={[className, dark && "ply-light-only"]} />}
+{dark && (typeof dark === "string"
+  ? <img src={dark} alt={alt} width={width} height={height} loading="lazy" onerror={failed} class:list={[className, "ply-dark-only"]} />
+  : <Picture {...pictureFormats} {...picture} loading="lazy" fetchpriority="auto" src={dark} class:list={[className, "ply-dark-only"]} />)}

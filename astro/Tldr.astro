@@ -1,0 +1,8 @@
+---
+// The paper in one line, set at the lede's size under the header and before the abstract, with
+// a small wall label in front. Plain text in the default slot, or markup.
+//   <Tldr>Edges between cells carry the message that the vertices cannot.</Tldr>
+interface Props { label?: string; class?: string }
+const { label = "In short", class: className } = Astro.props;
+---
+<p class:list={["ply-tldr", className]}><span class="ply-label">{label}</span> <slot /></p>

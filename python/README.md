@@ -57,6 +57,16 @@ from matplotlib.colors import TwoSlopeNorm
 ax.imshow(delta, cmap="ply-diverging", norm=TwoSlopeNorm(vcenter=0))
 ```
 
+To put a plot in a web page so its colors follow the page's theme, draw it under `ply.use("light")` and save it as inline SVG:
+
+```python
+from polytope_theme.mpl import save_inline_svg
+
+save_inline_svg(fig, "plot.svg")  # ink becomes currentColor, series become var(--ply-viz-1, ...)
+```
+
+The Astro `PlotSvg` component inlines the file, and the stylesheet sets the series colors for each theme. Text stays text.
+
 To apply the style to one block of code, use `plt.rc_context(polytope_theme.mpl.rc_params("dark"))`.
 
 matplotlib only finds Libre Franklin if it is installed as a system font (TTF or OTF from Google Fonts). Without it, text falls back to Franklin Gothic, Helvetica Neue, Arial and then DejaVu Sans.

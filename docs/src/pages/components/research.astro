@@ -7,6 +7,9 @@ import Cite from "@dario-loi/polytope/astro/Cite.astro";
 import BibTeX from "@dario-loi/polytope/astro/BibTeX.astro";
 import PubList from "@dario-loi/polytope/astro/PubList.astro";
 import Figure from "@dario-loi/polytope/astro/Figure.astro";
+import Tldr from "@dario-loi/polytope/astro/Tldr.astro";
+import References from "@dario-loi/polytope/astro/References.astro";
+import ComplexStatic from "@dario-loi/polytope/astro/ComplexStatic.astro";
 import Example from "../../components/Example.astro";
 import { u } from "../../data/nav";
 import Code from "@dario-loi/polytope/astro/Code.astro";
@@ -40,6 +43,11 @@ const ledger = `<ul class="ply-ledger">
 const chips = `<ul class="ply-chips">
   <li>Python</li><li>PyTorch</li><li>Rust</li><li>LaTeX</li><li>Astro</li>
 </ul>`;
+const exampleAuthors = [{ name: "A. Author", affiliations: [1] }, { name: "John Doe", affiliations: [2] }];
+const exampleRefs = [
+  { key: "author-2024", authors: ["E. Author", "F. Author"], year: 2024, title: "Example reference title", venue: "Example Journal", href: "#references", cite: ["Author et al., 2024"] },
+  { key: "other-2022", authors: ["G. Other", "H. Other", "I. Other"], year: 2022, title: "A second example reference", venue: "Example Conference", href: "#references", alt: { label: "arXiv", href: "#references" } },
+];
 const examplePubs = [
   { year: 2026, title: "Example title: Higher-order message passing on cell complexes", authors: ["A. Author", "John Doe", "B. Author"], venue: "Example Venue 2026", links: [{ label: "Paper", href: "#" }, { label: "Code", href: "#" }] },
   { year: 2026, title: "Example title: a second paper in the same year", authors: ["John Doe", "C. Author"], venue: "Example Workshop 2026", links: [{ label: "Paper", href: "#" }] },
@@ -86,6 +94,50 @@ const examplePubs = [
   </div>
   <Code lang="astro" code={`<PaperHeader title="..." authors={authors} me="John Doe" fold={12} />`} />
 
+  <h3 id="front-matter">Front matter slots</h3>
+  <p>Two slots finish a paper page's front matter. <code>figure</code> holds the key figure. It takes the width of the header and the margin together, so it ends where the margin column ends. A <code>Figure</code> with <code>column</code> keeps to the text's width instead, and <code>split</code> sets a long caption under a wide figure in two balanced columns from 60rem.</p>
+  <div class="ply-wide ex__live" style="border: 2px solid var(--ply-color-rule-strong); padding: 1.5rem">
+    <PaperHeader level={3} title="Example title: a paper with a key figure" venue="Example Venue 2026" authors={exampleAuthors} affiliations={["Example University", "Another Institute"]} me="John Doe">
+      <Figure slot="figure" num={1} split>
+        <div class="ply-panel" style="aspect-ratio: 16/5; display: grid; place-items: center"><span class="ply-muted">Key figure</span></div>
+        <Fragment slot="caption">A long caption sets in two balanced columns from 60rem, which keeps its lines near the reading measure and its edges the figure's. It starts with what the figure shows and ends with how to read it, so a reader who looks at nothing else still gets the result. The columns balance, so the caption stays one block.</Fragment>
+      </Figure>
+    </PaperHeader>
+  </div>
+  <Code lang="astro" code={`<PaperHeader title="..." authors={authors}>
+  <Figure slot="figure" num={1} split>
+    <Picture src={teaser} alt="..." />
+    <Fragment slot="caption">What the figure shows, then how to read it.</Fragment>
+  </Figure>
+</PaperHeader>`} />
+  <p><code>exhibit</code> is for a paper with no figure. A picture or a complex hangs in the margin beside the header from 60rem and stacks under it below that. The header sits in <code>.ply-paper-head</code> only when one of the two slots is filled, so a header without them is unchanged.</p>
+  <div class="ply-wide ex__live" style="border: 2px solid var(--ply-color-rule-strong); padding: 1.5rem">
+    <PaperHeader level={3} title="Example title: a paper without a figure" venue="Example Venue 2026" authors={exampleAuthors} affiliations={["Example University", "Another Institute"]} me="John Doe">
+      <figure slot="exhibit" class="ply-exhibit">
+        <ComplexStatic seed={7} points={28} radius={0.17} label="A complex seeded from the title" />
+        <figcaption><b>Example Venue 2026.</b> The card's complex, seeded from the title.</figcaption>
+      </figure>
+    </PaperHeader>
+  </div>
+  <Code lang="astro" code={`<PaperHeader title="..." authors={authors}>
+  <figure slot="exhibit" class="ply-exhibit">
+    <ComplexStatic seed={seed} points={28} radius={0.17} label="..." />
+    <figcaption><b>NeurIPS 2026.</b> ...</figcaption>
+  </figure>
+</PaperHeader>`} />
+  <h3 id="summary">Summary, divider, and foot</h3>
+  <p><code>Tldr</code> sets the paper in one line at the lede's size, under the header and before the abstract, behind a small wall label. A 3px rule closes the front matter before the text, and <code>.ply-rule--measure</code> keeps it to the text's width. <code>Article</code>'s <code>foot</code> slot holds what closes the page, such as the pager, at the text's edge and under the article's own padding.</p>
+  <Tldr>Edges between cells carry the message that the vertices cannot.</Tldr>
+  <hr class="ply-rule ply-rule--measure" />
+  <Code lang="astro" code={`<Article>
+  <PaperHeader slot="header" title="..." authors={authors} />
+  <Tldr>One line that says what the paper found.</Tldr>
+  <Abstract><p>...</p></Abstract>
+  <hr class="ply-rule ply-rule--measure" />
+  <h2>1. Introduction</h2>
+  <Pager slot="foot" label="More papers" prevText="Newer" nextText="Older" prev={newer} next={older} />
+</Article>`} />
+
   <h2>Equations</h2>
   <p>KaTeX renders math at build time, so pages ship HTML and MathML and no math script. The Hodge Laplacian on <M tex={String.raw`k`} />-simplices combines a down and an up part:</p>
   <Equation tex={String.raw`L_k = B_k^{\top} B_k + B_{k+1} B_{k+1}^{\top}`} num={1} />
@@ -99,6 +151,15 @@ const examplePubs = [
   <Code lang="astro" code={`<Cite n={1} title="..." authors="..." venue="..." year={2024} />`} />
   <p>The card stays open while the pointer is on it and closes with Escape. In plain HTML, load <code>js/cite.js</code> (it is part of <code>js/all.js</code>).</p>
 
+  <h3 id="references">Reference list</h3>
+  <p><code>References</code> lists the works a paper cites, each entry the target <code>#ref-key</code> of a citation link. The title links to the version of record, and an alternate copy gets its own link, named for a screen reader with the title. The entry a link jumped to is tinted, with a tomato bar beside it. Sort the list with <code>byAuthorYear</code>, and build each address with <code>refHref</code>.</p>
+  <References refs={exampleRefs} level={4} />
+  <Code lang="astro" code={`import { References, byAuthorYear, refHref } from "@dario-loi/polytope/astro";
+
+<References refs={refs.sort(byAuthorYear)} />
+// refs: { key, authors, year, title, venue?, href?, alt?: { label, href }, cite?: string[] }[]`} />
+  <p>In an MDX body the citation text can link itself. <code>citeLinks</code> from <code>@dario-loi/polytope/astro/cite-links.mjs</code> is a hast plugin for Astro 7's MDX pipeline. It reads a JSON file of <code>{"{ key, cite }"}</code> entries beside each MDX file and links every occurrence of a <code>cite</code> string, such as "Bodnar et al., 2022", to <code>#ref-key</code>, at build time. Text already inside a link, code, or a heading is left alone. <code>match</code> picks the files and <code>refs</code> maps a file's path to its reference file.</p>
+
   <h2>Figures</h2>
   <Figure num={2}>
     <div class="ply-panel" style="aspect-ratio: 16/6; display: grid; place-items: center"><span class="ply-muted">Figure content goes here</span></div>
@@ -109,6 +170,8 @@ const examplePubs = [
   <img src={plot.src} alt="..." />
   <Fragment slot="caption">What the figure shows, then how to read it.</Fragment>
 </Figure>`} />
+
+  <p><code>column</code> keeps a figure to the text's width wherever it sits, and <code>split</code> sets a long caption under a wide figure in two columns from 60rem. Both are described with the <a href="#front-matter">front matter slots</a>.</p>
 
   <h2 id="bibtex">BibTeX</h2>
   <p>Long fields wrap under their value, so the whole entry reads before it is copied, and a cite key never breaks unless it is wider than the block. Pass <code>wrap={"{false}"}</code> to let lines scroll instead. <code>Code</code> takes the same <code>wrap</code>.</p>
@@ -124,8 +187,9 @@ const examplePubs = [
 
   <h2>Publication wall</h2>
   <p>Publications grouped by year, the year in wood type, the site owner's name in bold in each author list.</p>
-  <PubList pubs={examplePubs} me="John Doe" />
-  <Code lang="astro" code={`<PubList pubs={pubs} me="John Doe" />`} />
+  <PubList pubs={examplePubs} me="John Doe" class="ply-wall--lead" />
+  <Code lang="astro" code={`<PubList pubs={pubs} me="John Doe" class="ply-wall--lead" />`} />
+  <p><code>class</code> adds classes to the wall, such as <code>ply-wall--lead</code> for the short tomato lead above each year.</p>
   <p>The wall is a region named <code>label</code> ("Publications"). When it sits in a section of yours that has its own heading, pass <code>label={"{false}"}</code>, so the page does not name two regions alike. <code>fold</code> folds a long author list here as in the header, as text: the first names, yours, and the last.</p>
 
   <h2 id="walls">Walls</h2>

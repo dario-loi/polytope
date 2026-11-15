@@ -338,7 +338,7 @@ writeFileSync(
 );
 
 for (const f of readdirSync(join(root, "css/js"))) {
-  if (f.endsWith(".js")) copyFileSync(join(root, "css/js", f), join(dist, "js", f));
+  if (f.endsWith(".js") || f.endsWith(".d.ts")) copyFileSync(join(root, "css/js", f), join(dist, "js", f));
 }
 
 // ---------------------------------------------------------------- python

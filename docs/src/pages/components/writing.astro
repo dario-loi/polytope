@@ -8,9 +8,12 @@ import Stability from "@dario-loi/polytope/astro/Stability.astro";
 import Figure from "@dario-loi/polytope/astro/Figure.astro";
 import PostHeader from "@dario-loi/polytope/astro/PostHeader.astro";
 import CellSketch from "../../components/CellSketch.astro";
+import Tex from "@dario-loi/polytope/astro/Tex.astro";
+import KatexAssets from "@dario-loi/polytope/astro/KatexAssets.astro";
 import { u } from "../../data/nav";
 ---
 <Docs title="Long-form writing" status="experimental" lede="Notes, explainers, and blog posts: the post header, sidenotes, margin figures, footnotes, theorem environments, and collapsible detail.">
+  <KatexAssets slot="head" />
   <h2>Post header</h2>
   <PostHeader level={3} title="Example note: the Hodge Laplacian, drawn" lede="A worked example on one triangle." date="2026-09-14" minutes={6} tags={["Topology"]} />
   <Code lang="astro" code={`<PostHeader
@@ -21,6 +24,26 @@ import { u } from "../../data/nav";
   tags={["Topology"]}
 />`} />
   <p>The title is set like a paper's, so a site's posts and papers read as one series. The date prints in full, as "14 September 2026"; pass <code>locale</code> for another language. In an <code>&lt;Article&gt;</code>, give it <code>slot="header"</code> and it lines up with the text. Its title sizes to the header's own width, so the header takes its width from where it sits; in a box that shrinks to fit its content, give it a width. The <a href={u("/patterns/post/")}>blog post pattern</a> shows the whole page.</p>
+
+  <h3 id="entry">An entry without a date</h3>
+  <p>A project page or a section has no date. Leave out <code>date</code>, give the facts for the meta line in <code>meta</code>, and put actions in the default slot, under the tags. <code>stop</code> ends the title in the tomato full stop for a page that is a section.</p>
+  <PostHeader level={3} title="Example project" lede="A plotting library for simplicial data." meta={["Open source", "2025"]} tags={["Python"]}>
+    <p><a class="ply-button ply-button--sm" href="#entry">Source</a></p>
+  </PostHeader>
+  <Code lang="astro" code={`<PostHeader title="Example project" lede="..." meta={["Open source", "2025"]} tags={["Python"]}>
+  <p><a class="ply-button ply-button--sm" href="https://github.com/...">Source</a></p>
+</PostHeader>`} />
+
+  <h2 id="tex">Math in text from data</h2>
+  <p><code>M</code> sets one formula in markup. A summary, an abstract, or a caption that lives in front matter or a JSON file has no markup to put it in, so <code>Tex</code> takes the whole text: each <code>$...$</code> renders through KaTeX at build time, <code>*italic*</code>, <code>**bold**</code>, and <code>***both***</code> become <code>em</code> and <code>strong</code>, and the rest is written out as it is. Each formula stays on one line, since a short formula split after its operator reads wrong. <code>html</code> passes trusted inline HTML through, for a caption.</p>
+  <p><Tex text={String.raw`A $k$-simplex has $\binom{n}{k+1}$ faces in an $n$-complex, so a pass over **all** cells costs *one* sweep.`} /></p>
+  <Code lang="astro" code={`<p><Tex text={paper.tldr} /></p>
+<p><Tex text={String.raw\`Sums over $n \times d$ cells, in *one* pass.\`} /></p>`} />
+  <p><code>Tex</code> does not load KaTeX's stylesheet. <code>M</code> and <code>Equation</code> import it as a linked stylesheet, which holds the first paint until it arrives. A page that cares about its first paint puts <code>KatexAssets</code> in its head instead, when <code>hasMath</code> says its text has some. That writes the stylesheet inline and preloads the five faces a formula uses. This page does so. Write a literal dollar sign as <code>\$</code>, and in a YAML front matter field put text with backslashes in single quotes.</p>
+  <Code lang="astro" code={`import { KatexAssets, Tex, hasMath } from "@dario-loi/polytope/astro";
+
+<head>{hasMath(paper.tldr, paper.abstract) && <KatexAssets />}</head>`} />
+  <p><code>emphasis(text)</code> and <code>plain(text)</code> from the same module turn the markers into markup or drop them, for a search description or a feed.</p>
 
   <h2>Theorem environments</h2>
   <Env kind="definition" num="2.1" name="Simplicial complex">

@@ -4,6 +4,9 @@ import Example from "../../components/Example.astro";
 import ApiTable from "../../components/ApiTable.astro";
 import Code from "@dario-loi/polytope/astro/Code.astro";
 import Stability from "@dario-loi/polytope/astro/Stability.astro";
+import SectionHead from "@dario-loi/polytope/astro/SectionHead.astro";
+import DatedList from "@dario-loi/polytope/astro/DatedList.astro";
+import SiteFooter from "@dario-loi/polytope/astro/SiteFooter.astro";
 import { u } from "../../data/nav";
 
 const tabs = `<nav class="ply-cluster" style="--ply-cluster-gap: 0.25rem" aria-label="Example chapters">
@@ -124,4 +127,67 @@ document.addEventListener("ply-search:select", (e) => track("search-select", e.d
   <p>A label with a subtitle, such as a paper's "Name: what it does", shows the name and keeps the rest for screen readers, so a long title does not outweigh the page; <code>split={"{false}"}</code> shows it whole. The labels balance across their lines. Where "Previous" and "Next" are not the right words, as on a list newest first, rename them.</p>
   <Code lang="astro" code={`<Pager label="More publications" prev={{ label: newer.title, href: newer.href }} next={{ label: older.title, href: older.href }}
   prevText="Newer" nextText="Older" />`} />
+  <p>On an article page, <code>Article</code>'s <code>foot</code> slot sets the pager at the text's edge: <code>&lt;Pager slot="foot" ... /&gt;</code>.</p>
+
+  <h2 id="section-heads">Section heads</h2>
+  <p>A section's heading takes a way onward on the same line, such as "All publications". On a page of many sections, two marks make each section its own. <code>rule</code> opens it on a 3px rule that leads with a short tomato segment and climbs in three pixel steps at its end, which is the one retro move the kit makes. <code>mark</code> sets a small static complex before the title, seeded from a name, so each section draws its own and none of them moves. The rule goes inside the content width, and the full-width rule under a mast stays plain.</p>
+  <div class="ply-wide">
+    <SectionHead level={4} title="Publications" rule mark="Publications" more={{ label: "All publications", href: "#section-heads" }} />
+    <SectionHead level={4} title="Projects" more={{ label: "All projects", href: "#section-heads" }} />
+  </div>
+  <Code lang="astro" code={`<SectionHead title="Publications" rule mark="Publications" more={{ label: "All publications", href: "/publications/" }} />
+<SectionHead title="Projects" more={{ label: "All projects", href: "/projects/", attrs: { "data-track": "see-all" } }} />`} />
+  <p>The rule is also a class pair for markup of your own: <code>.ply-rule--stair</code> adds the steps and <code>.ply-rule--lead</code> the tomato segment, on an <code>hr.ply-rule</code>. The rule keeps its 3px in layout, since the steps rise into the space above it. The link is 24px tall at rest and 44px under a finger, and its arrow moves a little on hover.</p>
+
+  <h2 id="dated-list">Dated list</h2>
+  <p>A short list of the latest entries under a wall label: a month and year over a kind in one column, then a linked title and the rest of the line. It suits news, talks, or releases, in a mast's side column or under a section heading. <code>rest</code> is plain text, and <code>html</code> passes it through as trusted markup.</p>
+  <div style="max-width: 36rem">
+    <DatedList label="Latest" items={[
+      { when: "Sep 2026", kind: "Talk", title: "Sheaves in the lab", href: "#dated-list", rest: "At Example Workshop." },
+      { when: "Aug 2026", kind: "Paper", title: "Higher-order message passing", href: "#dated-list", rest: "Accepted at Example Venue." },
+      { when: "Jun 2026", kind: "Award", title: "Example Prize", href: "#dated-list", rest: "Best student paper." },
+    ]} />
+  </div>
+  <Code lang="astro" code={`<DatedList label="Latest" items={[
+  { when: "Sep 2026", kind: "Talk", title: "Sheaves in the lab", href: "/talks/x/", rest: "At Example Workshop." },
+]} />`} />
+  <p>To close a mast's side column on the line where the exhibit's caption does, put the list in the mast's <code>after</code> slot and give the mast <code>side</code>. See <a href={u("/foundations/layout/#mast")}>Space and layout</a>.</p>
+
+  <h2 id="footer">Site footer</h2>
+  <p>A 3px rule, then who the site is at the start, the links in groups by meaning, and a hairline-topped colophon. The groups share one row when they fit. When they do not, they stack and right-align on one edge, so no row holds a lone link. Links are 24px tall at rest and 44px under a finger. The footer at the foot of this page is the same component.</p>
+  <div class="ply-wide ex__live" style="border: 2px solid var(--ply-color-rule-strong); padding: 0 1.5rem">
+    <SiteFooter name="John Doe" lede="PhD student, Example University, Boston." top="Back to top" linksLabel="Example links">
+      <Fragment slot="links">
+        <ul class="ply-site-footer__links ply-small" role="list">
+          <li><a class="ply-target" href="#footer">Email</a></li>
+          <li><a class="ply-target" href="#footer">Google Scholar</a></li>
+          <li><a class="ply-target" href="#footer">GitHub</a></li>
+        </ul>
+        <ul class="ply-site-footer__links ply-small" role="list">
+          <li><a class="ply-target" href="#footer">Papers RSS</a></li>
+          <li><a class="ply-target" href="#footer">Privacy</a></li>
+        </ul>
+      </Fragment>
+      <Fragment slot="colophon">&copy; 2026 John Doe. Built with <a href="https://github.com/dario-loi/polytope">Polytope</a>.</Fragment>
+    </SiteFooter>
+  </div>
+  <Code lang="astro" code={`<SiteFooter name="John Doe" lede="PhD student, Example University, Boston." top="Back to top" linksLabel="Elsewhere">
+  <Fragment slot="links">
+    <ul class="ply-site-footer__links ply-small" role="list">
+      <li><a class="ply-target" href="https://github.com/...">GitHub</a></li>
+    </ul>
+    <ul class="ply-site-footer__links ply-small" role="list">
+      <li><a class="ply-target" href="/privacy/">Privacy</a></li>
+    </ul>
+  </Fragment>
+  <Fragment slot="colophon">&copy; 2026 John Doe.</Fragment>
+</SiteFooter>`} />
+  <p>The <code>who</code> slot replaces the name and the line under it. <code>top</code> adds a "Back to top" link to the end of the colophon, for a phone and for a visitor without script. A fine pointer at 48rem and wider does not see it. Group links inside <code>.ply-site-footer__links</code>, and put <code>ply-target</code> on each link so a finger gets 44px.</p>
+
+  <h2 id="back-to-top">Back to top</h2>
+  <p><code>BackToTop</code> is a 44px button at the bottom right of a phone's screen, inside the safe area. It shows while the reader scrolls up from more than a screen down, and goes again on scrolling down, after 2.5 seconds, and when the end of the page's content is within a screen, so it never covers the last line or the footer's link. Hidden, it takes no touch and no tab stop. A click scrolls up, smoothly unless reduced motion is on, and moves focus to <code>main</code>. The button at the corner of this page on a phone is this component.</p>
+  <Code lang="astro" code={`<main id="main">...</main>
+<BackToTop />
+<SiteFooter top="Back to top" ... />`} />
+  <p>Put it once in the body, after <code>main</code>. <code>js/backtop.js</code> drives it and is part of <code>js/all.js</code>. In plain HTML, write <code>&lt;button class="ply-backtop" type="button" aria-label="Back to top" tabindex="-1" inert data-ply-backtop-button&gt;</code> with an arrow icon inside.</p>
 </Docs>

@@ -97,18 +97,24 @@ const paper = {
     ["title", "The whole title, as the browser tab and the search result show it"],
     ["description", "One or two sentences, ideally under 160 characters"],
     ["canonical", "The page's preferred address. Defaults to its address on site"],
-    ["image, imageAlt", "The preview image, as a path or an imported image, and its text alternative"],
+    ["image, imageAlt, imageType", "The preview image, as a path or an imported image, its text alternative, and its media type (image/png) for og:image:type"],
     ["type", "website, article, or profile. Defaults to article with a citation, else website"],
     ["siteName, locale", "The site's name and its language, such as en_US, for previews and the records. On the home page siteName also writes a WebSite record"],
     ["twitter", "The site's account on X, such as @yourname"],
     ["noindex", "Keeps the page out of results, and drops the canonical link"],
     ["published, modified", "Dates for an article, as ISO text or a Date"],
     ["person", "name, url, jobTitle, affiliation, sameAs, image, and id: a Person record, by default with @id home#person"],
-    ["citation", "title, authors, date, journal or conference, volume, issue, firstPage, lastPage, pdf, doi, arxiv, abstract, and id: the record's @id, by default the canonical address with #article"],
+    ["citation", "title, authors, date, journal or conference, volume, issue, firstPage, lastPage, pdf, doi, arxiv, abstract, keywords, and id: the record's @id, by default the canonical address with #article. An author may be { name, href, institutions }"],
+    ["icons", "svg, png, pngSize, and apple: the favicon set, as links. Put favicon.ico at the site's root, where crawlers ask first"],
+    ["themeColor", "{ light, dark }: the ground the browser's bar takes in each theme, #FFFFFF and #161615 by default. false leaves the meta out"],
     ["breadcrumbs", "The trail from the home page to this one, as name and href pairs. Search results may show it in place of the address"],
     ["schema", "Further schema.org records, written out as given. One with the @id of a record written here is merged into it, its fields winning"],
     ["sitemap", "The sitemap's address, for a link in the head"],
   ]} head={["Prop", "Effect"]} />
+
+  <h3 id="extras">What the extra tags are for</h3>
+  <p>A citation with <code>institutions</code> on its authors writes <code>citation_author_institution</code> after each name, which Scholar uses to tell people with the same name apart. <code>keywords</code>, the arXiv number, and the page's own address as <code>citation_abstract_html_url</code> and <code>citation_fulltext_html_url</code> go into the tags too, and a locale gives <code>citation_language</code>. The Twitter tags mirror the Open Graph ones, and every indexed page carries <code>max-image-preview:large</code>, so search may show its pictures at full width.</p>
+  <p>The browser's bar takes the page's ground. <code>Seo</code> writes two <code>theme-color</code> metas, one for each system theme. Once a visitor picks a theme with the switch, the system's no longer applies, so <code>js/theme.js</code> rewrites both to the ground of the chosen theme.</p>
 
   <h2>Check the result</h2>
   <p>After a deploy, paste a page's address into the <a href="https://validator.schema.org/">Schema Markup Validator</a> to see the records it reads, and into Google's <a href="https://search.google.com/test/rich-results">Rich Results Test</a> to see which ones Google can show, and into a link preview of any messaging app to see the card. These docs use the component on every page; <a href={u("/getting-started/astro/")}>Using with Astro</a> has the rest of the layout.</p>

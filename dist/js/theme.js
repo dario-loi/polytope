@@ -7,6 +7,19 @@
 const KEY = "ply-theme";
 const root = document.documentElement;
 
+// The browser's bar takes the page's ground. <Seo> writes two theme-color metas scoped to the
+// system theme (data-ply-bar="light" and "dark"); once the theme is chosen with the switch the
+// system's no longer applies, so both metas are rewritten to the chosen theme's ground.
+const bar = {};
+for (const m of document.querySelectorAll('meta[name="theme-color"][data-ply-bar]')) bar[m.dataset.plyBar] = m.getAttribute("content");
+function paintBar() {
+  const theme = root.dataset.theme;
+  if ((theme !== "light" && theme !== "dark") || !bar[theme]) return;
+  for (const m of document.querySelectorAll('meta[name="theme-color"][data-ply-bar]')) m.setAttribute("content", bar[theme]);
+}
+new MutationObserver(paintBar).observe(root, { attributeFilter: ["data-theme"] });
+paintBar();
+
 function current() {
   return root.dataset.theme || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
 }

@@ -13,7 +13,7 @@ import re
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Iterable, Sequence
 
-from ._tokens import DIVERGING, SEQUENTIAL
+from ._tokens import CATEGORICAL, COLORS, DIVERGING, SEQUENTIAL
 
 try:
     import matplotlib as _matplotlib
@@ -24,15 +24,18 @@ except ImportError:  # matplotlib is an optional extra
 
 if TYPE_CHECKING:
     from matplotlib.axes import Axes
+    from matplotlib.figure import Figure
     from matplotlib.text import Annotation
 
 __all__ = [
     "DIVERGING_NAME",
     "SEQUENTIAL_NAME",
     "diverging_cmap",
+    "inline_svg",
     "label_lines",
     "rc_params",
     "register_cmaps",
+    "save_inline_svg",
     "sequential_cmap",
     "style_path",
     "use",
@@ -268,6 +271,56 @@ def label_lines(
 
     if remove_legend and ax.get_legend() is not None:
         ax.get_legend().remove()
+    return out
+
+
+def inline_svg(fig: "Figure") -> str:
+    """Return ``fig`` as an SVG string whose colors follow the page's theme.
+
+    Draw the figure under ``use("light")``. Its Polytope colors then become CSS, so one
+    file serves both themes when it is inlined in a page (the Astro ``PlotSvg`` component
+    does that):
+
+    - the ink color becomes ``currentColor``, so text and strokes take the page's text color;
+    - the muted ink, the grid, and the page ground become
+      ``var(--ply-color-text-muted, ...)``, ``var(--ply-color-rule, ...)`` and
+      ``var(--ply-color-bg, ...)``;
+    - the eight categorical colors become ``var(--ply-viz-1, ...)`` to ``var(--ply-viz-8, ...)``,
+      which the stylesheet sets for each theme. The original light value is the fallback.
+
+    Text is kept as text (``svg.fonttype: none``), for readers and crawlers, and the figure
+    is saved with a transparent background. Colors other than these (a custom color you
+    passed to matplotlib) are left as they are.
+    """
+    _require()
+    import io
+
+    light = COLORS["light"]
+    swaps = {
+        light["text"].lower(): "currentColor",
+        light["text_muted"].lower(): f"var(--ply-color-text-muted, {light['text_muted'].lower()})",
+        light["rule"].lower(): f"var(--ply-color-rule, {light['rule'].lower()})",
+        light["bg"].lower(): f"var(--ply-color-bg, {light['bg'].lower()})",
+    }
+    for i, color in enumerate(CATEGORICAL["light"], start=1):
+        swaps[color.lower()] = f"var(--ply-viz-{i}, {color.lower()})"
+
+    buf = io.StringIO()
+    with _matplotlib.rc_context({"svg.fonttype": "none"}):
+        fig.savefig(buf, format="svg", transparent=True)
+    svg = buf.getvalue()
+    # matplotlib writes colors as #rrggbb in style declarations; swap each whole token.
+    return re.sub(
+        r"#[0-9a-fA-F]{6}\b",
+        lambda m: swaps.get(m.group(0).lower(), m.group(0)),
+        svg,
+    )
+
+
+def save_inline_svg(fig: "Figure", path: str | Path) -> Path:
+    """Write ``inline_svg(fig)`` to ``path`` and return the path."""
+    out = Path(path)
+    out.write_text(inline_svg(fig), encoding="utf-8")
     return out
 
 

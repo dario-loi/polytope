@@ -119,3 +119,19 @@ def test_label_lines_skips_nan_tail():
     ax.plot([0, 1, 2], [1.0, 2.0, float("nan")], label="a")
     (ann,) = mpl.label_lines(ax)
     assert ann.xy == (1.0, 2.0)
+
+
+def test_inline_svg_follows_the_page_theme(tmp_path):
+    dl.use("light")
+    fig, ax = plt.subplots()
+    ax.plot([0, 1, 2], [1, 3, 2])
+    ax.plot([0, 1, 2], [2, 1, 3])
+    ax.set_title("A title")
+    svg = mpl.inline_svg(fig)
+    assert "currentColor" in svg
+    assert "var(--ply-viz-1, #d9412b)" in svg
+    assert "var(--ply-viz-2, #009b93)" in svg
+    assert "<text" in svg  # text stays text
+    assert "#141414" not in svg.lower()
+    out = mpl.save_inline_svg(fig, tmp_path / "plot.svg")
+    assert out.read_text(encoding="utf-8") == svg

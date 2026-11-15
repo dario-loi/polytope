@@ -1,0 +1,21 @@
+---
+// A button that takes a phone back to the top, bottom right inside the safe area. It shows only
+// on phones (under 48rem, or a touch screen turned sideways), only while scrolling up from more
+// than a screen down, and goes again on scrolling down, after 2.5 seconds, and when the end of
+// the page's content is within a screen, so it never covers the last line or the footer's own
+// link. Hidden, it takes no touch and no tab stop. Put it once in the body, after <main id="main">;
+// js/backtop.js (part of js/all.js) drives it, and focus moves to <main> on the way up.
+//   <BackToTop />
+// A link with data-ply-backtop (SiteFooter's `top`) does the same without the button, and
+// without script it is an ordinary link to #top.
+import Icon from "./Icon.astro";
+interface Props {
+  /** The button's name, for another language. */
+  label?: string;
+}
+const { label = "Back to top" } = Astro.props;
+---
+<button class="ply-backtop" type="button" aria-label={label} tabindex="-1" inert data-ply-backtop-button>
+  <Icon name="arrow-up" size="1.25em" />
+</button>
+<script>import "../dist/js/backtop.js";</script>

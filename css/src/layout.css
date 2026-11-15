@@ -17,6 +17,21 @@
   /* A list page's lede runs as wide as a title line and balances, so a sentence a little longer than
      the measure never leaves one word on its own line. */
   .ply-mast__lede--wide { max-width: 52rem; text-wrap: balance; }
+  /* Dense (<Mast dense>): space that separates nothing comes down a step. 2rem under the mast, and a
+     compact mast 2rem over and 1.5rem under. */
+  .ply-mast.ply-mast--dense { padding-block-end: var(--ply-space-7); }
+  .ply-mast.ply-mast--dense.ply-mast--compact { padding-block: var(--ply-space-6) var(--ply-space-5); }
+  /* The exhibit beside the title from 48rem (<Mast side>), in a column of at most 35rem and 40% of
+     the mast, so the panel never spans the row; stacked, it is 24rem at most, on the content edge.
+     The left column runs the exhibit's height, and the "after" block closes on the line where the
+     exhibit's caption does. */
+  .ply-mast--side .ply-mast__exhibit { max-width: 24rem; }
+  .ply-mast--side > :first-child { display: flex; flex-direction: column; align-self: stretch; }
+  .ply-mast--side > :first-child > .ply-mast__after { margin-top: auto; }
+  @media (min-width: 48rem) {
+    .ply-mast.ply-mast--side:has(> .ply-mast__exhibit:not(:empty)) { grid-template-columns: minmax(0, 1fr) minmax(16rem, min(35rem, 40%)); }
+    .ply-mast--side .ply-mast__exhibit { max-width: none; }
+  }
   /* The exhibit column opens only when there is an exhibit; a mast without one (a list page)
      keeps the whole width for its title. */
   @media (min-width: 64rem) {

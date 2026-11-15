@@ -1,0 +1,45 @@
+---
+// The frame a working model on a paper page shares: a black exhibit panel holding the model's
+// drawing (one inline SVG), its controls and readout under the panel on the page ground, and a
+// wall-label caption that says what the model is. A model is an illustration of a paper's
+// mechanism, and its caption says so.
+//   <Model name="gate" title="A gate that opens at a threshold">
+//     <svg viewBox="0 0 100 56">...</svg>
+//     <Slider slot="controls" ... />
+//     <span slot="caption">Drag the threshold to open or close the gate.</span>
+//   </Model>
+// The drawing's classes (.ply-m-chalk, .ply-m-move, ...) are chalk lines and points on the
+// black panel, mustard at half strength for filled regions, and tomato for the one moving part.
+// With `firstRun`, the model waits as a blank panel until its script draws the start state and
+// runs once, the first time it is half in view (js/firstrun.js). Reduced motion skips the wait,
+// and a script that stalls shows the finished drawing after 2.5 seconds. Without script a model
+// shows its finished drawing and no controls.
+interface Props {
+  /** The model's name, for its script to find it (`data-model`). */
+  name: string;
+  /** Bold lead of the caption, a noun phrase in sentence case. */
+  title: string;
+  /** Marks the figure with a wall label, for a model not yet checked; shown only when true. */
+  draft?: boolean;
+  /** The label's words, for another language. */
+  draftLabel?: string;
+  /** Holds the figure back until js/firstrun.js draws the start state and runs it once. */
+  firstRun?: boolean;
+  class?: string;
+}
+const { name, title, draft = false, draftLabel = "Draft", firstRun = false, class: className } = Astro.props;
+---
+<figure class:list={["ply-exhibit ply-model", className]} data-model={name}>
+  {firstRun && <script is:inline>
+    // Before first paint: with motion allowed, hold the figure back until the module draws the start
+    // state; if that script stalls, show the finished drawing after 2.5 s.
+    (function (f) {
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      f.setAttribute("data-first", "wait");
+      setTimeout(function () { if (f.getAttribute("data-first") === "wait") f.removeAttribute("data-first"); }, 2500);
+    })(document.currentScript.parentElement);
+  </script>}
+  <div class="ply-panel ply-panel--flush ply-model__stage" data-surface="panel"><slot /></div>
+  {Astro.slots.has("controls") && <div class="ply-model__controls"><slot name="controls" /></div>}
+  <figcaption>{draft && <span class="ply-label ply-model__draft">{draftLabel}</span>} <b>{title}.</b> <slot name="caption" /></figcaption>
+</figure>

@@ -1,0 +1,39 @@
+---
+// A short dated list under a wall label: each row a month and year over a kind label, then a
+// linked title and the rest of the line. For the latest news, talks, or releases, in a mast's
+// side column or under a section heading.
+//   <DatedList label="Latest" items={[{ when: "Sep 2026", kind: "Talk", title: "Sheaves in the lab", href: "/talks/x/", rest: "At Example Workshop." }]} />
+// `rest` is plain text, or trusted markup with `html`.
+interface Item {
+  when: string;
+  /** "2026-09" or a full date, for the <time> element; the printed `when` otherwise. */
+  datetime?: string;
+  kind?: string;
+  title: string;
+  /** What follows the title on the line. */
+  rest?: string;
+  href: string;
+  /** Attributes for the title's link, such as data attributes for analytics. */
+  attrs?: Record<string, string>;
+}
+interface Props {
+  items: Item[];
+  /** The wall label over the list, and the region's name. */
+  label?: string;
+  /** `rest` is trusted HTML. */
+  html?: boolean;
+  class?: string;
+}
+const { items, label = "Latest", html = false, class: className } = Astro.props;
+---
+<section class:list={["ply-dated", className]} aria-label={label}>
+  <p class="ply-label" aria-hidden="true">{label}</p>
+  <ol class="ply-dated__list" role="list">
+    {items.map((e) => (
+      <li>
+        <span class="ply-dated__meta"><time class="ply-dated__when" datetime={e.datetime}>{e.when}</time>{e.kind && <span class="ply-dated__kind">{e.kind}</span>}</span>
+        <span class="ply-dated__what"><a href={e.href} {...e.attrs}>{e.title}</a>.{e.rest && (html ? <> <Fragment set:html={e.rest} /></> : <> {e.rest}</>)}</span>
+      </li>
+    ))}
+  </ol>
+</section>

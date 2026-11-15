@@ -6,19 +6,19 @@ import Stability from "@dario-loi/polytope/astro/Stability.astro";
 import { u } from "../../data/nav";
 const families = [
   ["Buttons and tags", "/components/buttons/", "Buttons, tags, status labels, stability labels.", "stable"],
-  ["Navigation", "/components/navigation/", "Top bar, search, chapter tabs, sidebar, on-this-page list, breadcrumb, pager.", "stable"],
+  ["Navigation", "/components/navigation/", "Top bar, search, chapter tabs, sidebar, on-this-page list, breadcrumb, pager, section heads, site footer, back to top.", "stable"],
   ["Notes", "/components/notes/", "Note, info, warning, success, and danger callouts.", "stable"],
   ["Forms", "/components/forms/", "Inputs, selects, checkboxes, radios, switches, sliders, segmented controls.", "stable"],
   ["Tables", "/components/tables/", "Data tables with tabular numbers, stripes, and captions.", "stable"],
   ["Code", "/components/code/", "Highlighted code panels with copy, inline code, keyboard keys.", "stable"],
-  ["Complex", "/components/complex/", "The live Vietoris-Rips complex with its radius slider, the emblem of these docs.", "experimental"],
+  ["Complex", "/components/complex/", "The live Vietoris-Rips complex with its radius slider, the emblem of these docs, and its static and small versions.", "experimental"],
   ["Atlas", "/components/atlas/", "A globe of the places in a CV that follows the entries as you read.", "experimental"],
   ["Probability machine", "/components/machine/", "The live Galton board and the loading indicator.", "experimental"],
-  ["Research", "/components/research/", "Paper header, figures, equations, citations, BibTeX, publication wall.", "experimental"],
+  ["Research", "/components/research/", "Paper header and front matter, figures, equations, citations, references, BibTeX, publication wall.", "experimental"],
   ["Search engines", "/getting-started/seo/", "Head tags for search results, Google Scholar, and link previews.", "experimental"],
-  ["Long-form writing", "/components/writing/", "Post header, sidenotes, margin figures, footnotes, theorem environments, collapsible sections.", "experimental"],
-  ["Demo chrome", "/components/demo/", "App shell, controls, readouts, empty states, toasts.", "experimental"],
-  ["Charts", "/components/charts/", "Chart frame, legend, tooltip, texture fill.", "experimental"],
+  ["Long-form writing", "/components/writing/", "Post header, inline math in text from data, sidenotes, margin figures, footnotes, theorem environments, collapsible sections.", "experimental"],
+  ["Demo chrome", "/components/demo/", "App shell, controls, readouts, working-model frame, empty states, the page not found, toasts.", "experimental"],
+  ["Charts", "/components/charts/", "Chart frame, legend, tooltip, texture fill, plots saved as inline SVG.", "experimental"],
 ] as const;
 ---
 <Docs title="Components" lede="Every part of the kit, as plain HTML classes and as Astro components.">

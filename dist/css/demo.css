@@ -34,6 +34,62 @@
   .ply-empty__title { margin: 0; font-family: var(--ply-font-display); font-size: var(--ply-size-xl); font-weight: 400; line-height: 1.1; }
   .ply-empty p:not(.ply-empty__title) { color: inherit; opacity: 0.85; font-size: var(--ply-size-md); }
 
+  /* A working model's frame (Model): a flush black panel holding one SVG, its controls and readout
+     under the panel on the page ground, and the exhibit caption. */
+  .ply-model { max-width: 30rem; }
+  .ply-model__stage > svg { display: block; width: 100%; height: auto; }
+  .ply-model__controls { display: grid; gap: var(--ply-space-3); margin-top: var(--ply-space-3); }
+  .ply-model__controls .ply-readout { max-width: 20rem; }
+  /* A choice keeps its own width instead of stretching across the column. */
+  .ply-model__controls .ply-segmented { justify-self: start; }
+  .ply-model__draft { margin-inline-end: var(--ply-space-2); }
+  /* First-view run (Model firstRun): nothing of the model shows until its start state is drawn, so the
+     finished drawing never appears and then vanishes. The panel stays, so the layout does not move. */
+  .ply-model[data-first="wait"] :is(.ply-model__stage > svg, .ply-model__controls) { visibility: hidden; }
+  /* A slider that moves a mark along the drawing's horizontal axis wears .ply-model__axis with --x0
+     and --x1, the fractions of the panel width where the axis starts and ends. Its track then runs
+     from x0 to x1 (the thumb's own width added outside, since a thumb's center travels inset by
+     half of it), so the thumb sits exactly under the mark it moves, at every value and width. The
+     value moves up beside the label to leave the track the full axis. */
+  .ply-model__axis { --thumb: 1.125rem; }
+  .ply-model__axis .ply-control { grid-template-columns: minmax(0, 1fr) auto; column-gap: var(--ply-space-3); }
+  .ply-model__axis .ply-control__label { grid-area: 1 / 1; }
+  .ply-model__axis .ply-range { display: contents; }
+  .ply-model__axis .ply-range output { grid-area: 1 / 2; align-self: baseline; }
+  .ply-model__axis .ply-slider { grid-area: 2 / 1 / 3 / 3; margin-inline: calc(var(--x0) * 100% - var(--thumb) / 2) calc((1 - var(--x1)) * 100% - var(--thumb) / 2); width: auto; }
+  /* Without script a model shows its finished drawing and no controls. */
+  @media (scripting: none) { .ply-model__controls { display: none; } }
+  /* The drawing's vocabulary, as in the complex and the Atlas: chalk lines and points on the black
+     panel, mustard at half strength for filled regions, tomato for the one moving part. */
+  .ply-model .ply-m-chalk { stroke: var(--ply-color-panel-text); fill: none; }
+  .ply-model .ply-m-chalk-fill { fill: var(--ply-color-panel-text); }
+  .ply-model .ply-m-quiet { stroke: var(--ply-color-panel-muted); fill: none; }
+  .ply-model .ply-m-quiet-fill { fill: var(--ply-color-panel-muted); }
+  .ply-model .ply-m-rule { stroke: var(--ply-color-panel-rule); fill: none; }
+  .ply-model .ply-m-note { fill: var(--ply-color-note); fill-opacity: 0.5; }
+  .ply-model .ply-m-move { fill: var(--ply-color-accent); }
+  .ply-model .ply-m-move-line { stroke: var(--ply-color-accent); fill: none; }
+  .ply-model .ply-m-text { fill: var(--ply-color-panel-text); font-family: var(--ply-font-text); font-weight: 600; }
+  .ply-model .ply-m-text-quiet { fill: var(--ply-color-panel-muted); font-family: var(--ply-font-text); }
+  .ply-model .ply-m-num { font-family: var(--ply-font-mono); font-variant-numeric: tabular-nums; }
+
+  /* The page for an address that is not here (Lost): ways onward, each a name in wood type with an
+     arrow and a line, hairlines between, the tomato on the name when one is hovered. The exhibit
+     goes beside them from 64rem. */
+  .ply-lost { padding-block: var(--ply-space-5) var(--ply-space-8); display: grid; gap: var(--ply-space-6); align-items: start; }
+  .ply-lost__ways { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; border-top: var(--ply-border-rule) solid var(--ply-color-rule-strong); }
+  .ply-prose .ply-lost__ways { padding-inline-start: 0; }
+  .ply-prose .ply-lost__ways > li + li { margin-top: 0; }
+  .ply-lost__ways li { border-bottom: var(--ply-border-hair) solid var(--ply-color-rule); }
+  .ply-lost__way { display: grid; gap: var(--ply-space-1); padding-block: var(--ply-space-4); text-decoration: none; color: inherit; }
+  .ply-lost__label { font-family: var(--ply-font-display); font-size: var(--ply-size-xl); display: inline-flex; align-items: center; gap: var(--ply-space-2); overflow-wrap: anywhere; }
+  .ply-lost__note { color: var(--ply-color-text-muted); }
+  .ply-lost__way:hover .ply-lost__label, .ply-lost__way:focus-visible .ply-lost__label { color: var(--ply-color-accent-text); }
+  @media (min-width: 64rem) {
+    .ply-lost:has(> .ply-lost__exhibit) { grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: var(--ply-space-7); }
+    .ply-lost__exhibit { order: 2; }
+  }
+
   /* Toast for short confirmations. */
   .ply-toast { position: fixed; inset-inline: var(--ply-space-4); bottom: var(--ply-space-4); z-index: 200; margin-inline: auto; max-width: 26rem; display: flex; gap: var(--ply-space-3); align-items: center; background: var(--ply-color-panel); color: var(--ply-color-panel-text); padding: var(--ply-space-3) var(--ply-space-4); font-size: var(--ply-size-sm); box-shadow: 0 0.75rem 2rem rgb(0 0 0 / 0.25); outline: 1px solid var(--ply-color-panel-rule); outline-offset: -1px; animation: ply-toast-in var(--ply-duration-slow) var(--ply-ease-out); }
   @keyframes ply-toast-in { from { transform: translateY(0.75rem); opacity: 0; } }

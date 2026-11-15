@@ -4,26 +4,13 @@
 // autoplay="visible" grows it from bare points on first view; the default draws it finished.
 // With autoplay the server's edges and triangles stay hidden while the script loads (machine.css),
 // and the slider and counts start at 0 to match; without script they do nothing, so they hide.
+import { complexLayout } from "./complex.ts";
 interface Props { points?: number; radius?: number; seed?: number; label?: string; controls?: boolean; autoplay?: "visible" | "none"; id?: string; class?: string }
 const { points = 36, radius = 0.16, seed = 7, label = "A random complex", controls = true, autoplay = "none", id = `cx-${seed}-${points}`, class: className } = Astro.props;
 
 // same generator, layout, and dense-drawing budget as css/js/complex.js
 const DENSE = 2000;
-let s = seed >>> 0 || 1;
-const rand = () => ((s = (s * 1664525 + 1013904223) >>> 0) / 4294967296);
-const cols = Math.ceil(Math.sqrt(points * 1.8)), rows = Math.ceil(points / cols);
-const pts = Array.from({ length: points }, (_, i) => {
-  const c = i % cols, r = Math.floor(i / cols);
-  return [6 + ((c + 0.15 + rand() * 0.7) / cols) * 88, 5 + ((r + 0.15 + rand() * 0.7) / rows) * 46];
-});
-const R = radius * 100;
-const adj = pts.map(() => new Set<number>());
-const edges: [number, number][] = [];
-for (let i = 0; i < points; i++) for (let j = i + 1; j < points; j++) {
-  if (Math.hypot(pts[i][0] - pts[j][0], pts[i][1] - pts[j][1]) <= R) { edges.push([i, j]); adj[i].add(j); adj[j].add(i); }
-}
-const tris: [number, number, number][] = [];
-for (const [i, j] of edges) for (const k of adj[i]) if (k > j && adj[j].has(k)) tris.push([i, j, k]);
+const { pts, edges, tris } = complexLayout(seed, points, radius);
 const grows = autoplay === "visible";
 const shown = grows ? { radius: 0, edges: 0, triangles: 0 } : { radius, edges: edges.length, triangles: tris.length };
 ---

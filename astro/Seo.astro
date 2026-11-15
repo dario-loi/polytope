@@ -9,11 +9,17 @@
 // is the canonical address with #article, so a fuller record of the same paper that a site
 // writes itself, with the same @id, merges with it instead of counting as a second work.
 // Records that share an @id are written as one, with the fields given in `schema` winning.
+// A citation's authors may carry their institutions, and its keywords, arXiv number, and
+// abstract page go into the citation_ tags too, which Scholar and reference managers read.
+// The twitter tags mirror the Open Graph ones, the image's type and a large-preview hint for
+// search are written, and `icons` links the favicon set. The browser's address bar takes the
+// page's ground: two theme-color metas scoped to the system theme, which js/theme.js rewrites
+// once a visitor picks a theme with the switch.
 
 /** A paper, for Google Scholar and reference managers. */
 export interface Citation {
   title: string;
-  authors: (string | { name: string; href?: string })[];
+  authors: (string | { name: string; href?: string; institutions?: string[] })[];
   /** "2026", "2026-06", or "2026-06-14". */
   date: string | Date;
   journal?: string;
@@ -28,6 +34,8 @@ export interface Citation {
   /** The arXiv identifier: the part of the address after arxiv.org/abs/. */
   arxiv?: string;
   abstract?: string;
+  /** Subjects, written as citation_keywords. */
+  keywords?: string[];
   /** The ScholarlyArticle record's @id. Defaults to the canonical address with #article;
    *  left out without one, as on a noindex page, unless given here. */
   id?: string;
@@ -63,8 +71,14 @@ interface Props {
   /** Defaults to "article" with a citation, else "website". */
   type?: "website" | "article" | "profile";
   siteName?: string;
-  /** Such as "en_US". */
+  /** Such as "en_US". Its language is the citation_language of a paper. */
   locale?: string;
+  /** The image's media type, such as "image/png", written as og:image:type. */
+  imageType?: string;
+  /** The favicon set. `svg` and `png` are addresses; `pngSize` is the raster's size ("192x192"); `apple` is the home-screen icon. */
+  icons?: { svg?: string; png?: string; pngSize?: string; apple?: string };
+  /** The ground the browser's bar takes in each theme, as hex colors. false leaves the meta out. */
+  themeColor?: { light: string; dark: string } | false;
   /** The site's account, such as "@yourname", for X and Twitter cards. */
   twitter?: string;
   /** Keep this page out of search results, such as a 404 or a draft. */
@@ -82,7 +96,7 @@ interface Props {
   sitemap?: string;
 }
 
-const { title, description, canonical, image, imageAlt, citation, person, breadcrumbs, schema, sitemap, siteName, locale, twitter, published, modified, noindex = false } = Astro.props;
+const { title, description, canonical, image, imageAlt, imageType, icons, themeColor = { light: "#FFFFFF", dark: "#161615" }, citation, person, breadcrumbs, schema, sitemap, siteName, locale, twitter, published, modified, noindex = false } = Astro.props;
 const type = Astro.props.type ?? (citation ? "article" : "website");
 const site = Astro.site;
 const here = site ? new URL(Astro.url.pathname, site) : undefined;
@@ -97,7 +111,7 @@ const pic = typeof image === "string" ? { src: image } : image;
 const picAlt = imageAlt ?? (typeof image === "object" ? image.alt : undefined);
 const iso = (d: string | Date) => (d instanceof Date ? d.toISOString() : d);
 const day = (d: string | Date) => (d instanceof Date ? d.toISOString().slice(0, 10) : d);
-const names = (citation?.authors ?? []).map((a) => (typeof a === "string" ? a : a.name));
+const authors = (citation?.authors ?? []).map((a) => (typeof a === "string" ? { name: a, institutions: [] as string[] } : { name: a.name, institutions: a.institutions ?? [] }));
 const venue = citation?.journal ?? citation?.conference;
 const articleId = citation?.id ? abs(citation.id) : url && `${url.split("#")[0]}#article`;
 const personId = person?.id ? abs(person.id) : home && `${home}#person`;
@@ -117,8 +131,8 @@ if (citation) {
   const same = [citation.doi && `https://doi.org/${citation.doi}`, citation.arxiv && `https://arxiv.org/abs/${citation.arxiv}`].filter(Boolean);
   records.push(ld({
     "@type": "ScholarlyArticle", "@id": articleId, headline: citation.title, name: citation.title,
-    author: (citation.authors ?? []).map((a) => (typeof a === "string" ? { "@type": "Person", name: a } : { "@type": "Person", name: a.name, url: a.href && abs(a.href) })),
-    datePublished: day(citation.date), abstract: citation.abstract, url, mainEntityOfPage: url, inLanguage: lang,
+    author: (citation.authors ?? []).map((a) => (typeof a === "string" ? { "@type": "Person", name: a } : { "@type": "Person", name: a.name, url: a.href && abs(a.href), affiliation: a.institutions?.length ? a.institutions.map((name) => ({ "@type": "Organization", name })) : undefined })),
+    datePublished: day(citation.date), abstract: citation.abstract, keywords: citation.keywords?.length ? citation.keywords.join(", ") : undefined, url, mainEntityOfPage: url, inLanguage: lang,
     isPartOf: venue && { "@type": citation.journal ? "Periodical" : "CreativeWork", name: venue },
     pageStart: citation.firstPage, pageEnd: citation.lastPage,
     image: pic && abs(pic.src),
@@ -155,7 +169,7 @@ const json = (node: unknown) => JSON.stringify(node).replace(/</g, "\\u003c");
 <title>{title}</title>
 {description && <meta name="description" content={description} />}
 {url && <link rel="canonical" href={url} />}
-{noindex && <meta name="robots" content="noindex" />}
+{noindex ? <meta name="robots" content="noindex" /> : <meta name="robots" content="max-image-preview:large" />}
 {sitemap && <link rel="sitemap" type="application/xml" href={sitemap} />}
 
 <meta property="og:type" content={type} />
@@ -165,6 +179,7 @@ const json = (node: unknown) => JSON.stringify(node).replace(/</g, "\\u003c");
 {siteName && <meta property="og:site_name" content={siteName} />}
 {locale && <meta property="og:locale" content={locale} />}
 {pic && <meta property="og:image" content={abs(pic.src)} />}
+{pic && imageType && <meta property="og:image:type" content={imageType} />}
 {pic?.width && <meta property="og:image:width" content={String(pic.width)} />}
 {pic?.height && <meta property="og:image:height" content={String(pic.height)} />}
 {pic && picAlt && <meta property="og:image:alt" content={picAlt} />}
@@ -172,11 +187,25 @@ const json = (node: unknown) => JSON.stringify(node).replace(/</g, "\\u003c");
 {type === "article" && modified && <meta property="article:modified_time" content={iso(modified)} />}
 <meta name="twitter:card" content={pic ? "summary_large_image" : "summary"} />
 {twitter && <meta name="twitter:site" content={twitter} />}
+<meta name="twitter:title" content={title} />
+{description && <meta name="twitter:description" content={description} />}
+{pic && <meta name="twitter:image" content={abs(pic.src)} />}
+{pic && picAlt && <meta name="twitter:image:alt" content={picAlt} />}
+{icons?.svg && <link rel="icon" href={icons.svg} type="image/svg+xml" />}
+{icons?.png && <link rel="icon" href={icons.png} type="image/png" sizes={icons.pngSize ?? "192x192"} />}
+{icons?.apple && <link rel="apple-touch-icon" href={icons.apple} />}
+{themeColor && <meta name="theme-color" content={themeColor.light} media="(prefers-color-scheme: light)" data-ply-bar="light" />}
+{themeColor && <meta name="theme-color" content={themeColor.dark} media="(prefers-color-scheme: dark)" data-ply-bar="dark" />}
 
 {citation && (
   <>
     <meta name="citation_title" content={citation.title} />
-    {names.map((n) => <meta name="citation_author" content={n} />)}
+    {authors.map((a) => (
+      <>
+        <meta name="citation_author" content={a.name} />
+        {a.institutions.map((i) => <meta name="citation_author_institution" content={i} />)}
+      </>
+    ))}
     <meta name="citation_publication_date" content={day(citation.date).replace(/-/g, "/")} />
     {citation.journal && <meta name="citation_journal_title" content={citation.journal} />}
     {citation.conference && <meta name="citation_conference_title" content={citation.conference} />}
@@ -186,6 +215,11 @@ const json = (node: unknown) => JSON.stringify(node).replace(/</g, "\\u003c");
     {citation.lastPage !== undefined && <meta name="citation_lastpage" content={String(citation.lastPage)} />}
     {citation.pdf && <meta name="citation_pdf_url" content={abs(citation.pdf)} />}
     {citation.doi && <meta name="citation_doi" content={citation.doi} />}
+    {citation.arxiv && <meta name="citation_arxiv_id" content={citation.arxiv} />}
+    {url && <meta name="citation_abstract_html_url" content={url} />}
+    {url && <meta name="citation_fulltext_html_url" content={url} />}
+    {citation.keywords && citation.keywords.length > 0 && <meta name="citation_keywords" content={citation.keywords.join("; ")} />}
+    {lang && <meta name="citation_language" content={lang.split("-")[0]} />}
   </>
 )}
 

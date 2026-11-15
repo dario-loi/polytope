@@ -1,30 +1,41 @@
 ---
-// Header for a post or a note: title, lede, date and reading time, tags. Set like the paper
-// header, so a site's posts and papers read as one series.
+// Header for a post, a note, or a project page: title, lede, a meta line, tags. Set like the
+// paper header, so a site's posts and papers read as one series.
 //   <PostHeader title="..." date="2026-09-14" minutes={6} tags={["Topology"]} lede="..." />
+//   <PostHeader title="StapleGL" meta={["Open source", "2025"]} lede="...">
+//     <a class="ply-button" href="...">Source</a>
+//   </PostHeader>
+// `date` and `minutes` write the meta line; `meta` adds facts of your own after them, or stands
+// in for them on a page with no date. The default slot sits under the tags, for actions.
 import Tag from "./Tag.astro";
 import WoodTitle from "./WoodTitle.astro";
 interface Props {
   title: string;
   /** "2026-09-14", or a Date. Printed as "14 September 2026". */
-  date: string | Date;
+  date?: string | Date;
   lede?: string;
   /** Reading time, in minutes. */
   minutes?: number;
+  /** Facts for the meta line, such as a status or a year. */
+  meta?: string[];
   tags?: string[];
   /** Heading level of the title: 1 on the post's own page. */
   level?: 1 | 2 | 3;
   /** Language for the printed date. */
   locale?: string;
+  /** End the title in the tomato full stop, for a page that is a section, not an entry. */
+  stop?: boolean;
 }
-const { title, date, lede, minutes, tags = [], level = 1, locale = "en-GB" } = Astro.props;
-const d = date instanceof Date ? date : new Date(`${date}T00:00:00Z`);
-const iso = d.toISOString().slice(0, 10);
-const shown = d.toLocaleDateString(locale, { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" });
+const { title, date, lede, minutes, meta = [], tags = [], level = 1, locale = "en-GB", stop = false } = Astro.props;
+const d = date === undefined ? undefined : date instanceof Date ? date : new Date(`${date}T00:00:00Z`);
+const iso = d?.toISOString().slice(0, 10);
+const shown = d?.toLocaleDateString(locale, { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" });
+const hasMeta = d !== undefined || minutes !== undefined || meta.length > 0;
 ---
 <header class="ply-post">
-  <WoodTitle class="ply-post__title" level={level} title={title} />
+  <WoodTitle class="ply-post__title" level={level} title={title} stop={stop} />
   {lede && <p class="ply-post__lede">{lede}</p>}
-  <p class="ply-post__meta"><time datetime={iso}>{shown}</time>{minutes !== undefined && <span>{minutes} minute read</span>}</p>
+  {hasMeta && <p class="ply-post__meta">{d && <time datetime={iso}>{shown}</time>}{minutes !== undefined && <span>{minutes} minute read</span>}{meta.map((m) => <span>{m}</span>)}</p>}
   {tags.length > 0 && <ul class="ply-post__tags" aria-label="Tags">{tags.map((t) => <li><Tag>{t}</Tag></li>)}</ul>}
+  <slot />
 </header>

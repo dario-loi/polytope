@@ -4,6 +4,12 @@ import Card from "@dario-loi/polytope/astro/Card.astro";
 import CardGrid from "@dario-loi/polytope/astro/CardGrid.astro";
 import Code from "@dario-loi/polytope/astro/Code.astro";
 import Note from "@dario-loi/polytope/astro/Note.astro";
+import ThemedImage from "@dario-loi/polytope/astro/ThemedImage.astro";
+import { u } from "../../data/nav";
+// Two pictures for the example: a light screenshot and its dark twin, drawn here as SVG.
+const shot = (ground: string, ink: string, bar: string) => `data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 56"><rect width="100" height="56" fill="${ground}"/><rect x="8" y="8" width="40" height="5" fill="${ink}"/><rect x="8" y="19" width="84" height="3" fill="${bar}"/><rect x="8" y="26" width="84" height="3" fill="${bar}"/><rect x="8" y="33" width="60" height="3" fill="${bar}"/><rect x="8" y="42" width="24" height="6" fill="#D9412B"/></svg>`)}`;
+const light = shot("#FFFFFF", "#141414", "#D9DAD6");
+const dark = shot("#161615", "#F2F2EE", "#3A3A37");
 ---
 <Docs title="Cards" status="experimental" lede="Entries on a list page, hung as exhibits: a black panel with the entry's figure or its own complex, then the title, a meta line, and a summary.">
   <Note kind="info">Every title and venue on this page is example content.</Note>
@@ -59,6 +65,22 @@ import Note from "@dario-loi/polytope/astro/Note.astro";
     <li>The classes work together or apart. Without subgrid, the last block of each card sits at the card's bottom.</li>
   </ul>
 
+  <h2 id="parts">Authors, tags, and links as props</h2>
+  <p><code>authors</code>, <code>links</code>, and a linked form of <code>tags</code> write those parts for you, in the order the aligned rows expect: summary, authors, tags, links. Authors are names, or <code>{"{ name, href }"}</code> to link one. <code>me</code> sets the owner's name darker, and <code>fold</code> shortens a long list to the first names, yours, and the last, with the gap read out as "more authors". A link takes <code>attrs</code> for data attributes, and a link to a PDF is kept out of hover prefetch.</p>
+  <CardGrid class="ply-wide ply-cards--aligned">
+    <Card href="#" title="Example title: a card written with props" meta={["Example Venue 2026"]} summary="The authors line, the tags, and the link row come from props."
+      authors={["A. Author", { name: "B. Author", href: "#parts" }, "John Doe"]} me="John Doe"
+      tags={[{ label: "Sheaves", href: "#parts" }, { label: "Topology", href: "#parts", current: true }]}
+      links={[{ label: "Paper", href: "#" }, { label: "Code", href: "#" }, { label: "BibTeX", href: "#" }]} />
+    <Card href="#" title="Example title: a second card, with a folded author list" meta={["Example Workshop 2026"]} summary="Past eight names the list folds."
+      authors={["A. Author", "B. Author", "C. Author", "D. Author", "E. Author", "F. Author", "G. Author", "H. Author", "John Doe", "I. Author", "J. Author"]} me="John Doe" fold={8}
+      links={[{ label: "arXiv", href: "#" }]} />
+  </CardGrid>
+  <Code lang="astro" code={`<Card href="/papers/x/" title="..." meta={["ICLR 2026"]} summary="..."
+  authors={["A. Author", { name: "B. Author", href: "/people/b/" }, "John Doe"]} me="John Doe" fold={12}
+  tags={[{ label: "Sheaves", href: "/topics/sheaves/" }, "Graphs"]}
+  links={[{ label: "Paper", href: "/x.pdf", attrs: { "data-track": "paper-link" } }, { label: "BibTeX", href: "/papers/x/#cite" }]} />`} />
+
   <h2 id="pictures">Pictures</h2>
   <ul>
     <li>Write <code>sizes</code> for the column a phone shows, which is the viewport less two gutters. <code>100vw</code> overstates it by a tenth, and a phone then fetches the next size up. The helpers <code>column()</code> and <code>widthsFor()</code> from <code>@dario-loi/polytope/astro</code> write both values.</li>
@@ -70,6 +92,21 @@ import { column, pictureFormats, widthsFor } from "@dario-loi/polytope/astro";
 
 <Picture {...pictureFormats} src={light} widths={widthsFor(light, 720)} sizes={\`(min-width: 64rem) 30vw, \${column()}\`} class="ply-light-only" alt="" />
 <Picture {...pictureFormats} src={dark} widths={widthsFor(dark, 720)} sizes={\`(min-width: 64rem) 30vw, \${column()}\`} loading="lazy" class="ply-dark-only" alt="" />`} />
+
+  <h3 id="themed">Twins and the fallback complex</h3>
+  <p><code>ThemedImage</code> writes the twin pair. <code>src</code> is an imported image, which goes through Astro's <code>Picture</code> with the widths and sizes you give, or an address, which becomes a plain <code>img</code>. The twin in <code>dark</code> loads lazily at normal priority, so the theme not in use never competes with the one on screen. A picture that fails to load is hidden.</p>
+  <p>Under a picture in the <code>figure</code> slot, a card draws its complex with no script (<code>ComplexStatic</code>), and the loaded picture covers it. A picture that is slow, missing, or failed leaves the complex. The second card below points at a picture that does not exist.</p>
+  <CardGrid class="ply-wide">
+    <Card href="#themed" title="Example title: a screenshot with a dark twin" meta={["Example Venue 2026"]} summary="Switch the theme to see the twin.">
+      <ThemedImage slot="figure" src={light} dark={dark} alt="" />
+    </Card>
+    <Card href="#themed" title="Example title: a picture that is missing" meta={["Example Venue 2025"]} summary="The complex shows where the picture would be.">
+      <ThemedImage slot="figure" src={u("/examples/missing.webp")} alt="" />
+    </Card>
+  </CardGrid>
+  <Code lang="astro" code={`<Card href="/papers/x/" title="..." meta={["ICLR 2026"]}>
+  <ThemedImage slot="figure" src={light} dark={dark} alt="" widths={widthsFor(light, 720)} sizes={\`(min-width: 64rem) 30vw, \${column()}\`} />
+</Card>`} />
 
   <h2>Plain HTML</h2>
   <Code lang="html" code={`<div class="ply-cards">

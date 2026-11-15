@@ -9,6 +9,9 @@ import Empty from "@dario-loi/polytope/astro/Empty.astro";
 import Button from "@dario-loi/polytope/astro/Button.astro";
 import Code from "@dario-loi/polytope/astro/Code.astro";
 import Stability from "@dario-loi/polytope/astro/Stability.astro";
+import Model from "@dario-loi/polytope/astro/Model.astro";
+import Lost from "@dario-loi/polytope/astro/Lost.astro";
+import ComplexStatic from "@dario-loi/polytope/astro/ComplexStatic.astro";
 import { u } from "../../data/nav";
 ---
 <Docs title="Demo chrome" status="experimental" lede="The frame for an interactive figure or a small research tool: header, controls, a black stage, and a status line." wide>
@@ -45,7 +48,81 @@ import { u } from "../../data/nav";
     </Empty>
   </div>
   <p>An empty state says what is missing and gives the one action that fills it. Its mark is a complex with no edges yet: a few loose points. When the empty state is the page's content, as on a 404, give its title a heading level with <code>level={"{1}"}</code>, so the page has a heading.</p>
+
+  <h2 id="model">Working model</h2>
+  <p><code>Model</code> is the frame every working model on a paper page shares: a flush black panel holding one inline SVG, the controls and readout under the panel on the page ground, and an exhibit caption that says what the model is. A model illustrates a paper's mechanism, and its caption says so. The drawing's classes (<code>.ply-m-chalk</code>, <code>.ply-m-move</code>, and the rest) set chalk lines and points on the panel, mustard at half strength for filled regions, and tomato for the one moving part.</p>
+  <div style="max-width: 30rem">
+    <Model name="gate" title="A gate that opens at a threshold" firstRun>
+      <svg viewBox="0 0 100 56" role="img" aria-label="A point on an axis. A gate stands at 60% and the region past it fills when the point crosses.">
+        <line class="ply-m-rule" x1="10" y1="40" x2="90" y2="40" stroke-width="0.6" />
+        <rect class="ply-m-note" data-fill x="58" y="30" width="0" height="10" />
+        <line class="ply-m-chalk" x1="58" y1="22" x2="58" y2="44" stroke-width="0.8" />
+        <text class="ply-m-text" x="58" y="18" font-size="4" text-anchor="middle">threshold</text>
+        <circle class="ply-m-move" data-dot cx="90" cy="40" r="2.4" />
+      </svg>
+      <div slot="controls" class="ply-model__axis" style="--x0: 0.1; --x1: 0.9">
+        <Slider label="Position" name="gate-x" value={80} />
+      </div>
+      <Fragment slot="caption">Drag the point past the threshold and the gate fills. On first view the point runs once from the start.</Fragment>
+    </Model>
+  </div>
+  <Code lang="astro" code={`<Model name="gate" title="A gate that opens at a threshold" firstRun>
+  <svg viewBox="0 0 100 56">...</svg>
+  <div slot="controls" class="ply-model__axis" style="--x0: 0.1; --x1: 0.9">
+    <Slider label="Position" name="gate-x" value={80} />
+  </div>
+  <Fragment slot="caption">What the model shows, and that it illustrates the mechanism.</Fragment>
+</Model>`} />
+  <p><code>name</code> is for the model's own script, and <code>draft</code> marks a figure not yet checked with a wall label. A slider that moves a mark along the drawing's horizontal axis wears <code>.ply-model__axis</code> with <code>--x0</code> and <code>--x1</code>, the fractions of the panel's width where the axis starts and ends, so its thumb sits under the mark at every value and width.</p>
+  <p><code>firstRun</code> holds the figure back as a blank panel until the model's script draws its start state, then runs the model once, the first time it is half in view. Reduced motion skips the wait, a script that stalls shows the finished drawing after 2.5 seconds, and any input on a control ends the run. <code>js/firstrun.js</code> exports <code>firstRun(figure, {"{ duration, start, frame, end }"})</code>, which returns a player with <code>replay()</code>, and the curves <code>arrive</code>, <code>easeOut</code>, and <code>bezier</code>.</p>
+  <Code lang="js" code={`import { firstRun, easeOut } from "@dario-loi/polytope/js/firstrun.js";
+
+const player = firstRun(figure, {
+  duration: 2,
+  start() { setPosition(0); },
+  frame(p) { setPosition(80 * easeOut(p)); },
+  end(cancelled) { setPosition(80); },
+});`} />
+
+  <h2 id="lost">Page not found</h2>
+  <p><code>Lost</code> sets the ways onward from an address that is not here: each a name in wood type with an arrow and a line saying what is there, hairlines between, the name turning tomato on hover. The exhibit goes beside them from 64rem and first when stacked. A complex whose radius is too small to join its points is the exhibit this was drawn for. Put it under a mast with the headline and one plain sentence, and mark the page <code>noindex</code> in <code>Seo</code>.</p>
+  <div class="ply-wide ex__live" style="border: 2px solid var(--ply-color-rule-strong)">
+    <Lost label="Example ways onward" ways={[
+      { href: "#lost", label: "Papers", note: "Every paper, with code and BibTeX." },
+      { href: "#lost", label: "Topics", note: "The same papers, grouped by subject." },
+      { href: "#lost", label: "Home", note: "Who I am and what I work on." },
+    ]}>
+      <ComplexStatic slot="exhibit" seed={404} points={28} radius={0.12} label="A complex of unconnected points" />
+    </Lost>
+  </div>
+  <Code lang="astro" code={`<Mast title="Page not found" lede="This page does not exist, though these ones do." compact rule />
+<Lost ways={[{ href: "/papers/", label: "Papers", note: "Every paper, with code and BibTeX." }]}>
+  <ComplexStatic slot="exhibit" seed={404} radius={0.12} label="A complex of unconnected points" />
+</Lost>`} />
 </Docs>
+<script>
+  import { firstRun, easeOut } from "@dario-loi/polytope/js/firstrun.js";
+  // The working model's own script: a point on an axis, and the region past the threshold filling when it crosses.
+  const fig = document.querySelector<HTMLElement>('[data-model="gate"]');
+  const input = fig?.querySelector<HTMLInputElement>("input[type=range]");
+  const dot = fig?.querySelector("[data-dot]");
+  const fill = fig?.querySelector("[data-fill]");
+  if (fig && input && dot && fill) {
+    const draw = (v: number) => {
+      const x = 10 + 0.8 * v;
+      dot.setAttribute("cx", String(x));
+      fill.setAttribute("width", String(Math.max(0, x - 58)));
+    };
+    input.addEventListener("input", () => draw(Number(input.value)));
+    firstRun(fig, {
+      duration: 2,
+      start() { input.value = "0"; draw(0); },
+      frame(p) { draw(80 * easeOut(p)); },
+      end() { input.value = "80"; draw(80); input.dispatchEvent(new Event("input", { bubbles: true })); },
+    });
+    draw(Number(input.value));
+  }
+</script>
 <script>
   const m = document.querySelector<any>(".demo-machine");
   const status = document.querySelector(".ply-app__status .ply-status")!;

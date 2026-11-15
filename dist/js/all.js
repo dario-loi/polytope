@@ -10,6 +10,7 @@ import "./search.js";
 import "./scroll.js";
 import "./topbar.js";
 import "./fold.js";
+import "./backtop.js";
 // The Atlas is the largest element and few pages have one, so it loads only where one is.
 // Module scripts run after the page is parsed, so one look finds it.
 if (document.querySelector("ply-atlas")) import("./atlas.js");

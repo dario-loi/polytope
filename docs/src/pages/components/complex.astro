@@ -3,6 +3,9 @@ import Docs from "../../layouts/Docs.astro";
 import Complex from "@dario-loi/polytope/astro/Complex.astro";
 import Code from "@dario-loi/polytope/astro/Code.astro";
 import ApiTable from "../../components/ApiTable.astro";
+import ComplexStatic from "@dario-loi/polytope/astro/ComplexStatic.astro";
+import ComplexMark from "@dario-loi/polytope/astro/ComplexMark.astro";
+import { seedOf } from "@dario-loi/polytope/astro/complex.ts";
 ---
 <Docs title="Vietoris-Rips complex" status="experimental" lede="Random points on a plane. Two points closer than the radius join into an edge, and three points that are pairwise joined fill a triangle.">
   <p>The complex is the emblem of these docs: the home page opens with it, and the homepage pattern hangs it as the header figure. It is built from the same parts as a polytope: points, segments, and triangles.</p>
@@ -31,6 +34,24 @@ import ApiTable from "../../components/ApiTable.astro";
     ["controls", "Astro only. Shows the radius slider and the edge and triangle counts.", "true"],
   ]} head={["Attribute", "Effect", "Default"]} />
   <p>The element fires <code>ply-complex-change</code> with <code>vertices</code>, <code>edges</code>, <code>triangles</code>, and <code>radius</code> whenever it redraws. Any range input with <code>data-ply-complex-radius</code>, inside the element or pointing at it with <code>for</code>, drives the radius.</p>
+
+  <h2 id="static">Static and small versions</h2>
+  <p><code>ComplexStatic</code> draws the same complex as <code>Complex</code> from the same seed, as a plain element with no slider, no custom element, and no script. Use it where a drawing sits under a picture or takes no input, since upgrading it would only spend main-thread time. A card draws one under every figure. It is decorative unless you pass <code>label</code>.</p>
+  <figure class="ply-exhibit" style="max-width: 24rem">
+    <ComplexStatic seed={11} points={28} radius={0.17} label="A static complex of 28 points" />
+    <figcaption><b>Static.</b> The same pixels as the live complex at its default radius.</figcaption>
+  </figure>
+  <Code lang="astro" code={`<ComplexStatic seed={11} points={28} radius={0.17} label="A static complex of 28 points" />`} />
+  <p><code>ComplexMark</code> is a small fragment for a page's recurring mark: points and edges in the text color, mustard triangles at half strength, set on the page ground. Seed each from a name with <code>seedOf</code> and every section draws its own fragment, and none of them moves, so the live complex stays the page's one motion. <code>SectionHead</code> places one before its title.</p>
+  <p class="ply-cluster" style="align-items: center">
+    <ComplexMark seed={seedOf("Publications")} />
+    <ComplexMark seed={seedOf("Projects")} />
+    <ComplexMark seed={seedOf("Talks")} />
+  </p>
+  <Code lang="astro" code={`import { ComplexMark, seedOf } from "@dario-loi/polytope/astro";
+
+<ComplexMark seed={seedOf("Publications")} />`} />
+  <p>The generator behind all three is exported as <code>complexLayout(seed, points, radius)</code>. It returns the points, edges, and triangles in a 100 by 56 box, the same cells <code>js/complex.js</code> draws, so a drawing of your own, such as a share-card script, comes out as the same picture.</p>
 
   <h2>Without JavaScript</h2>
   <p>The server draws the same complex from the seed, so the figure is complete before any script runs, in RSS readers, and with scripts off. Under reduced motion it is drawn finished and does not grow.</p>

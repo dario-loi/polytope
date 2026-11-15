@@ -1,0 +1,28 @@
+---
+// The page for an address that is not here: a list of ways onward, each a name in wood type with
+// an arrow and one line saying what is there, hairlines between, and an exhibit beside it from
+// 64rem (stacked first below that). Under a mast with the headline and one plain sentence.
+//   <Mast title="Page not found" lede="This page does not exist, though these ones do." compact rule />
+//   <Lost ways={[{ href: "/papers/", label: "Papers", note: "Every paper, with code and BibTeX." }]}>
+//     <ComplexStatic slot="exhibit" seed={404} radius={0.12} label="A complex of unconnected points" />
+//   </Lost>
+// A complex whose radius is too small to join any points is the exhibit this was drawn for: a
+// complex of loose points, which goes nowhere. Mark the page noindex in its <Seo>.
+import Icon from "./Icon.astro";
+interface Props {
+  ways: { href: string; label: string; note?: string; attrs?: Record<string, string> }[];
+  /** Names the list for a screen reader. */
+  label?: string;
+  class?: string;
+}
+const { ways, label = "Where to go", class: className } = Astro.props;
+const exhibit = Astro.slots.has("exhibit") ? (await Astro.slots.render("exhibit")).trim() : "";
+---
+<div class:list={["ply-container ply-lost", className]}>
+  <ul class="ply-lost__ways" role="list" aria-label={label}>
+    {ways.map((w) => (
+      <li><a class="ply-lost__way ply-target" href={w.href} {...w.attrs}><span class="ply-lost__label">{w.label}<Icon name="arrow-right" /></span>{w.note && <span class="ply-lost__note">{w.note}</span>}</a></li>
+    ))}
+  </ul>
+  {exhibit && <div class="ply-panel ply-panel--flush ply-lost__exhibit" data-surface="panel"><Fragment set:html={exhibit} /></div>}
+</div>

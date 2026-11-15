@@ -1,0 +1,39 @@
+@layer ply.reset, ply.base, ply.layout, ply.components, ply.utilities;
+@layer ply.components {
+  /* Site footer: a 3px rule, who the site is at the start, the links in groups by meaning at the end,
+     and a hairline-topped colophon. The groups share a row when they fit and otherwise stack,
+     right-aligned on one edge, so no row holds a lone link. */
+  .ply-site-footer { border-top: var(--ply-border-rule) solid var(--ply-color-rule-strong); margin-top: var(--ply-space-7); }
+  .ply-site-footer__inner { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: start; gap: var(--ply-space-5) var(--ply-space-7); padding-block: var(--ply-space-6) var(--ply-space-4); }
+  .ply-site-footer__who { display: grid; gap: var(--ply-space-2); }
+  .ply-site-footer__name { font-size: var(--ply-size-xl); line-height: 1; }
+  .ply-site-footer__nav { display: flex; flex-wrap: wrap; gap: var(--ply-space-2) var(--ply-space-5); }
+  @media (min-width: 64rem) {
+    .ply-site-footer__nav { flex: 1 1 28rem; justify-content: flex-end; }
+    .ply-site-footer__links { flex-wrap: nowrap; }
+    /* The block at the start is as wide as its line, which stays on one; the links take the rest. */
+    .ply-site-footer__who { flex: none; }
+    .ply-site-footer__who p { white-space: nowrap; }
+  }
+  /* In this layer so .ply-target, a utility, raises a link to 44px under a finger; every link in a
+     group is 24px tall at rest. */
+  .ply-site-footer__links { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: var(--ply-space-2) var(--ply-space-5); }
+  .ply-site-footer__links a { display: inline-flex; align-items: center; min-height: 1.5rem; }
+  /* Inside .ply-prose the list items would take the prose list spacing, so it is taken back. */
+  .ply-prose .ply-site-footer__links { padding-inline-start: 0; }
+  .ply-site-footer__links > li, .ply-prose .ply-site-footer__links > li + li { margin: 0; }
+  .ply-site-footer__colophon { padding-block: var(--ply-space-4) var(--ply-space-5); margin: 0; border-top: var(--ply-border-hair) solid var(--ply-color-rule); }
+  .ply-site-footer__top { white-space: nowrap; }
+  /* A fine pointer at 48rem and wider scrolls with its wheel, so the link is for phones and for no script. */
+  @media (min-width: 48rem) and (pointer: fine) { .ply-site-footer__top { display: none; } }
+
+  /* Back to top, phones only: 44px square, the page's ground and the ink border of a secondary
+     button, bottom right inside the safe area. Hidden, it takes no touch and no tab stop. */
+  .ply-backtop { display: none; }
+  @media (max-width: 47.99rem), (pointer: coarse) and (max-height: 32rem) {
+    .ply-backtop { display: grid; place-items: center; position: fixed; z-index: 30; width: 2.75rem; height: 2.75rem; padding: 0; inset-inline-end: max(var(--ply-space-4), env(safe-area-inset-right)); bottom: max(var(--ply-space-4), env(safe-area-inset-bottom)); background: var(--ply-color-bg); color: var(--ply-color-text); border: var(--ply-border-rule) solid var(--ply-color-rule-strong); border-radius: 0; opacity: 0; pointer-events: none; transition: opacity var(--ply-duration-fast) var(--ply-ease-out); cursor: pointer; }
+    .ply-backtop--on { opacity: 1; pointer-events: auto; }
+    .ply-backtop:focus-visible { outline: var(--ply-border-rule) solid var(--ply-color-focus); outline-offset: 2px; }
+  }
+  @media (prefers-reduced-motion: reduce) { .ply-backtop { transition: none; } }
+}

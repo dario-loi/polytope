@@ -1,0 +1,37 @@
+---
+// A section's heading with an optional way onward ("All publications") on the same line. For a
+// page of many sections, such as a home page, two marks make each section its own:
+//   rule   the section opens on a 3px rule that leads with a short tomato segment and steps up
+//          in three pixel stairs at its end (the one retro move: see DESIGN.md);
+//   mark   a small static Vietoris-Rips fragment before the title, seeded from a name (a string
+//          or a number), so each section draws its own and none of them moves.
+//   <SectionHead title="Publications" rule mark="Publications" more={{ label: "All publications", href: "/publications/" }} />
+// The rule goes inside the content width, and the full-width rule under a mast stays plain. The
+// "more" link is 24px tall at rest and 44px under a finger.
+import ComplexMark from "./ComplexMark.astro";
+import Icon from "./Icon.astro";
+import { seedOf } from "./complex.ts";
+interface Props {
+  title: string;
+  id?: string;
+  /** Heading level of the title. */
+  level?: 2 | 3 | 4;
+  /** The way onward; `attrs` adds attributes to the link, such as data attributes for analytics. */
+  more?: { label: string; href: string; attrs?: Record<string, string> };
+  /** Opens the section on the stair rule. */
+  rule?: boolean;
+  /** Seeds the fragment before the title: a name (hashed) or a number. */
+  mark?: string | number;
+  class?: string;
+}
+const { title, id, level = 2, more, rule = false, mark, class: className } = Astro.props;
+const H = `h${level}`;
+const seed = mark === undefined ? undefined : typeof mark === "number" ? mark : seedOf(mark);
+---
+{rule && <hr class="ply-rule ply-rule--stair ply-rule--lead" aria-hidden="true" />}
+<div class:list={["ply-section-head", seed !== undefined && "ply-section-head--marked", rule && "ply-section-head--ruled", className]}>
+  {seed !== undefined
+    ? <div class="ply-section-head__title"><ComplexMark seed={seed} /><H id={id}>{title}</H></div>
+    : <H id={id}>{title}</H>}
+  {more && <a class="ply-section-head__more ply-target" href={more.href} {...more.attrs}>{more.label}<Icon name="arrow-right" /></a>}
+</div>
