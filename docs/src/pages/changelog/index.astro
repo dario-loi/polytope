@@ -10,6 +10,16 @@ import ReleaseModel from "../../components/exhibits/ReleaseModel.astro";
       <p class="ply-wall__label">0.8</p>
       <ul class="ply-wall__entries">
         <li class="ply-pub">
+          <p class="ply-pub__title">0.8.1, repeatable plot files</p>
+          <p class="ply-pub__venue">15 November 2026</p>
+          <div class="ply-prose ply-small" style="margin-top: var(--ply-space-2)">
+            <ul>
+              <li><code>polytope_theme.mpl.inline_svg()</code> and <code>save_inline_svg()</code> give the same SVG for the same figure. matplotlib salted clip-path ids at random and stamped the date, so a committed plot changed on every render; a fixed salt and no date keep it the same until the plot changes.</li>
+              <li>To update: <code>pip install -U polytope-theme</code>. The npm package is the same as 0.8.0 apart from its version.</li>
+            </ul>
+          </div>
+        </li>
+        <li class="ply-pub">
           <p class="ply-pub__title">0.8.0, search in the bar and BibTeX downloads</p>
           <p class="ply-pub__venue">15 November 2026</p>
           <div class="ply-prose ply-small" style="margin-top: var(--ply-space-2)">
