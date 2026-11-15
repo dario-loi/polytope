@@ -289,7 +289,8 @@ def inline_svg(fig: "Figure") -> str:
       which the stylesheet sets for each theme. The original light value is the fallback.
 
     Text is kept as text (``svg.fonttype: none``), for readers and crawlers, and the figure
-    is saved with a transparent background. Colors other than these (a custom color you
+    is saved with a transparent background. The output is repeatable: the same figure gives
+    the same string. Colors other than these (a custom color you
     passed to matplotlib) are left as they are.
     """
     _require()
@@ -306,8 +307,10 @@ def inline_svg(fig: "Figure") -> str:
         swaps[color.lower()] = f"var(--ply-viz-{i}, {color.lower()})"
 
     buf = io.StringIO()
-    with _matplotlib.rc_context({"svg.fonttype": "none"}):
-        fig.savefig(buf, format="svg", transparent=True)
+    # A fixed hash salt and no date make the output repeatable: the same figure gives the same
+    # file, so a committed plot changes only when the plot does.
+    with _matplotlib.rc_context({"svg.fonttype": "none", "svg.hashsalt": "polytope"}):
+        fig.savefig(buf, format="svg", transparent=True, metadata={"Date": None})
     svg = buf.getvalue()
     # matplotlib writes colors as #rrggbb in style declarations; swap each whole token.
     return re.sub(
