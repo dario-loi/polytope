@@ -98,4 +98,16 @@
   @media (min-width: 72rem) { .ply-menu--chapters { display: none; } }
   .ply-topbar:is([data-ply-tabs="tabs"], [data-ply-tabs="snug"], [data-ply-tabs="tight"]) .ply-menu--chapters { display: none; }
   .ply-topbar[data-ply-tabs="menu"] .ply-menu--chapters { display: block; }
+
+  /* Enlarged text on a narrow window: once the tabs have folded into the menu, the bar may wrap
+     to a second row, the wordmark may break inside a word, and the tools may wrap at their end
+     edge, so nothing runs past the screen (at 200% text on a 320px phone the bar needs it). Only
+     in the menu state, or before topbar.js has measured: while tabs show, a wrap would give
+     them a row of their own, the script would measure them as fitting, and a phone would get
+     tabs and tools on separate rows. Nothing changes while everything fits on one line. */
+  @media (max-width: 30rem) {
+    .ply-topbar:is([data-ply-tabs="menu"], :not([data-ply-tabs])) .ply-topbar__inner { flex-wrap: wrap; }
+    .ply-topbar:is([data-ply-tabs="menu"], :not([data-ply-tabs])) .ply-wordmark { flex: 0 1 auto; min-width: 0; white-space: normal; overflow-wrap: anywhere; }
+    .ply-topbar:is([data-ply-tabs="menu"], :not([data-ply-tabs])) .ply-topbar__tools { flex: 0 1 auto; flex-wrap: wrap; justify-content: flex-end; }
+  }
 }

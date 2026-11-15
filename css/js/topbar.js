@@ -20,6 +20,8 @@ function settle(bar) {
   for (const a of bar.getAnimations?.({ subtree: true }) ?? []) if (a.transitionProperty) a.finish();
 }
 
+// The bar wraps to a second row only in the menu state (nav.css, below 30rem), so every state
+// measured here is a single row and a wrapped bar never reads as a fit.
 function fit(bar) {
   const links = bar.querySelector(".ply-topbar__links");
   const field = bar.querySelector(".ply-search__field");

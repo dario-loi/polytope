@@ -108,6 +108,7 @@
   "--ply-size-xl": [
     "base.css",
     "components/atlas.css",
+    "components/card.css",
     "components/demo.css",
     "components/nav.css",
     "components/research.css",
@@ -155,7 +156,8 @@
   "--ply-color-link": [
     "base.css",
     "components/note.css",
-    "components/research.css"
+    "components/research.css",
+    "components/tag.css"
   ],
   "--ply-weight-semibold": [
     "base.css",
@@ -177,6 +179,7 @@
     "components/form.css",
     "components/nav.css",
     "components/search.css",
+    "components/tag.css",
     "components/writing.css"
   ],
   "--ply-ease-out": [
@@ -310,6 +313,7 @@
     "components/atlas.css",
     "components/code.css",
     "components/demo.css",
+    "components/research.css",
     "components/search.css",
     "utilities.css"
   ],
@@ -320,6 +324,7 @@
     "components/form.css",
     "components/nav.css",
     "components/note.css",
+    "components/research.css",
     "components/search.css",
     "components/table.css",
     "components/writing.css"
@@ -388,6 +393,7 @@
     "layout.css"
   ],
   "--ply-layout-toc": [
+    "components/research.css",
     "layout.css"
   ],
   "--ply-border-hair": [
@@ -396,6 +402,8 @@
     "components/code.css",
     "components/demo.css",
     "components/nav.css",
+    "components/panel.css",
+    "components/research.css",
     "components/search.css",
     "components/table.css",
     "components/writing.css",
@@ -407,6 +415,7 @@
     "components/demo.css",
     "components/form.css",
     "components/nav.css",
+    "components/panel.css",
     "components/research.css",
     "components/search.css",
     "components/table.css",
@@ -559,7 +568,8 @@
   "--ply-weight-medium": [
     "components/form.css",
     "components/nav.css",
-    "components/search.css"
+    "components/search.css",
+    "components/writing.css"
   ],
   "--ply-size-xs": [
     "components/atlas.css",
@@ -660,7 +670,16 @@
   "--ply-size-4xl": [
     "components/research.css"
   ],
+  "--ply-ledger-when": [
+    "components/research.css"
+  ],
   "--ply-viz-1": [
+    "components/viz.css"
+  ],
+  "--ply-viz-8": [
+    "components/viz.css"
+  ],
+  "--ply-plot-max": [
     "components/viz.css"
   ],
   "--ply-flow": [

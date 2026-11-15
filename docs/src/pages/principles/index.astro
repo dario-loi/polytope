@@ -1,8 +1,9 @@
 ---
 import Docs from "../../layouts/Docs.astro";
 import Machine from "@dario-loi/polytope/astro/Machine.astro";
+import { u } from "../../data/nav";
 ---
-<Docs title="Principles" lede="Five rules for deciding anything the rest of these docs do not cover.">
+<Docs title="Principles" lede="Six rules for deciding anything the rest of these docs do not cover.">
   <figure class="ply-exhibit" slot="exhibit">
     <Machine interactive balls={30} rows={8} />
     <figcaption><b>Play comes from working things.</b> Each ball bounces left or right at every peg, and together they pile into a bell curve. Click it to run it again.</figcaption>
@@ -35,4 +36,13 @@ import Machine from "@dario-loi/polytope/astro/Machine.astro";
 
   <h2>5. Free to host, built to last</h2>
   <p>Everything builds to static files that GitHub Pages or Cloudflare Pages serve at no cost. Fonts are self-hosted. There is no tracking and no service that can disappear and take a page with it.</p>
+
+  <h2>6. Space is for one thing</h2>
+  <p>Around a single focus, such as a paper's title, empty space draws the eye. Across a page of many elements, such as a home page, it reads as a gap. Give a page one focus with room around it, or fill it.</p>
+  <ul>
+    <li>A paper title has margin on every side.</li>
+    <li>On a home page every region holds content: a block moves into an empty column, a column widens, or a body sets in two.</li>
+    <li>Labels start at one edge and what they label starts one column in, on every wall and list.</li>
+  </ul>
+  <p>The layout page has the details: <a href={u("/foundations/layout/#space")}>Space around things</a>.</p>
 </Docs>

@@ -5,6 +5,18 @@
   .ply-table .ply-tag { overflow-wrap: normal; }
   .ply-tag--solid { background: var(--ply-color-text); color: var(--ply-color-bg); border-color: var(--ply-color-text); }
   .ply-tag--note { background: var(--ply-color-note); color: var(--ply-ink-950); border-color: var(--ply-color-note); }
+  /* A tag that is a link (an <a class="ply-tag ply-tag--link">) keeps the tag's look and takes
+     the link's: teal and underlined, so a row of them reads as navigation and not as a filter
+     bar; at least 28px tall, ink fill on hover, and the page's focus ring. The current one is the
+     solid tag, plain. */
+  .ply-tag--link { color: var(--ply-color-link); text-decoration-line: underline; text-decoration-thickness: 1.5px; text-underline-offset: 0.2em; min-height: 1.75rem; padding-inline: 0.6rem; transition: background-color var(--ply-duration-fast) var(--ply-ease-out), color var(--ply-duration-fast) var(--ply-ease-out); }
+  .ply-tag--link.ply-tag--solid { color: var(--ply-color-bg); text-decoration: none; }
+  .ply-tag--link:hover { background: var(--ply-color-text); color: var(--ply-color-bg); border-color: var(--ply-color-text); }
+  /* A row of tags: a ul of li, each holding a tag. Inside .ply-prose the list items would take the
+     prose list spacing, so it is taken back. */
+  .ply-tag-list { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: var(--ply-space-2); }
+  .ply-prose .ply-tag-list { padding-inline-start: 0; }
+  .ply-tag-list > li, .ply-prose .ply-tag-list > li + li { margin: 0; }
 
   .ply-status { display: inline-flex; align-items: center; gap: var(--ply-space-2); font-size: var(--ply-size-sm); font-weight: var(--ply-weight-semibold); }
   .ply-status::before { content: ""; width: 0.6875rem; height: 0.6875rem; flex: none; }

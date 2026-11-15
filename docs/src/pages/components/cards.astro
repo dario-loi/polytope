@@ -28,6 +28,49 @@ import Note from "@dario-loi/polytope/astro/Note.astro";
     <li><code>level</code> sets the title's heading level (3 by default), and <code>link</code> passes attributes to the title's link, such as data attributes for analytics.</li>
   </ul>
 
+  <h2 id="aligned">Aligned rows and three tracks</h2>
+  <p>Cards with summaries of different lengths leave titles and link rows at different heights across a row. <code>.ply-cards--aligned</code> lines the parts up with subgrid, from 48rem: each card takes seven rows of the grid (panel, title, meta, summary, authors, tags, links), so the parts of one row of cards start on shared lines and the row is as tall as its tallest part. An unused row collapses. <code>.ply-cards--tracks</code> keeps the grid at exactly three tracks from 80rem, whatever a row holds, so a card is the same size on every row. The lead, or a card alone, then puts its panel across two tracks and its text in the third, with its title a step smaller.</p>
+  <CardGrid class="ply-wide ply-cards--aligned ply-cards--tracks">
+    <Card lead href="#" title="Example title: a lead card across two tracks" meta={["Example Venue 2026", "Oral"]} summary="With three tracks the lead's panel ends where the second track ends.">
+      <p class="ply-card__authors">A. Author, <span class="ply-me">John Doe</span>, B. Author</p>
+      <p class="ply-card__links"><a href="#">Paper</a><a href="#">Code</a><a href="#">BibTeX</a></p>
+    </Card>
+    <Card href="#" title="Example title: a short summary" meta={["Example Workshop 2026"]} summary="One line.">
+      <p class="ply-card__authors"><span class="ply-me">John Doe</span>, C. Author</p>
+      <p class="ply-card__links"><a href="#">Paper</a><a href="#">BibTeX</a></p>
+    </Card>
+    <Card href="#" title="Example title: a second card whose title takes two lines in a narrow track" meta={["Example Venue 2025"]} summary="A longer summary that takes three lines in its track, so the authors and links of the cards beside it start on the same lines.">
+      <p class="ply-card__authors">D. Author, <span class="ply-me">John Doe</span>, E. Author</p>
+      <p class="ply-card__links"><a href="#">Paper</a><a href="#">Data</a><a href="#">BibTeX</a></p>
+    </Card>
+    <Card href="#" title="Example title: an earlier preprint" meta={["arXiv preprint"]} summary="Two lines of summary, set between the others." tags={["Topology"]}>
+      <p class="ply-card__authors"><span class="ply-me">John Doe</span>, F. Author</p>
+      <p class="ply-card__links"><a href="#">arXiv</a><a href="#">BibTeX</a></p>
+    </Card>
+  </CardGrid>
+  <Code lang="astro" code={`<CardGrid class="ply-cards--aligned ply-cards--tracks">
+  <Card href="/papers/x/" title="..." meta={["ICLR 2026"]} summary="...">
+    <p class="ply-card__authors">A. Author, <span class="ply-me">John Doe</span></p>
+    <p class="ply-card__links"><a href="/x.pdf">Paper</a><a href="/papers/x/#cite">BibTeX</a></p>
+  </Card>
+</CardGrid>`} />
+  <ul>
+    <li><code>.ply-card__authors</code> is the authors line in 14px caption gray, with the owner's name, in <code>.ply-me</code>, set darker. <code>.ply-card__links</code> is a row of small links, 24px tall, 44px under a finger. Both go in the card's default slot.</li>
+    <li>The classes work together or apart. Without subgrid, the last block of each card sits at the card's bottom.</li>
+  </ul>
+
+  <h2 id="pictures">Pictures</h2>
+  <ul>
+    <li>Write <code>sizes</code> for the column a phone shows, which is the viewport less two gutters. <code>100vw</code> overstates it by a tenth, and a phone then fetches the next size up. The helpers <code>column()</code> and <code>widthsFor()</code> from <code>@dario-loi/polytope/astro</code> write both values.</li>
+    <li>A picture with a twin for the other theme takes <code>.ply-light-only</code> and <code>.ply-dark-only</code>: the one for the theme in use shows, the switch's first and then the system's, and paper takes the light one. Load the twin lazily at normal priority, since a reader sees one of the two.</li>
+    <li>A flush panel that holds a picture gets a hairline frame (<code>.ply-panel--flush</code> with an <code>img</code>), so a light screenshot keeps its edge on the white wall, as a card's panel does.</li>
+  </ul>
+  <Code lang="astro" code={`import { Picture } from "astro:assets";
+import { column, pictureFormats, widthsFor } from "@dario-loi/polytope/astro";
+
+<Picture {...pictureFormats} src={light} widths={widthsFor(light, 720)} sizes={\`(min-width: 64rem) 30vw, \${column()}\`} class="ply-light-only" alt="" />
+<Picture {...pictureFormats} src={dark} widths={widthsFor(dark, 720)} sizes={\`(min-width: 64rem) 30vw, \${column()}\`} loading="lazy" class="ply-dark-only" alt="" />`} />
+
   <h2>Plain HTML</h2>
   <Code lang="html" code={`<div class="ply-cards">
   <article class="ply-card ply-card--lead">

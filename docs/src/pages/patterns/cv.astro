@@ -25,7 +25,31 @@ import { stops } from "../../data/atlas-example";
       ))}
     </Atlas>
   </div>
+  <div class="ply-container cv-rest">
+    <section aria-labelledby="cv-awards">
+      <h2 id="cv-awards">Awards and service</h2>
+      <ul class="ply-ledger">
+        <li><span class="ply-ledger__text">Example Prize, best student paper at Example Venue</span><span class="ply-ledger__when">2026</span></li>
+        <li><span class="ply-ledger__text">Reviewer, Example Conference and Example Workshop</span><span class="ply-ledger__when">2024-2026</span></li>
+      </ul>
+    </section>
+    <section aria-labelledby="cv-skills">
+      <h2 id="cv-skills">Skills</h2>
+      <dl class="ply-wall">
+        <div class="ply-wall__row">
+          <dt class="ply-wall__name">Languages</dt>
+          <dd class="ply-wall__body"><ul class="ply-chips"><li>Python</li><li>Rust</li><li>C++</li><li>LaTeX</li></ul></dd>
+        </div>
+        <div class="ply-wall__row">
+          <dt class="ply-wall__name">Libraries</dt>
+          <dd class="ply-wall__body"><ul class="ply-chips"><li>PyTorch</li><li>PyTorch Geometric</li><li>NetworkX</li></ul></dd>
+        </div>
+      </dl>
+    </section>
+  </div>
 </Pattern>
 <style>
   .cv-atlas { padding-block-start: var(--ply-space-6); }
+  .cv-rest { display: grid; gap: var(--ply-space-7); padding-block: var(--ply-space-7) 0; }
+  .cv-rest h2 { margin-bottom: var(--ply-space-4); }
 </style>

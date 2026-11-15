@@ -22,6 +22,14 @@
 /* JetBrains Mono (ascent 1020, descent 300, gap 0 on 1000): Menlo, Liberation Mono, or Courier New,
    all 0.6em wide like it. */
 @font-face { font-family: "JetBrains Mono Fallback"; font-style: normal; font-weight: 100 800; src: local("Menlo Regular"), local("Menlo-Regular"), local("Liberation Mono"), local("LiberationMono"), local("Courier New"), local("CourierNewPSMT"); ascent-override: 102%; descent-override: 30%; line-gap-override: 0%; }
+/* Glyphs outside the Latin subset (accented author names, the multiplication sign, math
+   operators) would send the browser through every installed font for a stand-in, which put
+   hundreds of milliseconds into the first layout on a slow CPU. These two faces name the stand-in
+   (the Arial family the stack ends on), so that search becomes one lookup. No size-adjust: the
+   glyphs keep the size they had. They come before the real faces, so a code point both cover
+   (U+0131, U+0152-0153, U+2212) stays in Libre Franklin. */
+@font-face { font-family: "Libre Franklin Variable"; font-style: normal; font-weight: 100 549; src: local("Arial"), local("ArialMT"), local("Liberation Sans"), local("LiberationSans"), local("DejaVu Sans"); unicode-range: U+0100-024F, U+2200-22FF, U+2061; }
+@font-face { font-family: "Libre Franklin Variable"; font-style: normal; font-weight: 550 900; src: local("Arial Bold"), local("Arial-BoldMT"), local("Liberation Sans Bold"), local("LiberationSans-Bold"), local("DejaVu Sans Bold"); unicode-range: U+0100-024F, U+2200-22FF, U+2061; }
 @font-face { font-family: "Libre Franklin Variable"; font-style: normal; font-weight: 100 900; font-display: swap; src: url("./fonts/libre-franklin-latin-wght.woff2") format("woff2-variations"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
 @font-face { font-family: "Libre Franklin Variable"; font-style: italic; font-weight: 100 900; font-display: swap; src: url("./fonts/libre-franklin-latin-wght-italic.woff2") format("woff2-variations"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
 @font-face { font-family: "JetBrains Mono Variable"; font-style: normal; font-weight: 100 800; font-display: swap; src: url("./fonts/jetbrains-mono-latin-wght.woff2") format("woff2-variations"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
@@ -278,7 +286,8 @@
   input, button, textarea, select { font: inherit; color: inherit; }
   p, h1, h2, h3, h4, h5, h6 { overflow-wrap: break-word; }
   h1, h2, h3, h4 { text-wrap: balance; }
-  p { text-wrap: pretty; }
+  /* Running text never ends on a lone word: paragraphs, list items, definitions, captions. */
+  p, li, dd, figcaption { text-wrap: pretty; }
   ul[role="list"], ol[role="list"] { list-style: none; padding: 0; }
   /* hidden always hides, even on an element whose class sets a display, such as a button. */
   [hidden]:not([hidden="until-found"]) { display: none !important; }
@@ -378,6 +387,9 @@
   .ply-mast--compact .ply-mast__title { --ply-size-display: clamp(var(--ply-size-3xl), 1.4rem + 3.6vw, 4.5rem); }
   .ply-mast__stop { color: var(--ply-color-accent); }
   .ply-mast__lede { font-size: var(--ply-size-lg); line-height: var(--ply-leading-normal); max-width: 36rem; margin-top: var(--ply-space-5); }
+  /* A list page's lede runs as wide as a title line and balances, so a sentence a little longer than
+     the measure never leaves one word on its own line. */
+  .ply-mast__lede--wide { max-width: 52rem; text-wrap: balance; }
   /* The exhibit column opens only when there is an exhibit; a mast without one (a list page)
      keeps the whole width for its title. */
   @media (min-width: 64rem) {
@@ -612,6 +624,18 @@
   @media (min-width: 72rem) { .ply-menu--chapters { display: none; } }
   .ply-topbar:is([data-ply-tabs="tabs"], [data-ply-tabs="snug"], [data-ply-tabs="tight"]) .ply-menu--chapters { display: none; }
   .ply-topbar[data-ply-tabs="menu"] .ply-menu--chapters { display: block; }
+
+  /* Enlarged text on a narrow window: once the tabs have folded into the menu, the bar may wrap
+     to a second row, the wordmark may break inside a word, and the tools may wrap at their end
+     edge, so nothing runs past the screen (at 200% text on a 320px phone the bar needs it). Only
+     in the menu state, or before topbar.js has measured: while tabs show, a wrap would give
+     them a row of their own, the script would measure them as fitting, and a phone would get
+     tabs and tools on separate rows. Nothing changes while everything fits on one line. */
+  @media (max-width: 30rem) {
+    .ply-topbar:is([data-ply-tabs="menu"], :not([data-ply-tabs])) .ply-topbar__inner { flex-wrap: wrap; }
+    .ply-topbar:is([data-ply-tabs="menu"], :not([data-ply-tabs])) .ply-wordmark { flex: 0 1 auto; min-width: 0; white-space: normal; overflow-wrap: anywhere; }
+    .ply-topbar:is([data-ply-tabs="menu"], :not([data-ply-tabs])) .ply-topbar__tools { flex: 0 1 auto; flex-wrap: wrap; justify-content: flex-end; }
+  }
 }
 
 /* ---- components/search.css ---- */
@@ -758,6 +782,9 @@
   .ply-panel a { color: var(--ply-color-code-string); }
   .ply-panel a:hover { color: var(--ply-color-panel-text); }
   .ply-panel--flush { padding: 0; }
+  /* A flush panel that holds a picture gets the hairline frame cards give theirs, so a light
+     screenshot keeps its edge on the white wall. */
+  .ply-panel--flush:has(img, picture) { outline: var(--ply-border-hair) solid var(--ply-color-rule); outline-offset: -1px; }
 
   /* Figure with an exhibit caption underneath, outside the black. */
   .ply-exhibit { margin: 0; }
@@ -929,6 +956,18 @@
   .ply-table .ply-tag { overflow-wrap: normal; }
   .ply-tag--solid { background: var(--ply-color-text); color: var(--ply-color-bg); border-color: var(--ply-color-text); }
   .ply-tag--note { background: var(--ply-color-note); color: var(--ply-ink-950); border-color: var(--ply-color-note); }
+  /* A tag that is a link (an <a class="ply-tag ply-tag--link">) keeps the tag's look and takes
+     the link's: teal and underlined, so a row of them reads as navigation and not as a filter
+     bar; at least 28px tall, ink fill on hover, and the page's focus ring. The current one is the
+     solid tag, plain. */
+  .ply-tag--link { color: var(--ply-color-link); text-decoration-line: underline; text-decoration-thickness: 1.5px; text-underline-offset: 0.2em; min-height: 1.75rem; padding-inline: 0.6rem; transition: background-color var(--ply-duration-fast) var(--ply-ease-out), color var(--ply-duration-fast) var(--ply-ease-out); }
+  .ply-tag--link.ply-tag--solid { color: var(--ply-color-bg); text-decoration: none; }
+  .ply-tag--link:hover { background: var(--ply-color-text); color: var(--ply-color-bg); border-color: var(--ply-color-text); }
+  /* A row of tags: a ul of li, each holding a tag. Inside .ply-prose the list items would take the
+     prose list spacing, so it is taken back. */
+  .ply-tag-list { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: var(--ply-space-2); }
+  .ply-prose .ply-tag-list { padding-inline-start: 0; }
+  .ply-tag-list > li, .ply-prose .ply-tag-list > li + li { margin: 0; }
 
   .ply-status { display: inline-flex; align-items: center; gap: var(--ply-space-2); font-size: var(--ply-size-sm); font-weight: var(--ply-weight-semibold); }
   .ply-status::before { content: ""; width: 0.6875rem; height: 0.6875rem; flex: none; }
@@ -1283,6 +1322,50 @@
   .ply-wall__label { font-family: var(--ply-font-display); font-size: var(--ply-size-3xl); line-height: 1; font-variant-numeric: tabular-nums; }
   .ply-wall__entries { list-style: none; padding: 0; display: grid; gap: var(--ply-space-4); }
   @media (min-width: 48rem) { .ply-wall__year { grid-template-columns: 9rem minmax(0, 1fr); gap: var(--ply-space-6); } }
+  /* One edge for every wall: from 64rem the label column is as wide as an article's rail, so the
+     labels (years, names) start at the page's edge and everything they label starts one column in. */
+  @media (min-width: 64rem) { .ply-wall__year { grid-template-columns: var(--ply-layout-toc) minmax(0, 1fr); } }
+  /* A short tomato lead above each label (ply-wall--lead on the wall), the small mark that leads the eye in. */
+  .ply-wall--lead :is(.ply-wall__label, .ply-wall__name)::before { content: ""; display: block; width: 2.5rem; height: 3px; margin-bottom: var(--ply-space-3); background: var(--ply-color-accent); }
+
+  /* Rows: a wall of names (topics, skills) set like the year wall, the name in the label column,
+     what it labels beside it, and a hairline between rows. Put .ply-wall on a ul, ol, or dl. */
+  .ply-wall:is(ul, ol) { list-style: none; padding: 0; margin: 0; }
+  .ply-wall__row { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--ply-space-3); padding-block: var(--ply-space-4); }
+  .ply-wall__row + .ply-wall__row { border-top: var(--ply-border-hair) solid var(--ply-color-rule); }
+  .ply-wall__name { margin: 0; font-family: var(--ply-font-text); font-size: var(--ply-size-xl); font-weight: var(--ply-weight-bold); line-height: 1.2; letter-spacing: -0.01em; text-wrap: balance; }
+  .ply-wall__name a { color: inherit; text-decoration-thickness: 2px; text-underline-offset: 0.18em; }
+  .ply-wall__body { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--ply-space-3); min-width: 0; margin: 0; max-width: var(--ply-layout-measure); }
+  .ply-wall__about { color: var(--ply-color-text-muted); }
+  .ply-wall__list { list-style: none; padding: 0; margin: 0; display: grid; gap: var(--ply-space-2); }
+  .ply-wall__list a { font-weight: var(--ply-weight-semibold); }
+  .ply-wall__aside { margin-inline-start: var(--ply-space-1); font-size: var(--ply-size-sm); color: var(--ply-color-text-muted); }
+  @media (min-width: 64rem) {
+    .ply-wall__row { grid-template-columns: var(--ply-layout-toc) minmax(0, 1fr); gap: var(--ply-space-6); align-items: start; }
+    .ply-wall__name { font-size: var(--ply-size-lg); }
+    .ply-wall__aside { white-space: nowrap; }
+    .ply-wall__body { max-width: none; }
+  }
+  /* With the room (ply-wall__body--split), a description and a list are two columns, so the row
+     is as tall as its longer side and the right half of the page is used. */
+  @media (min-width: 80rem) {
+    .ply-wall__body--split { grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); gap: var(--ply-space-6); align-items: start; }
+    .ply-wall__body--split .ply-wall__about { max-width: var(--ply-layout-measure); }
+  }
+
+  /* Ledger: awards, service, and talks, the text at the start and the year at the end of each
+     row, hairlines between. --ply-ledger-when colors the years (ink by default). */
+  .ply-ledger { list-style: none; padding: 0; margin: 0; }
+  .ply-prose .ply-ledger { padding-inline-start: 0; }
+  .ply-ledger > li, .ply-prose .ply-ledger > li + li { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--ply-space-1) var(--ply-space-5); margin: 0; padding-block: var(--ply-space-3); border-top: var(--ply-border-hair) solid var(--ply-color-rule); }
+  .ply-ledger > li:last-child { border-bottom: var(--ply-border-hair) solid var(--ply-color-rule); }
+  .ply-ledger__text { flex: 1 1 24rem; min-width: 0; max-width: var(--ply-layout-measure); text-wrap: pretty; }
+  .ply-ledger__when { color: var(--ply-ledger-when, inherit); font-weight: var(--ply-weight-bold); font-variant-numeric: tabular-nums; }
+
+  /* Chips: a row of short names (skills, tools) in the mono face, each in a sunken box. */
+  .ply-chips { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--ply-space-2); max-width: var(--ply-layout-measure); }
+  .ply-prose .ply-chips { padding-inline-start: 0; }
+  .ply-chips > li, .ply-prose .ply-chips > li + li { margin: 0; padding: 0.15rem 0.55rem; background: var(--ply-color-surface-sunken); border: var(--ply-border-hair) solid var(--ply-color-rule); font-family: var(--ply-font-mono); font-size: var(--ply-size-sm); overflow-wrap: anywhere; }
 
   .ply-pub { display: grid; gap: var(--ply-space-1); }
   .ply-pub__title { font-weight: var(--ply-weight-bold); font-size: var(--ply-size-lg); line-height: 1.3; }
@@ -1304,8 +1387,8 @@
   .ply-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, max(16rem, (100% - 2 * var(--ply-space-6)) / 3)), 1fr)); gap: var(--ply-space-7) var(--ply-space-6); container-type: inline-size; }
   /* The columns are as many as the cards besides the lead, up to three, so a lead with two
      cards under it sets them half and half. */
-  .ply-cards:not(:has(> :nth-child(3 of :not(.ply-card--lead)))) { grid-template-columns: repeat(auto-fit, minmax(min(100%, max(16rem, (100% - var(--ply-space-6)) / 2)), 1fr)); }
-  .ply-cards:not(:has(> :nth-child(2 of :not(.ply-card--lead)))) { grid-template-columns: minmax(0, 1fr); }
+  .ply-cards:where(:not(:has(> :nth-child(3 of :not(.ply-card--lead))))) { grid-template-columns: repeat(auto-fit, minmax(min(100%, max(16rem, (100% - var(--ply-space-6)) / 2)), 1fr)); }
+  .ply-cards:where(:not(:has(> :nth-child(2 of :not(.ply-card--lead))))) { grid-template-columns: minmax(0, 1fr); }
   .ply-card { display: grid; grid-template-rows: auto 1fr; gap: var(--ply-space-4); align-content: start; min-width: 0; }
   .ply-card__panel { position: relative; display: block; background: var(--ply-color-panel); aspect-ratio: 100 / 56; overflow: hidden; text-decoration: none; }
   .ply-card__panel :is(img, video) { display: block; width: 100%; height: 100%; object-fit: cover; }
@@ -1322,6 +1405,11 @@
   .ply-card__summary { font-size: var(--ply-size-ui); line-height: var(--ply-leading-normal); color: var(--ply-color-text-muted); max-width: 40rem; }
   .ply-card__tags { display: flex; flex-wrap: wrap; gap: var(--ply-space-2); list-style: none; padding: 0; margin-top: var(--ply-space-1); }
   .ply-card__tags > li { margin: 0; }
+  /* An authors line (the owner's name, .ply-me, is set darker) and a row of links under the summary. */
+  .ply-card__authors { font-size: var(--ply-size-sm); line-height: var(--ply-leading-normal); color: var(--ply-color-text-muted); }
+  .ply-card__authors .ply-me { color: var(--ply-color-text); font-weight: var(--ply-weight-semibold); }
+  .ply-card__links { display: flex; flex-wrap: wrap; gap: var(--ply-space-3); font-size: var(--ply-size-sm); }
+  .ply-card__links a { display: inline-flex; align-items: center; min-height: 1.5rem; }
 
   /* The lead card, or a card alone in its grid or under the lead, spans the row; with room it
      sets its panel beside the text and its title in wood type, the name over the subtitle. */
@@ -1333,6 +1421,44 @@
     :is(.ply-card--lead, .ply-cards > .ply-card:only-child, .ply-card--lead + .ply-card:last-child) .ply-card__sub { display: block; margin-top: var(--ply-space-2); font-family: var(--ply-font-text); font-size: var(--ply-size-lg); font-weight: var(--ply-weight-semibold); line-height: var(--ply-leading-tight); }
     :is(.ply-card--lead, .ply-cards > .ply-card:only-child, .ply-card--lead + .ply-card:last-child) .ply-card__sub-mark { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
     :is(.ply-card--lead, .ply-cards > .ply-card:only-child, .ply-card--lead + .ply-card:last-child) .ply-card__summary { font-size: var(--ply-size-md); }
+  }
+
+  /* Aligned rows (ply-cards--aligned): from 48rem each card takes seven rows of the grid by
+     subgrid (panel, title, meta, summary, authors, tags, links), and its body dissolves into
+     the grid, so the titles, summaries, authors, tags, and link rows of one row of cards start on
+     shared lines and the row is as tall as its tallest part. A row a card does not fill has no
+     height. The gap between rows is each card's bottom margin, since a grid gap would also open
+     between the seven rows. The lead, or a card alone, is its own row and keeps its layout.
+     Link rows are .ply-card__links or .ply-pub__links. */
+  @media (min-width: 48rem) {
+    .ply-cards--aligned { row-gap: 0; margin-bottom: calc(-1 * var(--ply-space-6)); }
+    .ply-cards--aligned > :is(.ply-card--lead, .ply-card:only-child, .ply-card--lead + .ply-card:last-child) { margin-bottom: var(--ply-space-6); }
+    .ply-cards--aligned > .ply-card:not(.ply-card--lead, :only-child, .ply-card--lead + :last-child) { grid-row: span 7; grid-template-rows: subgrid; row-gap: 0; margin-bottom: var(--ply-space-6); }
+    .ply-cards--aligned > .ply-card:not(.ply-card--lead, :only-child, .ply-card--lead + :last-child) > .ply-card__body { display: contents; }
+    .ply-cards--aligned > .ply-card:not(.ply-card--lead, :only-child, .ply-card--lead + :last-child) :is(.ply-card__title, .ply-card__meta, .ply-card__summary, .ply-card__authors, .ply-card__tags, .ply-card__links, .ply-pub__links) { margin-block: var(--ply-space-2) 0; }
+    .ply-cards--aligned > .ply-card:not(.ply-card--lead, :only-child, .ply-card--lead + :last-child) > .ply-card__panel { grid-row: 1; }
+    .ply-cards--aligned > .ply-card:not(.ply-card--lead, :only-child, .ply-card--lead + :last-child) .ply-card__title { grid-row: 2; margin-top: var(--ply-space-4); }
+    .ply-cards--aligned > .ply-card:not(.ply-card--lead, :only-child, .ply-card--lead + :last-child) .ply-card__meta { grid-row: 3; }
+    .ply-cards--aligned > .ply-card:not(.ply-card--lead, :only-child, .ply-card--lead + :last-child) .ply-card__summary { grid-row: 4; }
+    .ply-cards--aligned > .ply-card:not(.ply-card--lead, :only-child, .ply-card--lead + :last-child) .ply-card__authors { grid-row: 5; }
+    .ply-cards--aligned > .ply-card:not(.ply-card--lead, :only-child, .ply-card--lead + :last-child) .ply-card__tags { grid-row: 6; margin-top: var(--ply-space-3); }
+    .ply-cards--aligned > .ply-card:not(.ply-card--lead, :only-child, .ply-card--lead + :last-child) :is(.ply-card__links, .ply-pub__links) { grid-row: 7; }
+  }
+  /* Without subgrid, the last block of a card sits at the card's bottom. */
+  @supports not (grid-template-rows: subgrid) {
+    .ply-cards--aligned .ply-card__body { display: flex; flex-direction: column; }
+    .ply-cards--aligned .ply-card__body > :last-child { margin-top: auto; }
+  }
+
+  /* Three tracks (ply-cards--tracks): from 80rem the grid is exactly three tracks whatever a
+     row holds, so a card is the same size on every row. The lead, or a lone card, uses subgrid
+     and its panel spans two tracks, with its text in the third; its title steps down to xl to
+     suit one track. */
+  @media (min-width: 80rem) {
+    .ply-cards.ply-cards--tracks { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .ply-cards.ply-cards--tracks > :is(.ply-card--lead, .ply-card:only-child) { grid-template-columns: subgrid; }
+    .ply-cards.ply-cards--tracks > :is(.ply-card--lead, .ply-card:only-child) > .ply-card__panel { grid-column: span 2; }
+    .ply-cards.ply-cards--tracks > :is(.ply-card--lead, .ply-card:only-child) .ply-card__title { font-size: var(--ply-size-xl); }
   }
 }
 
@@ -1391,6 +1517,11 @@
 
   .ply-quote { margin: var(--ply-space-5) 0; padding-inline-start: var(--ply-space-5); border-inline-start: 1px solid var(--ply-color-rule-strong); font-size: var(--ply-size-lg); line-height: var(--ply-leading-normal); max-width: var(--ply-layout-measure); }
   .ply-quote cite { display: block; margin-top: var(--ply-space-2); font-size: var(--ply-size-sm); font-style: normal; color: var(--ply-color-text-muted); }
+
+  /* Emphasis in running text is type alone: em is the true italic, a step heavier than the body so
+     it reads as a change of voice; strong is bold, and both together are bold italic. */
+  .ply-prose em { font-style: italic; font-weight: var(--ply-weight-medium); }
+  .ply-prose :is(strong em, em strong) { font-weight: var(--ply-weight-bold); }
 }
 
 /* ---- components/demo.css ---- */
@@ -1456,6 +1587,22 @@
   .ply-chart .ply-direct-label { fill: var(--ply-color-text); font-weight: 600; }
   .ply-chart__source { font-size: var(--ply-size-xs); color: var(--ply-color-text-muted); }
 
+  /* A small chart drawn for the margin (put the class on the Chart) shows at its own size, so its
+     text matches the sidenotes, and shrinks only in a narrower column. Back in the text on a
+     narrow screen it keeps that size instead of scrolling sideways, so it has no scroll hint. */
+  .ply-chart--margin { max-width: 21rem; }
+  .ply-chart--margin .ply-chart__plot > svg { display: block; max-width: 100%; height: auto; min-width: 0; font-size: var(--ply-size-sm); }
+  .ply-chart--margin .ply-chart__hint { display: none; }
+  .ply-chart--margin > .ply-details { font-size: var(--ply-size-sm); overflow-x: auto; }
+
+  /* A plot saved as inline SVG (a matplotlib figure, say): ink follows the theme through
+     currentColor, and the series use var(--ply-viz-1) ... var(--ply-viz-8) in the file, so
+     both themes need one SVG. Text stays real text. --ply-plot-max caps the width at the
+     figure's own size. */
+  .ply-plot { color: var(--ply-color-text); }
+  .ply-plot svg { display: block; width: 100%; height: auto; max-width: var(--ply-plot-max, 100%); margin-inline: auto; }
+  .ply-plot svg text { fill: currentColor; }
+
   .ply-legend { display: flex; flex-wrap: wrap; gap: var(--ply-space-1) var(--ply-space-4); list-style: none; padding: 0; font-size: var(--ply-size-sm); }
   .ply-legend li { display: inline-flex; align-items: center; gap: var(--ply-space-2); }
   .ply-legend__key { width: 0.75rem; height: 0.75rem; border-radius: var(--ply-radius-ball); background: var(--c, var(--ply-viz-1)); flex: none; }
@@ -1486,6 +1633,12 @@
   /* A link or button of your own that stands alone grows to a 44px target under a finger,
      as Polytope's own controls do. */
   @media (pointer: coarse) { .ply-target { display: inline-flex; align-items: center; min-height: 2.75rem; min-width: 2.75rem; } }
+  /* A picture with a twin for each theme: the one for the theme in use shows, the switch's first
+     and then the system's, and paper takes the light one. Nothing else may set their display. */
+  @media screen { :root[data-theme="light"] .ply-dark-only, :root[data-theme="dark"] .ply-light-only { display: none; } }
+  @media screen and (prefers-color-scheme: light) { :root:not([data-theme]) .ply-dark-only { display: none; } }
+  @media screen and (prefers-color-scheme: dark) { :root:not([data-theme]) .ply-light-only { display: none; } }
+  @media print { .ply-dark-only { display: none; } }
   .ply-flow > * + * { margin-top: var(--ply-flow, var(--ply-space-4)); }
   .ply-mt-0 { margin-top: 0 !important; }
   @media (max-width: 40rem) { .ply-hide-narrow { display: none !important; } }
@@ -1546,12 +1699,27 @@
     .ply-slider { height: 2.75rem; }
     .ply-check { padding-block: 0.625rem; }
     .ply-switch { min-height: 2.75rem; }
-    :is(.ply-pub__links, .ply-paper__links) a { display: inline-flex; align-items: center; min-height: 2.75rem; }
+    :is(.ply-pub__links, .ply-paper__links, .ply-card__links) a { display: inline-flex; align-items: center; min-height: 2.75rem; }
+    :is(.ply-pub__links, .ply-card__links) a, .ply-atlas__filter button { min-width: 2.75rem; justify-content: center; }
     .ply-wordmark { display: inline-flex; align-items: center; min-height: 2.75rem; }
     .ply-authors__toggle button { min-height: 2.75rem; }
-    /* A publication's title runs as text, so it grows its target with padding, which leaves
-       the lines where they are. */
-    .ply-pub__title a { padding-block: 0.5rem; }
+    /* A card's or publication's title runs as text, so it grows its target with padding and an
+       opposite margin, which leaves the lines where they are. */
+    :is(.ply-card__title, .ply-pub__title) a { display: inline-block; padding-block: 0.7rem; margin-block: -0.7rem; }
+    .ply-skip { display: flex; align-items: center; min-height: 2.75rem; }
+    .ply-tag--link { min-height: 2.75rem; padding-inline: 0.8rem; }
+  }
+
+  /* Enlarged text in a narrow window (200% text-only zoom at 320px must not scroll sideways):
+     titles and inline code may break inside a word, wide inline math scrolls inside itself, and the Atlas's
+     list and filter stay inside the column. These sit in the utilities layer, over the rules
+     that keep a title's full stop with its word and .ply-nowrap's own. */
+  @media (max-width: 30rem) {
+    :is(.ply-card__title, .ply-title, .ply-paper__title, .ply-post__title, .ply-mast__title), :is(.ply-card__title, .ply-title, .ply-paper__title, .ply-post__title, .ply-mast__title) .ply-nowrap { white-space: normal; overflow-wrap: anywhere; min-width: 0; }
+    .ply-prose :not(pre) > code { overflow-wrap: anywhere; }
+    p .ply-math:not(.ply-math--display) { display: inline-block; max-width: 100%; overflow-x: auto; overflow-y: hidden; vertical-align: bottom; }
+    .ply-atlas__frame > *, .ply-atlas__stops, .ply-atlas__stop, .ply-atlas__list, .ply-atlas__filter { min-width: 0; max-width: 100%; }
+    .ply-atlas__stop :is(.ply-atlas__title, .ply-atlas__org, .ply-atlas__meta, .ply-atlas__when) { overflow-wrap: anywhere; }
   }
 
   /* Print. tokens.css switches paper to the light theme with ink-on-white panels;

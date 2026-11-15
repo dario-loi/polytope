@@ -4,7 +4,18 @@ import LineChartExample from "../../components/LineChartExample.astro";
 import Code from "@dario-loi/polytope/astro/Code.astro";
 import Stability from "@dario-loi/polytope/astro/Stability.astro";
 import ApiTable from "../../components/ApiTable.astro";
+import Chart from "@dario-loi/polytope/astro/Chart.astro";
+import Example from "../../components/Example.astro";
 import { u } from "../../data/nav";
+const plot = `<div class="ply-plot" style="--ply-plot-max: 28rem">
+  <svg viewBox="0 0 280 120" role="img" aria-label="Two series rising over ten steps; the first ends higher.">
+    <path d="M10 110 H270 M10 110 V10" fill="none" stroke="currentColor" stroke-width="1.2" />
+    <path d="M10 100 L70 80 L130 60 L190 38 L250 22" fill="none" stroke="var(--ply-viz-1)" stroke-width="2" />
+    <path d="M10 104 L70 94 L130 82 L190 70 L250 60" fill="none" stroke="var(--ply-viz-2)" stroke-width="2" />
+    <text x="12" y="22" font-size="11">accuracy</text>
+    <text x="214" y="104" font-size="11">epoch</text>
+  </svg>
+</div>`;
 ---
 <Docs title="Charts" headTitle="Chart frame - Polytope" status="experimental" lede="A frame for charts drawn by any library: title, legend, plot, data table, source.">
   <LineChartExample />
@@ -26,6 +37,23 @@ Plot.plot({
   marks: [Plot.lineY(data, { x: "epoch", y: "acc", stroke: "model", strokeWidth: 2 })],
 });`} />
   <p>Static exports (paper figures) should use the token module instead, so the colors are fixed: <code>import {"{ viz }"} from "@dario-loi/polytope/tokens"</code>.</p>
+
+  <h2 id="margin">Charts in the margin</h2>
+  <p>A small chart drawn for the margin shows at its own size, so its text matches the sidenotes next to it. Put <code>.ply-chart--margin</code> on the chart: it is at most 21rem wide, its text is 14px, and in a narrow column it shrinks and keeps that size where a plain chart keeps its 32rem width and scrolls. It has no scroll hint, since it never scrolls.</p>
+  <Chart class="ply-chart--margin" title="Accuracy by epoch" subtitle="Synthetic example data">
+    <svg viewBox="0 0 300 140" role="img" aria-label="A line rising from 0.4 to 0.8 over ten epochs.">
+      <g class="grid"><line x1="30" x2="290" y1="30" y2="30" /><line x1="30" x2="290" y1="80" y2="80" /></g>
+      <line class="ply-baseline" x1="30" x2="290" y1="130" y2="130" />
+      <path d="M30 120 L90 90 L150 68 L210 50 L270 36" fill="none" stroke="var(--ply-viz-1)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+    </svg>
+  </Chart>
+  <Code lang="astro" code={`<Chart class="ply-chart--margin" title="..." subtitle="...">
+  <svg viewBox="0 0 300 140">...</svg>
+</Chart>`} />
+
+  <h2 id="plots">Plots saved as SVG</h2>
+  <p>A plot from matplotlib, R, or another tool can go into the page as inline SVG (not as an <code>img</code>), so its colors follow the theme. Write the file with <code>currentColor</code> for ink and <code>var(--ply-viz-1)</code> to <code>var(--ply-viz-8)</code> for the series, keep the text as real text, and wrap it in <code>.ply-plot</code>. Both themes then use one file. <code>--ply-plot-max</code> caps the width at the figure's own size. Give the <code>svg</code> a <code>role="img"</code> and an <code>aria-label</code> that says what the plot shows.</p>
+  <Example html={plot} />
 
   <h2>Tooltip and legend</h2>
   <p><code>.ply-tooltip</code> is the black hover card used above; <code>.ply-legend</code> lists series with a dot, line, or bar key. <code>.ply-texture</code> adds a diagonal hatch for print and forced-colors mode.</p>

@@ -35,7 +35,7 @@ const Wall = label === false ? "div" : "section";
             <p class="ply-pub__title">{p.href ? <a href={p.href}>{p.title}</a> : p.title}</p>
             <p class="ply-pub__authors">{(fold ? foldAuthors(p.authors, me, fold) : p.authors).map((a, i) => <>{i > 0 && ", "}{a === me ? <span class="ply-me">{a}</span> : a === "..." ? <><span class="ply-pub__gap" aria-hidden="true">...</span><span class="ply-visually-hidden">{gapText}</span></> : a}</>)}</p>
             {p.venue && <p class="ply-pub__venue">{p.venue}</p>}
-            {p.links && p.links.length > 0 && <p class="ply-pub__links">{p.links.map((l) => <a href={l.href}>{l.label}</a>)}</p>}
+            {p.links && p.links.length > 0 && <p class="ply-pub__links">{p.links.map((l) => <a href={l.href} data-astro-prefetch={/\.pdf([?#]|$)/i.test(l.href) ? "false" : undefined}>{l.label}</a>)}</p>}
           </li>
         ))}
       </ul>

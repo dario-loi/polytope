@@ -97,6 +97,50 @@
   .ply-wall__label { font-family: var(--ply-font-display); font-size: var(--ply-size-3xl); line-height: 1; font-variant-numeric: tabular-nums; }
   .ply-wall__entries { list-style: none; padding: 0; display: grid; gap: var(--ply-space-4); }
   @media (min-width: 48rem) { .ply-wall__year { grid-template-columns: 9rem minmax(0, 1fr); gap: var(--ply-space-6); } }
+  /* One edge for every wall: from 64rem the label column is as wide as an article's rail, so the
+     labels (years, names) start at the page's edge and everything they label starts one column in. */
+  @media (min-width: 64rem) { .ply-wall__year { grid-template-columns: var(--ply-layout-toc) minmax(0, 1fr); } }
+  /* A short tomato lead above each label (ply-wall--lead on the wall), the small mark that leads the eye in. */
+  .ply-wall--lead :is(.ply-wall__label, .ply-wall__name)::before { content: ""; display: block; width: 2.5rem; height: 3px; margin-bottom: var(--ply-space-3); background: var(--ply-color-accent); }
+
+  /* Rows: a wall of names (topics, skills) set like the year wall, the name in the label column,
+     what it labels beside it, and a hairline between rows. Put .ply-wall on a ul, ol, or dl. */
+  .ply-wall:is(ul, ol) { list-style: none; padding: 0; margin: 0; }
+  .ply-wall__row { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--ply-space-3); padding-block: var(--ply-space-4); }
+  .ply-wall__row + .ply-wall__row { border-top: var(--ply-border-hair) solid var(--ply-color-rule); }
+  .ply-wall__name { margin: 0; font-family: var(--ply-font-text); font-size: var(--ply-size-xl); font-weight: var(--ply-weight-bold); line-height: 1.2; letter-spacing: -0.01em; text-wrap: balance; }
+  .ply-wall__name a { color: inherit; text-decoration-thickness: 2px; text-underline-offset: 0.18em; }
+  .ply-wall__body { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--ply-space-3); min-width: 0; margin: 0; max-width: var(--ply-layout-measure); }
+  .ply-wall__about { color: var(--ply-color-text-muted); }
+  .ply-wall__list { list-style: none; padding: 0; margin: 0; display: grid; gap: var(--ply-space-2); }
+  .ply-wall__list a { font-weight: var(--ply-weight-semibold); }
+  .ply-wall__aside { margin-inline-start: var(--ply-space-1); font-size: var(--ply-size-sm); color: var(--ply-color-text-muted); }
+  @media (min-width: 64rem) {
+    .ply-wall__row { grid-template-columns: var(--ply-layout-toc) minmax(0, 1fr); gap: var(--ply-space-6); align-items: start; }
+    .ply-wall__name { font-size: var(--ply-size-lg); }
+    .ply-wall__aside { white-space: nowrap; }
+    .ply-wall__body { max-width: none; }
+  }
+  /* With the room (ply-wall__body--split), a description and a list are two columns, so the row
+     is as tall as its longer side and the right half of the page is used. */
+  @media (min-width: 80rem) {
+    .ply-wall__body--split { grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); gap: var(--ply-space-6); align-items: start; }
+    .ply-wall__body--split .ply-wall__about { max-width: var(--ply-layout-measure); }
+  }
+
+  /* Ledger: awards, service, and talks, the text at the start and the year at the end of each
+     row, hairlines between. --ply-ledger-when colors the years (ink by default). */
+  .ply-ledger { list-style: none; padding: 0; margin: 0; }
+  .ply-prose .ply-ledger { padding-inline-start: 0; }
+  .ply-ledger > li, .ply-prose .ply-ledger > li + li { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--ply-space-1) var(--ply-space-5); margin: 0; padding-block: var(--ply-space-3); border-top: var(--ply-border-hair) solid var(--ply-color-rule); }
+  .ply-ledger > li:last-child { border-bottom: var(--ply-border-hair) solid var(--ply-color-rule); }
+  .ply-ledger__text { flex: 1 1 24rem; min-width: 0; max-width: var(--ply-layout-measure); text-wrap: pretty; }
+  .ply-ledger__when { color: var(--ply-ledger-when, inherit); font-weight: var(--ply-weight-bold); font-variant-numeric: tabular-nums; }
+
+  /* Chips: a row of short names (skills, tools) in the mono face, each in a sunken box. */
+  .ply-chips { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--ply-space-2); max-width: var(--ply-layout-measure); }
+  .ply-prose .ply-chips { padding-inline-start: 0; }
+  .ply-chips > li, .ply-prose .ply-chips > li + li { margin: 0; padding: 0.15rem 0.55rem; background: var(--ply-color-surface-sunken); border: var(--ply-border-hair) solid var(--ply-color-rule); font-family: var(--ply-font-mono); font-size: var(--ply-size-sm); overflow-wrap: anywhere; }
 
   .ply-pub { display: grid; gap: var(--ply-space-1); }
   .ply-pub__title { font-weight: var(--ply-weight-bold); font-size: var(--ply-size-lg); line-height: 1.3; }

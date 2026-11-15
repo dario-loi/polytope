@@ -37,6 +37,15 @@ import { Button, Note, Equation, Machine } from "@dario-loi/polytope/astro";
 <Machine interactive />`} />
   <p>Components that need a script (the machine, copy buttons, the theme toggle, sliders) include it themselves. Astro bundles each script once per page.</p>
 
+  <h2 id="layers">Your own CSS</h2>
+  <p>Polytope's rules sit in five cascade layers, in this order: <code>ply.reset</code>, <code>ply.base</code>, <code>ply.layout</code>, <code>ply.components</code>, <code>ply.utilities</code>. A rule of your own that sits outside every layer beats all of them, so it also beats a utility such as <code>.ply-target</code>, which raises a link to 44px under a finger. Put a size that a utility may override in <code>@layer ply.components</code>, and begin the sheet by restating the order, so the order is always Polytope's.</p>
+  <Code lang="css" code={`@layer ply.reset, ply.base, ply.layout, ply.components, ply.utilities;
+
+@layer ply.components {
+  .site-foot__links a { display: inline-flex; align-items: center; min-height: 1.5rem; }
+}`} />
+  <p>The footer link is 24px tall at rest. Under <code>pointer: coarse</code>, <code>.ply-target</code> on it, or Polytope's own touch rules, raises it to 44px, because both sit in a later layer than the component rule.</p>
+
   <h2>Astro settings</h2>
   <p>Astro compiles <code>.astro</code> files from <code>node_modules</code> without extra configuration. If Vite complains about an external package during the build, add this:</p>
   <Code lang="js" title="astro.config.mjs" code={`export default defineConfig({

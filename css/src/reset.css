@@ -7,7 +7,8 @@
   input, button, textarea, select { font: inherit; color: inherit; }
   p, h1, h2, h3, h4, h5, h6 { overflow-wrap: break-word; }
   h1, h2, h3, h4 { text-wrap: balance; }
-  p { text-wrap: pretty; }
+  /* Running text never ends on a lone word: paragraphs, list items, definitions, captions. */
+  p, li, dd, figcaption { text-wrap: pretty; }
   ul[role="list"], ol[role="list"] { list-style: none; padding: 0; }
   /* hidden always hides, even on an element whose class sets a display, such as a button. */
   [hidden]:not([hidden="until-found"]) { display: none !important; }

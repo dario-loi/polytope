@@ -45,3 +45,5 @@ export { default as WoodTitle } from "./WoodTitle.astro";
 // Helpers the components use, for markup of your own: title sizing and folded author lists.
 export { emWidth, longestRun, splitTitle, titleStyle, woodTitle } from "./title.ts";
 export { foldAuthors, keptWhenFolded } from "./authors.ts";
+// Picture helpers: formats, the phone column for `sizes`, and width steps.
+export { column, pictureFormats, widthsFor } from "./images.ts";

@@ -1,6 +1,7 @@
 ---
 import Docs from "../../layouts/Docs.astro";
 import MotionModel from "../../components/exhibits/MotionModel.astro";
+import { u } from "../../data/nav";
 ---
 <Docs title="Accessibility" lede="The kit targets WCAG 2.2 level AA. These are the commitments behind that, and the checks a new part has to pass.">
   <MotionModel slot="exhibit" />
@@ -14,8 +15,9 @@ import MotionModel from "../../components/exhibits/MotionModel.astro";
     <li>The machine and the complex describe themselves to screen readers, including their current counts. Demo status lines are live regions.</li>
     <li>Equations render to MathML alongside the visual HTML, so screen readers can read them.</li>
     <li>Pages reflow at 320px wide and at 400% zoom without sideways scrolling; wide tables scroll inside their own frame.</li>
+    <li>At 200% text-only zoom on a 320px window nothing scrolls sideways. Below 30rem a title may break inside a word, the top bar wraps once its tabs are in the menu, wide inline math scrolls inside its paragraph, and the Atlas's list and filter stay in their column. See <a href={u("/foundations/layout/#narrow")}>Space and layout</a>.</li>
     <li>The first tab stop is a skip link past the top bar to the page title.</li>
-    <li>On touch screens, tabs, small buttons, menu items, and slider rails grow to 44px. The compact 36px sizes are for mouse and trackpad.</li>
+    <li>Small link rows are 24px tall on a mouse and 44px on touch screens, and so are tabs, small buttons, menu items, the skip link, link tags, and slider rails. A title that runs as text grows its target with padding and an opposite margin, so nothing moves. The compact 36px sizes are for mouse and trackpad.</li>
     <li>In Windows contrast themes, checks, radio balls, switches, the current tab, and status marks keep their shapes in system colors.</li>
     <li>A citation hover card stays open while the pointer is on it and closes with Escape.</li>
     <li>Pages print in the light theme, with black panels as ink on white and the site chrome left out. Fills that show a state, such as a primary button, a pressed segment, or a checked box, keep their ink on paper.</li>
@@ -36,6 +38,7 @@ import MotionModel from "../../components/exhibits/MotionModel.astro";
     <li>Has a name, a role, and a state that a screen reader announces.</li>
     <li>Passes contrast in light and dark.</li>
     <li>Does not rely on color, hover, or motion to carry meaning.</li>
-    <li>Holds together at 320px and at 200% text size.</li>
+    <li>Holds together at 320px and at 200% text-only zoom, with the real copy in it.</li>
+    <li>Has a 24px target on a mouse and a 44px target under <code>pointer: coarse</code>, unless it sits inside running text.</li>
   </ol>
 </Docs>

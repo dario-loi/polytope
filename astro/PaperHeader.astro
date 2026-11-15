@@ -57,7 +57,7 @@ const kept = folds ? keptWhenFolded(authors.length, authors.findIndex((a) => a.n
   {links.length > 0 && (
     <div class="ply-paper__links">
       {links.map((l, i) => (
-        <a class:list={["ply-button ply-button--sm", i !== primary && "ply-button--secondary"]} href={l.href}>{l.icon && <Icon name={l.icon} />}{l.label}</a>
+        <a class:list={["ply-button ply-button--sm", i !== primary && "ply-button--secondary"]} href={l.href} data-astro-prefetch={/\.pdf([?#]|$)/i.test(l.href) ? "false" : undefined}>{l.icon && <Icon name={l.icon} />}{l.label}</a>
       ))}
     </div>
   )}

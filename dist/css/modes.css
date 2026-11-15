@@ -44,12 +44,27 @@
     .ply-slider { height: 2.75rem; }
     .ply-check { padding-block: 0.625rem; }
     .ply-switch { min-height: 2.75rem; }
-    :is(.ply-pub__links, .ply-paper__links) a { display: inline-flex; align-items: center; min-height: 2.75rem; }
+    :is(.ply-pub__links, .ply-paper__links, .ply-card__links) a { display: inline-flex; align-items: center; min-height: 2.75rem; }
+    :is(.ply-pub__links, .ply-card__links) a, .ply-atlas__filter button { min-width: 2.75rem; justify-content: center; }
     .ply-wordmark { display: inline-flex; align-items: center; min-height: 2.75rem; }
     .ply-authors__toggle button { min-height: 2.75rem; }
-    /* A publication's title runs as text, so it grows its target with padding, which leaves
-       the lines where they are. */
-    .ply-pub__title a { padding-block: 0.5rem; }
+    /* A card's or publication's title runs as text, so it grows its target with padding and an
+       opposite margin, which leaves the lines where they are. */
+    :is(.ply-card__title, .ply-pub__title) a { display: inline-block; padding-block: 0.7rem; margin-block: -0.7rem; }
+    .ply-skip { display: flex; align-items: center; min-height: 2.75rem; }
+    .ply-tag--link { min-height: 2.75rem; padding-inline: 0.8rem; }
+  }
+
+  /* Enlarged text in a narrow window (200% text-only zoom at 320px must not scroll sideways):
+     titles and inline code may break inside a word, wide inline math scrolls inside itself, and the Atlas's
+     list and filter stay inside the column. These sit in the utilities layer, over the rules
+     that keep a title's full stop with its word and .ply-nowrap's own. */
+  @media (max-width: 30rem) {
+    :is(.ply-card__title, .ply-title, .ply-paper__title, .ply-post__title, .ply-mast__title), :is(.ply-card__title, .ply-title, .ply-paper__title, .ply-post__title, .ply-mast__title) .ply-nowrap { white-space: normal; overflow-wrap: anywhere; min-width: 0; }
+    .ply-prose :not(pre) > code { overflow-wrap: anywhere; }
+    p .ply-math:not(.ply-math--display) { display: inline-block; max-width: 100%; overflow-x: auto; overflow-y: hidden; vertical-align: bottom; }
+    .ply-atlas__frame > *, .ply-atlas__stops, .ply-atlas__stop, .ply-atlas__list, .ply-atlas__filter { min-width: 0; max-width: 100%; }
+    .ply-atlas__stop :is(.ply-atlas__title, .ply-atlas__org, .ply-atlas__meta, .ply-atlas__when) { overflow-wrap: anywhere; }
   }
 
   /* Print. tokens.css switches paper to the light theme with ink-on-white panels;

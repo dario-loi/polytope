@@ -7,10 +7,39 @@ import Cite from "@dario-loi/polytope/astro/Cite.astro";
 import BibTeX from "@dario-loi/polytope/astro/BibTeX.astro";
 import PubList from "@dario-loi/polytope/astro/PubList.astro";
 import Figure from "@dario-loi/polytope/astro/Figure.astro";
+import Example from "../../components/Example.astro";
 import { u } from "../../data/nav";
 import Code from "@dario-loi/polytope/astro/Code.astro";
 import Note from "@dario-loi/polytope/astro/Note.astro";
 import Stability from "@dario-loi/polytope/astro/Stability.astro";
+const rows = `<ul class="ply-wall ply-wall--lead" role="list">
+  <li class="ply-wall__row">
+    <h3 class="ply-wall__name"><a href="#">Topological deep learning</a></h3>
+    <div class="ply-wall__body ply-wall__body--split">
+      <p class="ply-wall__about">Neural networks for data in which relations join more than two things at once.</p>
+      <ul class="ply-wall__list" role="list">
+        <li><a href="#">Example title: higher-order message passing</a> <span class="ply-wall__aside">Example Venue 2026</span></li>
+        <li><a href="#">Example title: a benchmark for simplicial learning</a> <span class="ply-wall__aside">arXiv preprint</span></li>
+      </ul>
+    </div>
+  </li>
+  <li class="ply-wall__row">
+    <h3 class="ply-wall__name"><a href="#">Sheaves</a></h3>
+    <div class="ply-wall__body ply-wall__body--split">
+      <p class="ply-wall__about">Local data glued along restriction maps.</p>
+      <ul class="ply-wall__list" role="list">
+        <li><a href="#">Example title: sheaf diffusion with learned restriction maps</a> <span class="ply-wall__aside">Example Workshop 2026</span></li>
+      </ul>
+    </div>
+  </li>
+</ul>`;
+const ledger = `<ul class="ply-ledger">
+  <li><span class="ply-ledger__text">Example Prize, for the best student paper at Example Venue</span><span class="ply-ledger__when">2026</span></li>
+  <li><span class="ply-ledger__text">Reviewer, Example Conference and Example Workshop</span><span class="ply-ledger__when">2024-2026</span></li>
+</ul>`;
+const chips = `<ul class="ply-chips">
+  <li>Python</li><li>PyTorch</li><li>Rust</li><li>LaTeX</li><li>Astro</li>
+</ul>`;
 const examplePubs = [
   { year: 2026, title: "Example title: Higher-order message passing on cell complexes", authors: ["A. Author", "John Doe", "B. Author"], venue: "Example Venue 2026", links: [{ label: "Paper", href: "#" }, { label: "Code", href: "#" }] },
   { year: 2026, title: "Example title: a second paper in the same year", authors: ["John Doe", "C. Author"], venue: "Example Workshop 2026", links: [{ label: "Paper", href: "#" }] },
@@ -98,4 +127,16 @@ const examplePubs = [
   <PubList pubs={examplePubs} me="John Doe" />
   <Code lang="astro" code={`<PubList pubs={pubs} me="John Doe" />`} />
   <p>The wall is a region named <code>label</code> ("Publications"). When it sits in a section of yours that has its own heading, pass <code>label={"{false}"}</code>, so the page does not name two regions alike. <code>fold</code> folds a long author list here as in the header, as text: the first names, yours, and the last.</p>
+
+  <h2 id="walls">Walls</h2>
+  <p>A wall is a list divided by rules, its labels in one column. The year wall of <code>PubList</code> is one; the same classes set other lists. From 64rem every wall's label column is as wide as an article's rail (<code>--ply-layout-toc</code>), so the labels of every wall, list, and home section start at one edge and what they label starts one column in.</p>
+  <h3>Rows</h3>
+  <p>A <code>.ply-wall__row</code> sets a name in the label column and what it labels beside it, with a hairline between rows. It suits a list of topics with their papers, or of skills with their tools. Put <code>.ply-wall</code> on a <code>ul</code>, <code>ol</code>, or <code>dl</code>. <code>.ply-wall--lead</code> on the wall adds a short tomato lead above each label, a name here and a year on the year wall. From 80rem, <code>.ply-wall__body--split</code> sets a description and a list in two columns, so the row is as tall as its longer side. <code>.ply-wall__aside</code> is a quiet note after a link, such as a venue.</p>
+  <Example html={rows} />
+  <h3>Ledger</h3>
+  <p>A ledger sets awards, service, and talks: the text at the start of each row and the year at the end, in bold tabular figures, with hairlines between. Set <code>--ply-ledger-when</code> to give the years a color of the site's own.</p>
+  <Example html={ledger} />
+  <h3>Chips</h3>
+  <p>Chips are short names, such as skills or tools, in the mono face. Each sits in a sunken box with a hairline, and the row wraps.</p>
+  <Example html={chips} />
 </Docs>

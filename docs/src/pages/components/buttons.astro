@@ -18,6 +18,11 @@ const tags = `<div class="ply-cluster">
   <span class="ply-tag ply-tag--solid">Oral</span>
   <span class="ply-tag ply-tag--note">New</span>
 </div>`;
+const linkTags = `<ul class="ply-tag-list" role="list" aria-label="Topics">
+  <li><a class="ply-tag ply-tag--link" href="#" rel="tag">Topology</a></li>
+  <li><a class="ply-tag ply-tag--link ply-tag--solid" href="#" rel="tag" aria-current="page">Sheaves</a></li>
+  <li><a class="ply-tag ply-tag--link" href="#" rel="tag">Graph learning</a></li>
+</ul>`;
 const status = `<div class="ply-cluster" style="--ply-cluster-gap: 1.5rem">
   <span class="ply-status ply-status--idle">Idle</span>
   <span class="ply-status ply-status--running">Training</span>
@@ -48,7 +53,10 @@ const status = `<div class="ply-cluster" style="--ply-cluster-gap: 1.5rem">
 
   <h2>Tags</h2>
   <Example html={tags} />
-  <p>Tags name a venue, a type, or a topic. They are not buttons; if a tag filters something, make it a real button or link.</p>
+  <p>Tags name a venue, a type, or a topic. A tag that filters something is a real button or link.</p>
+  <h3 id="link-tags">Link tags</h3>
+  <p>A topic tag that leads to a list of its papers is a link. <code>.ply-tag--link</code> keeps the tag's shape and takes the link's look: teal, underlined, at least 28px tall (44px under a finger), filled with ink on hover. The current tag is the solid one, without the underline, and carries <code>aria-current="page"</code>. <code>.ply-tag-list</code> sets a <code>ul</code> of tags as a wrapping row, also inside <code>.ply-prose</code>, where list items would otherwise take the prose spacing.</p>
+  <Example html={linkTags} />
 
   <h2>Status</h2>
   <Example html={status} />

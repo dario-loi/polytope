@@ -1,6 +1,7 @@
 ---
 import Docs from "../../layouts/Docs.astro";
 import data from "@dario-loi/polytope/tokens.json";
+import { u } from "../../data/nav";
 const t = data.tokens as Record<string, any>;
 const sizes = Object.keys(t).filter((k) => k.startsWith("--ply-size-"));
 ---
@@ -34,8 +35,13 @@ const sizes = Object.keys(t).filter((k) => k.startsWith("--ply-size-"));
     <li>Body is 17px with 1.6 line height, in a column of about 68 characters (<code>--ply-layout-measure</code>).</li>
     <li>Headings from h3 down use Libre Franklin bold. Space above a heading is larger than space below it.</li>
     <li>Numbers in tables use tabular figures so columns line up. The table component sets this.</li>
-    <li>Mono is for code and values, never for labels that only want to look technical.</li>
+    <li>Mono is for code and values, and for short names such as tools in a list of chips. A label that only needs to look technical stays in the text face.</li>
+    <li>Paragraphs, list items, definitions, and captions set with <code>text-wrap: pretty</code>, so a line does not end on a lone word. Headings balance.</li>
+    <li>In prose, emphasis is the true italic one step heavier than the body; see <a href={u("/components/writing/#emphasis")}>Long-form writing</a>.</li>
   </ul>
+
+  <h2>Glyphs outside the Latin subset</h2>
+  <p>The self-hosted faces hold Latin. An accented author name, the multiplication sign, or a math operator falls outside that subset. Left alone, the browser searches every installed font for a stand-in, which put hundreds of milliseconds into the first layout on a slow phone. <code>fonts.css</code> names the stand-in instead, the Arial family the font stack already ends on, in two faces for the light and bold weights. The glyphs keep the size they would have had.</p>
 
   <h2>Scale</h2>
   <div class="ply-table-wrap ply-wide">

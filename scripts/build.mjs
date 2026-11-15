@@ -294,6 +294,14 @@ const fontsCss = `/* Self-hosted faces. Ultra: Apache 2.0. Libre Franklin and Je
 /* JetBrains Mono (ascent 1020, descent 300, gap 0 on 1000): Menlo, Liberation Mono, or Courier New,
    all 0.6em wide like it. */
 @font-face { font-family: "JetBrains Mono Fallback"; font-style: normal; font-weight: 100 800; src: local("Menlo Regular"), local("Menlo-Regular"), local("Liberation Mono"), local("LiberationMono"), local("Courier New"), local("CourierNewPSMT"); ascent-override: 102%; descent-override: 30%; line-gap-override: 0%; }
+/* Glyphs outside the Latin subset (accented author names, the multiplication sign, math
+   operators) would send the browser through every installed font for a stand-in, which put
+   hundreds of milliseconds into the first layout on a slow CPU. These two faces name the stand-in
+   (the Arial family the stack ends on), so that search becomes one lookup. No size-adjust: the
+   glyphs keep the size they had. They come before the real faces, so a code point both cover
+   (U+0131, U+0152-0153, U+2212) stays in Libre Franklin. */
+@font-face { font-family: "Libre Franklin Variable"; font-style: normal; font-weight: 100 549; src: local("Arial"), local("ArialMT"), local("Liberation Sans"), local("LiberationSans"), local("DejaVu Sans"); unicode-range: U+0100-024F, U+2200-22FF, U+2061; }
+@font-face { font-family: "Libre Franklin Variable"; font-style: normal; font-weight: 550 900; src: local("Arial Bold"), local("Arial-BoldMT"), local("Liberation Sans Bold"), local("LiberationSans-Bold"), local("DejaVu Sans Bold"); unicode-range: U+0100-024F, U+2200-22FF, U+2061; }
 @font-face { font-family: "Libre Franklin Variable"; font-style: normal; font-weight: 100 900; font-display: swap; src: url("./fonts/libre-franklin-latin-wght.woff2") format("woff2-variations"); unicode-range: ${range}; }
 @font-face { font-family: "Libre Franklin Variable"; font-style: italic; font-weight: 100 900; font-display: swap; src: url("./fonts/libre-franklin-latin-wght-italic.woff2") format("woff2-variations"); unicode-range: ${range}; }
 @font-face { font-family: "JetBrains Mono Variable"; font-style: normal; font-weight: 100 800; font-display: swap; src: url("./fonts/jetbrains-mono-latin-wght.woff2") format("woff2-variations"); unicode-range: ${range}; }

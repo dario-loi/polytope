@@ -14,6 +14,9 @@
   .ply-mast--compact .ply-mast__title { --ply-size-display: clamp(var(--ply-size-3xl), 1.4rem + 3.6vw, 4.5rem); }
   .ply-mast__stop { color: var(--ply-color-accent); }
   .ply-mast__lede { font-size: var(--ply-size-lg); line-height: var(--ply-leading-normal); max-width: 36rem; margin-top: var(--ply-space-5); }
+  /* A list page's lede runs as wide as a title line and balances, so a sentence a little longer than
+     the measure never leaves one word on its own line. */
+  .ply-mast__lede--wide { max-width: 52rem; text-wrap: balance; }
   /* The exhibit column opens only when there is an exhibit; a mast without one (a list page)
      keeps the whole width for its title. */
   @media (min-width: 64rem) {

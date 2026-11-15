@@ -52,4 +52,9 @@
 
   .ply-quote { margin: var(--ply-space-5) 0; padding-inline-start: var(--ply-space-5); border-inline-start: 1px solid var(--ply-color-rule-strong); font-size: var(--ply-size-lg); line-height: var(--ply-leading-normal); max-width: var(--ply-layout-measure); }
   .ply-quote cite { display: block; margin-top: var(--ply-space-2); font-size: var(--ply-size-sm); font-style: normal; color: var(--ply-color-text-muted); }
+
+  /* Emphasis in running text is type alone: em is the true italic, a step heavier than the body so
+     it reads as a change of voice; strong is bold, and both together are bold italic. */
+  .ply-prose em { font-style: italic; font-weight: var(--ply-weight-medium); }
+  .ply-prose :is(strong em, em strong) { font-weight: var(--ply-weight-bold); }
 }

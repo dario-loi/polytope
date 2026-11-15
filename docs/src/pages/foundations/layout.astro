@@ -1,6 +1,7 @@
 ---
 import Docs from "../../layouts/Docs.astro";
 import Code from "@dario-loi/polytope/astro/Code.astro";
+import Example from "../../components/Example.astro";
 import data from "@dario-loi/polytope/tokens.json";
 import { u } from "../../data/nav";
 const t = data.tokens as Record<string, any>;
@@ -62,6 +63,30 @@ const space = Object.keys(t).filter((k) => k.startsWith("--ply-space-"));
     <li>A section heading starts below any sidenote or margin figure still beside the text, so a note never sits beside the next section. Keep notes short; a long one leaves a gap in the text.</li>
   </ul>
 
+  <h2 id="space">Space around things</h2>
+  <p>Empty space is for a single focus. Around one central element, such as a paper title or a mast, it draws the eye. On a page that shows many elements side by side, such as a home page, a list, or a wall, an empty region reads as a gap, so it holds content: a block moves into it, a column widens, or a body sets in two columns. A card grid keeps three tracks at wide widths (<code>.ply-cards--tracks</code>) so a row never leaves one empty, and a wall's body splits into a description and a list (<code>.ply-wall__body--split</code>).</p>
+  <p>On a page with many parts, space that separates nothing comes down a step or two. Rules, panels, and display type do the grouping. A mast over a list pads <code>--ply-space-6</code> above its title and <code>--ply-space-5</code> below, card rows sit as far apart as the columns, the sections after a mast carry their own 3px rule as the divider, and a long list of projects sets compact rows on a phone.</p>
+
+  <h3 id="edges">Two edges</h3>
+  <p>A page has two edges. Labels (titles, years, topic names) start at the first, and everything they label starts one column in, at the width of an article's rail (<code>--ply-layout-toc</code>). Every wall, list, and home section uses the same label column, so the content of all of them starts on one line down the page.</p>
+
+  <h3 id="ledes">List pages and entry pages</h3>
+  <p>A list page sets its lede as wide as a title line, up to 52rem, and balances it, so a sentence a little longer than the measure never leaves one word on a line. An entry page (a paper, a post, a project) sets its title to its own column with a container query, and its lede keeps the reading measure.</p>
+  <Code lang="html" code={`<p class="ply-mast__lede ply-mast__lede--wide">Papers, newest first, with the topics they belong to.</p>`} />
+
+  <h2 id="narrow">Enlarged text and narrow windows</h2>
+  <p>Layouts are built for 200% text-only zoom at 320px with the real copy in them, and at that size nothing scrolls sideways. Below 30rem, which is 960px at 200% text, these hold:</p>
+  <ul>
+    <li>Titles (<code>.ply-card__title</code>, <code>.ply-title</code>, the paper, post, and mast titles, and their <code>.ply-nowrap</code> parts) may break inside a word.</li>
+    <li>Inline math wider than its paragraph scrolls inside itself.</li>
+    <li>The Atlas's list, stops, and filter stay inside the column, and the filter scrolls in its frame.</li>
+    <li>The top bar wraps to a second row once its tabs have folded into the menu. While tabs show, the bar stays on one line: a wrap would give the tabs a row of their own, and <code>topbar.js</code> would measure them as fitting. The wordmark may break inside a word, and the tools wrap at their end edge.</li>
+  </ul>
+  <p>Test a new layout at that size before adding anything new to this list.</p>
+
+  <h2 id="targets">Touch targets</h2>
+  <p>A small link row is 24px tall on a fine pointer and 44px under <code>pointer: coarse</code>. That covers tabs, small buttons, the skip link, link tags, the link rows of cards and publications, the Atlas filter, and sidebar and on-this-page links. A title that runs as text grows its target with padding and an equal opposite margin, so the lines stay where they are. Links inside running text keep their own size. For a link of your own, <code>.ply-target</code> does the same as Polytope's controls.</p>
+
   <h2>Rules and borders</h2>
   <div class="ply-table-wrap">
     <table class="ply-table">
@@ -74,6 +99,8 @@ const space = Object.keys(t).filter((k) => k.startsWith("--ply-space-"));
     </table>
   </div>
 
+  <p>A site spends retro once. The example is a section rule whose end climbs in three 3px pixel steps, as a bar on an Atari screen does, set on the rules inside the content width and left off the full-width rule under a mast. Mono labels and one-bit art are the other retro marks a site may use.</p>
+
   <h2>Corners</h2>
   <p>Panels, buttons, inputs, tags, and code blocks are square, like exhibit labels cut from board. Only round things are round: balls, points, radio buttons, status dots.</p>
 
@@ -81,6 +108,9 @@ const space = Object.keys(t).filter((k) => k.startsWith("--ply-space-"));
   <p><code>.ply-stack</code> stacks children with a gap, <code>.ply-cluster</code> wraps them in a row, <code>.ply-grid</code> makes responsive columns from a minimum width. Each reads a custom property for its gap (<code>--ply-stack-gap</code>, <code>--ply-cluster-gap</code>, <code>--ply-grid-gap</code>).</p>
   <p>In a <code>.ply-cluster</code> of buttons, a ghost button draws its padding into the gap before it, so its word lines up with the row's edge when it wraps to a new line, as a filled button's box does.</p>
   <p>Polytope's own controls grow to 44px targets under a finger (<code>pointer: coarse</code>). Give a link or button of your own that stands alone the class <code>.ply-target</code> to do the same.</p>
+  <h3 id="twins">Light and dark twins</h3>
+  <p>A picture drawn for each theme takes <code>.ply-light-only</code> on one and <code>.ply-dark-only</code> on the other. The one for the theme in use shows: the switch's choice first, then the system's. Paper shows the light one. Do not set <code>display</code> on either element, since a rule that outranks the utility would show both.</p>
+  <Example html={`<p><span class="ply-light-only">This text shows in the light theme.</span><span class="ply-dark-only">This text shows in the dark theme.</span></p>`} />
   <h3>Titles of your own</h3>
   <p><code>&lt;WoodTitle title="..." /&gt;</code> is the title the paper and post headers use, for a header of your own, such as a project page's: about 22 characters to a line, longer lines for a long title, never so big that its longest word breaks, with <code>split</code> for a subtitle and <code>stop</code> for the tomato full stop. It sizes to the nearest container, so give its header <code>container-type: inline-size</code>. The helpers it uses, <code>woodTitle</code>, <code>splitTitle</code>, and <code>emWidth</code>, come from <code>@dario-loi/polytope/astro</code>.</p>
 </Docs>

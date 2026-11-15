@@ -19,6 +19,22 @@
   .ply-chart .ply-direct-label { fill: var(--ply-color-text); font-weight: 600; }
   .ply-chart__source { font-size: var(--ply-size-xs); color: var(--ply-color-text-muted); }
 
+  /* A small chart drawn for the margin (put the class on the Chart) shows at its own size, so its
+     text matches the sidenotes, and shrinks only in a narrower column. Back in the text on a
+     narrow screen it keeps that size instead of scrolling sideways, so it has no scroll hint. */
+  .ply-chart--margin { max-width: 21rem; }
+  .ply-chart--margin .ply-chart__plot > svg { display: block; max-width: 100%; height: auto; min-width: 0; font-size: var(--ply-size-sm); }
+  .ply-chart--margin .ply-chart__hint { display: none; }
+  .ply-chart--margin > .ply-details { font-size: var(--ply-size-sm); overflow-x: auto; }
+
+  /* A plot saved as inline SVG (a matplotlib figure, say): ink follows the theme through
+     currentColor, and the series use var(--ply-viz-1) ... var(--ply-viz-8) in the file, so
+     both themes need one SVG. Text stays real text. --ply-plot-max caps the width at the
+     figure's own size. */
+  .ply-plot { color: var(--ply-color-text); }
+  .ply-plot svg { display: block; width: 100%; height: auto; max-width: var(--ply-plot-max, 100%); margin-inline: auto; }
+  .ply-plot svg text { fill: currentColor; }
+
   .ply-legend { display: flex; flex-wrap: wrap; gap: var(--ply-space-1) var(--ply-space-4); list-style: none; padding: 0; font-size: var(--ply-size-sm); }
   .ply-legend li { display: inline-flex; align-items: center; gap: var(--ply-space-2); }
   .ply-legend__key { width: 0.75rem; height: 0.75rem; border-radius: var(--ply-radius-ball); background: var(--c, var(--ply-viz-1)); flex: none; }
