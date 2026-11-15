@@ -131,7 +131,7 @@
      the first line at the item's start edge, so the tint reaches 12px into the gutter and the bar
      sits beyond it, clear of the text. */
   .ply-refs { margin-top: var(--ply-space-7); }
-  .ply-refs__list { list-style: none; padding: 0; margin: 0; display: grid; gap: var(--ply-space-2); font-size: var(--ply-size-sm); line-height: var(--ply-leading-normal); }
+  .ply-refs__list { list-style: none; padding: 0; margin: var(--ply-space-3) 0 0; display: grid; gap: var(--ply-space-2); font-size: var(--ply-size-sm); line-height: var(--ply-leading-normal); }
   .ply-prose .ply-refs__list { padding-inline-start: 0; }
   .ply-prose .ply-refs__list > li + li { margin-top: 0; }
   .ply-refs__item { padding-inline-start: 1.5em; text-indent: -1.5em; overflow-wrap: anywhere; text-wrap: pretty; }

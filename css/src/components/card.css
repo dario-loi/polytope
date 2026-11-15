@@ -93,4 +93,15 @@
     .ply-cards.ply-cards--tracks > :is(.ply-card--lead, .ply-card:only-child) > .ply-card__panel { grid-column: span 2; }
     .ply-cards.ply-cards--tracks > :is(.ply-card--lead, .ply-card:only-child) .ply-card__title { font-size: var(--ply-size-xl); }
   }
+  /* A last row of two cards (a lead and five more, or any run that ends two short of a full row)
+     would leave one track empty. On a page that shows many elements an empty track reads as a
+     gap, so the grid is then six half-tracks: a card takes two, the last two take three each and
+     share the row, and the lead keeps its layout (panel across four half-tracks, text in two). */
+  @media (min-width: 80rem) {
+    .ply-cards.ply-cards--tracks:is(:not(:has(> .ply-card--lead)):has(> .ply-card:nth-child(3n+1):nth-last-child(2)), :has(> .ply-card--lead:first-child):has(> .ply-card:nth-child(3n+2):nth-last-child(2))) { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+    .ply-cards.ply-cards--tracks:is(:not(:has(> .ply-card--lead)):has(> .ply-card:nth-child(3n+1):nth-last-child(2)), :has(> .ply-card--lead:first-child):has(> .ply-card:nth-child(3n+2):nth-last-child(2))) > .ply-card:not(.ply-card--lead, :only-child, .ply-card--lead + :last-child) { grid-column: span 2; }
+    .ply-cards.ply-cards--tracks:is(:not(:has(> .ply-card--lead)):has(> .ply-card:nth-child(3n+1):nth-last-child(2)), :has(> .ply-card--lead:first-child):has(> .ply-card:nth-child(3n+2):nth-last-child(2))) > .ply-card:not(.ply-card--lead, :only-child, .ply-card--lead + :last-child):nth-last-child(-n+2) { grid-column: span 3; }
+    .ply-cards.ply-cards--tracks:is(:not(:has(> .ply-card--lead)):has(> .ply-card:nth-child(3n+1):nth-last-child(2)), :has(> .ply-card--lead:first-child):has(> .ply-card:nth-child(3n+2):nth-last-child(2))) > .ply-card--lead > .ply-card__panel { grid-column: span 4; }
+    .ply-cards.ply-cards--tracks:is(:not(:has(> .ply-card--lead)):has(> .ply-card:nth-child(3n+1):nth-last-child(2)), :has(> .ply-card--lead:first-child):has(> .ply-card:nth-child(3n+2):nth-last-child(2))) > .ply-card--lead > .ply-card__body { grid-column: span 2; }
+  }
 }

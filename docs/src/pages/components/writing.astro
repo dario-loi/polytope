@@ -39,7 +39,7 @@ import { u } from "../../data/nav";
   <p><Tex text={String.raw`A $k$-simplex has $\binom{n}{k+1}$ faces in an $n$-complex, so a pass over **all** cells costs *one* sweep.`} /></p>
   <Code lang="astro" code={`<p><Tex text={paper.tldr} /></p>
 <p><Tex text={String.raw\`Sums over $n \times d$ cells, in *one* pass.\`} /></p>`} />
-  <p><code>Tex</code> does not load KaTeX's stylesheet. <code>M</code> and <code>Equation</code> import it as a linked stylesheet, which holds the first paint until it arrives. A page that cares about its first paint puts <code>KatexAssets</code> in its head instead, when <code>hasMath</code> says its text has some. That writes the stylesheet inline and preloads the five faces a formula uses. This page does so. Write a literal dollar sign as <code>\$</code>, and in a YAML front matter field put text with backslashes in single quotes.</p>
+  <p><code>Tex</code> does not load KaTeX's stylesheet. <code>M</code> and <code>Equation</code> import it as a linked stylesheet, which holds the first paint until it arrives. A page that cares about its first paint puts <code>KatexAssets</code> in its head instead, when <code>hasMath</code> says its text has some. That writes the stylesheet inline and preloads the two faces nearly every formula uses, Main-Regular and Math-Italic. The rarer faces load when a formula draws them; <code>preload="all"</code> preloads all five. This page does so. Write a literal dollar sign as <code>\$</code>, and in a YAML front matter field put text with backslashes in single quotes.</p>
   <Code lang="astro" code={`import { KatexAssets, Tex, hasMath } from "@dario-loi/polytope/astro";
 
 <head>{hasMath(paper.tldr, paper.abstract) && <KatexAssets />}</head>`} />

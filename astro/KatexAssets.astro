@@ -1,8 +1,11 @@
 ---
 // KaTeX's stylesheet and fonts for a page with math, written for the head: the stylesheet inline,
-// so the first paint does not wait for a request (a linked stylesheet blocks it), and the five
-// faces a formula uses preloaded, since left to the stylesheet they are found only after the
-// first layout. <M> and <Equation> import the stylesheet themselves, as a link, which suits a
+// so the first paint does not wait for a request (a linked stylesheet blocks it), and the two
+// faces nearly every formula uses (Main-Regular for digits, operators, and brackets, Math-Italic
+// for variables) preloaded, since left to the stylesheet they are found only after the first
+// layout. The rarer faces (bold, AMS symbols, caligraphic) load when a formula uses them: a
+// preload fetches a face whether or not the page draws it, and on a phone those requests delay
+// the largest paint. <M> and <Equation> import the stylesheet themselves, as a link, which suits a
 // page with a little math; a page that cares about its first paint puts this in <head> instead,
 // when `hasMath` says its text has some, and shows math with <Tex>.
 //   {hasMath(paper.tldr, paper.abstract) && <KatexAssets />}
@@ -15,11 +18,12 @@ import mathItalic from "katex/dist/fonts/KaTeX_Math-Italic.woff2?url";
 import ams from "katex/dist/fonts/KaTeX_AMS-Regular.woff2?url";
 import caligraphic from "katex/dist/fonts/KaTeX_Caligraphic-Regular.woff2?url";
 interface Props {
-  /** false skips the font preloads, for a page where the math is far down. */
-  preload?: boolean;
+  /** false skips the font preloads, for a page where the math is far down; "all" preloads the
+   *  five faces a heavy page may use (the default is Main-Regular and Math-Italic). */
+  preload?: boolean | "all";
 }
 const { preload = true } = Astro.props;
-const fonts = [main, mathItalic, ams, mainBold, caligraphic];
+const fonts = preload === "all" ? [main, mathItalic, ams, mainBold, caligraphic] : [main, mathItalic];
 ---
 <style set:html={css} />
 {preload && fonts.map((f) => <link rel="preload" href={f} as="font" type="font/woff2" crossorigin />)}
