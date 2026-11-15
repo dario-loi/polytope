@@ -15,6 +15,11 @@
     .ply-search-trigger { padding: 0; width: 2.5rem; justify-content: center; }
     .ply-search-trigger > span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
   }
+  /* Under 22.5rem (a 320px phone) the wordmark steps down to lg, so it and three touch-sized
+     tools (44px each) share one row instead of wrapping the bar onto two. */
+  @media (max-width: 22.49rem) {
+    .ply-wordmark { font-size: var(--ply-size-lg); }
+  }
   @media (max-width: 25rem) {
     .ply-menu--chapters > summary { padding: 0; min-width: 2.5rem; }
     .ply-menu__word { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }

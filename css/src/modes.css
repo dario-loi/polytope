@@ -72,7 +72,7 @@
   @media print {
     .ply-backtop, .ply-complex-mark, .ply-skip, .ply-topbar, .ply-docs__nav, .ply-docs__toc, .ply-article__rail, .ply-pager, .ply-menu,
     .ply-theme-toggle, .ply-code__copy, .ply-chart__hint, .ply-cite__card, .ply-toast,
-    .ply-atlas__controls, .ply-atlas__readout, .ply-atlas__filter { display: none !important; }
+    .ply-atlas__controls, .ply-atlas__readout, .ply-atlas__filter, .ply-article__contents, .ply-bibtex__files { display: none !important; }
     /* The globe prints once at the top of its entries, as it stands. */
     .ply-atlas__stage { position: static; }
     .ply-atlas__map { height: 18rem; break-inside: avoid; }

@@ -149,6 +149,7 @@
     "base.css",
     "components/atlas.css",
     "components/card.css",
+    "components/nav.css",
     "components/research.css",
     "components/search.css",
     "components/writing.css",

@@ -33,6 +33,9 @@ import ReleaseModel from "../../components/exhibits/ReleaseModel.astro";
               <li><code>fonts.css</code> names a stand-in (the Arial family) for glyphs outside the Latin subset, such as accented names and math operators, so the browser skips a search through every installed font.</li>
               <li>Paragraphs, list items, definitions, and captions set with <code>text-wrap: pretty</code>. In <code>.ply-prose</code>, <code>em</code> is the true italic one step heavier, and bold italic is bold. See <a href="../components/writing/#emphasis">Long-form writing</a>.</li>
               <li><code>.ply-chart--margin</code> shows a small chart at its own size, 21rem at most, with its text at the sidenotes' size. <code>.ply-plot</code> frames a plot saved as inline SVG, so its ink and series follow the theme. See <a href="../components/charts/#margin">Charts</a>.</li>
+              <li>Two columns of cards (a grid 34rem to 52rem wide: a tablet, a phone on its side) no longer leave an odd last card beside an empty slot. That card spans the row, its panel in the first column and its text in the second, on the grid's own lines.</li>
+              <li>Under 22.5rem the wordmark steps down to 20px, so on a 320px phone it and three 44px touch tools share one row of the top bar.</li>
+              <li>On paper, a phone's folded on-this-page list and the BibTeX download buttons are hidden with the rest of the site chrome.</li>
               <li>A flush panel that holds a picture gets a hairline frame, as a card's panel does.</li>
               <li>A card's tags keep their own height in an aligned row, where a list stretched to the tallest card's no longer stretches its chips.</li>
               <li>A card's title may break inside itself in a narrow column: the body is one <code>minmax(0, 1fr)</code> track, and a kept-together phrase wider than the card breaks, so enlarged text on a mid-sized window does not scroll sideways.</li>

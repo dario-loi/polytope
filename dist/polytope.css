@@ -557,6 +557,11 @@
     .ply-search-trigger { padding: 0; width: 2.5rem; justify-content: center; }
     .ply-search-trigger > span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
   }
+  /* Under 22.5rem (a 320px phone) the wordmark steps down to lg, so it and three touch-sized
+     tools (44px each) share one row instead of wrapping the bar onto two. */
+  @media (max-width: 22.49rem) {
+    .ply-wordmark { font-size: var(--ply-size-lg); }
+  }
   @media (max-width: 25rem) {
     .ply-menu--chapters > summary { padding: 0; min-width: 2.5rem; }
     .ply-menu__word { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
@@ -1569,6 +1574,16 @@
     .ply-cards--aligned > .ply-card:not(.ply-card--lead, :only-child, .ply-card--lead + :last-child) .ply-card__tags { grid-row: 6; margin-top: var(--ply-space-3); }
     .ply-cards--aligned > .ply-card:not(.ply-card--lead, :only-child, .ply-card--lead + :last-child) :is(.ply-card__links, .ply-pub__links) { grid-row: 7; }
   }
+  /* Two columns (a grid 34rem to 52rem wide: a tablet, a phone on its side) leave an odd last card
+     beside an empty slot. That card spans the row instead: its panel keeps the first column and its
+     text takes the second, so both stay on the grid's lines. An aligned grid's subgrid rows are
+     undone for it. */
+  @container (min-width: 34rem) and (max-width: 51.99rem) {
+    .ply-cards > .ply-card:not(.ply-card--lead):last-child:nth-child(odd of .ply-card:not(.ply-card--lead)) { grid-column: 1 / -1; grid-row: auto; grid-template-rows: none; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--ply-space-6); align-items: start; }
+    .ply-cards > .ply-card:not(.ply-card--lead):last-child:nth-child(odd of .ply-card:not(.ply-card--lead)) > .ply-card__panel { grid-row: auto; }
+    .ply-cards > .ply-card:not(.ply-card--lead):last-child:nth-child(odd of .ply-card:not(.ply-card--lead)) > .ply-card__body { display: grid; }
+    .ply-cards > .ply-card:not(.ply-card--lead):last-child:nth-child(odd of .ply-card:not(.ply-card--lead)) > .ply-card__body > * { grid-row: auto; margin-block: 0; }
+  }
   /* Without subgrid, the last block of a card sits at the card's bottom. */
   @supports not (grid-template-rows: subgrid) {
     .ply-cards--aligned .ply-card__body { display: flex; flex-direction: column; }
@@ -1968,7 +1983,7 @@
   @media print {
     .ply-backtop, .ply-complex-mark, .ply-skip, .ply-topbar, .ply-docs__nav, .ply-docs__toc, .ply-article__rail, .ply-pager, .ply-menu,
     .ply-theme-toggle, .ply-code__copy, .ply-chart__hint, .ply-cite__card, .ply-toast,
-    .ply-atlas__controls, .ply-atlas__readout, .ply-atlas__filter { display: none !important; }
+    .ply-atlas__controls, .ply-atlas__readout, .ply-atlas__filter, .ply-article__contents, .ply-bibtex__files { display: none !important; }
     /* The globe prints once at the top of its entries, as it stands. */
     .ply-atlas__stage { position: static; }
     .ply-atlas__map { height: 18rem; break-inside: avoid; }
