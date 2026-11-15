@@ -68,6 +68,7 @@ const schema = home ? [
     {chrome && (
       <TopBar brand="Polytope" brandHref={u("/")} links={links}>
         <Search
+          variant="inline"
           href={u("/tokens/#tk-q")}
           bundle={u("/pagefind/")}
           baseUrl={`${base}/`}

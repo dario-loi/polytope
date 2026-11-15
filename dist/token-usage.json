@@ -78,6 +78,7 @@
     "base.css",
     "components/code.css",
     "components/note.css",
+    "components/search.css",
     "components/tag.css"
   ],
   "--ply-font-display": [
@@ -175,6 +176,7 @@
     "components/button.css",
     "components/form.css",
     "components/nav.css",
+    "components/search.css",
     "components/writing.css"
   ],
   "--ply-ease-out": [
@@ -217,6 +219,7 @@
     "components/machine.css",
     "components/panel.css",
     "components/research.css",
+    "components/search.css",
     "components/viz.css"
   ],
   "--ply-color-panel": [
@@ -230,6 +233,7 @@
     "components/machine.css",
     "components/panel.css",
     "components/research.css",
+    "components/search.css",
     "components/viz.css"
   ],
   "--ply-color-panel-rule": [
@@ -297,6 +301,7 @@
     "components/code.css",
     "components/machine.css",
     "components/note.css",
+    "components/search.css",
     "components/table.css",
     "components/tag.css"
   ],
@@ -361,6 +366,7 @@
     "layout.css"
   ],
   "--ply-layout-gutter": [
+    "components/search.css",
     "layout.css"
   ],
   "--ply-space-6": [
@@ -448,6 +454,7 @@
     "components/demo.css",
     "components/nav.css",
     "components/research.css",
+    "components/search.css",
     "components/viz.css",
     "layout.css",
     "modes.css"
@@ -592,9 +599,13 @@
     "components/note.css",
     "components/search.css"
   ],
+  "--ply-search-room": [
+    "components/search.css"
+  ],
   "--ply-color-code-string": [
     "components/code.css",
-    "components/panel.css"
+    "components/panel.css",
+    "components/search.css"
   ],
   "--ply-color-flag": [
     "components/panel.css"

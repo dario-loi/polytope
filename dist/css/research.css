@@ -87,6 +87,8 @@
 
   /* BibTeX block: a code panel with a copy button, set narrower than prose code. */
   .ply-bibtex .ply-code { max-width: var(--ply-layout-measure); }
+  /* The download row under it: small secondary buttons for the .bib and .ris files. */
+  .ply-bibtex__files { display: flex; flex-wrap: wrap; gap: var(--ply-space-3); margin-top: var(--ply-space-3); max-width: var(--ply-layout-measure); }
 
   /* History wall: entries grouped by year with the year as a big wood-type numeral.
      Used for publication lists and the changelog. */

@@ -2,6 +2,9 @@
 // Top bar: wordmark, chapter tabs (current one is a black wall label), tools slot.
 // The chapters show as tabs where they fit and collapse into a menu where they do not
 // (js/topbar.js; without it, below 72rem).
+// The default slot holds the tools. <Search variant="inline" /> goes there too: a compact field
+// that topbar.js counts when it measures the tabs, and that folds to an icon button where the
+// tabs fold into the menu.
 import Icon from "./Icon.astro";
 export interface Link { label: string; href: string; current?: boolean }
 interface Props { brand?: string; brandHref?: string; links?: Link[]; class?: string }

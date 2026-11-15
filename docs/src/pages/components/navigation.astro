@@ -39,7 +39,7 @@ const pager = `<nav class="ply-pager" aria-label="Pages" style="margin-top:0">
 ---
 <Docs title="Navigation" status="stable" lede="A black wall label marks the chapter you are in; a tomato point marks the page.">
   <h2>Top bar</h2>
-  <p>The top bar of this site is the component: wordmark at left, chapter tabs, tools at right, a 3px rule underneath. Where the tabs do not fit, they first set closer, then the search field drops its word; where they still do not fit, they fold into a Menu button that opens a native <code>&lt;details&gt;</code> panel. <code>js/topbar.js</code> measures the fit, so a site with three chapters keeps its tabs on a phone and one with nine folds them on a small laptop. Without the script the tabs fold below 72rem, and the menu still works.</p>
+  <p>The top bar of this site is the component: wordmark at left, chapter tabs, tools at right, a 3px rule underneath. Where the tabs do not fit, they first set closer and the inline search field narrows; where they still do not fit, they fold into a Menu button, and the field becomes an icon button that opens a native <code>&lt;details&gt;</code> panel. <code>js/topbar.js</code> measures the fit, so a site with three chapters keeps its tabs on a phone and one with nine folds them on a small laptop. Without the script the tabs fold below 72rem, and the menu still works.</p>
   <p>The script also closes the menu when it should get out of the way: <kbd>Esc</kbd> closes it and puts focus back on its button, and a press outside it, or focus moving on past it, closes it too.</p>
   <p>The theme toggle flips light and dark and keeps the choice in <code>localStorage</code> under <code>ply-theme</code> ("light" or "dark", no identifier), so the next page opens in it. Say so in a privacy notice. <code>&lt;ThemeToggle persist={"{false}"} /&gt;</code> keeps the choice for the page only and clears a stored one; in plain HTML, add <code>data-ply-persist="false"</code> to the toggle.</p>
   <Code lang="astro" code={`<TopBar brand="John Doe" brandHref="/" links={[
@@ -51,25 +51,55 @@ const pager = `<nav class="ply-pager" aria-label="Pages" style="margin-top:0">
   <ApiTable rows={[["brand", "Wordmark text", "Polytope"], ["brandHref", "Wordmark link", "/"], ["links", "Chapters: { label, href, current }"], ["default slot", "Tools on the right: Search, the theme toggle"]]} head={["Prop", "Effect", "Default"]} />
 
   <h2>Search</h2>
-  <p>The search in this site's top bar is the component. It opens a panel over the page with results from the site's own <a href="https://pagefind.app/">Pagefind</a> index, a static search that needs no server. Press <kbd>/</kbd> or <kbd>Ctrl</kbd>+<kbd>K</kbd> (<kbd>Cmd</kbd>+<kbd>K</kbd> on a Mac) to open it, the arrow keys to move through results, <kbd>Enter</kbd> to follow one, and <kbd>Esc</kbd> to close it. Without JavaScript the button is a plain link to a page you choose.</p>
+  <p>Search reads the site's own <a href="https://pagefind.app/">Pagefind</a> index, a static search that needs no server. It comes in two variants. The inline field in this site's top bar is the one to use in a top bar. The dialog is a button that opens a panel over the page.</p>
+  <p>Build the index after the site build, and mark what it should read: the main content of each page, and the kind of each page, which the panel shows over each group of results. Navigation, footers, and forms are left out on their own.</p>
+  <Code lang="sh" code={`npx astro build && npx pagefind --site dist`} />
+  <Code lang="html" code={`<main data-pagefind-body>
+  <article data-pagefind-meta="kind:Publications">...</article>
+</main>`} />
+
+  <h3>Inline field</h3>
+  <p>A compact field sits in the bar between the tabs and the tools, about 14 characters wide with a <kbd>/</kbd> key hint, and grows a little while it has focus. Results drop in a black panel under it: up to eight pages, grouped by kind, each with its title and one line of excerpt with the match marked in mustard. The panel ends with an "All results" link when you give it a results page. Before the reader types, the panel shows the hint and the quick links. When nothing matches, the links come back under a line of your choosing.</p>
+  <p>The field is a combobox. The arrow keys move through the results, <kbd>Enter</kbd> follows one, and <kbd>Esc</kbd> closes the panel and leaves the field. The result count is read out through a status region. <kbd>/</kbd> and <kbd>Ctrl</kbd>+<kbd>K</kbd> (<kbd>Cmd</kbd>+<kbd>K</kbd> on a Mac) focus the field from anywhere on the page, except while the reader types in another field. The Pagefind files load on the first focus, with a loading line in the panel. If they cannot load, the panel links to the page set in <code>href</code>.</p>
+  <p><code>js/topbar.js</code> counts the field when it measures the tabs: the field's width comes out of the room the tabs have, so it never pushes a tab off the bar. When the tabs fold into the menu, the field becomes an icon button. Pressing it opens the field across the whole bar, over the wordmark and the tools, with a close button. <kbd>Esc</kbd> or the button puts the bar back, and the bar keeps its height throughout. Without JavaScript the field is hidden and the bar shows the plain link, as it does for the dialog.</p>
+  <Code lang="astro" code={`<TopBar brand="John Doe" brandHref="/" links={links}>
+  <Search variant="inline" href="/search/" resultsHref="/search/"
+    placeholder="Search papers, talks, and notes"
+    hint="Finds papers, talks, and notes."
+    links={[{ label: "Publications", href: "/publications/" }, { label: "Teaching", href: "/teaching/" }]} />
+  <ThemeToggle />
+</TopBar>`} />
+
+  <h3>Dialog</h3>
+  <p>The dialog variant is the default. A button in the bar opens a panel over the page, with the page dimmed behind it. Press <kbd>/</kbd> or <kbd>Ctrl</kbd>+<kbd>K</kbd> (<kbd>Cmd</kbd>+<kbd>K</kbd> on a Mac) to open it, the arrow keys to move through results, <kbd>Enter</kbd> to follow one, and <kbd>Esc</kbd> to close it. Results show their matching sections too. Without JavaScript the button is a plain link to a page you choose.</p>
   <Code lang="astro" code={`<TopBar brand="John Doe" brandHref="/" links={links}>
   <Search href="/publications/" placeholder="Search papers, talks, and notes"
     links={[{ label: "Publications", href: "/publications/" }, { label: "Teaching", href: "/teaching/" }]} />
   <ThemeToggle />
 </TopBar>`} />
-  <p>Build the index after the site build, and mark what it should read: the main content of each page, and the kind of each page, which the panel shows beside the result. Navigation, footers, and forms are left out on their own.</p>
-  <Code lang="sh" code={`npx astro build && npx pagefind --site dist`} />
-  <Code lang="html" code={`<main data-pagefind-body>
-  <article data-pagefind-meta="kind:Publications">...</article>
-</main>`} />
+
+  <h3>Props</h3>
   <ApiTable rows={[
-    ["href", "Where the button goes without JavaScript", "#"],
+    ["variant", "\"dialog\" opens a panel over the page. \"inline\" is a field in the bar with a drop panel.", "dialog"],
+    ["href", "Where the button goes without JavaScript, and the link shown if the index cannot load", "#"],
     ["label, placeholder", "The button's text and the field's placeholder", "Search"],
     ["bundle", "Folder of the Pagefind files, with the site's base path", "/pagefind/"],
     ["baseUrl", "Prefix for result links when the site lives under a base path", "/"],
-    ["hint, links", "A line and quick links shown before the reader types"],
+    ["hint, links", "A line and quick links shown before the reader types. The links also show when nothing matches."],
+    ["resultsHref", "Inline only. The site's results page. The panel's last row links to it with ?q= and the query added. Without it the row is left out."],
+    ["emptyText", "Inline only. The line above the links when nothing matches", "Try one of these topics"],
     ["ranking", "Pagefind ranking options, such as { pageLength: 0.2 } so short records do not crowd out pages"],
   ]} head={["Prop", "Effect", "Default"]} />
+
+  <h3>Events</h3>
+  <p>The component sends three events from its <code>&lt;ply-search&gt;</code> element, which bubble, so a site can pass them on to its own analytics. None of them carries the query text. What a reader searches for is theirs, so the component neither sends nor exposes it, and a site that wants a count of searches gets one without a privacy question.</p>
+  <ApiTable rows={[
+    ["ply-search:open", "The reader focused the field or opened the dialog. No detail."],
+    ["ply-search:results", "{ bucket: \"0\" | \"1-5\" | \"6+\" }, sent once when a query has settled, after the reader pauses typing. Never one per keystroke."],
+    ["ply-search:select", "{ url, kind }: the path and hash of the page followed, and its kind (empty when it has none, \"all\" for the All results link)."],
+  ]} head={["Event", "Detail"]} />
+  <Code lang="js" code={`document.addEventListener("ply-search:results", (e) => track("search", { bucket: e.detail.bucket }));
+document.addEventListener("ply-search:select", (e) => track("search-select", e.detail));`} />
   <p>A record can carry <code>meta.summary</code>, which the panel shows in place of an excerpt. These docs add every token, class, and component that way, from a short script that uses Pagefind's Node API after the build.</p>
 
   <h2>Chapter tabs</h2>

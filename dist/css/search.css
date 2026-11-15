@@ -4,7 +4,7 @@
      Pagefind index (css/js/search.js). Square sheet, a 3px rule, the soft shadow that floating
      layers get; the matched words are mustard marks and the active result has the tomato point. */
   .ply-search { display: contents; }
-  .ply-search-trigger__key { font-family: var(--ply-font-mono); font-size: var(--ply-size-xs); line-height: 1.4; padding: 0 0.4em; border: 1.5px solid currentColor; border-bottom-width: 3px; color: var(--ply-color-text-muted); }
+  .ply-search-trigger__key, .ply-search__key { font-family: var(--ply-font-mono); font-size: var(--ply-size-xs); line-height: 1.4; padding: 0 0.4em; border: 1.5px solid currentColor; border-bottom-width: 3px; color: var(--ply-color-text-muted); }
   @media (max-width: 40rem) { .ply-search-trigger__key { display: none; } }
 
   .ply-search__dialog {
@@ -54,5 +54,83 @@
   /* Phones: the panel takes the screen, field at the top. */
   @media (max-width: 40rem) {
     .ply-search__dialog { width: 100%; height: 100%; max-height: none; margin: 0; border: 0; box-shadow: none; }
+  }
+
+  /* Inline field: a compact search field in the top bar, results in a black exhibit panel
+     under it. The field keeps a fixed width in the bar (about 14ch), so the tabs are measured
+     against it (js/topbar.js); its box is what grows on focus, over the gap beside the tabs,
+     and the panel hangs from the field's end edge. Where the tabs have folded into the menu the
+     field is an icon button, and pressing it lays the field across the bar. */
+  .ply-search--inline .ply-search-trigger { display: none; }
+  .ply-search__field { --_rule: var(--ply-color-rule-strong); --_chrome: 6.75rem; --_n: 14ch; position: relative; flex: none; inline-size: calc(var(--_n) + var(--_chrome)); block-size: 2.5rem; font-size: var(--ply-size-ui); }
+  .ply-topbar[data-ply-tabs="snug"] .ply-search__field { --_n: 12ch; }
+  .ply-topbar[data-ply-tabs="tight"] .ply-search__field { --_n: 10ch; }
+  .ply-search__box { position: absolute; inset-block: 0; inset-inline-end: 0; z-index: 2; box-sizing: border-box; inline-size: 100%; display: flex; align-items: center; gap: var(--ply-space-2); padding-inline: var(--ply-space-3) var(--ply-space-2); border: var(--ply-border-control) solid var(--ply-color-rule-strong); background: var(--ply-color-bg); color: var(--ply-color-text-muted); transition: inline-size var(--ply-duration-base) var(--ply-ease-out), color var(--ply-duration-fast) var(--ply-ease-out); }
+  .ply-search__box > svg { flex: none; width: 1.125rem; height: 1.125rem; }
+  .ply-search__box:hover { color: var(--ply-color-text); }
+  .ply-search__box:focus-within { inline-size: calc(100% + min(var(--ply-search-room, 0px), 7rem)); color: var(--ply-color-text); outline: 3px solid var(--ply-color-focus); outline-offset: 2px; }
+  .ply-search__box .ply-search__input { flex: 1; min-width: 0; min-height: 0; block-size: 100%; padding: 0; font-size: var(--ply-size-ui); text-overflow: ellipsis; }
+  .ply-search__box .ply-search__input::placeholder { color: var(--ply-color-text-muted); opacity: 1; }
+  .ply-search__box:focus-within .ply-search__key, .ply-search__dismiss { display: none; }
+  .ply-search__dismiss { flex: none; appearance: none; align-items: center; justify-content: center; width: 2rem; height: 2rem; margin-inline-end: -0.25rem; padding: 0; border: 0; background: transparent; color: var(--ply-color-text-muted); cursor: pointer; }
+  .ply-search__dismiss:hover { color: var(--ply-color-text); }
+
+  /* Hung 1.75rem under the field: past the bar's 3px rule, with a little air (the bar is 4.5rem). */
+  .ply-search__panel { position: absolute; inset-inline-end: 0; top: calc(100% + 1.75rem); z-index: 100; box-sizing: border-box; inline-size: min(32rem, calc(100vw - 2rem)); max-block-size: min(34rem, calc(100dvh - 7rem)); overflow-y: auto; overscroll-behavior: contain; padding-block: var(--ply-space-2); border: var(--ply-border-rule) solid var(--_rule); background: var(--ply-color-panel); color: var(--ply-color-panel-text); box-shadow: 0 1rem 2.5rem rgb(0 0 0 / 0.25); font-size: var(--ply-size-ui); opacity: 1; transform: none; transition: opacity var(--ply-duration-base) var(--ply-ease-out), transform var(--ply-duration-base) var(--ply-ease-out), display var(--ply-duration-base) allow-discrete; }
+  .ply-search__panel[hidden] { display: none; }
+  @starting-style { .ply-search__panel:not([hidden]) { opacity: 0; transform: translateY(-0.5rem); } }
+  .ply-search__panel .ply-search__status, .ply-search__panel .ply-search__idle { padding-block: var(--ply-space-2); }
+  .ply-search__panel .ply-search__idle p + p, .ply-search__panel .ply-search__idle p + ul { margin-top: var(--ply-space-2); }
+  .ply-search__panel .ply-search__idle ul { margin-top: var(--ply-space-3); }
+  .ply-search__panel .ply-search__idle p[data-ply-empty] { color: var(--ply-color-text); font-weight: var(--ply-weight-semibold); }
+  .ply-search__panel .ply-search__status a { color: var(--ply-color-code-string); }
+
+  .ply-search__group { padding-block: var(--ply-space-1); }
+  .ply-search__group:not(:first-child) { border-top: var(--ply-border-hair) solid var(--ply-color-rule); }
+  .ply-search__group > .ply-label { margin: var(--ply-space-2) var(--ply-space-4) var(--ply-space-1); }
+  .ply-search__group > ul { list-style: none; margin: 0; padding: 0; }
+  .ply-search__panel .ply-search__hit--page:not(:first-child) { border-top: 0; }
+  .ply-search__panel .ply-search__hit a { grid-template-columns: minmax(0, 1fr); padding-block: var(--ply-space-2); padding-inline: var(--ply-space-6) var(--ply-space-4); }
+  .ply-search__panel .ply-search__hit[aria-selected="true"] a::before { top: calc(var(--ply-space-2) + 0.3rem); }
+  .ply-search__name, .ply-search__panel .ply-search__excerpt { min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+  .ply-search__panel .ply-search__excerpt { display: block; font-size: var(--ply-size-sm); }
+  .ply-search__panel .ply-search__excerpt mark { background: var(--ply-color-note); color: var(--ply-ink-950); }
+  .ply-search__hit--all { border-top: var(--ply-border-hair) solid var(--ply-color-rule); margin-top: var(--ply-space-1); }
+  .ply-search__hit--all a { display: flex; align-items: center; justify-content: space-between; font-weight: var(--ply-weight-bold); }
+  .ply-search__panel .ply-search__hit--all a { display: flex; padding-block: var(--ply-space-3); }
+
+  /* Folded: with the tabs in the menu, the field is an icon button. Its press opens the field
+     across the bar (the inner box is the bar's full width, so the field covers wordmark, tabs,
+     and tools until Esc or the close button). The first rules cover the moment before
+     topbar.js has measured, on phones. */
+  @media (max-width: 40rem) {
+    .ply-topbar:not([data-ply-tabs]) .ply-search--inline:not([data-expanded]) .ply-search__field { display: none; }
+    .ply-topbar:not([data-ply-tabs]) .ply-search--inline:not([data-expanded]) .ply-search-trigger { display: inline-flex; }
+  }
+  .ply-topbar[data-ply-tabs="menu"] .ply-search--inline:not([data-expanded]) .ply-search__field { display: none; }
+  .ply-topbar[data-ply-tabs="menu"] .ply-search--inline:not([data-expanded]) .ply-search-trigger { display: inline-flex; padding: 0; width: 2.5rem; justify-content: center; }
+  .ply-topbar[data-ply-tabs="menu"] .ply-search--inline .ply-search-trigger > span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .ply-topbar[data-ply-tabs="menu"] .ply-search--inline .ply-search-trigger__key { display: none; }
+  .ply-topbar[data-ply-tabs="menu"] .ply-search--inline[data-expanded] .ply-search__field { position: absolute; inset: 0; z-index: 50; inline-size: auto; block-size: auto; display: flex; align-items: center; padding: var(--ply-space-3) var(--ply-layout-gutter); background: var(--ply-color-bg); }
+  .ply-topbar[data-ply-tabs="menu"] .ply-search--inline[data-expanded] .ply-search__box { position: relative; inline-size: 100%; block-size: 2.5rem; }
+  .ply-topbar[data-ply-tabs="menu"] .ply-search--inline[data-expanded] .ply-search__box:focus-within { inline-size: 100%; }
+  .ply-topbar[data-ply-tabs="menu"] .ply-search--inline[data-expanded] .ply-search__key { display: none; }
+  .ply-topbar[data-ply-tabs="menu"] .ply-search--inline[data-expanded] .ply-search__dismiss { display: inline-flex; }
+  .ply-topbar[data-ply-tabs="menu"] .ply-search--inline[data-expanded] .ply-search__panel { inset-inline: var(--ply-layout-gutter); inline-size: auto; top: calc(100% + var(--ply-border-rule) + var(--ply-space-2)); max-block-size: calc(100dvh - 6rem); }
+
+  /* No script: the field cannot work, so the bar keeps its trigger link as it always had. */
+  @media (scripting: none) {
+    .ply-search--inline .ply-search__field { display: none; }
+    .ply-search--inline .ply-search-trigger { display: inline-flex; }
+  }
+
+  @media (pointer: coarse) {
+    .ply-search__field { block-size: 2.75rem; }
+    .ply-search__key { display: none; }
+    .ply-search__dismiss { width: 2.75rem; height: 2.75rem; }
+    .ply-topbar[data-ply-tabs="menu"] .ply-search--inline[data-expanded] .ply-search__box { block-size: 2.75rem; }
+  }
+  @media (forced-colors: active) {
+    .ply-search__hit[aria-selected="true"] a { outline: 2px solid Highlight; outline-offset: -2px; }
   }
 }

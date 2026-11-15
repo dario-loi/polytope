@@ -1,15 +1,32 @@
 ---
-// Site search: a top-bar trigger that opens a panel of results from the site's own Pagefind
-// index. Put it in TopBar's slot, and build the index after the site build:
+// Site search over the site's own Pagefind index. Put it in TopBar's slot, and build the index
+// after the site build:
 //   npx pagefind --site dist
 // Mark each page's main content with data-pagefind-body, and name a page's kind with
 // data-pagefind-meta="kind:Publications" to show it beside the result.
+//
+// Two variants. "dialog" (the default) is a trigger that opens a panel over the page. "inline"
+// is a compact field in the bar (about 14ch, wider while it has focus) whose results drop in a
+// panel under it: up to eight pages grouped by kind, then an "All results" link when
+// resultsHref is set. Where the chapter tabs have folded into the menu (js/topbar.js), the
+// field becomes an icon button, and pressing it opens the field across the bar. Without
+// JavaScript the inline field is hidden and the bar shows the trigger link, as the dialog
+// variant does.
+//
+// Events on <ply-search> (bubbling CustomEvents), for a site to map to its own analytics. None
+// carries the query text, by design: what a reader searches for is theirs, so the component
+// neither sends nor exposes it.
+//   ply-search:open     no detail; the field gained focus or the dialog opened.
+//   ply-search:results  detail { bucket: "0" | "1-5" | "6+" }; once per settled query (the
+//                       reader stopped typing), never per keystroke.
+//   ply-search:select   detail { url, kind }; the path (and hash) of the page followed and its
+//                       kind ("" when it has none, "all" for the All results link).
 import Icon from "./Icon.astro";
 interface Props {
   /** Visible label of the trigger, and the panel's name. */
   label?: string;
   placeholder?: string;
-  /** Where the trigger goes without JavaScript. */
+  /** Where the trigger goes without JavaScript, and the link shown if the index cannot load. */
   href?: string;
   /** Folder of the Pagefind bundle, including the site's base path. */
   bundle?: string;
@@ -17,34 +34,64 @@ interface Props {
   baseUrl?: string;
   /** One line shown before the reader types: what can be found. */
   hint?: string;
-  /** Quick links shown before the reader types. */
+  /** Quick links shown before the reader types, and again when nothing matches. */
   links?: { label: string; href: string }[];
   /** Pagefind ranking options, such as { pageLength: 0.2 } so short records do not crowd out pages. */
   ranking?: Record<string, number>;
+  /** "dialog" opens a panel over the page; "inline" is a field in the bar with a drop panel. */
+  variant?: "dialog" | "inline";
+  /** Inline only: the site's results page. The panel ends with a link to it, with ?q= and the query added. */
+  resultsHref?: string;
+  /** Inline only: the line shown above the links when nothing matches. */
+  emptyText?: string;
   id?: string;
   class?: string;
 }
-const { label = "Search", placeholder = "Search", href = "#", bundle = "/pagefind/", baseUrl = "/", hint, links = [], ranking, id = "ply-search", class: className } = Astro.props;
+const { label = "Search", placeholder = "Search", href = "#", bundle = "/pagefind/", baseUrl = "/", hint, links = [], ranking, variant = "dialog", resultsHref, emptyText = "Try one of these topics", id = "ply-search", class: className } = Astro.props;
+const inline = variant === "inline";
 ---
-<ply-search class:list={["ply-search", className]} id={id} bundle={bundle} base-url={baseUrl} ranking={ranking ? JSON.stringify(ranking) : undefined}>
+<ply-search class:list={["ply-search", inline && "ply-search--inline", className]} id={id} bundle={bundle} base-url={baseUrl} ranking={ranking ? JSON.stringify(ranking) : undefined} variant={inline ? "inline" : undefined} results-href={inline ? resultsHref : undefined}>
   <a class="ply-search-trigger" href={href} data-ply-search-open aria-keyshortcuts="/ Control+K Meta+K"><span>{label}</span><kbd class="ply-search-trigger__key" aria-hidden="true">/</kbd><Icon name="search" /></a>
-  <dialog class="ply-search__dialog" aria-label={label}>
-    <div class="ply-search__bar" role="search">
-      <Icon name="search" />
-      <input class="ply-search__input" type="search" placeholder={placeholder} aria-label={label} role="combobox" aria-expanded="false" aria-controls={`${id}-results`} aria-autocomplete="list" autocomplete="off" spellcheck="false" enterkeyhint="go" />
-      <button class="ply-search__close" type="button" aria-label="Close search (Esc)">Esc</button>
+  {inline ? (
+    <div class="ply-search__field" role="search" aria-label={label}>
+      <div class="ply-search__box">
+        <Icon name="search" />
+        <input class="ply-search__input" type="search" placeholder={placeholder} aria-label={label} role="combobox" aria-expanded="false" aria-controls={`${id}-results`} aria-haspopup="listbox" aria-autocomplete="list" aria-keyshortcuts="/ Control+K Meta+K" autocomplete="off" spellcheck="false" enterkeyhint="search" />
+        <kbd class="ply-search__key" aria-hidden="true">/</kbd>
+        <button class="ply-search__dismiss" type="button" aria-label="Close search"><Icon name="close" /></button>
+      </div>
+      <p class="ply-visually-hidden" role="status" data-ply-live></p>
+      <div class="ply-search__panel" data-surface="panel" hidden>
+        <p class="ply-search__status" role="status"></p>
+        {(hint || links.length > 0) && (
+          <div class="ply-search__idle">
+            {hint && <p data-ply-hint>{hint}</p>}
+            {links.length > 0 && <p data-ply-empty hidden>{emptyText}</p>}
+            {links.length > 0 && <ul>{links.map((l) => <li><a href={l.href}>{l.label}</a></li>)}</ul>}
+          </div>
+        )}
+        <ul class="ply-search__results" id={`${id}-results`} role="listbox" aria-label="Results"></ul>
+      </div>
     </div>
-    <div class="ply-search__body">
-      <p class="ply-search__status" role="status"></p>
-      {(hint || links.length > 0) && (
-        <div class="ply-search__idle">
-          {hint && <p>{hint}</p>}
-          {links.length > 0 && <ul>{links.map((l) => <li><a href={l.href}>{l.label}</a></li>)}</ul>}
-        </div>
-      )}
-      <ul class="ply-search__results" id={`${id}-results`} role="listbox" aria-label="Results"></ul>
-      <button class="ply-button ply-button--secondary ply-button--sm ply-search__more" type="button" hidden>Show more</button>
-    </div>
-  </dialog>
+  ) : (
+    <dialog class="ply-search__dialog" aria-label={label}>
+      <div class="ply-search__bar" role="search">
+        <Icon name="search" />
+        <input class="ply-search__input" type="search" placeholder={placeholder} aria-label={label} role="combobox" aria-expanded="false" aria-controls={`${id}-results`} aria-autocomplete="list" autocomplete="off" spellcheck="false" enterkeyhint="go" />
+        <button class="ply-search__close" type="button" aria-label="Close search (Esc)">Esc</button>
+      </div>
+      <div class="ply-search__body">
+        <p class="ply-search__status" role="status"></p>
+        {(hint || links.length > 0) && (
+          <div class="ply-search__idle">
+            {hint && <p>{hint}</p>}
+            {links.length > 0 && <ul>{links.map((l) => <li><a href={l.href}>{l.label}</a></li>)}</ul>}
+          </div>
+        )}
+        <ul class="ply-search__results" id={`${id}-results`} role="listbox" aria-label="Results"></ul>
+        <button class="ply-button ply-button--secondary ply-button--sm ply-search__more" type="button" hidden>Show more</button>
+      </div>
+    </dialog>
+  )}
 </ply-search>
 <script>import "../dist/js/search.js";</script>

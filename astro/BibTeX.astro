@@ -1,8 +1,37 @@
 ---
 // A BibTeX entry in a code panel with a copy button. Long fields wrap under their value, so
 // the whole entry reads before it is copied; wrap={false} scrolls them instead.
+//
+// bib and ris, when given, add a row under the panel with two small buttons that download the
+// entry as a .bib or a .ris file (give each a URL to a file your site serves). downloadAttrs
+// goes on both buttons, for a site's own attributes such as analytics hooks; a value may use
+// "{format}", which becomes "bib" or "ris". Each button also carries data-format="bib" or "ris".
+import Button from "./Button.astro";
 import Code from "./Code.astro";
-interface Props { entry: string; title?: string; wrap?: boolean }
-const { entry, title = "BibTeX", wrap = true } = Astro.props;
+import Icon from "./Icon.astro";
+interface Props {
+  entry: string;
+  title?: string;
+  wrap?: boolean;
+  /** URL of the entry as a .bib file; adds the "Download .bib" button. */
+  bib?: string;
+  /** URL of the entry as a .ris file; adds the "Download .ris" button. */
+  ris?: string;
+  /** Extra attributes for both download buttons; "{format}" in a value becomes "bib" or "ris". */
+  downloadAttrs?: Record<string, string>;
+}
+const { entry, title = "BibTeX", wrap = true, bib, ris, downloadAttrs = {} } = Astro.props;
+const files = [
+  { format: "bib", href: bib },
+  { format: "ris", href: ris },
+].filter((f): f is { format: string; href: string } => Boolean(f.href));
+const attrsFor = (format: string) => Object.fromEntries(Object.entries(downloadAttrs).map(([k, v]) => [k, String(v).replaceAll("{format}", format)]));
 ---
-<div class="ply-bibtex"><Code code={entry} lang="bibtex" title={title} wrap={wrap} /></div>
+<div class="ply-bibtex">
+  <Code code={entry} lang="bibtex" title={title} wrap={wrap} />
+  {files.length > 0 && (
+    <div class="ply-bibtex__files">
+      {files.map((f) => <Button href={f.href} download variant="secondary" size="sm" {...attrsFor(f.format)} data-format={f.format}><Icon name="download" /> Download .{f.format}</Button>)}
+    </div>
+  )}
+</div>

@@ -6,6 +6,12 @@
 
 // Each way the bar can be drawn, roomiest first: the tabs, the tabs set closer, the tabs set
 // closer with an icon for search, then the menu.
+//
+// An inline search field (astro/Search.astro variant="inline") sits in the tools, which never
+// shrink, so the room left for the tabs already has the field's width taken out of it, and a
+// field that grows on focus never changes the layout: it grows over the gap the tabs leave
+// (measured here as --ply-search-room). Snug and tight set the field narrower. In the menu
+// state the field is an icon button, and pressing it opens the field across the whole bar.
 const STATES = ["tabs", "snug", "tight"];
 
 // Under reduced motion every style change runs as a 0.01ms transition (reset.css), and a size
@@ -16,17 +22,43 @@ function settle(bar) {
 
 function fit(bar) {
   const links = bar.querySelector(".ply-topbar__links");
-  if (!links) return;
-  // Try each state and keep the first that fits. Nothing paints between the writes, so a bar
-  // that ends on the menu never flashes its tabs.
-  const state = STATES.find((s) => {
-    bar.dataset.plyTabs = s;
+  const field = bar.querySelector(".ply-search__field");
+  if (!links && !field) return;
+  let state;
+  if (links) {
+    // Try each state and keep the first that fits. Nothing paints between the writes, so a bar
+    // that ends on the menu never flashes its tabs.
+    state = STATES.find((s) => {
+      bar.dataset.plyTabs = s;
+      settle(bar);
+      return links.scrollWidth <= links.clientWidth + 1;
+    }) ?? "menu";
+  } else {
+    // No chapters: only the search field can crowd the bar, and it folds to its icon.
+    const inner = bar.querySelector(".ply-topbar__inner");
+    bar.dataset.plyTabs = "tabs";
     settle(bar);
-    return links.scrollWidth <= links.clientWidth + 1;
-  }) ?? "menu";
+    state = inner && inner.scrollWidth > inner.clientWidth + 1 ? "menu" : "tabs";
+  }
   bar.dataset.plyTabs = state;
   settle(bar);
-  if (state !== "menu") bar.querySelector(".ply-menu--chapters")?.removeAttribute("open");
+  if (state !== "menu") {
+    bar.querySelector(".ply-menu--chapters")?.removeAttribute("open");
+    // The field is back in the bar, so a bar-wide search has nothing left to cover.
+    for (const s of bar.querySelectorAll("ply-search[data-expanded]")) s.collapse?.();
+  }
+  room(bar);
+}
+
+// How far the focused field may grow to its start side: the gap between the last tab (or the
+// wordmark) and the field, less a little air. Zero where the field is an icon.
+function room(bar) {
+  const field = bar.querySelector(".ply-search__field");
+  if (!field || !field.getClientRects().length || bar.dataset.plyTabs === "menu") { bar.style.removeProperty("--ply-search-room"); return; }
+  const tabs = [...bar.querySelectorAll(".ply-topbar__links .ply-tab")].filter((t) => t.getClientRects().length);
+  const before = tabs.at(-1) ?? bar.querySelector(".ply-wordmark");
+  const gap = field.getBoundingClientRect().left - (before?.getBoundingClientRect().right ?? 0) - 12;
+  bar.style.setProperty("--ply-search-room", `${Math.max(0, Math.floor(gap))}px`);
 }
 
 // The chapter menu is a native details element. Escape closes it and puts focus back on its

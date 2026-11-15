@@ -88,7 +88,10 @@ const examplePubs = [
   author    = {Author, A. and Doe, John and Author, B.},
   booktitle = {Example Venue},
   year      = {2026}
-}`} />
+}`} bib={u("/examples/example.bib")} ris={u("/examples/example.ris")} downloadAttrs={{ "data-track": "citation-download", "data-track-label": "{format}" }} />
+  <p>Give <code>bib</code> and <code>ris</code> the addresses of the entry as files, and a row of two small buttons, Download .bib and Download .ris, sits under the panel. Each button downloads its file. <code>downloadAttrs</code> adds attributes to both, such as the data attributes an analytics script reads, and <code>{"{format}"}</code> in a value becomes <code>bib</code> or <code>ris</code>. Each button also has <code>data-format</code> set to its format.</p>
+  <Code lang="astro" code={`<BibTeX entry={bibtex} bib="/papers/key.bib" ris="/papers/key.ris"
+  downloadAttrs={{ "data-track": "citation-download", "data-track-label": "{format}" }} />`} />
 
   <h2>Publication wall</h2>
   <p>Publications grouped by year, the year in wood type, the site owner's name in bold in each author list.</p>

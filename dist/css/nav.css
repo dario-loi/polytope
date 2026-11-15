@@ -2,7 +2,7 @@
 @layer ply.components {
   /* Top bar: wordmark, chapter links with a black wall-label tab on the current one, tools. */
   .ply-topbar { border-bottom: var(--ply-border-rule) solid var(--ply-color-rule-strong); background: var(--ply-color-bg); }
-  .ply-topbar__inner { display: flex; align-items: center; gap: var(--ply-space-5); min-height: 4.5rem; padding-block: var(--ply-space-3); }
+  .ply-topbar__inner { position: relative; display: flex; align-items: center; gap: var(--ply-space-5); min-height: 4.5rem; padding-block: var(--ply-space-3); }
   .ply-wordmark { font-family: var(--ply-font-display); font-size: var(--ply-size-xl); line-height: 1; color: var(--ply-color-text); text-decoration: none; white-space: nowrap; flex: none; font-weight: 400; }
   .ply-wordmark:hover { color: var(--ply-color-text); }
   .ply-wordmark__stop { color: var(--ply-color-accent); }
