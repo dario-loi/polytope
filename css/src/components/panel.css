@@ -4,6 +4,9 @@
   .ply-panel a { color: var(--ply-color-code-string); }
   .ply-panel a:hover { color: var(--ply-color-panel-text); }
   .ply-panel--flush { padding: 0; }
+  /* A flush panel whose picture has a fallback (ThemedImage's `fallback`) holds the complex under it,
+     as a card's panel does, so a picture that fails leaves the complex and not a black panel. */
+  .ply-panel--flush:has(> .ply-card__fallback) { position: relative; overflow: hidden; }
   /* A flush panel that holds a picture gets the hairline frame cards give theirs, so a light
      screenshot keeps its edge on the white wall. */
   .ply-panel--flush:has(img, picture) { outline: var(--ply-border-hair) solid var(--ply-color-rule); outline-offset: -1px; }

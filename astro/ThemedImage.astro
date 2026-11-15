@@ -10,9 +10,15 @@
 // image never covers what lies under it (a Card's complex); empty alt text does the same in most
 // browsers. Do not set display on the picture: a rule of yours that outranks the utilities would
 // show both twins.
+// `fallback` is a seed for the complex a picture in a flush panel draws underneath itself, as
+// Card does under its figure, so a picture that is slow, missing, or failed leaves the complex
+// and never a black panel (the picture keeps its own box, so the panel keeps its shape):
+//   <div class="ply-panel ply-panel--flush"><ThemedImage src={cover} alt="" fallback={7} /></div>
+// The fallback is a sibling written before the pictures; the panel holds it (panel.css).
 import { Picture } from "astro:assets";
 import type { ImageMetadata } from "astro";
 import { pictureFormats } from "./images.ts";
+import ComplexStatic from "./ComplexStatic.astro";
 type Source = ImageMetadata | string;
 interface Props {
   src: Source;
@@ -25,12 +31,15 @@ interface Props {
   sizes?: string;
   loading?: "eager" | "lazy";
   fetchpriority?: "high" | "low" | "auto";
+  /** Seeds the complex drawn under the picture, which shows where the picture does not (a Card does the same). */
+  fallback?: number;
   class?: string;
 }
-const { src, dark, class: className, width, height, widths, sizes, loading, fetchpriority, alt } = Astro.props;
+const { src, dark, class: className, width, height, widths, sizes, loading, fetchpriority, alt, fallback } = Astro.props;
 const failed = "this.style.visibility='hidden'";
 const picture = { widths, sizes, loading, fetchpriority, alt, onerror: failed };
 ---
+{fallback !== undefined && <div class="ply-card__fallback" aria-hidden="true"><ComplexStatic seed={fallback} points={28} radius={0.17} /></div>}
 {typeof src === "string"
   ? <img src={src} alt={alt} width={width} height={height} loading={loading} fetchpriority={fetchpriority} onerror={failed} class:list={[className, dark && "ply-light-only"]} />
   : <Picture {...pictureFormats} {...picture} src={src} class:list={[className, dark && "ply-light-only"]} />}

@@ -132,4 +132,12 @@ const space = Object.keys(t).filter((k) => k.startsWith("--ply-space-"));
   .sp li { display: grid; grid-column: 1 / -1; grid-template-columns: subgrid; align-items: center; }
   .sp code { background: none; padding: 0; font-size: var(--ply-size-xs); }
   .sp__bar { height: 0.875rem; background: var(--ply-color-text); min-width: 1px; max-width: 100%; }
+  /* Where the name, bar, and value no longer fit one row (a phone, or enlarged text on a narrow window), the
+     bar takes a row under the name and the value. The width is in rem, so enlarged text folds it sooner. */
+  @media (max-width: 24rem) {
+    .sp { grid-template-columns: minmax(0, 1fr) auto; }
+    .sp li > code { grid-column: 1; grid-row: 1; overflow-wrap: anywhere; }
+    .sp li > span:last-child { grid-column: 2; grid-row: 1; }
+    .sp__bar { grid-column: 1 / -1; grid-row: 2; }
+  }
 </style>

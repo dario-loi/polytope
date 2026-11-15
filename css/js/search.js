@@ -5,7 +5,8 @@
 //       .ply-search__idle, ul.ply-search__results, button.ply-search__more </dialog>
 //   </ply-search>
 // Build the index after the site build, for example: npx pagefind --site dist
-// "/" or Ctrl/Cmd+K opens it, arrows move through results, Enter follows one, Esc closes.
+// "/" or Ctrl/Cmd+K opens it, arrows move through results, Enter follows the chosen one (the inline
+// field with none chosen opens the results page for the query), Esc closes.
 // A page names its kind with data-pagefind-meta="kind:Publications"; the panel shows it.
 // ranking='{"pageLength":0.2}' passes Pagefind ranking options through. A record with
 // meta.summary shows that text instead of an excerpt.
@@ -322,11 +323,13 @@ class PlySearch extends HTMLElement {
       li.setAttribute("aria-label", `All ${results.length} results`);
       this.list.append(li);
     }
-    this._status("");
-    this._show(results.length > 0);
     const n = results.length;
     const shown = q.length > 40 ? `${q.slice(0, 39)}...` : q;
-    this._announce(n ? `${n} ${n === 1 ? "result" : "results"} for ${shown}` : `No results for ${shown}`);
+    // Nothing found: say so in the panel (a status region, so it is read out as well) above the
+    // links that come back.
+    this._status(n ? "" : `Nothing matches "${shown}".`);
+    this._show(n > 0);
+    if (n) this._announce(`${n} ${n === 1 ? "result" : "results"} for ${shown}`);
     this._report(n);
   }
 
@@ -400,8 +403,20 @@ class PlySearch extends HTMLElement {
       this._move(e.key === "ArrowDown" ? 1 : -1);
     } else if (e.key === "Enter") {
       const opts = this._options();
+      if (this.inline) {
+        // A result the arrows have chosen opens. With none chosen, Enter asks for the full list
+        // of the query, as a search form does, and falls back to the best match where the bar
+        // has no results page.
+        const chosen = opts[this._active];
+        const all = this.getAttribute("results-href");
+        const q = this.input.value.trim();
+        if (chosen && !this.panel.hidden) { e.preventDefault(); this._go(chosen.querySelector("a").href, chosen); }
+        else if (all && q) { e.preventDefault(); this._go(`${all}${all.includes("?") ? "&" : "?"}q=${encodeURIComponent(q)}`, { dataset: { url: all, kind: "all" } }); }
+        else if (opts[0] && !this.panel.hidden) { e.preventDefault(); this._go(opts[0].querySelector("a").href, opts[0]); }
+        return;
+      }
       const pick = opts[this._active] || opts[0];
-      if (pick && !(this.inline && this.panel.hidden)) { e.preventDefault(); this._go(pick.querySelector("a").href, pick); }
+      if (pick) { e.preventDefault(); this._go(pick.querySelector("a").href, pick); }
     } else if (e.key === "Escape") {
       if (this.inline) {
         // Close the panel and drop focus; a bar folded to its icon is put back.

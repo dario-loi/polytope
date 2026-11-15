@@ -16,19 +16,24 @@
   /* Under a figure the card draws its complex (ComplexStatic) and the picture paints over it, so a
      picture that is slow, missing, or failed leaves the complex and never a black void. */
   .ply-card__fallback { position: absolute; inset: 0; }
+  .ply-card__fallback :is(.ply-complex-wrap, .ply-complex) { height: 100%; }
   .ply-card__fallback ~ :is(picture, img, video) { position: relative; }
   .ply-card__fallback ~ picture img { position: relative; }
   /* A hairline frame, so a light screenshot keeps its edge on the white wall. */
   .ply-card__panel:has(img, video)::after { content: ""; position: absolute; inset: 0; border: var(--ply-border-hair) solid var(--ply-color-rule); pointer-events: none; }
   .ply-card__labels { position: absolute; inset-block-start: var(--ply-space-3); inset-inline-start: var(--ply-space-3); display: flex; flex-wrap: wrap; gap: var(--ply-space-2); pointer-events: none; }
-  .ply-card__body { display: grid; gap: var(--ply-space-2); align-content: start; }
+  .ply-card__body { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--ply-space-2); align-content: start; }
   .ply-card__title { margin: 0; font-family: var(--ply-font-text); font-size: var(--ply-size-lg); font-weight: var(--ply-weight-bold); line-height: 1.25; letter-spacing: -0.01em; text-wrap: balance; overflow-wrap: break-word; }
   .ply-card__title a { color: var(--ply-color-text); font-weight: inherit; text-decoration-color: var(--ply-color-rule); }
+  /* The title's kept-together phrases stay whole on a line, but one wider than the card (enlarged text,
+     a narrow column) breaks inside itself instead of overflowing. */
+  .ply-card__title .ply-nowrap { display: inline-block; max-width: 100%; white-space: normal; overflow-wrap: anywhere; }
   .ply-card:hover .ply-card__title a { text-decoration-color: var(--ply-color-accent); }
   .ply-card__meta { display: flex; flex-wrap: wrap; gap: 0 var(--ply-space-3); font-size: var(--ply-size-sm); font-weight: var(--ply-weight-semibold); color: var(--ply-color-text-muted); font-variant-numeric: tabular-nums; }
   .ply-card__meta > :first-child { color: var(--ply-color-text); }
   .ply-card__summary { font-size: var(--ply-size-ui); line-height: var(--ply-leading-normal); color: var(--ply-color-text-muted); max-width: 40rem; }
-  .ply-card__tags { display: flex; flex-wrap: wrap; gap: var(--ply-space-2); list-style: none; padding: 0; margin-top: var(--ply-space-1); }
+  /* Tags keep their own height when an aligned row makes the list taller than its content. */
+  .ply-card__tags { display: flex; flex-wrap: wrap; align-items: flex-start; align-content: flex-start; gap: var(--ply-space-2); list-style: none; padding: 0; margin-top: var(--ply-space-1); }
   .ply-card__tags > li { margin: 0; }
   /* Rows 2rem apart, as the columns are (ply-cards--dense), for a page that shows many elements; an
      aligned grid sets its own row gap with the cards' margins. */
