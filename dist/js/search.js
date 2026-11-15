@@ -483,13 +483,16 @@ class PlySearch extends HTMLElement {
       if (this.inline) {
         // The index is not there: say so, and offer the page the no-script link goes to.
         const href = this.trigger.getAttribute("href");
-        this.status.replaceChildren("Search is not available right now.");
+        // One item, so the message and its link wrap as a sentence in the status row.
+        const msg = el("span");
+        msg.append("Search is not available right now.");
         if (href && href !== "#") {
           const a = el("a");
           a.href = href;
           a.textContent = "Open the search page";
-          this.status.append(" ", a);
+          msg.append(" ", a);
         }
+        this.status.replaceChildren(msg);
       } else this.status.textContent = "Search is not built for this site yet.";
       if (this.idle) this.idle.hidden = true;
     } else this.status.textContent = state;

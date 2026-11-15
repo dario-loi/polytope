@@ -47,7 +47,7 @@ interface Props {
   id?: string;
   class?: string;
 }
-const { label = "Search", placeholder = "Search", href = "#", bundle = "/pagefind/", baseUrl = "/", hint, links = [], ranking, variant = "dialog", resultsHref, emptyText = "Try one of these topics", id = "ply-search", class: className } = Astro.props;
+const { label = "Search", placeholder = "Search", href = "#", bundle = "/pagefind/", baseUrl = "/", hint, links = [], ranking, variant = "dialog", resultsHref, emptyText = "Try one of these topics.", id = "ply-search", class: className } = Astro.props;
 const inline = variant === "inline";
 ---
 <ply-search class:list={["ply-search", inline && "ply-search--inline", className]} id={id} bundle={bundle} base-url={baseUrl} ranking={ranking ? JSON.stringify(ranking) : undefined} variant={inline ? "inline" : undefined} results-href={inline ? resultsHref : undefined}>

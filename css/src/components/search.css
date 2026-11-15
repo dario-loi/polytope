@@ -81,7 +81,9 @@
   .ply-search__panel .ply-search__status, .ply-search__panel .ply-search__idle { padding-block: var(--ply-space-2); }
   .ply-search__panel .ply-search__idle p + p, .ply-search__panel .ply-search__idle p + ul { margin-top: var(--ply-space-2); }
   .ply-search__panel .ply-search__idle ul { margin-top: var(--ply-space-3); }
-  .ply-search__panel .ply-search__idle p[data-ply-empty] { color: var(--ply-color-text); font-weight: var(--ply-weight-semibold); }
+  /* A status line (loading, nothing found, no index) is what the reader needs first, so it is set in the
+     panel's text color and semibold, and the hint under it stays quiet. */
+  .ply-search__panel .ply-search__status { color: var(--ply-color-text); font-weight: var(--ply-weight-semibold); }
   .ply-search__panel .ply-search__status a { color: var(--ply-color-code-string); }
 
   .ply-search__group { padding-block: var(--ply-space-1); }

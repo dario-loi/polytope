@@ -95,7 +95,7 @@ const examplePubs = [
   <Code lang="astro" code={`<PaperHeader title="..." authors={authors} me="John Doe" fold={12} />`} />
 
   <h3 id="front-matter">Front matter slots</h3>
-  <p>Two slots finish a paper page's front matter. <code>figure</code> holds the key figure. It takes the width of the header and the margin together, so it ends where the margin column ends. A <code>Figure</code> with <code>column</code> keeps to the text's width instead, and <code>split</code> sets a long caption under a wide figure in two balanced columns from 60rem.</p>
+  <p>Two slots finish a paper page's front matter. <code>figure</code> holds the key figure. It takes the width of the header and the margin together, so it ends where the margin column ends. A <code>Figure</code> with <code>column</code> keeps to the text's width, and <code>split</code> sets a long caption under a wide figure in two balanced columns from 60rem.</p>
   <div class="ply-wide ex__live" style="border: 2px solid var(--ply-color-rule-strong); padding: 1.5rem">
     <PaperHeader level={3} title="Example title: a paper with a key figure" venue="Example Venue 2026" authors={exampleAuthors} affiliations={["Example University", "Another Institute"]} me="John Doe">
       <Figure slot="figure" num={1} split>
